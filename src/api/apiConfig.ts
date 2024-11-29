@@ -9,11 +9,11 @@ const END_POINT = {
   },
 };
 
-export const ACCESS_TOKEN = Config.ACCESS_TOKEN;
-export const API_URL = Config.BASE_URL_STAGING;
+export const ACCESS_TOKEN = '';
+export const API_URL = '';
 const ENV_NAME = Config.ENV as keyof typeof END_POINT;
 export const API_CONFIG = {
-  BASE_URL: END_POINT[ENV_NAME].BASE_URL,
+  BASE_URL: '',
   TIMEOUT: 10000,
   HEADERS: {
     'Content-Type': 'application/json',
