@@ -48,5 +48,10 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>ReactNativeConfig</key>
+	<dict>
+		<key>ENVFILE</key>
+		<string>.env</string>
+	</dict>
 </dict>
 </plist>

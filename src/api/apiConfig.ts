@@ -1,15 +1,16 @@
 import Config from 'react-native-config';
+
 const END_POINT = {
   production: {
-    BASE_URL: Config.API_URL_PRODUCTION,
+    BASE_URL: Config.BASE_URL_PRODUCTION,
   },
   staging: {
-    BASE_URL: Config.API_URL_STAGING,
+    BASE_URL: Config.BASE_URL_STAGING,
   },
 };
 
 export const ACCESS_TOKEN = Config.ACCESS_TOKEN;
-export const API_URL = Config.API_URL_STAGING;
+export const API_URL = Config.BASE_URL_STAGING;
 const ENV_NAME = Config.ENV as keyof typeof END_POINT;
 export const API_CONFIG = {
   BASE_URL: END_POINT[ENV_NAME].BASE_URL,
