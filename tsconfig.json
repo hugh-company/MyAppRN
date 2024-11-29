@@ -1,3 +1,37 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+   
+    "target": "esnext",
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "jsx": "react-native",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components": ["src/components"],
+      "@screens": ["src/screens"],
+      "@assets": ["src/assets"],
+      "@hooks": ["src/hooks"],
+      "@utils": ["src/utils"],
+      "@navigation": ["src/navigation"],
+      "@types": ["src/types"],
+      "@validations": ["src/validations"],
+      "@redux": ["src/redux"],
+      "@services": ["src/services"],
+      "@notifications": ["src/notifications"],
+      "@api": ["src/api"],
+      "@translations": ["src/translations"]
+    }
+  },
+  "include": [
+    "**/*",
+    "custom.d.ts",
+    "src/assets/icons/*.svg",
+    "src/assets/images/*.png",
+    "src/assets/images/*.jpg"
+  ]
 }
