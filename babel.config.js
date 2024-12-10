@@ -20,6 +20,7 @@ module.exports = {
           '@utils': './src/utils',
           '@navigation': './src/navigation',
           '@redux': './src/redux',
+          '@theme': './src/theme',
         },
       },
     ],

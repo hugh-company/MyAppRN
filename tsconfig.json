@@ -24,8 +24,10 @@
       "@services": ["src/services"],
       "@notifications": ["src/notifications"],
       "@api": ["src/api"],
-      "@translations": ["src/translations"]
-    }
+      "@translations": ["src/translations"],
+      "@theme": ["src/theme"]
+    },
+    "typeRoots": ["./src/types"]
   },
   "include": [
     "**/*",
