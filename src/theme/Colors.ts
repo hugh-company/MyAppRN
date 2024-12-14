@@ -1,60 +1,30 @@
-export const lightColors = {
-  colorMain4: '#007AFF',
-  primary: '#007AFF',
-  secondary: '#5856D6',
-  tertiary: '#34C759',
-  quaternary: '#FF2D55',
-  background: '#FFFFFF',
-  surface: '#F2F2F7',
-  text: '#000000',
-  textSecondary: '#3C3C43',
-  textTertiary: '#787880',
-  textQuaternary: '#C7C7CC',
-  border: '#C6C6C8',
-  borderSecondary: '#E5E5EA',
-  borderTertiary: '#D1D1D6',
-  borderQuaternary: '#C7C7CC',
-  success: '#34C759',
-  error: '#FF3B30',
-  warning: '#FF9500',
-  info: '#5856D6',
-  whiteColor: '#FFFFFF',
-  colorDisable: '#E5E5EA',
-};
-
-export const darkColors = {
-  colorMain4: '#0A84FF',
-  primary: '#0A84FF',
-  secondary: '#5E5CE6',
-  tertiary: '#30D158',
-  quaternary: '#FF375F',
-  background: '#000000',
-  surface: '#1C1C1E',
-  text: '#FFFFFF',
-  textSecondary: '#EBEBF5',
-  textTertiary: '#98989F',
-  textQuaternary: '#48484A',
-  border: '#38383A',
-  borderSecondary: '#2C2C2E',
-  borderTertiary: '#383838',
-  borderQuaternary: '#48484A',
-  success: '#30D158',
-  error: '#FF453A',
-  warning: '#FF9F0A',
-  info: '#5E5CE6',
-  whiteColor: '#FFFFFF',
-  colorDisable: '#E5E5EA',
-};
-
-export type ThemeColors = typeof lightColors;
-
 export const Colors = {
-  light: lightColors,
-  dark: darkColors,
+  primary: '#F65D79',
+  background: '#F7CC15',
+  green: '#21AB3B',
+  red: '#FF0000',
+  text: '#000000',
+  border: '#E5E5EA',
+  white: '#FFFFFF',
+  orange: '#F2994A',
+  success: '#21AB3B',
+  warning: '#F2994A',
+  info: '#21AB3B',
+  error: '#FF0000',
+  lightGray: '#E5E5EA',
+  placeholder: '#8E8E93',
+  black: 'black',
+  buttonDelete: '#FFEBEE',
+  txtDelete: '#FF5252',
+
+  buttonCancel: '#E5E5EA',
+  txtCancel: '#000000',
+  buttonConfirm: '#21AB3B',
+  txtConfirm: '#FFFFFF',
+  backgroundShadowWhite: 'rgba(255, 255, 255, 0.5)',
 };
 
-export default Colors;
-
+export type ColorScheme = typeof Colors;
 // shadow
 export const Shadow = {
   normal: {

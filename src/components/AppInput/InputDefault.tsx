@@ -1,9 +1,8 @@
 import { EyeIcon, EyeOffIcon } from '@assets';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { Colors, FontSize, FontWithFamily, Spacing } from '@theme';
 import React, { forwardRef, useState } from 'react';
 import {
   StyleSheet,
-  Text,
   TextInput,
   TextInputProps,
   TextStyle,
@@ -17,7 +16,7 @@ interface InputDefaultProps extends TextInputProps {
   label?: string;
   error?: string;
   containerStyle?: ViewStyle;
-  inputStyle?: TextStyle;
+
   labelStyle?: TextStyle;
   errorStyle?: TextStyle;
   secureTextEntry?: boolean;
@@ -28,7 +27,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
     label,
     error,
     containerStyle,
-    inputStyle,
+    style,
     labelStyle,
     errorStyle,
     secureTextEntry,
@@ -36,43 +35,42 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   } = props;
 
   const [isPrivateText, setSecureTextEntry] = useState(secureTextEntry);
-  const { themeColors } = useTheme();
-  const getStyle = styles(themeColors);
+
   const togglePasswordVisibility = () => {
     setSecureTextEntry(!isPrivateText);
   };
 
   return (
-    <View style={[getStyle.container, containerStyle]}>
-      {label && <AppText style={[getStyle.label, labelStyle]}>{label}</AppText>}
-      <View style={getStyle.inputContainer}>
+    <View style={[styles.container, containerStyle]}>
+      {label && <AppText style={[styles.label, labelStyle]}>{label}</AppText>}
+      <View style={styles.inputContainer}>
         <TextInput
           ref={ref}
           style={[
-            getStyle.input,
+            styles.input,
             isPrivateText && { paddingRight: Spacing.width45 },
-            inputStyle,
-            error ? getStyle.inputError : null,
+            style,
+            error ? styles.inputError : null,
           ]}
-          placeholderTextColor="#999"
+          placeholderTextColor={Colors.placeholder}
           secureTextEntry={isPrivateText}
           {...inputProps}
         />
         {secureTextEntry && (
           <TouchableOpacity
-            style={getStyle.iconContainer}
+            style={styles.iconContainer}
             onPress={togglePasswordVisibility}
           >
             {isPrivateText ? <EyeIcon /> : <EyeOffIcon />}
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={[getStyle.error, errorStyle]}>{error}</Text>}
+      {error && <AppText style={[styles.error, errorStyle]}>{error}</AppText>}
     </View>
   );
 });
 
-const styles = (themeColors: ThemeColors) => StyleSheet.create({
+const styles = StyleSheet.create({
 
   container: {
     marginBottom: Spacing.height16,
@@ -90,18 +88,18 @@ const styles = (themeColors: ThemeColors) => StyleSheet.create({
   input: {
     height: Spacing.height48,
     borderWidth: 1,
-    borderColor: themeColors.border,
+    borderColor: Colors.border,
     borderRadius: 8,
     paddingHorizontal: Spacing.width12,
-    fontSize: FontSize.FontSize16,
-    color: themeColors.text,
-    backgroundColor: themeColors.background,
+    fontSize: FontSize.FontSize14,
+    color: Colors.text,
+    backgroundColor: Colors.white,
   },
   inputError: {
-    borderColor: themeColors.error,
+    borderColor: Colors.error,
   },
   error: {
-    color: themeColors.error,
+    color: Colors.error,
     fontSize: FontSize.FontSize12,
     marginTop: Spacing.height4,
   },
@@ -112,7 +110,7 @@ const styles = (themeColors: ThemeColors) => StyleSheet.create({
     justifyContent: 'center',
 
   },
-})
+});
 
 
 export default InputDefault;

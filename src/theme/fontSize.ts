@@ -1,7 +1,6 @@
+import {Dimensions, PixelRatio, Platform} from 'react-native';
 
-import { Dimensions, Platform, PixelRatio } from 'react-native';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 const scale = SCREEN_WIDTH / 375;
 
@@ -28,5 +27,5 @@ export const FontSize = {
 } as const;
 
 // Types
-export type FontSize = typeof fontSize;
+export type FontSize = typeof FontSize;
 export type FontSizeKey = keyof FontSize;

@@ -18,7 +18,6 @@ const MainStackComponent = memo(() => {
         initialRouteName={SCREEN_ROUTE.HOME}>
         <MainStack.Screen name={SCREEN_ROUTE.HOME} component={HomeScreen} />
       </MainStack.Navigator>
- 
     </>
   );
 });

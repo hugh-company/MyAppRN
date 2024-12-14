@@ -1,14 +1,50 @@
 {
-    "auth": {
-        "login": {
-            "title": "Đăng nhập",
-            "email": "Email",
-            "password": "Mật khẩu",
-            "forgot_password": "Quên mật khẩu?",
-            "sign_in": "Đăng nhập",
-            "sign_up": "Đăng ký",
-            "sign_in_with_google": "Đăng nhập với Google",
-            "sign_in_with_facebook": "Đăng nhập với Facebook"
-        }
-    }
+  "home": {
+    "title": "To-do list",
+    "add_task": "Tạo task mới",
+    "add_task_title": "Tạo task mới",
+    "edit_task_title": "Sửa task",
+    "task_name": "Tên task",
+
+    "done": "Xong",
+    "priority": "Mức độ ưu tiên",
+    "low": "Thấp",
+    "medium": "Trung bình",
+    "high": "Cao",
+    "urgent": "Ưu tiên",
+
+    "description": "Mô tả",
+    "due_date": "Ngày hết hạn",
+    "add": "Thêm",
+    "update": "Cập nhật",
+    "deadline": "Thời hạn",
+    "status": "Trạng thái",
+    "in_progress": "Đang làm",
+    "not_started": "Chưa làm",
+    "completed": "Đã hoàn thành",
+    "todo": "Chưa làm",
+    "inProgress": "Đang làm",
+    "expired": "Hết hạn",
+    "days": "ngày",
+    "hour": "giờ",
+    "minute": "phút",
+    "second": "giây"
+  },
+  "form": {
+    "description": "Mô tả",
+    "deadline": "Thời hạn",
+    "priority": "Mức độ ưu tiên",
+    "status": "Trạng thái",
+    "name": "Tên task",
+    "add": "Thêm",
+    "edit": "Sửa",
+
+    "confirm": "Xác nhận",
+    "color": "Màu",
+    "select_color": "Chọn màu",
+    "images": "Hình ảnh",
+    "delete": "Xóa",
+    "cancel": "Hủy",
+    "save": "Lưu"
+  }
 }

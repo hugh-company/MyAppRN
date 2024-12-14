@@ -8,7 +8,7 @@ interface AppTextProps extends TextProps {
 }
 
 const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default', ...props }) => {
-  const { themeColors } = useTheme();
+  const { colors } = useTheme();
   const variantStyles = {
     default: styles.default,
     title: styles.title,
@@ -18,7 +18,7 @@ const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default',
 
 
   return (
-    <Text style={[variantStyles[variant], style, { color: themeColors.text }]} {...props}>
+    <Text style={[variantStyles[variant], { color: colors.text }, style]} {...props}>
       {children}
     </Text>
   );

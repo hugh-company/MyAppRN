@@ -1,5 +1,6 @@
 <!-- create folder -->
 
-mkdir src/components/AppButton
-touch src/components/AppButton.tsx
-touch src/components/index.ts
+mkdir src/components/ModalConfirmation
+touch src/components/ModalConfirmation/ModalConfirmation.tsx
+touch src/components/ModalConfirmation/index.ts
+

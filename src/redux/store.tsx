@@ -1,8 +1,8 @@
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import { setupListeners } from '@reduxjs/toolkit/query';
+import { AsyncStorage } from '@utils';
+import { persistReducer, persistStore } from 'redux-persist';
 import rootReducer from './rootReducer';
-import {persistStore, persistReducer} from 'redux-persist';
-import {configureStore, ThunkAction, Action} from '@reduxjs/toolkit';
-import {setupListeners} from '@reduxjs/toolkit/query';
-import {AsyncStorage} from '@utils';
 const newAsyncStorage = {
   getItem: async (key: string) => {
     return await AsyncStorage.getString(key);
@@ -21,7 +21,7 @@ const newAsyncStorage = {
 const persistConfig = {
   key: 'root',
   storage: newAsyncStorage,
-  // whitelist: ['accountSlice'],
+  // whitelist: ['taskSlice'],
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

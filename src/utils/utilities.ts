@@ -14,3 +14,7 @@ export const showNotificationWarning = (
   title: string,
   description: string,
 ) => {};
+
+export const generateId = () => {
+  return Date.now().toString();
+};

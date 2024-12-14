@@ -1,5 +1,6 @@
 import { setupCachePersister, setupGraphQlClient } from '@api';
 import { ApolloProvider } from '@apollo/client';
+import { ModalConfirmation } from '@components';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import { persistor, store } from '@redux';
 import { ThemeProvider } from '@theme';
@@ -7,6 +8,7 @@ import { initI18n } from '@translations';
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ModalPortal } from 'react-native-modals';
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -39,11 +41,10 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <ThemeProvider>
-      <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
+      <ThemeProvider>
         <Provider store={store}>
           <ApolloProvider client={client}>
-            {/* <NetworkStatus /> */}
             <PersistGate loading={null} persistor={persistor}>
               <SafeAreaProvider initialMetrics={initialWindowMetrics}>
                 <AppNavigator
@@ -51,12 +52,14 @@ function App(): React.JSX.Element {
                     NavigationUtils.setTopLevelNavigator(navigatorRef);
                   }}
                 />
+                <ModalPortal />
+                <ModalConfirmation />
               </SafeAreaProvider>
             </PersistGate>
           </ApolloProvider>
         </Provider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   );
 }
 

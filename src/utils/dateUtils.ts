@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {t} from 'i18next';
 
 // Hàm để định dạng ngày tháng
 export const formatDate = (
@@ -15,7 +16,25 @@ export const isBefore = (
 ): boolean => {
   return dayjs(date1).isBefore(dayjs(date2));
 };
-
+export const getDateToday = (date: Date | string) => {
+  const diff = dayjs(date).diff(dayjs(), 'day');
+  if (diff > 0) {
+    return `${diff} ${t('home.days')}`;
+  }
+  const diffHour = dayjs(date).diff(dayjs(), 'hour');
+  if (diffHour > 0) {
+    return `${diffHour} ${t('home.hour')}`;
+  }
+  const diffMinute = dayjs(date).diff(dayjs(), 'minute');
+  if (diffMinute > 0) {
+    return `${diffMinute} ${t('home.minute')}`;
+  }
+  const diffSecond = dayjs(date).diff(dayjs(), 'second');
+  if (diffSecond > 0) {
+    return `${diffSecond} ${t('home.second')}`;
+  }
+  return t('home.expired');
+};
 // Hàm để tính số ngày giữa hai ngày
 export const daysBetween = (
   date1: Date | string,
