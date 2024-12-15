@@ -3,12 +3,11 @@ export enum SCREEN_ROUTE {
   MAIN_STACK = 'MainStack',
   //   Screens
   // Auth
-  SIGN_IN = 'SignIn',
-  REQUEST_ACCOUNT = 'RequestAccountScreen',
-  FORGOT_EMAIL = 'ForgotEmail',
-  RESET_PASSWORD = 'ResetPassword',
+  SIGN_UP = 'SignUp',
+  SELECT_VERIFY = 'SelectVerify',
+  SUPPORT_VERIFY_CODE = 'SupportVerifyCode',
   VERIFY_CODE = 'VerifyCode',
-  PASS_CODE = 'PassCode',
+  SETUP_INFO_USER = 'SetupInfoUser',
 
   // Main
   HOME = 'Home',

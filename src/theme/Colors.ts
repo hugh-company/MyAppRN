@@ -1,5 +1,5 @@
 export const Colors = {
-  primary: '#F65D79',
+  primary: '#22409A',
   background: '#F7CC15',
   green: '#21AB3B',
   red: '#FF0000',
@@ -22,6 +22,7 @@ export const Colors = {
   buttonConfirm: '#21AB3B',
   txtConfirm: '#FFFFFF',
   backgroundShadowWhite: 'rgba(255, 255, 255, 0.5)',
+  link: '#22409A',
 };
 
 export type ColorScheme = typeof Colors;

@@ -1,1 +1,1 @@
-export * from './taskSlice';
+export * from './InfoUserSlice';

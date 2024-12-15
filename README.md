@@ -1,6 +1,7 @@
 <!-- create folder -->
 
-mkdir src/components/ModalConfirmation
-touch src/components/ModalConfirmation/ModalConfirmation.tsx
-touch src/components/ModalConfirmation/index.ts
+mkdir src/components/RunTime
+touch src/components/RunTime/RunTime.tsx
+touch src/components/RunTime/index.ts
+touch src/components/RunTime/style.ts
 

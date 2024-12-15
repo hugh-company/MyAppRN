@@ -113,7 +113,7 @@ export const AppButton: React.FC<AppButtonProps> = ({
     text: {
       color: getTextColor(),
       fontSize: size === 'small' ? FontSize.FontSize14 : size === 'medium' ? FontSize.FontSize16 : FontSize.FontSize18,
-      ...FontWithFamily.FontWithFamily_400,
+      ...FontWithFamily.FontWithFamily_600,
     },
   });
 

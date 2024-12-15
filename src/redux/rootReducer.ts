@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
-import taskSlice from './slices/taskSlice';
+import infoUserSlice from './slices/InfoUserSlice';
 const rootReducer = combineReducers({
-  taskSlice,
+  infoUserSlice,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;
