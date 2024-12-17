@@ -1,6 +1,6 @@
-import { Dimensions } from "react-native";
+import { Dimensions } from 'react-native';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 const DW = 375;
 const DH = 812;
 const vh = height / DH;

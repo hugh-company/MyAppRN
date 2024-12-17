@@ -1,14 +1,18 @@
-import React, { forwardRef } from 'react';
+import { useTheme } from '@theme';
+import React, { forwardRef, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 import { View } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import { AppText } from '../AppText';
 import { AppInputDropdownDefaultProps, AppInputDropdownProps } from './AppInputDropdown.type';
-import { styles } from './styles';
+import { createStyles } from './styles';
+
 
 
 const AppInputDropdownDefault = forwardRef<SelectDropdown, AppInputDropdownDefaultProps>((props, ref) => {
   const { data, value, containerStyle, styleInput, label, labelStyle, placeholder, onSelect, error, errorStyle } = props;
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <AppText style={[styles.label, labelStyle]}>{label}</AppText>}

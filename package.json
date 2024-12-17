@@ -8,7 +8,9 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "pod": "cd ios && pod install"
+    "pod": "cd ios && pod install",
+    "create-screens": "node createFile.js screen ",
+    "create-components": "node createFile.js component"
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",

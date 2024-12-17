@@ -1,5 +1,5 @@
-import { FontSize, FontWithFamily, useTheme } from '@theme';
-import React from 'react';
+import { FontSize, FontWithFamily, ThemeColors, useTheme } from '@theme';
+import React, { useMemo } from 'react';
 import { StyleSheet, Text, TextProps } from 'react-native';
 
 interface AppTextProps extends TextProps {
@@ -8,7 +8,8 @@ interface AppTextProps extends TextProps {
 }
 
 const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default', ...props }) => {
-  const { colors } = useTheme();
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const variantStyles = {
     default: styles.default,
     title: styles.title,
@@ -18,29 +19,34 @@ const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default',
 
 
   return (
-    <Text style={[variantStyles[variant], { color: colors.text }, style]} {...props}>
+    <Text style={[variantStyles[variant], style, { color: themeColors.text }]} {...props}>
       {children}
     </Text>
   );
 };
 
-const styles = StyleSheet.create({
-  default: {
-    fontSize: FontSize.FontSize14,
-    ...FontWithFamily.FontWithFamily_400,
-  },
-  title: {
-    fontSize: FontSize.FontSize20,
-    ...FontWithFamily.FontWithFamily_600,
-  },
-  subtitle: {
-    fontSize: FontSize.FontSize16,
-    ...FontWithFamily.FontWithFamily_500,
-  },
-  caption: {
-    fontSize: FontSize.FontSize12,
-    ...FontWithFamily.FontWithFamily_400,
-  },
-});
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    default: {
+      fontSize: FontSize.FontSize14,
+      ...FontWithFamily.FontWithFamily_400,
+      color: themeColors.text,
+    },
+    title: {
+      fontSize: FontSize.FontSize20,
+      ...FontWithFamily.FontWithFamily_600,
+      color: themeColors.text,
+    },
+    subtitle: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_500,
+      color: themeColors.text,
+    },
+    caption: {
+      fontSize: FontSize.FontSize12,
+      ...FontWithFamily.FontWithFamily_400,
+      color: themeColors.text,
+    },
+  });
 
 export default AppText;

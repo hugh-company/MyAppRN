@@ -1,5 +1,5 @@
-import {Colors, FontWithBold_Barlow, Spacing} from '@theme';
-import {StyleSheet} from 'react-native';
+import { FontWithFamily, Spacing } from '@theme';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   button: {
@@ -9,16 +9,14 @@ export const styles = StyleSheet.create({
     minHeight: Spacing.height56,
     flexDirection: 'row',
     borderRadius: Spacing.width84,
-    backgroundColor: Colors.blue,
   },
   label: {
     textAlign: 'center',
-    ...FontWithBold_Barlow.Bold_Barlow_600,
-    color: Colors.white,
+    ...FontWithFamily.FontWithFamily_600,
     flex: 1,
   },
   icon: {
     marginLeft: Spacing.width20,
   },
-  txtWrap: {flex: 0, paddingHorizontal: Spacing.width15},
+  txtWrap: { flex: 0, paddingHorizontal: Spacing.width15 },
 });

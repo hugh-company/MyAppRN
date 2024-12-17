@@ -1,7 +1,7 @@
 import { CloseIcon, DeleteIcon } from '@assets';
-import { Colors, FontSize, FontWithFamily, Spacing, WidthScreen } from '@theme';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ModalConfirmationProps } from '@utils';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { Modal, ModalContent } from 'react-native-modals';
 import { AppButton } from '../AppButton';
@@ -10,7 +10,8 @@ import { AppText } from '../AppText';
 
 export const ModalConfirmation = () => {
   const [infoConfirmation, setInfoConfirmation] = useState<ModalConfirmationProps | null>(null);
-
+  const { themeColors } = useTheme();
+  const getStyle = useMemo(() => createStyles(themeColors), [themeColors]);
   useEffect(() => {
     DeviceEventEmitter.addListener('showModalConfirmation', (data) => {
       setInfoConfirmation(data);
@@ -41,19 +42,19 @@ export const ModalConfirmation = () => {
       onSwipeOut={onCancel}
 
     >
-      <ModalContent style={styles.container}>
+      <ModalContent style={getStyle.container}>
         {getIcon()}
-        <AppText style={styles.title}>{infoConfirmation?.title}</AppText>
-        {infoConfirmation?.message && <AppText style={styles.description}>{infoConfirmation?.message}</AppText>}
-        <View style={styles.viewAction}>
-          <AppButton title={'Cancel'} onPress={onCancel} style={styles.btnCancel} />
-          <AppButton title={'Confirm'} onPress={onConfirm} style={styles.btnConfirm} />
+        <AppText style={getStyle.title}>{infoConfirmation?.title}</AppText>
+        {infoConfirmation?.message && <AppText style={getStyle.description}>{infoConfirmation?.message}</AppText>}
+        <View style={getStyle.viewAction}>
+          <AppButton label={'Cancel'} onPress={onCancel} style={getStyle.btnCancel} />
+          <AppButton label={'Confirm'} onPress={onConfirm} style={getStyle.btnConfirm} />
         </View>
       </ModalContent>
     </Modal>
   );
 };
-const styles = StyleSheet.create({
+const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: FontSize.FontSize16,
 
-    color: Colors.black,
+    color: themeColors.text,
     ...FontWithFamily.FontWithFamily_600,
     width: '70%',
     textAlign: 'center',
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: FontSize.FontSize14,
-    color: Colors.black,
+    color: themeColors.text,
     ...FontWithFamily.FontWithFamily_400,
     width: '90%',
     textAlign: 'center',
@@ -85,12 +86,12 @@ const styles = StyleSheet.create({
     gap: Spacing.width16,
   },
   btnCancel: {
-    backgroundColor: Colors.buttonCancel,
+    backgroundColor: themeColors.buttonCancel,
     flex: 1,
     borderRadius: Spacing.width8,
   },
   btnConfirm: {
-    backgroundColor: Colors.buttonConfirm,
+    backgroundColor: themeColors.buttonConfirm,
     flex: 1,
     borderRadius: Spacing.width8,
   },

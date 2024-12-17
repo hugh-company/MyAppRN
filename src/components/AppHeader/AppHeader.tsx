@@ -1,5 +1,5 @@
-import { Colors, FontSize, FontWithFamily, Spacing } from '@theme';
-import React from 'react';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 interface AppHeaderProps {
@@ -21,6 +21,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   style,
   titleStyle,
 }) => {
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={[styles.container, style]}>
       {leftComponent}
@@ -30,18 +32,19 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    height: 56,
-    backgroundColor: Colors.white,
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.width16,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  title: {
-    fontSize: FontSize.FontSize16,
-    ...FontWithFamily.FontWithFamily_500,
-    color: Colors.text,
-  },
-});
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      height: 56,
+      backgroundColor: themeColors.background,
+      justifyContent: 'center',
+      paddingHorizontal: Spacing.width16,
+      borderBottomWidth: 1,
+      borderBottomColor: themeColors.border,
+    },
+    title: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_500,
+      color: themeColors.text,
+    },
+  });

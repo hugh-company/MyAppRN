@@ -1,6 +1,6 @@
 import { EyeIcon, EyeOffIcon } from '@assets';
-import { Colors, FontSize, FontWithFamily, Spacing } from '@theme';
-import React, { forwardRef, useState } from 'react';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import React, { forwardRef, useMemo, useState } from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -16,7 +16,6 @@ interface InputDefaultProps extends TextInputProps {
   label?: string;
   error?: string;
   containerStyle?: ViewStyle;
-
   labelStyle?: TextStyle;
   errorStyle?: TextStyle;
   secureTextEntry?: boolean;
@@ -35,7 +34,8 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   } = props;
 
   const [isPrivateText, setSecureTextEntry] = useState(secureTextEntry);
-
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const togglePasswordVisibility = () => {
     setSecureTextEntry(!isPrivateText);
   };
@@ -52,7 +52,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
             style,
             error ? styles.inputError : null,
           ]}
-          placeholderTextColor={Colors.placeholder}
+          placeholderTextColor={themeColors.placeholder}
           secureTextEntry={isPrivateText}
           {...inputProps}
         />
@@ -70,47 +70,47 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   );
 });
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      marginBottom: Spacing.height16,
+    },
+    label: {
+      fontSize: FontSize.FontSize14,
+      ...FontWithFamily.FontWithFamily_600,
 
-  container: {
-    marginBottom: Spacing.height16,
-  },
-  label: {
-    fontSize: FontSize.FontSize14,
-    ...FontWithFamily.FontWithFamily_600,
+      marginBottom: Spacing.height8,
+    },
+    inputContainer: {
+      position: 'relative',
 
-    marginBottom: Spacing.height8,
-  },
-  inputContainer: {
-    position: 'relative',
+    },
+    input: {
+      height: Spacing.height48,
+      borderWidth: 1,
+      borderColor: themeColors.inputBorder,
+      borderRadius: 8,
+      paddingHorizontal: Spacing.width12,
+      fontSize: FontSize.FontSize14,
+      color: themeColors.inputText,
+      backgroundColor: themeColors.inputBackground,
+    },
+    inputError: {
+      borderColor: themeColors.error,
+    },
+    error: {
+      color: themeColors.error,
+      fontSize: FontSize.FontSize12,
+      marginTop: Spacing.height4,
+    },
+    iconContainer: {
+      position: 'absolute',
+      right: Spacing.width12,
+      height: '100%',
+      justifyContent: 'center',
 
-  },
-  input: {
-    height: Spacing.height48,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: 8,
-    paddingHorizontal: Spacing.width12,
-    fontSize: FontSize.FontSize14,
-    color: Colors.text,
-    backgroundColor: Colors.white,
-  },
-  inputError: {
-    borderColor: Colors.error,
-  },
-  error: {
-    color: Colors.error,
-    fontSize: FontSize.FontSize12,
-    marginTop: Spacing.height4,
-  },
-  iconContainer: {
-    position: 'absolute',
-    right: Spacing.width12,
-    height: '100%',
-    justifyContent: 'center',
-
-  },
-});
+    },
+  });
 
 
 export default InputDefault;

@@ -1,13 +1,16 @@
 // src/components/NetworkStatus.js
-import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
+import { ThemeColors, useTheme } from '@theme';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 
 const NetworkStatus = () => {
   const [isConnected, setIsConnected] = useState(true);
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
 
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
+    const unsubscribe = NetInfo.addEventListener((state: any) => {
       setIsConnected(state.isConnected);
     });
 
@@ -28,20 +31,21 @@ const NetworkStatus = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'red',
-    padding: 10,
-    alignItems: 'center',
-  },
-  warningText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: themeColors.error,
+      padding: 10,
+      alignItems: 'center',
+    },
+    warningText: {
+      color: 'white',
+      fontWeight: 'bold',
+    },
+  });
 
 export default NetworkStatus;

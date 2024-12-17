@@ -1,6 +1,6 @@
-import { Colors, FontSize, FontWithFamily, Spacing } from '@theme';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { formatDate } from '@utils';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { StyleSheet, TextStyle, TouchableOpacity, View } from 'react-native';
 import DatePicker from 'react-native-date-picker';
 import { AppText } from '../AppText';
@@ -17,6 +17,8 @@ interface AppInputDateProps {
 }
 export const AppInputDate = ({ value, onChange, error, label, labelStyle, inputStyle, errorStyle, placeholder }: AppInputDateProps) => {
   const [openDatePicker, setOpenDatePicker] = useState(false);
+  const { themeColors } = useTheme();
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={styles.container}>
       {label && <AppText style={[styles.label, labelStyle]}>{label}</AppText>}
@@ -49,32 +51,33 @@ export const AppInputDate = ({ value, onChange, error, label, labelStyle, inputS
     </View>
   );
 };
-const styles = StyleSheet.create({
-  container: {
-    marginBottom: Spacing.height16,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: Colors.border,
-    borderRadius: Spacing.width8,
-    height: Spacing.height44,
-    justifyContent: 'center',
-    paddingHorizontal: Spacing.width12,
-  },
-  label: {
-    fontSize: FontSize.FontSize14,
-    ...FontWithFamily.FontWithFamily_600,
-    marginBottom: Spacing.height8,
-  },
-  error: {
-    color: Colors.error,
-    fontSize: FontSize.FontSize12,
-    marginTop: Spacing.height4,
-  },
-  txtValue: {
-    color: Colors.text,
-  },
-  placeholder: {
-    color: Colors.placeholder,
-  },
-});
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      marginBottom: Spacing.height16,
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: themeColors.inputBorder,
+      borderRadius: Spacing.width8,
+      height: Spacing.height44,
+      justifyContent: 'center',
+      paddingHorizontal: Spacing.width12,
+    },
+    label: {
+      fontSize: FontSize.FontSize14,
+      ...FontWithFamily.FontWithFamily_600,
+      marginBottom: Spacing.height8,
+    },
+    error: {
+      color: themeColors.error,
+      fontSize: FontSize.FontSize12,
+      marginTop: Spacing.height4,
+    },
+    txtValue: {
+      color: themeColors.inputText,
+    },
+    placeholder: {
+      color: themeColors.placeholder,
+    },
+  });
