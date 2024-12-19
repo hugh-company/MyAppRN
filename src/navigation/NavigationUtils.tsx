@@ -3,6 +3,7 @@ import {
   StackActions,
   StackActionType,
 } from '@react-navigation/native';
+import { DeviceEventEmitter } from 'react-native';
 
 type typeNavigation = {
   dispatch: (arg0: CommonActions.Action | StackActionType) => void;
@@ -24,6 +25,27 @@ export function navigate(routeName: string, params?: object | undefined) {
   );
 }
 
+export function resetApp() {
+  DeviceEventEmitter.emit('eventLoadingApp');
+}
+
+export function navigateToStack(
+  stackName: string,
+  screenName: string,
+  params?: object | undefined
+) {
+  _navigator?.dispatch(
+    CommonActions.navigate({
+      name: stackName,
+      params: {
+        screen: screenName,
+        params,
+      },
+    }),
+  );
+}
+
+
 export function goBack() {
   if (_navigator?.canGoBack()) {
     _navigator.dispatch(CommonActions.goBack());
@@ -38,7 +60,7 @@ export function reset(routeName: string) {
   _navigator?.dispatch(
     CommonActions.reset({
       index: 0,
-      routes: [{name: routeName}],
+      routes: [{ name: routeName }],
     }),
   );
 }
@@ -48,5 +70,5 @@ export const NavigationUtils = {
   setTopLevelNavigator,
   goBack,
   pop,
-  reset,
+  reset, navigateToStack,
 };

@@ -1,6 +1,8 @@
 export enum SCREEN_ROUTE {
   AUTH_STACK = 'AuthStack',
   MAIN_STACK = 'MainStack',
+  DRAWER_NAVIGATION = 'DrawerNavigation',
+  BOTTOM_NAVIGATION = 'BottomNavigation',
   //   Screens
   // Auth
   LOGIN = 'Login',
@@ -11,8 +13,14 @@ export enum SCREEN_ROUTE {
 
   // Main
   HOME = 'Home',
+  MOVIES = 'Movies',
+  CHAPTERS = 'Chapters',
+  DATING = 'Dating',
+  DATING_DETAILS = 'DATING_DETAILS',
+
+  GAMES = 'Games',
   SETTING = 'Setting',
   PROFILE = 'Profile',
-  SETTING_PASSWORD = 'Setting_Password',
-  CHANGE_PASSWORD = 'Change_Password',
+  SAVED_MOVIE = 'SavedMovie',
+  SAVED_CHAPTER = 'SavedChapter',
 }

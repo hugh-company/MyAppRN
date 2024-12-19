@@ -1,4 +1,4 @@
-import { FontWithFamily, Spacing } from '@theme';
+import { FontSize, FontWithFamily, Spacing } from '@theme';
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
@@ -6,12 +6,13 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
-    minHeight: Spacing.height56,
+    minHeight: Spacing.height48,
     flexDirection: 'row',
     borderRadius: Spacing.width84,
   },
   label: {
     textAlign: 'center',
+    fontSize: FontSize.FontSize16,
     ...FontWithFamily.FontWithFamily_600,
     flex: 1,
   },

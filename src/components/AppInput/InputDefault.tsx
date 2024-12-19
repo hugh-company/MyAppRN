@@ -34,6 +34,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   } = props;
 
   const [isPrivateText, setSecureTextEntry] = useState(secureTextEntry);
+  const [isFocus, setIsFocus] = useState(false);
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const togglePasswordVisibility = () => {
@@ -46,11 +47,18 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
       <View style={styles.inputContainer}>
         <TextInput
           ref={ref}
+          onFocus={() => {
+            setIsFocus(true);
+          }}
+          onBlur={() => {
+            setIsFocus(false);
+          }}
           style={[
             styles.input,
             isPrivateText && { paddingRight: Spacing.width45 },
             style,
             error ? styles.inputError : null,
+            isFocus && styles.inputFocus,
           ]}
           placeholderTextColor={themeColors.placeholder}
           secureTextEntry={isPrivateText}
@@ -61,7 +69,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
             style={styles.iconContainer}
             onPress={togglePasswordVisibility}
           >
-            {isPrivateText ? <EyeIcon /> : <EyeOffIcon />}
+            {isPrivateText ? <EyeOffIcon /> : <EyeIcon />}
           </TouchableOpacity>
         )}
       </View>
@@ -97,6 +105,9 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     inputError: {
       borderColor: themeColors.error,
+    },
+    inputFocus: {
+      borderColor: themeColors.primary,
     },
     error: {
       color: themeColors.error,

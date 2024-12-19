@@ -1,6 +1,7 @@
-import { CloseIcon, DeleteIcon } from '@assets';
+import { CloseIcon, DeleteIcon, LogoutIcon } from '@assets';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ModalConfirmationProps } from '@utils';
+import { t } from 'i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 import { DeviceEventEmitter, StyleSheet, View } from 'react-native';
 import { Modal, ModalContent } from 'react-native-modals';
@@ -16,6 +17,9 @@ export const ModalConfirmation = () => {
     DeviceEventEmitter.addListener('showModalConfirmation', (data) => {
       setInfoConfirmation(data);
     });
+    return () => {
+      DeviceEventEmitter.removeAllListeners('showModalConfirmation');
+    };
   }, []);
   const getIcon = () => {
     switch (infoConfirmation?.icon) {
@@ -25,6 +29,8 @@ export const ModalConfirmation = () => {
         return <DeleteIcon width={Spacing.width30} height={Spacing.width30} />;
       case 'confirm':
         return <DeleteIcon />;
+      case 'logout':
+        return <LogoutIcon size={Spacing.width72} color={themeColors.primary} />;
     }
   };
   const onCancel = () => {
@@ -47,8 +53,8 @@ export const ModalConfirmation = () => {
         <AppText style={getStyle.title}>{infoConfirmation?.title}</AppText>
         {infoConfirmation?.message && <AppText style={getStyle.description}>{infoConfirmation?.message}</AppText>}
         <View style={getStyle.viewAction}>
-          <AppButton label={'Cancel'} onPress={onCancel} style={getStyle.btnCancel} />
-          <AppButton label={'Confirm'} onPress={onConfirm} style={getStyle.btnConfirm} />
+          <AppButton label={t('cancel')} onPress={onCancel} style={getStyle.btnCancel} />
+          <AppButton label={t('confirm')} onPress={onConfirm} style={getStyle.btnConfirm} />
         </View>
       </ModalContent>
     </Modal>
@@ -58,6 +64,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: themeColors.background,
     width: WidthScreen / 1.2,
 
   },

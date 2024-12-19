@@ -19,7 +19,7 @@ export const AppImage = React.memo((props: propsImage) => {
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
 
-  const { colors } = useTheme();
+  const { themeColors } = useTheme();
   useEffect(() => {
     setLoading(true);
   }, [uri]);
@@ -38,7 +38,7 @@ export const AppImage = React.memo((props: propsImage) => {
   }, [uri, checkNetworking]);
   const source = isError ? NoImage : imgSource ? imgSource : uri ? { uri } : (defaultSource ? defaultSource : NoImage);
   return (
-    <Box justifyContent={'center'} alignItems="center" >
+    <Box justifyContent={'center'} alignItems="center">
       <FastImage
         source={source}
         style={[styles.image, style]}
@@ -50,7 +50,7 @@ export const AppImage = React.memo((props: propsImage) => {
       />
       {isLoading && (
         <ActivityIndicator
-          color={colors.primary}
+          color={themeColors.primary}
           style={{ position: 'absolute' }}
         />
       )}

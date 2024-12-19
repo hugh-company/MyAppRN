@@ -1,6 +1,6 @@
+import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { IconProps } from './IconProps';
-
 export const EyeIcon = ({ width = 24, height = 24, color = '#666' }: IconProps) => (
   <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
     <Path

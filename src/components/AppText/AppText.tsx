@@ -19,7 +19,7 @@ const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default',
 
 
   return (
-    <Text style={[variantStyles[variant], style, { color: themeColors.text }]} {...props}>
+    <Text style={[variantStyles[variant], { color: themeColors.text }, style]} {...props}>
       {children}
     </Text>
   );

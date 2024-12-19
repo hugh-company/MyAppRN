@@ -1,5 +1,5 @@
 import React from 'react';
-import {TYPE_REF_LOADING_GLOBAL} from './GlobalUI';
+import { TYPE_REF_LOADING_GLOBAL } from './GlobalUI';
 
 const globalUIRef = React.createRef<TYPE_REF_LOADING_GLOBAL>();
 let numOfTime = 0;

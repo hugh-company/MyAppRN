@@ -226,6 +226,8 @@ export const Spacing = {
   width295: sizeWidth(295),
   width302: sizeWidth(302),
   width303: sizeWidth(303),
+  width315: sizeWidth(315),
+  width320: sizeWidth(320),
   width335: sizeWidth(335),
   height1: sizeHeight(1),
   height2: sizeHeight(2),
@@ -438,6 +440,7 @@ export const Spacing = {
   height275: sizeHeight(275),
   height302: sizeHeight(302),
   height303: sizeHeight(303),
+  height315: sizeHeight(315),
   height335: sizeHeight(335),
   height375: sizeHeight(375),
 };

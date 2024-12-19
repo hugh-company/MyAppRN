@@ -1,9 +1,9 @@
 import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client';
 import {setContext} from '@apollo/client/link/context';
+import {onError} from '@apollo/client/link/error';
+import {logout, store} from '@redux';
 import {AsyncStorage, mmkvStorage, showNotificationError} from '@utils';
 import {CachePersistor} from 'apollo3-cache-persist';
-import {onError} from '@apollo/client/link/error';
-import {clearToken, store} from '@redux';
 const httpLink = new HttpLink({
   // uri: `${API_CONFIG.BASE_URL}/graphql`
   uri: 'http://localhost:8080/graphql',
@@ -36,7 +36,7 @@ const errorLink = onError(({graphQLErrors, networkError}) => {
       if (error.message.includes(ERROR_MESSAGES.UNAUTHORIZED)) {
         console.log('error', error.message);
         showNotificationError('Logout', error.message);
-        store.dispatch(clearToken());
+        store.dispatch(logout());
       }
       // showNotificationError('Error', error.message);
     });

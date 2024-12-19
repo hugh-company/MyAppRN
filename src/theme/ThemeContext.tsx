@@ -11,7 +11,7 @@ import { FontSize } from './fontSize';
 import { FontWithFamily } from './fontWithBold';
 import { Spacing } from './spacing';
 
-export type ThemeType = 'light' | 'dark' | 'system';
+export type ThemeType = 'light' | 'dark'
 
 interface ThemeContextType {
   themeType: ThemeType;
@@ -22,16 +22,16 @@ interface ThemeContextType {
 
 const storage = new MMKV();
 const THEME_KEY = '@theme_type';
-const defaultThemeType: ThemeType = 'system';
+const defaultThemeType: ThemeType = 'dark';
 
 export const ThemeContext = createContext<ThemeContextType>({
   themeType: defaultThemeType,
   themeColors: lightColors,
-  isDarkMode: false,
+  isDarkMode: true,
   setThemeType: () => null,
 });
 const theme = createTheme({
-  dark: false,
+  dark: true,
   colors: {
     ...darkColors,
   },
@@ -59,8 +59,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const isDarkMode = useCallback(() => {
-    if (themeType === 'system') {
-      return systemColorScheme === 'dark';
+    if (themeType === 'light') {
+      return systemColorScheme === 'light';
     }
     return themeType === 'dark';
   }, [themeType, systemColorScheme]);

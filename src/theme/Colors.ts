@@ -1,6 +1,6 @@
 export const lightColors = {
-  colorMain4: '#007AFF',
-  primary: '#007AFF',
+  colorMain4: '#D11030',
+  primary: '#D11030',
   secondary: '#5856D6',
   tertiary: '#34C759',
   quaternary: '#FF2D55',
@@ -21,16 +21,22 @@ export const lightColors = {
   whiteColor: '#FFFFFF',
   colorDisable: '#E5E5EA',
   placeholder: '#8E8E93',
-  inputBackground: '#F2F2F7',
-  inputBorder: '#C6C6C8',
+  inputBackground: '#010101',
+  inputBorder: '#292929',
   inputText: '#000000',
-  buttonConfirm: '#007AFF',
-  buttonCancel: '#FF2D55',
+  buttonConfirm: '#FF2D55',
+  buttonCancel: '#8E8E93',
+  btnSocial: '#292929',
+  txtLink: '#6B87F9',
+  disable: '#595959',
+  grey: '#737373',
+  subtile: '#B2B2B2',
+  star: '#F4C26C',
 };
 
 export const darkColors = {
-  colorMain4: '#0A84FF',
-  primary: '#0A84FF',
+  colorMain4: '#D11030',
+  primary: '#D11030',
   secondary: '#5E5CE6',
   tertiary: '#30D158',
   quaternary: '#FF375F',
@@ -50,12 +56,18 @@ export const darkColors = {
   info: '#5E5CE6',
   whiteColor: '#FFFFFF',
   colorDisable: '#E5E5EA',
-  placeholder: '#8E8E93',
-  inputBackground: '#F2F2F7',
-  inputBorder: '#C6C6C8',
-  inputText: '#000000',
-  buttonConfirm: '#007AFF',
-  buttonCancel: '#FF2D55',
+  placeholder: '#B2B2B2',
+  inputBackground: '#010101',
+  inputBorder: '#292929',
+  inputText: '#FFFFFF',
+  txtLink: '#6B87F9',
+  buttonConfirm: '#FF2D55',
+  buttonCancel: '#8E8E93',
+  btnSocial: '#292929',
+  disable: '#595959',
+  grey: '#737373',
+  subtile: '#B2B2B2',
+  star: '#F4C26C',
 };
 
 export type ThemeColors = typeof lightColors;
@@ -65,6 +77,7 @@ export const Colors = {
   dark: darkColors,
   buttonConfirm: '',
   buttonCancel: '',
+  primary: '#D11030',
 };
 
 export default Colors;

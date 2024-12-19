@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { IconProps } from './types';
 
-export const PenIcon: React.FC<IconProps> = ({ width = 16, height = 16, color = '#1A1818' }) => {
+const PenIcon: React.FC<IconProps> = ({ width = 16, height = 16, color = '#1A1818' }) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 18 16" fill="none"  >
       <Path
@@ -23,3 +23,4 @@ export const PenIcon: React.FC<IconProps> = ({ width = 16, height = 16, color = 
 };
 
 
+export default PenIcon;

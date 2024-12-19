@@ -1,29 +1,36 @@
+import { AsyncStorage } from '@utils';
 import i18next from 'i18next';
-import {initReactI18next} from 'react-i18next';
-import {en, vi} from './locales';
+import { initReactI18next } from 'react-i18next';
+import { en, vi } from './locales';
+
 type languageDetectorType = {
   type:
-    | 'backend'
-    | 'logger'
-    | 'languageDetector'
-    | 'postProcessor'
-    | 'i18nFormat'
-    | 'formatter'
-    | '3rdParty';
+  | 'backend'
+  | 'logger'
+  | 'languageDetector'
+  | 'postProcessor'
+  | 'i18nFormat'
+  | 'formatter'
+  | '3rdParty';
   async: boolean;
   detect: (cb: (value: string) => void) => void;
   init: () => void;
-  cacheUserLanguage: () => void;
+  cacheUserLanguage: (lng: string) => void;
 };
 
 const languageDetector: languageDetectorType = {
   type: 'languageDetector',
   async: true,
-  detect: (cb: (value: string) => void) => cb('en'),
+  detect: async (cb: (value: string) => void) => {
+    const savedLanguage = await AsyncStorage.getString('user-language');
+    cb(savedLanguage || 'vi');
+    return savedLanguage;
+  },
   init: () => {
     console.log('INIT_LANG');
   },
-  cacheUserLanguage: () => {
+  cacheUserLanguage: async (lng: string) => {
+    await AsyncStorage.set('user-language', lng);
     console.log('INIT_CACHE_LANGUAGE');
   },
 };
@@ -37,19 +44,20 @@ export const resources = {
 const ns = [...Object.keys(en)];
 
 const initI18n = () => {
-  i18next
+  return i18next
     .use(languageDetector)
     .use(initReactI18next)
     .init({
-      fallbackLng: 'en',
+      fallbackLng: 'vi',
       debug: true,
       resources: {
-        en: {common: en},
-        vi: {common: vi},
+        en: { common: en },
+        vi: { common: vi },
       },
       ns,
       defaultNS,
     });
 };
 
-export {initI18n};
+export { initI18n };
+

@@ -6,7 +6,7 @@ export interface ModalConfirmationProps {
   visible: boolean;
   title: string;
   message: string;
-  icon: 'close' | 'delete' | 'confirm';
+  icon: 'close' | 'delete' | 'confirm' | 'logout';
   onConfirm?: () => void;
   onCancel?: () => void;
 }
@@ -25,5 +25,11 @@ export const showModalConfirmation = ({
     icon,
     onConfirm,
     onCancel,
+  });
+};
+// modal change language
+export const showModalLanguage = (visible: boolean) => {
+  DeviceEventEmitter.emit('showModalChangeLanguage', {
+    visible,
   });
 };

@@ -1,10 +1,9 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  HomeScreen,
-} from '@screens';
+import { } from '@screens';
 import React, { memo } from 'react';
+import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
 const MainStack = createStackNavigator();
 
@@ -15,8 +14,8 @@ const MainStackComponent = memo(() => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={SCREEN_ROUTE.HOME}>
-        <MainStack.Screen name={SCREEN_ROUTE.HOME} component={HomeScreen} />
+        initialRouteName={SCREEN_ROUTE.DRAWER_NAVIGATION}>
+        <MainStack.Screen name={SCREEN_ROUTE.DRAWER_NAVIGATION} component={DrawerNavigation} />
       </MainStack.Navigator>
     </>
   );

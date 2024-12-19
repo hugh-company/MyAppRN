@@ -1,50 +1,77 @@
 {
-  "home": {
-    "title": "To-do list",
-    "add_task": "Tạo task mới",
-    "add_task_title": "Tạo task mới",
-    "edit_task_title": "Sửa task",
-    "task_name": "Tên task",
-
-    "done": "Xong",
-    "priority": "Mức độ ưu tiên",
-    "low": "Thấp",
-    "medium": "Trung bình",
-    "high": "Cao",
-    "urgent": "Ưu tiên",
-
-    "description": "Mô tả",
-    "due_date": "Ngày hết hạn",
-    "add": "Thêm",
-    "update": "Cập nhật",
-    "deadline": "Thời hạn",
-    "status": "Trạng thái",
-    "in_progress": "Đang làm",
-    "not_started": "Chưa làm",
-    "completed": "Đã hoàn thành",
-    "todo": "Chưa làm",
-    "inProgress": "Đang làm",
-    "expired": "Hết hạn",
-    "days": "ngày",
-    "hour": "giờ",
-    "minute": "phút",
-    "second": "giây"
+  "login": {
+    "title": "Siêu ứng dụn giải trí, tất cả trong 1 nền tảng.",
+    "or": "Hoặc",
+    "login": "Đăng nhập",
+    "createAccountNow": "Tạo tài khoản ngay.",
+    "forgotPassword": "Quên mật khẩu?",
+    "forgot": "Quên mật khẩu",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "youCanAccount": "Bạn chưa có tài khoản?"
   },
-  "form": {
-    "description": "Mô tả",
-    "deadline": "Thời hạn",
-    "priority": "Mức độ ưu tiên",
-    "status": "Trạng thái",
-    "name": "Tên task",
-    "add": "Thêm",
-    "edit": "Sửa",
+  "register": {
+    "title": "Đăng ký tài khoản",
+    "descripstion": "Nhận thêm các ưu đãi đặc biệt dành cho các thành viên",
+    "name": "Tên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "register": "Đăng ký"
+  },
+  "validate": {
+    "validate_email": "Email không hợp lệ",
+    "email_req": "Vui lòng nhập email",
+    "validate_password": "Mật khẩu không hợp lệ",
 
-    "confirm": "Xác nhận",
-    "color": "Màu",
-    "select_color": "Chọn màu",
-    "images": "Hình ảnh",
-    "delete": "Xóa",
-    "cancel": "Hủy",
-    "save": "Lưu"
-  }
+    "validate_name": "Vui lòng nhập tên của bạn",
+    "validate_max_name": "Tên không được dài quá 50 ký tự",
+
+    "check_password": "Mật khẩu không khớp",
+
+    "password_req": "Mật khẩu phải ít nhất 6 ký tự",
+    "password_max": "Mật khẩu không được dài quá 32 ký tự",
+
+    "validate_confirmPassword_min": "Mật khẩu phải ít nhất 6 ký tự",
+    "validate_confirmPassword_max": "Mật khẩu không được dài quá 32 ký tự"
+  },
+  "navigation": {
+    "home": "Trang chủ",
+    "movies": "Phim",
+    "chapters": "Truyện",
+    "dating": "Hẹn hò",
+    "games": "Chơi game"
+  },
+  "drawer": {
+    "title": "filmAPP",
+    "description": "Nhận thêm nhiều lợi ích khi trở thành thành viên",
+    "search": "Tìm kiếm",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "logoutMessage": "Bạn có chắc chắn muốn đăng xuất?",
+    "movies": "Phim ảnh",
+    "chapters": "Truyện tranh",
+    "dating": "Hẹn hò",
+    "games": "Chơi game",
+    "language": "Ngôn ngữ",
+    "profile": "Trang cá nhân",
+    "movie_saved": "Phim đã lưu",
+    "chapter_saved": "Truyện đã lưu",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt"
+  },
+  "home": {
+    "datingTitle": "Tìm một nửa của bạn",
+    "datingDescription": "Hãy xem ai là người sẽ hiểu được phần sâu bên trong con người bạn.",
+    "goDating": "Đi đến trang hẹn hò",
+    "libraryMovie": "Thư viện phim hay",
+    "viewer": "lượt xem",
+    "typeFavorite": "Thể loại được yêu thích",
+    "viewMore": "Xem thêm"
+  },
+  "cancel": "Hủy",
+  "save": "Lưu",
+  "confirm": "Xác nhận"
 }

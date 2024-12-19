@@ -4,7 +4,6 @@ require Pod::Executable.execute_command('node', ['-p',
     "react-native/scripts/react_native_pods.rb",
     {paths: [process.argv[1]]},
   )', __dir__]).strip
-
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -19,10 +18,18 @@ target 'MyAppRN' do
 
   use_react_native!(
     :path => config[:reactNativePath],
+
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal'
+  pod 'FirebaseCore', :modular_headers => true
 
+  pod 'Firebase/Messaging', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
+  pod 'GoogleSignIn'
   target 'MyAppRNTests' do
     inherit! :complete
     # Pods for testing
@@ -33,7 +40,7 @@ target 'MyAppRN' do
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      :mac_catalyst_enabled => false
+      :mac_catalyst_enabled => false,
       # :ccache_enabled => true
     )
   end
