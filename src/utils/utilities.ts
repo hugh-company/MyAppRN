@@ -49,7 +49,10 @@ export const getPrettyNumberString = (
   rawNumber: number,
   numberFormat?: DecimalFormat,
   decimals = 0,
-): string => {
+): string | number => {
+  if (rawNumber === 0) {
+    return '0';
+  }
   rawNumber = rawNumber ? rawNumber : 0;
   let numberString = '';
   let scale = '';

@@ -1,5 +1,5 @@
 import { MenuIcon, SearchIcon } from '@assets';
-import { useNavigation } from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
@@ -58,7 +58,7 @@ export const HeaderHome = ({ children }: HeaderHomeProps) => {
 
           <Animated.View style={[styles.header, { paddingTop: top }, headerBackgroundColorStyle]}>
             {/* open drawer */}
-            <TouchableOpacity onPress={() => navigation.openDrawer()} style={styles.btnMenu}>
+            <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
               <MenuIcon color={themeColors.text} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnMenu}>

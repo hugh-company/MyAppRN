@@ -69,7 +69,27 @@
     "libraryMovie": "Thư viện phim hay",
     "viewer": "lượt xem",
     "typeFavorite": "Thể loại được yêu thích",
-    "viewMore": "Xem thêm"
+    "viewMore": "Xem thêm",
+    "viewAll": "Xem toàn bộ",
+    "gameOnline": "Game online",
+    "multiplayer": "Nhiều người chơi",
+    "rank": "Bảng xếp hạng",
+    "playGame": "lượt chơi",
+    "comicManage": "Truyện tranh",
+    "multipPeopleRead": "Nhiều người đọc",
+    "episodes": "tập",
+    "likes": "lượt thích"
+  },
+  "movies": {
+    "movieGood": "Phim hay",
+    "movieNew": "Phim mới",
+    "movieHot": "Phim đang hot 🔥",
+    "tradingMovie": "Nhiều lượt xem nhất"
+  },
+  "search": {
+    "movies": "Tìm kiếm phim",
+    "chapters": "Tìm kiếm truyện",
+    "games": "Tìm kiếm game"
   },
   "cancel": "Hủy",
   "save": "Lưu",

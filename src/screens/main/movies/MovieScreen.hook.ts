@@ -1,11 +1,27 @@
-import { useTheme } from '@theme';
-import { useState } from 'react';
-import { createStyles } from './styles';
+import {useTheme} from '@theme';
+import {useState} from 'react';
+import {createStyles} from './styles';
 
 export const useMovieScreen = () => {
   const [data, setData] = useState([]);
-  const { themeColors } = useTheme();
+  const [search, setSearch] = useState('');
+  const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
+  const [activeCategory, setActiveCategory] = useState(1);
 
-  return { data, themeColors, styles };
+  const onSearch = (text: string) => {
+    setSearch(text);
+  };
+  const onSelectedCategory = (id: number) => {
+    setActiveCategory(id);
+  };
+  return {
+    data,
+    themeColors,
+    styles,
+    search,
+    onSearch,
+    activeCategory,
+    onSelectedCategory,
+  };
 };

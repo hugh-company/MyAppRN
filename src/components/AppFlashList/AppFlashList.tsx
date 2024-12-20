@@ -10,7 +10,7 @@ import {
   ViewStyle,
 } from 'react-native';
 
-import { ContentStyle, FlashList as FlatList, ListRenderItem } from '@shopify/flash-list';
+import { ContentStyle, FlashList, ListRenderItem } from '@shopify/flash-list';
 import { Spacing, useTheme } from '@theme';
 import { AppText } from '../AppText';
 
@@ -55,6 +55,7 @@ interface AppFlashListProps {
   | undefined;
   isOnlyList?: boolean;
   nestedScrollEnabled?: boolean;
+  scrollEventThrottle?: number
 }
 
 const RenderContent = ({
@@ -90,7 +91,7 @@ const AppFlashList = React.memo(
       onRefresh,
       data = [],
       onLoadMore,
-      isLoading,
+      isLoading = false,
       isShort,
       perPage = 14,
       pagingEnabled,
@@ -100,7 +101,17 @@ const AppFlashList = React.memo(
       isOnlyList,
       nestedScrollEnabled,
       contentContainerStyle,
-      estimatedItemSize,
+      estimatedItemSize = 200,
+      scrollEventThrottle,
+      ListHeaderComponent,
+      ListFooterComponent,
+      onScroll,
+      horizontal,
+      numColumns,
+      scrollEnabled,
+      onMomentumScrollEnd,
+      style,
+      ListEmptyComponent,
     } = props;
     const [isFirst, setFirst] = React.useState(true);
     const { themeColors } = useTheme();
@@ -111,7 +122,7 @@ const AppFlashList = React.memo(
       }
     }, [isFirst, isLoading]);
 
-    const ListHeaderComponent = React.useCallback(() => {
+    const ListHeaderComponentBase = React.useCallback(() => {
       if (!isLoading && data?.length < 1) {
         return (
           <View style={styles.viewHeader}>
@@ -130,16 +141,17 @@ const AppFlashList = React.memo(
         isLoading={isLoading}
         data={data}
       >
-        <FlatList
-          ListHeaderComponent={props.ListHeaderComponent || ListHeaderComponent}
-          style={[styles.flashList, props.style]}
-          horizontal={props.horizontal}
-          numColumns={props.numColumns}
-          scrollEnabled={props.scrollEnabled}
-          onMomentumScrollEnd={props.onMomentumScrollEnd}
+        <FlashList
+          ListHeaderComponent={ListHeaderComponent || ListHeaderComponentBase}
+          style={[styles.flashList, style]}
+          horizontal={horizontal}
+          numColumns={numColumns}
+          scrollEnabled={scrollEnabled}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           data={isShort ? data.slice(0, 5) : data}
           renderItem={renderItem}
           refreshing={isLoading && data.length > 1}
+          scrollEventThrottle={scrollEventThrottle}
           refreshControl={
             onRefresh && (
               <RefreshControl
@@ -158,8 +170,8 @@ const AppFlashList = React.memo(
           //   return item.id;
           // }}
           ListFooterComponent={
-            props.ListFooterComponent ? (
-              props.ListFooterComponent
+            ListFooterComponent ? (
+              ListFooterComponent
             ) : isShort ? (
               data?.length >= 4 ? null : null // <ViewMore onPress={onPress} customViewMore={customViewMore} />
             ) : data && data?.length > perPage - 1 && isLoading ? (
@@ -177,8 +189,8 @@ const AppFlashList = React.memo(
           showsVerticalScrollIndicator={false}
           pagingEnabled={pagingEnabled}
           initialScrollIndex={initialScrollIndex}
-          onScroll={props.onScroll}
-          ListEmptyComponent={props.ListEmptyComponent}
+          onScroll={onScroll}
+          ListEmptyComponent={ListEmptyComponent}
           nestedScrollEnabled={nestedScrollEnabled}
           estimatedItemSize={estimatedItemSize}
         />

@@ -1,2 +1,2 @@
 export {default as ItemMovie} from './ItemMovie';
-export {default as MovieWithSlider} from './MovieWithSlider';
+export {default as SliderList} from './SliderList';

@@ -1,32 +1,32 @@
-import { HeaderItemHome, ItemMovie, SliderList } from '@components';
-import { categoryMovies, favoriteMovies, movies } from '@services';
+import { HeaderItemHome, HorizontalList, ItemGame } from '@components';
+import { categoryMovies, movies } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
-interface MovieHomeProps {
+interface GameHomeProps {
   style?: StyleProp<ViewStyle>;
 
 }
-export const MovieHome = ({ style }: MovieHomeProps) => {
+export const GameHome = ({ style }: GameHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [activeCategory, setActiveCategory] = React.useState(1);
 
   const renderItem = ({ item }) => {
     return (
-      <ItemMovie item={item} />
+      <ItemGame item={item} />
     );
   };
   return (
     <View style={styles.container}>
-      <HeaderItemHome title={t('home.libraryMovie')} categoryIdSelected={activeCategory} categories={categoryMovies} onSelectedCategory={setActiveCategory} />
+      <HeaderItemHome title={t('home.gameOnline')} categoryIdSelected={activeCategory} type="games" categories={categoryMovies} onSelectedCategory={setActiveCategory} styleHeader={styles.header} />
 
       <FlatList data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
 
       {/*  */}
-      <SliderList title={t('home.typeFavorite')} data={favoriteMovies} />
+      <HorizontalList title={t('home.typeFavorite')} data={movies} titleViewMore={t('home.rank')} />
     </View>
   );
 };
@@ -34,15 +34,11 @@ export const MovieHome = ({ style }: MovieHomeProps) => {
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      marginTop: Spacing.width48,
 
+      marginTop: Spacing.width24,
     },
     header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: Spacing.width24,
-      marginHorizontal: Spacing.width16,
+      marginTop: -Spacing.height24,
 
     },
     title: {

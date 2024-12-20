@@ -1,16 +1,16 @@
 import { RightIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { favoriteMovies } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { t } from 'i18next';
 import React, { useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { itemListSlider, SliderListProps } from './SliderList.type';
 
-interface MovieHomeProps {
+interface Props extends SliderListProps {
   style?: StyleProp<ViewStyle>;
-  title: string
+
 }
-const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
+const SliderList = ({ style, title, data }: Props) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
@@ -22,8 +22,8 @@ const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
       setCurrentIndex(viewableItems[0].index);
     }
   });
-  const data = favoriteMovies;
-  const renderItem = ({ item }) => {
+
+  const renderItem = ({ item }: { item: itemListSlider }) => {
     return (
       <View style={styles.itemType}>
         <FlatList style={styles.listMovie} scrollEnabled={false} numColumns={2} data={item.data} keyExtractor={(item) => item.id.toString()} renderItem={({ item, index }) => {
@@ -35,7 +35,7 @@ const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
         }} />
         <View style={styles.viewType}>
           <AppText style={styles.txtType}>
-            {item.title}
+            {item.name}
           </AppText>
           <RightIcon />
         </View>
@@ -43,10 +43,9 @@ const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
       </View>
     );
   };
+  if (!data) { return null; }
   return (
-    <View style={styles.container}>
-
-
+    <View style={[styles.container, style]}>
       <View style={styles.header}>
         <AppText style={styles.title}>
           {title}
@@ -74,7 +73,7 @@ const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
         initialNumToRender={3}
       />
       <View style={styles.dotsContainer}>
-        {data.map((_, index) => (
+        {data?.map((_, index) => (
           <View
             key={index}
             style={[
@@ -90,12 +89,11 @@ const MovieWithSlider = ({ style, title }: MovieHomeProps) => {
     </View>
   );
 };
-export default MovieWithSlider;
+export default SliderList;
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      marginTop: Spacing.width48,
-      marginBottom: Spacing.width24,
+      marginTop: Spacing.width24,
 
     },
     header: {
@@ -138,7 +136,7 @@ const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       justifyContent: 'center',
 
-      marginTop: Spacing.width16,
+      marginTop: Spacing.width8,
 
       alignSelf: 'center',
       backgroundColor: themeColors.btnSocial,

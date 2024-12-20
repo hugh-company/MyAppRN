@@ -23,6 +23,8 @@ export {default as MenuIcon} from './MenuIcon';
 export {default as MovieIcon} from './MovieIcon';
 export {default as PageProfileIcon} from './PageProfile';
 export {default as PenIcon} from './PenIcon';
+export {default as PlayIcon} from './PlayIcon';
+export {default as PlayStackedIcon} from './PlayStackedIcon';
 export {default as RightIcon} from './RightIcon';
 export {default as SavedIcon} from './SavedIcon';
 export {default as SearchIcon} from './SearchIcon';

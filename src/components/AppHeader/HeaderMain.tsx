@@ -1,27 +1,21 @@
-import { LeftIcon } from '@assets';
-import { goBack } from '@navigation';
+import { HomeIcon, SearchIcon } from '@assets';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../AppText';
 
-interface AppHeaderProps {
+interface HeaderMainProps {
   title?: string;
-  leftComponent?: React.ReactNode;
-  rightComponent?: React.ReactNode;
-  onLeftPress?: () => void;
-  onRightPress?: () => void;
+
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
 }
 
-export const AppHeader: React.FC<AppHeaderProps> = ({
+export const HeaderMain: React.FC<HeaderMainProps> = ({
   title,
-  leftComponent,
-  rightComponent,
-  onLeftPress,
-  onRightPress,
+
   style,
   titleStyle,
 }) => {
@@ -30,11 +24,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={[styles.container, style, { marginTop: top }]}>
-      {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
-        <LeftIcon />
-      </TouchableOpacity>}
-      <AppText style={[styles.title, titleStyle]}>{title}</AppText>
-      {rightComponent}
+      <View style={styles.flex1}>
+        <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.HOME)} style={styles.btnHome}>
+          <HomeIcon />
+        </TouchableOpacity>
+        <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
+      </View>
+      <TouchableOpacity style={styles.btnSearch}>
+        <SearchIcon size={Spacing.width24} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -42,25 +40,38 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      height: Spacing.height56,
+
       paddingHorizontal: Spacing.width16,
       backgroundColor: 'transparent',
       alignItems: 'center',
       flexDirection: 'row',
-
+      gap: Spacing.width16,
     },
 
     title: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize24,
       ...FontWithFamily.FontWithFamily_500,
       color: themeColors.text,
-
+      flex: 1,
     },
-    btnBack: {
+    flex1: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+      gap: Spacing.width16,
+    },
+    btnHome: {
       width: Spacing.width40,
       height: Spacing.width40,
       borderRadius: Spacing.height24,
       backgroundColor: themeColors.btnSocial,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    btnSearch: {
+      width: Spacing.width40,
+      height: Spacing.width40,
+
       alignItems: 'center',
       justifyContent: 'center',
     },
