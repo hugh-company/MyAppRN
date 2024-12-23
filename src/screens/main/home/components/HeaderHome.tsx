@@ -1,4 +1,5 @@
 import { MenuIcon, SearchIcon } from '@assets';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
@@ -61,7 +62,7 @@ export const HeaderHome = ({ children }: HeaderHomeProps) => {
             <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
               <MenuIcon color={themeColors.text} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btnMenu}>
+            <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnMenu}>
               <SearchIcon />
             </TouchableOpacity>
           </Animated.View>

@@ -23,4 +23,11 @@ export enum SCREEN_ROUTE {
   PROFILE = 'Profile',
   SAVED_MOVIE = 'SavedMovie',
   SAVED_CHAPTER = 'SavedChapter',
+
+  // Movies
+  MOVIE_DETAIL = 'MovieDetail',
+  //
+  SEARCH_SCREEN = 'SearchScreen',
+  LIST_MOVIES = 'ListMovies',
+  VIDEO = 'Video',
 }

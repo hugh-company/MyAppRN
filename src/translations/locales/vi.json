@@ -89,9 +89,40 @@
   "search": {
     "movies": "Tìm kiếm phim",
     "chapters": "Tìm kiếm truyện",
-    "games": "Tìm kiếm game"
+    "games": "Tìm kiếm game",
+    "search": "Tìm kiếm phim, diễn viên, đạo diễn, ...",
+    "type": "Thể loại",
+    "sort": "Sắp xếp",
+    "movie": "Phim",
+    "chapter": "Truyện",
+    "game": "Game",
+    "sortWith": "Sắp xếp theo",
+    "viewer": "Lượt xem",
+    "likes": "Lượt thích",
+    "searchVariety": "Tìm kiếm đa dạng",
+    "searchResults": "Kết quả tìm kiếm cho “NAME”:",
+    "duration": "Thời lượng: ",
+    "searchNotFound": "Chúng tôi không tìm thấy từ khoá bạn yêu cầu"
+  },
+  "movie": {
+    "list_chapters": "Danh sách tập",
+    "more": "Xem thêm",
+    "show_less": "Thu gọn",
+    "otherMovie": "Phim liên quan",
+    "release_date": "Ngày ra mắt",
+    "tags": "Tags",
+    "director": "Đạo diễn",
+    "actor": "Diễn viên",
+    "content": "Nội dung"
   },
   "cancel": "Hủy",
   "save": "Lưu",
-  "confirm": "Xác nhận"
+  "confirm": "Xác nhận",
+  "notFound": "Không có dữ liệu",
+  "play": "Play",
+  "like": "Thích",
+  "liked": "Đã thích",
+  "rating": "Đánh giá",
+  "saveMovie": "Lưu lại",
+  "share": "Chia sẻ"
 }

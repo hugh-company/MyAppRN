@@ -1,4 +1,4 @@
-import {Spacing, ThemeColors} from '@theme';
+import {FontWithFamily, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -6,8 +6,17 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       flexGrow: 1,
     },
-    viewHeader: {
+    viewHeader: {},
+    viewEmpty: {
       flex: 1,
-      paddingTop: Spacing.height15,
+
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txtNotFound: {
+      ...FontWithFamily.FontWithFamily_500,
+      marginTop: Spacing.width16,
+      width: '80%',
+      textAlign: 'center',
     },
   });

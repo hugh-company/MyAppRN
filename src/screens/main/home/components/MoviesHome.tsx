@@ -23,7 +23,7 @@ export const MovieHome = ({ style }: MovieHomeProps) => {
     <View style={styles.container}>
       <HeaderItemHome title={t('home.libraryMovie')} categoryIdSelected={activeCategory} categories={categoryMovies} onSelectedCategory={setActiveCategory} />
 
-      <FlatList data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
+      <FlatList showsHorizontalScrollIndicator={false} data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
 
       {/*  */}
       <SliderList title={t('home.typeFavorite')} data={favoriteMovies} />

@@ -6,25 +6,31 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       borderRadius: Spacing.width4,
       marginLeft: Spacing.width16,
-      overflow: 'hidden',
       width: Spacing.width240,
+      gap: Spacing.width8,
     },
     image: {
       width: Spacing.width240,
       height: Spacing.width320,
+      borderRadius: Spacing.width4,
     },
     name: {
       marginVertical: Spacing.width8,
       fontSize: FontSize.FontSize24,
       ...FontWithFamily.FontWithFamily_600,
-      width: '100%',
+    },
+    director: {
+      fontSize: FontSize.FontSize10,
+      color: themeColors.subtile,
+      marginTop: 4,
+    },
+    duration: {
+      fontSize: FontSize.FontSize10,
+      color: themeColors.subtile,
     },
     viewOption: {
+      gap: 4,
       flexDirection: 'row',
-      alignItems: 'center',
-
-      marginBottom: Spacing.width16,
-      gap: Spacing.width8,
     },
     txtView: {
       fontSize: FontSize.FontSize14,
@@ -35,7 +41,11 @@ export const createStyles = (themeColors: ThemeColors) =>
     viewRow: {
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'center',
+
       gap: 4,
+    },
+    viewInfo: {
+      flex: 1,
+      justifyContent: 'space-between',
     },
   });

@@ -1,12 +1,12 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const CloseIcon = ({ size = 24 }: { size?: number }) => {
+const CloseIcon = ({ size = 24, color = '#000000' }: { size?: number, color?: string }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path
         d="M18 6L6 18M6 6l12 12"
-        stroke="#000000"
+        stroke={color}
         strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"

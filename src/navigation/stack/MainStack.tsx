@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { } from '@screens';
+import { ListMovieScreen, MovieDetailScreen, SearchScreen, VideoScreen } from '@screens';
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -14,8 +14,15 @@ const MainStackComponent = memo(() => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={SCREEN_ROUTE.DRAWER_NAVIGATION}>
+        initialRouteName={SCREEN_ROUTE.VIDEO}>
         <MainStack.Screen name={SCREEN_ROUTE.DRAWER_NAVIGATION} component={DrawerNavigation} />
+
+        {/* Search */}
+        <MainStack.Screen name={SCREEN_ROUTE.SEARCH_SCREEN} component={SearchScreen} />
+        {/* Movies */}
+        <MainStack.Screen name={SCREEN_ROUTE.LIST_MOVIES} component={ListMovieScreen} />
+        <MainStack.Screen name={SCREEN_ROUTE.MOVIE_DETAIL} component={MovieDetailScreen} />
+        <MainStack.Screen name={SCREEN_ROUTE.VIDEO} component={VideoScreen} />
       </MainStack.Navigator>
     </>
   );

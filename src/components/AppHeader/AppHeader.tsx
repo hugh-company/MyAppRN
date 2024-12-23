@@ -30,10 +30,12 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={[styles.container, style, { marginTop: top }]}>
-      {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
-        <LeftIcon />
-      </TouchableOpacity>}
-      <AppText style={[styles.title, titleStyle]}>{title}</AppText>
+      <View style={styles.flex1}>
+        {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
+          <LeftIcon />
+        </TouchableOpacity>}
+        <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>
+      </View>
       {rightComponent}
     </View>
   );
@@ -42,7 +44,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      height: Spacing.height56,
+      // height: Spacing.height56,
       paddingHorizontal: Spacing.width16,
       backgroundColor: 'transparent',
       alignItems: 'center',
@@ -51,7 +53,7 @@ const createStyles = (themeColors: ThemeColors) =>
     },
 
     title: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize18,
       ...FontWithFamily.FontWithFamily_500,
       color: themeColors.text,
 
@@ -63,5 +65,11 @@ const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.btnSocial,
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    flex1: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+      gap: Spacing.width16,
     },
   });

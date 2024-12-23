@@ -3,14 +3,15 @@ import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { t } from 'i18next';
 import React, { useRef, useState } from 'react';
-import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { itemListSlider, SliderListProps } from './SliderList.type';
 
 interface Props extends SliderListProps {
   style?: StyleProp<ViewStyle>;
+  onViewMore?: () => void;
 
 }
-const SliderList = ({ style, title, data }: Props) => {
+const SliderList = ({ style, title, data, onViewMore }: Props) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
@@ -50,12 +51,12 @@ const SliderList = ({ style, title, data }: Props) => {
         <AppText style={styles.title}>
           {title}
         </AppText>
-        <View style={styles.btnViewMore}>
+        <TouchableOpacity onPress={() => onViewMore?.()} style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>
             {t('home.viewMore')}
           </AppText>
           <RightIcon />
-        </View>
+        </TouchableOpacity>
       </View>
       <FlatList
         ref={flatListRef}

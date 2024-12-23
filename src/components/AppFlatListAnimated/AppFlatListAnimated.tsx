@@ -1,4 +1,6 @@
-import { useTheme } from '@theme';
+import { IconNotFound } from '@assets';
+import { Spacing, useTheme } from '@theme';
+import { t } from 'i18next';
 import React from 'react';
 import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, StyleProp, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -15,6 +17,11 @@ export interface AppFlatListAnimatedProps {
   numColumns?: number;
   title?: string;
   ListHeaderComponent?:
+  | React.ComponentType<any>
+  | React.ReactElement
+  | null
+  | undefined;
+  ListEmptyComponent?:
   | React.ComponentType<any>
   | React.ReactElement
   | null
@@ -40,37 +47,37 @@ export interface AppFlatListAnimatedProps {
 }
 const AppFlatListAnimated = ({ data, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading,
   horizontal, ListFooterComponent, ListHeaderComponent,
-  emptyText,
+  contentContainerStyle,
   onLoadMore,
   onRefresh, onEndReachedThreshold,
   pagingEnabled,
   initialScrollIndex,
   removeClippedSubviews, perPage = 14,
-
+  ListEmptyComponent,
 }: AppFlatListAnimatedProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const ListHeaderComponentBase = React.useCallback(() => {
-    if (!isLoading && data?.length < 1) {
-      return (
-        <View style={styles.viewHeader}>
 
-          <AppText>{emptyText}</AppText>
+  const ListEmptyComponentBase = React.useCallback(() => {
+    if (!isLoading) {
+      return (
+        <View style={styles.viewEmpty}>
+          <IconNotFound color={themeColors.text} size={Spacing.width70} />
+          <AppText style={styles.txtNotFound}>{t('notFound')}</AppText>
         </View>
       );
     }
     return null;
-  }, [isLoading, data?.length, emptyText]);
+  }, [isLoading]);
   return (
     <Animated.FlatList
       onScroll={onScroll}
       scrollEventThrottle={scrollEventThrottle}
       data={data}
       horizontal={horizontal}
-      ListHeaderComponent={ListHeaderComponent || ListHeaderComponentBase}
-      contentContainerStyle={styles.container}
+      ListHeaderComponent={ListHeaderComponent}
+      contentContainerStyle={[styles.container, contentContainerStyle]}
       numColumns={numColumns}
-
       renderItem={renderItem}
       columnWrapperStyle={columnWrapperStyle}
       refreshControl={
@@ -93,6 +100,7 @@ const AppFlatListAnimated = ({ data, onScroll, scrollEventThrottle, renderItem, 
           </View>
         ) : null
       }
+      ListEmptyComponent={ListEmptyComponent || ListEmptyComponentBase}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       pagingEnabled={pagingEnabled}

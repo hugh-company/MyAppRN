@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const MenuIcon = ({ size = 28, color = '#EDEDED' }: { size?: number, color: string }) => {
+const MenuIcon = ({ size = 28, color = '#EDEDED' }: { size?: number, color?: string }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 28 28" fill="none">
 

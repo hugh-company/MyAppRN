@@ -32,6 +32,8 @@ export const lightColors = {
   grey: '#737373',
   subtile: '#B2B2B2',
   star: '#F4C26C',
+  backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
+  onSurface: '#EDEDED',
 };
 
 export const darkColors = {
@@ -68,6 +70,8 @@ export const darkColors = {
   grey: '#737373',
   subtile: '#B2B2B2',
   star: '#F4C26C',
+  backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
+  onSurface: '#EDEDED',
 };
 
 export type ThemeColors = typeof lightColors;

@@ -23,7 +23,7 @@ export const GameHome = ({ style }: GameHomeProps) => {
     <View style={styles.container}>
       <HeaderItemHome title={t('home.gameOnline')} categoryIdSelected={activeCategory} type="games" categories={categoryMovies} onSelectedCategory={setActiveCategory} styleHeader={styles.header} />
 
-      <FlatList data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
+      <FlatList showsHorizontalScrollIndicator={false} data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
 
       {/*  */}
       <HorizontalList title={t('home.typeFavorite')} data={movies} titleViewMore={t('home.rank')} />

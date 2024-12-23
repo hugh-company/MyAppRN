@@ -3,5 +3,8 @@ export * from './create-profile';
 export * from './dating';
 export * from './game';
 export * from './home';
+export * from './list-movies';
 export * from './movies';
 export * from './movies-detail';
+export * from './search';
+export * from './VideoScreen';

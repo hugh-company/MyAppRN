@@ -30,7 +30,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
         </TouchableOpacity>
         <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
       </View>
-      <TouchableOpacity style={styles.btnSearch}>
+      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnSearch}>
         <SearchIcon size={Spacing.width24} />
       </TouchableOpacity>
     </View>

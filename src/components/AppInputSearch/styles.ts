@@ -24,4 +24,10 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       height: '100%',
     },
+    btnClose: {
+      height: '100%',
+      paddingHorizontal: Spacing.width8,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });

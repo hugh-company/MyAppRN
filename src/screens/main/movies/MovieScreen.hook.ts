@@ -1,5 +1,11 @@
-import {useTheme} from '@theme';
+import {Spacing, useTheme} from '@theme';
 import {useState} from 'react';
+import {
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import {createStyles} from './styles';
 
 export const useMovieScreen = () => {
@@ -8,7 +14,21 @@ export const useMovieScreen = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [activeCategory, setActiveCategory] = useState(1);
+  const scrollY = useSharedValue(0);
 
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+
+  const inputSearchStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(scrollY.value > 50 ? 0 : 1, {duration: 300}),
+      height: withTiming(scrollY.value > 50 ? 0 : 50, {duration: 300}),
+      marginTop: withTiming(scrollY.value > 50 ? 0 : Spacing.width16, {
+        duration: 300,
+      }),
+    };
+  });
   const onSearch = (text: string) => {
     setSearch(text);
   };
@@ -23,5 +43,7 @@ export const useMovieScreen = () => {
     onSearch,
     activeCategory,
     onSelectedCategory,
+    inputSearchStyle,
+    scrollHandler,
   };
 };

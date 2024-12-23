@@ -35,7 +35,7 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "files.autoSave": "afterDelay",
+  "files.autoSave": "off",
   "files.autoSaveDelay": 1000,
   "eslint.validate": [
     "javascript",
@@ -55,5 +55,7 @@
   "i18n-ally.keystyle": "nested",
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
-  }
+  },
+  "editor.formatOnPaste": false,
+  "editor.formatOnType": false
 }

@@ -46,7 +46,7 @@ export const getDecimalsByFormat = (
   return decimals;
 };
 export const getPrettyNumberString = (
-  rawNumber: number,
+  rawNumber: number | any,
   numberFormat?: DecimalFormat,
   decimals = 0,
 ): string | number => {

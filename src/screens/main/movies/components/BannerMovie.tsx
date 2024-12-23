@@ -75,16 +75,20 @@ const createStyles = (themeColors: ThemeColors) =>
       width: WidthScreen,
       height: Spacing.height240,
       paddingHorizontal: Spacing.width16,
-      borderRadius: Spacing.width16,
-      overflow: 'hidden',
+
+
+
     },
     image: {
-
+      borderWidth: 1,
+      borderColor: themeColors.btnSocial,
       borderRadius: Spacing.width16,
+      overflow: 'hidden',
+
     },
     gradient: {
       position: 'absolute',
-      bottom: -Spacing.width2,
+      bottom: 0,
       width: '100%',
       height: '50%',
       left: Spacing.width16,

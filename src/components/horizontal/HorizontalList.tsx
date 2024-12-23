@@ -1,4 +1,5 @@
 import { BrandIcon, LikeActiveIcon, RightIcon } from '@assets';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
@@ -13,13 +14,14 @@ interface HorizontalListProps {
   onViewMore?: () => void;
   data?: { image: string, id: number }[];
   style?: StyleProp<ViewStyle>;
-  type?: 'games' | 'chapters';
+  type?: 'games' | 'chapters' | 'movies';
+  itemStyle?: StyleProp<ViewStyle>;
 }
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
   title,
   data,
-  style, titleViewMore = t('home.viewMore'), onViewMore, type = 'games',
+  style, titleViewMore = t('home.viewMore'), onViewMore, type = 'games', itemStyle,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -29,13 +31,18 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
     switch (type) {
       case 'games':
         return (
-          <TouchableOpacity style={styles.btnGame}>
+          <TouchableOpacity style={[styles.btnGame, itemStyle]}>
             <AppImage uri={item.image} style={styles.image} />
           </TouchableOpacity>
         );
+      case 'movies':
       case 'chapters':
         return (
-          <TouchableOpacity style={styles.btnGame}>
+          <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => {
+            if (type === 'movies') {
+              navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item });
+            }
+          }}>
             <AppImage uri={item.image} style={styles.image} />
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <AppText numberOfLines={2} style={styles.name}>{item.name}</AppText>
@@ -64,14 +71,16 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         <AppText style={styles.title}>
           {title}
         </AppText>
-        <TouchableOpacity onPress={() => onViewMore?.()} style={styles.btnViewMore}>
+        <TouchableOpacity onPress={() => {
+          onViewMore?.();
+        }} style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>
             {titleViewMore}
           </AppText>
           <RightIcon />
         </TouchableOpacity>
       </View>
-      <FlatList data={data} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
+      <FlatList data={data} horizontal keyExtractor={(item) => `child_${title}${item?.id?.toString()}`} renderItem={renderItem} />
 
     </View>
   );
@@ -99,7 +108,7 @@ const createStyles = (themeColors: ThemeColors) =>
       ...FontWithFamily.FontWithFamily_600,
     },
     image: {
-      width: Spacing.width106,
+      width: '100%',
       height: Spacing.width152,
     },
     body: {

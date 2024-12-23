@@ -1,17 +1,18 @@
-import { SearchIcon } from '@assets';
+import { CloseIcon, SearchIcon } from '@assets';
 import { Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
 import React, { forwardRef } from 'react';
-import { TextInput, View, ViewStyle } from 'react-native';
+import { TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppInputSearchProps {
   value?: string;
   style?: ViewStyle;
   onChangeText?: (text: string) => void;
-  editable?: boolean
+  editable?: boolean;
+  placeholder?: string;
 }
 const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) => {
-  const { value, style, onChangeText } = props;
+  const { value, style, onChangeText, placeholder } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   return (
@@ -26,13 +27,18 @@ const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) =
             style,
 
           ]}
-          editable={false}
+
           placeholderTextColor={themeColors.placeholder}
-          placeholder={t('search.movies')}
+          placeholder={placeholder || t('search.movies')}
           value={value}
           onChangeText={onChangeText}
 
         />
+        {value && <TouchableOpacity style={styles.btnClose} onPress={() => {
+          if (onChangeText) {
+            onChangeText('');
+          }
+        }}><CloseIcon size={Spacing.width12} color={themeColors.subtile} /></TouchableOpacity>}
       </View>
 
     </View>
