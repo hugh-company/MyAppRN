@@ -7,12 +7,13 @@
 #import <Firebase.h>
 #import <UserNotifications/UserNotifications.h>
 #import <GoogleSignIn/GoogleSignIn.h>
+#import "Orientation.h"
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   // Initialize Firebase
- 
+
   if ([FIRApp defaultApp] == nil) {
       [FIRApp configure];
     }
@@ -21,7 +22,7 @@
                        didFinishLaunchingWithOptions:launchOptions];
   // Initialize Facebook SDK
 //  [[FBSDKApplicationDelegate sharedInstance] application:application didFinishLaunchingWithOptions:launchOptions];
-  
+
   self.moduleName = @"MyAppRN";
   self.initialProps = @{};
 
@@ -34,7 +35,10 @@
 //  [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] ||
   return   [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url options:options] ||[GIDSignIn.sharedInstance handleURL:url];
 }
-
+//
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+  return [Orientation getOrientation];
+}
 // Bundle URL for React Native
 - (NSURL *)bundleURL
 {

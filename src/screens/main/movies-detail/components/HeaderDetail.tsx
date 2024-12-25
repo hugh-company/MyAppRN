@@ -1,5 +1,6 @@
 import { DotsIcon, LikeActiveIcon, PlayIcon, PlayStackedIcon, StarIcon } from '@assets';
 import { AppHeader, AppImage, AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
 import { movieDetailInterface } from '@types';
 import { getPrettyNumberString } from '@utils';
@@ -60,10 +61,10 @@ export const HeaderDetail = ({ movie, children }: HeaderDetailProps) => {
             end={{ x: 0, y: 1 }}
           >
             <View style={styles.body}>
-              <View style={styles.btnPlay}>
+              <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.VIDEO,)} style={styles.btnPlay}>
                 <PlayIcon />
                 <AppText style={styles.txtPlay}>{t('play')}</AppText>
-              </View>
+              </TouchableOpacity>
 
               {/* info movie */}
               <View style={styles.info}>

@@ -1,35 +1,106 @@
+import { AppText } from '@components';
+import { t } from 'i18next';
 import React from 'react';
-import { View } from 'react-native';
-import Video from 'react-native-video';
+import { TouchableOpacity } from 'react-native';
+import Animated, { runOnJS } from 'react-native-reanimated';
+import Video, { SelectedTrackType } from 'react-native-video';
 import { useVideoScreen } from './VideoScreen.hook';
+import AppControlAds from './components/AppControlAds';
+import { AppControlBottom } from './components/AppControlBottom';
+import { ControlCenter } from './components/ControlCenter';
+import { HeaderControl } from './components/HeaderControl';
+import { ModalSpeed } from './components/ModalSpeed';
 
 const VideoScreen = () => {
-  const { data, themeColors, styles } = useVideoScreen();
-  const videoUri = 'https://example.com/video.mp4'; // Replace with your video URI
-  const subtitleUri = 'https://example.com/subtitle.vtt'; // Replace with your subtitle URI
+  const { handleUserInteraction,
+    setCurrentTime,
+    currentTime,
+    playbackRate,
+    uri,
 
-  // useEffect(() => {
-  //   Orientation.lockToLandscape();
-  //   return () => {
-  //     Orientation.unlockAllOrientations();
-  //   };
-  // }, []);
+    fastForward,
+    paused,
+    togglePlayPause,
+    rewind,
+    setDuration, isMuted, setIsMuted, goBackScreen, toggleMute,
+    duration, themeColors, styles, videoRef, error, isSpeedVisible,
+    setSpeedVisible,
+    unmuteOnVolumeChange, subtitles, isLoading, setIsLoading, selectedSubtitle, setSelectedSubtitle,
+    onMenuPress, toggleControlsVisibility,
+    updateProgress, controlsVisible, showAds, ad, skipAd, setPlaybackRate, toggleFullScreen, isFullScreenVisible,
+    animatedStyle, screenDimensions, setError,
+  } = useVideoScreen();
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={[styles.container]}
+      onPress={toggleControlsVisibility}
+    >
       <Video
-        source={{ uri: videoUri }}
+        source={{ uri: uri }}
         style={styles.video}
-        controls={true}
+        controls={false}
+        ref={videoRef}
         resizeMode="contain"
+        onError={() => {
 
+          setError(true);
+        }}
+        onProgress={(data) => runOnJS(updateProgress)(data.currentTime)}
+        onLoad={({ duration }) => setDuration(duration)}
+        muted={isMuted}
+        paused={paused || showAds} // Pause the main video if an ad is shown
+        rate={playbackRate}
+        onLoadStart={() => setIsLoading(true)}
+        onReadyForDisplay={() => setIsLoading(false)}
+
+        selectedTextTrack={{
+          type: SelectedTrackType.LANGUAGE,
+
+        }}
       />
-      {/* Placeholder for ads */}
-      {/* <View style={styles.adContainer}>
-        <AppText>Ad Placeholder</AppText>
-      </View>
-      <AppText>VideoScreen</AppText> */}
-    </View>
+
+      {error && (
+        <Animated.View style={styles.errorContainer}>
+          <AppText style={styles.errorText}>{t('movie.error')}</AppText>
+        </Animated.View>
+      )}
+
+      {controlsVisible && (
+        <Animated.View style={[styles.controls]}>
+          <HeaderControl
+            onMenuPress={onMenuPress}
+            goBackScreen={goBackScreen}
+          />
+          <ControlCenter isError={error} isLoading={isLoading} onPlayPause={togglePlayPause} onSkipBackward={rewind} onSkipForward={fastForward} paused={paused} />
+          <AppControlBottom
+            isFullScreenVisible={isFullScreenVisible}
+            isSpeedVisible={isSpeedVisible}
+            setSpeedVisible={setSpeedVisible}
+            isError={error}
+            isMuted={isMuted}
+            setCurrentTime={setCurrentTime}
+            toggleMute={toggleMute}
+            videoRef={videoRef}
+            duration={duration}
+            currentTime={currentTime}
+            loading={isLoading}
+            toggleFullScreen={toggleFullScreen} />
+        </Animated.View>
+      )}
+      {showAds && <AppControlAds ad={ad} onSkipAd={skipAd} />}
+      <ModalSpeed
+        visible={isSpeedVisible}
+        currentSpeed={playbackRate}
+        onSelectSpeed={(speed) => {
+          setPlaybackRate(speed);
+          setSpeedVisible(false);
+        }
+        }
+        onClose={() => {
+          setSpeedVisible(false);
+        }} />
+    </TouchableOpacity>
   );
 };
 

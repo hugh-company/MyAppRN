@@ -159,6 +159,9 @@ export const createStyles = (themeColors: ThemeColors) =>
 
   console.log('🎉 Folder and files created successfully!');
 };
+
+// create icon svg
+
 // Nhận tên thư mục từ tham số dòng lệnh
 const args = process.argv.slice(2);
 const [type, folderName, fileName] = args;

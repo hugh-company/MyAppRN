@@ -12,6 +12,7 @@ import { Platform, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalPortal } from 'react-native-modals';
+import Orientation from 'react-native-orientation-locker';
 import {
   initialWindowMetrics,
   SafeAreaProvider,
@@ -51,6 +52,7 @@ function App(): React.JSX.Element {
   useEffect(() => {
     // Hide splash screen once app is ready
     SplashScreen.hide();
+    Orientation.unlockAllOrientations();
   }, []);
 
   return (

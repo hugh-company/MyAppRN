@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import {t} from 'i18next';
-
+dayjs.extend(duration);
 // Hàm để định dạng ngày tháng
 export const formatDate = (
   date: Date | string,
@@ -46,4 +47,11 @@ export const daysBetween = (
 // Hàm để lấy ngày hiện tại
 export const getCurrentDate = (): string => {
   return dayjs().format('YYYY-MM-DD');
+};
+// format HH:mm ==> 12:00
+// format giây qua đạng HH:mm:ss
+
+export const formatTimeSeconds = (seconds: number): string => {
+  const formatted = dayjs.duration(seconds, 'seconds').format('HH:mm:ss');
+  return formatted.startsWith('00:') ? formatted.slice(3) : formatted;
 };

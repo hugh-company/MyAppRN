@@ -113,7 +113,10 @@
     "tags": "Tags",
     "director": "Đạo diễn",
     "actor": "Diễn viên",
-    "content": "Nội dung"
+    "content": "Nội dung",
+    "skipsAd": "Bỏ qua quảng cáo",
+    "speed": "Tốc độ",
+    "error": "Video không thể phát"
   },
   "cancel": "Hủy",
   "save": "Lưu",

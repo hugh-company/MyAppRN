@@ -14,7 +14,7 @@ const MainStackComponent = memo(() => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={SCREEN_ROUTE.VIDEO}>
+        initialRouteName={SCREEN_ROUTE.DRAWER_NAVIGATION}>
         <MainStack.Screen name={SCREEN_ROUTE.DRAWER_NAVIGATION} component={DrawerNavigation} />
 
         {/* Search */}
