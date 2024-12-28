@@ -50,7 +50,7 @@ const AppLessMore = ({ html, initialNumberOfLines = 3, text }: AppLessMoreProps)
           <RenderHTML
             contentWidth={WidthScreen - Spacing.width32}
             source={{ html: html || '' }}
-            systemFonts={systemFonts}
+            // systemFonts={systemFonts}
             renderersProps={{
               TNodeChildrenRenderer: {
                 // Use JavaScript default parameters instead of defaultProps

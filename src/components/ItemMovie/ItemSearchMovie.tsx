@@ -1,12 +1,11 @@
 import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { createStyles } from './styles';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export interface ItemSearchMovieProps {
   item: any;
@@ -17,7 +16,7 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
   const styles = createStyles(themeColors);
 
   return (
-    <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item })} style={styles.container}>
+    <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item })} style={[styles.container]}>
       <AppImage uri={item?.poster} style={styles.image} />
       <View style={styles.viewInfo}>
         <View>
@@ -44,3 +43,51 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
 };
 
 export default ItemSearchMovie;
+
+const createStyles = (themeColors: any) => StyleSheet.create({
+  container: {
+    borderRadius: Spacing.width4,
+    gap: Spacing.width8,
+    flexDirection: 'row',
+    marginBottom: Spacing.width16,
+  },
+  image: {
+    width: Spacing.width92,
+    height: Spacing.width132,
+    borderRadius: Spacing.width4,
+  },
+  name: {
+
+    fontSize: FontSize.FontSize14,
+    ...FontWithFamily.FontWithFamily_600,
+  },
+  director: {
+    fontSize: FontSize.FontSize10,
+    color: themeColors.subtile,
+    marginTop: 4,
+  },
+  duration: {
+    fontSize: FontSize.FontSize10,
+    color: themeColors.subtile,
+  },
+  viewOption: {
+    gap: 4,
+
+  },
+  txtView: {
+    fontSize: FontSize.FontSize14,
+  },
+  txtLike: {
+    fontSize: FontSize.FontSize14,
+  },
+  viewRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+
+    gap: 4,
+  },
+  viewInfo: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+});

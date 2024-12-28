@@ -1,12 +1,12 @@
 import { BrandIcon, LikeActiveIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { createStyles } from './styles';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+
 export interface ItemMovieProps {
   item: any;
 }
@@ -35,3 +35,51 @@ const ItemMovie = ({ item }: ItemMovieProps) => {
 };
 
 export default ItemMovie;
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      borderRadius: Spacing.width4,
+      marginLeft: Spacing.width16,
+      width: Spacing.width240,
+      gap: Spacing.width8,
+    },
+    image: {
+      width: Spacing.width240,
+      height: Spacing.width320,
+      borderRadius: Spacing.width4,
+    },
+    name: {
+      marginVertical: Spacing.width8,
+      fontSize: FontSize.FontSize24,
+      ...FontWithFamily.FontWithFamily_600,
+    },
+    director: {
+      fontSize: FontSize.FontSize10,
+      color: themeColors.subtile,
+      marginTop: 4,
+    },
+    duration: {
+      fontSize: FontSize.FontSize10,
+      color: themeColors.subtile,
+    },
+    viewOption: {
+      gap: 4,
+      flexDirection: 'row',
+    },
+    txtView: {
+      fontSize: FontSize.FontSize14,
+    },
+    txtLike: {
+      fontSize: FontSize.FontSize14,
+    },
+    viewRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+
+      gap: 4,
+    },
+    viewInfo: {
+      flex: 1,
+      justifyContent: 'space-between',
+    },
+  });

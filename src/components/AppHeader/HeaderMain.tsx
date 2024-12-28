@@ -11,11 +11,12 @@ interface HeaderMainProps {
 
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
+  isHome?: boolean
 }
 
 export const HeaderMain: React.FC<HeaderMainProps> = ({
   title,
-
+  isHome = true,
   style,
   titleStyle,
 }) => {
@@ -23,11 +24,11 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
-    <View style={[styles.container, style, { marginTop: top }]}>
+    <View style={[styles.container, style, { marginTop: top || Spacing.width16 }]}>
       <View style={styles.flex1}>
-        <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.HOME)} style={styles.btnHome}>
+        {isHome && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.HOME)} style={styles.btnHome}>
           <HomeIcon />
-        </TouchableOpacity>
+        </TouchableOpacity>}
         <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
       </View>
       <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnSearch}>
@@ -46,6 +47,7 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       flexDirection: 'row',
       gap: Spacing.width16,
+      paddingBottom: Spacing.width16,
     },
 
     title: {

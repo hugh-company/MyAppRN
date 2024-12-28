@@ -28,6 +28,12 @@ export enum SCREEN_ROUTE {
   MOVIE_DETAIL = 'MovieDetail',
   //
   SEARCH_SCREEN = 'SearchScreen',
-  LIST_MOVIES = 'ListMovies',
+  VIEW_LIST = 'ViewList',
   VIDEO = 'Video',
+  // Chapters
+  CHAPTER_DETAIL = 'ChapterDetail',
+  PREVIEW_CHAPTER = 'PreviewChapter',
+  // Games
+  GAME_DETAIL = 'GameDetail',
+  PREVIEW_GAME = 'PreviewGame',
 }

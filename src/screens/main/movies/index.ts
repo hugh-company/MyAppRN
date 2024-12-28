@@ -1,1 +1,2 @@
-export { default as MovieScreen } from './MovieScreen';
+export * from './components/BannerMovie';
+export {default as MovieScreen} from './MovieScreen';

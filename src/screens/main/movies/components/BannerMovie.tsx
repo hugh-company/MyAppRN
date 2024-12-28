@@ -10,14 +10,16 @@ import LinearGradient from 'react-native-linear-gradient';
 
 interface BannerMovieProps {
   data: movieInterface[];
-  style?: StyleProp<ViewStyle>
+  style?: StyleProp<ViewStyle>;
+  title?: string;
+  isGame?: boolean
 }
-export const BannerMovie = ({ data, style }: BannerMovieProps) => {
+export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItemBanner = ({ item }: { item: movieInterface }) => (
     <TouchableOpacity style={styles.banner}>
-      <AppImage uri={item.image} style={styles.image} />
+      <AppImage uri={item.poster} style={styles.image} />
       <LinearGradient
         colors={['rgba(0, 0, 0, 0)', 'black']}
         style={styles.gradient}
@@ -28,12 +30,12 @@ export const BannerMovie = ({ data, style }: BannerMovieProps) => {
           <View style={styles.viewInfo}>
             <AppText style={styles.nameMovie} numberOfLines={2}>{item.name}</AppText>
             <View style={styles.viewOption}>
-              <View style={styles.viewRow}>
+              {!isGame && <View style={styles.viewRow}>
                 <PlayStackedIcon />
                 <AppText style={styles.txtView}>
                   {getPrettyNumberString(item.currentEpisode ?? 0)}/{getPrettyNumberString(item.totalEpisodes ?? 0)} {t('home.episodes')}
                 </AppText>
-              </View>
+              </View>}
 
               <View style={styles.viewRow}>
                 <LikeActiveIcon size={Spacing.width16} color={themeColors.star} />
@@ -41,16 +43,16 @@ export const BannerMovie = ({ data, style }: BannerMovieProps) => {
               </View>
             </View>
           </View>
-          <View style={styles.btnPlay}>
+          {!isGame && <View style={styles.btnPlay}>
             <PlayIcon />
-          </View>
+          </View>}
         </View>
       </LinearGradient>
     </TouchableOpacity>
   );
   return (
     <View style={[styles.container, style]}>
-      <AppBanners width={WidthScreen} label={t('movies.movieHot')}
+      <AppBanners width={WidthScreen} label={title}
         data={data}
         labelStyle={styles.title}
         renderItem={renderItemBanner} />

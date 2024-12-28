@@ -3,9 +3,7 @@ import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
-    container: {
-      backgroundColor: themeColors.background,
-    },
+    container: {},
     inputContainer: {
       flexDirection: 'row',
       alignItems: 'center',

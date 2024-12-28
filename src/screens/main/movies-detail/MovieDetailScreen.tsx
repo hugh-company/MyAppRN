@@ -1,6 +1,7 @@
 import { HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { dataSearch } from '@services';
+import { TypeListMovie } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
@@ -23,11 +24,11 @@ const MovieDetailScreen = () => {
           ...elm,
           image: elm?.poster,
         }))}
-          type={'movies'}
+          type={TypeListMovie.MOVIES}
           title={t('movie.otherMovie')}
           itemStyle={styles.itemImage}
           onViewMore={() => {
-            navigate(SCREEN_ROUTE.LIST_MOVIES, { type: 'movie', name: t('movie.otherMovie') });
+            navigate(SCREEN_ROUTE.VIEW_LIST, { type: 'movie', name: t('movie.otherMovie') });
           }}
         />
       </HeaderDetail>

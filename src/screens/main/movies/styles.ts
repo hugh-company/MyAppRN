@@ -23,4 +23,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     listContainer: {
       flex: 1,
     },
+    itemStyle: {
+      width: Spacing.width120,
+    },
   });

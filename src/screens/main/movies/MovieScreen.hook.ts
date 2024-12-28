@@ -1,34 +1,45 @@
+import {categoryMovies, dashboardMovies} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {useState} from 'react';
-import {
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import {useEffect, useRef, useState} from 'react';
+import {Animated} from 'react-native';
 import {createStyles} from './styles';
 
 export const useMovieScreen = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(dashboardMovies);
+  const [dataCategory, setDataCategory] = useState([]);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [activeCategory, setActiveCategory] = useState(1);
-  const scrollY = useSharedValue(0);
+  const scrollY = useRef(new Animated.Value(0)).current;
 
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    scrollY.value = event.contentOffset.y;
-  });
+  const scrollHandler = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {useNativeDriver: false},
+  );
 
-  const inputSearchStyle = useAnimatedStyle(() => {
-    return {
-      opacity: withTiming(scrollY.value > 50 ? 0 : 1, {duration: 300}),
-      height: withTiming(scrollY.value > 50 ? 0 : 50, {duration: 300}),
-      marginTop: withTiming(scrollY.value > 50 ? 0 : Spacing.width16, {
-        duration: 300,
-      }),
-    };
-  });
+  const inputSearchStyle = {
+    opacity: scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    }),
+    height: scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [50, 0],
+      extrapolate: 'clamp',
+    }),
+    marginTop: scrollY.interpolate({
+      inputRange: [0, 50],
+      outputRange: [Spacing.width16, 0],
+      extrapolate: 'clamp',
+    }),
+  };
+
+  useEffect(() => {
+    // fetch data
+    setDataCategory(categoryMovies || []);
+  }, []);
   const onSearch = (text: string) => {
     setSearch(text);
   };
@@ -45,5 +56,6 @@ export const useMovieScreen = () => {
     onSelectedCategory,
     inputSearchStyle,
     scrollHandler,
+    dataCategory,
   };
 };

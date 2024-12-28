@@ -12,7 +12,7 @@ import { HeaderControl } from './components/HeaderControl';
 import { ModalSpeed } from './components/ModalSpeed';
 
 const VideoScreen = () => {
-  const { handleUserInteraction,
+  const {
     setCurrentTime,
     currentTime,
     playbackRate,
@@ -22,13 +22,13 @@ const VideoScreen = () => {
     paused,
     togglePlayPause,
     rewind,
-    setDuration, isMuted, setIsMuted, goBackScreen, toggleMute,
-    duration, themeColors, styles, videoRef, error, isSpeedVisible,
+    setDuration, isMuted, goBackScreen, toggleMute,
+    duration, styles, videoRef, error, isSpeedVisible,
     setSpeedVisible,
-    unmuteOnVolumeChange, subtitles, isLoading, setIsLoading, selectedSubtitle, setSelectedSubtitle,
+    isLoading, setIsLoading,
     onMenuPress, toggleControlsVisibility,
     updateProgress, controlsVisible, showAds, ad, skipAd, setPlaybackRate, toggleFullScreen, isFullScreenVisible,
-    animatedStyle, screenDimensions, setError,
+    setError,
   } = useVideoScreen();
 
   return (

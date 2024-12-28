@@ -25,7 +25,7 @@ export const DashboardSearch = ({ data }: DashboardSearchProps) => {
       }))}
       titleViewMore={t('home.viewAll')}
       onViewMore={() => {
-        navigate(SCREEN_ROUTE.LIST_MOVIES, { type: item.type, name: item.name, id: item.id });
+        navigate(SCREEN_ROUTE.VIEW_LIST, { type: item.type, name: item.name, id: item.id });
       }}
     />
   );

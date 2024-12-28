@@ -2,7 +2,7 @@ export const dashboardSearch = [
   {
     id: 1,
     name: 'Phim đang hot 🔥',
-    type: 'movies',
+    type: 'MOVIES',
     data: [
       {
         id: 1,
@@ -178,7 +178,7 @@ export const dashboardSearch = [
   {
     id: 2,
     name: 'Đầu truyện hot 🔥',
-    type: 'chapters',
+    type: 'CHAPTERS',
     data: [
       {
         id: 1,
@@ -241,7 +241,7 @@ export const dashboardSearch = [
   {
     id: 3,
     name: 'Game nổi bật',
-    type: 'games',
+    type: 'GAMES',
     data: [
       {
         id: 1,

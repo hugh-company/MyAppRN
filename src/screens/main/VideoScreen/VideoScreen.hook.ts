@@ -1,13 +1,8 @@
 import {goBack} from '@navigation';
 import {useTheme} from '@theme';
-import {useCallback, useEffect, useRef, useState} from 'react';
-import {Dimensions} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
 import Orientation from 'react-native-orientation-locker';
-import {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {createStyles} from './styles';
 
 export const useVideoScreen = () => {
@@ -27,25 +22,9 @@ export const useVideoScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [controlsTimeout, setControlsTimeout] = useState();
   const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
-  const unmuteOnVolumeChange = useCallback(
-    () => setIsMuted(!isFullScreenVisible),
-    [isMuted, setIsMuted, isFullScreenVisible],
-  );
+
   // state speed to control speed video
   const [isSpeedVisible, setSpeedVisible] = useState(false); // Add this line
-
-  // Add the subtitles array
-  const subtitles = [
-    {
-      language: 'es',
-      title: 'Spanish',
-      type: 'text/vtt',
-      index: 0,
-      selected: true,
-    },
-    {language: 'en', title: 'English', type: 'text/vtt', index: 1},
-  ];
-  const [selectedSubtitle, setSelectedSubtitle] = useState(0); // 0 for English, 1 for Vietnamese
 
   const ads = [
     {
@@ -69,10 +48,6 @@ export const useVideoScreen = () => {
     uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
     startTime: 10000,
   });
-
-  const [screenDimensions, setScreenDimensions] = useState(
-    Dimensions.get('window'),
-  );
 
   // useEffect(() => {
   //   Orientation.lockToLandscape();
@@ -131,7 +106,7 @@ export const useVideoScreen = () => {
     setCurrentTime(newTime);
     setPaused(false); // Ensure video continues playing after seeking
   };
-  const handleUserInteraction = () => {};
+
   const [controlsVisible, setControlsVisible] = useState(false);
   // sau 3s không tương tác thì ẩn control
   useEffect(() => {
@@ -152,12 +127,6 @@ export const useVideoScreen = () => {
   const onMenuPress = () => {};
   const rotation = useSharedValue(0);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{rotate: `${rotation.value}deg`}],
-    };
-  });
-
   const toggleFullScreen = () => {
     setControlsVisible(false);
     if (isFullScreenVisible) {
@@ -171,48 +140,37 @@ export const useVideoScreen = () => {
   };
 
   return {
-    themeColors,
-    styles,
-    videoRef,
-    error,
-    showAds,
-
-    subtitles,
-    handleUserInteraction,
     setCurrentTime,
     currentTime,
     playbackRate,
     uri,
+
     fastForward,
     paused,
     togglePlayPause,
     rewind,
     setDuration,
-    duration,
     isMuted,
-    setIsMuted,
     goBackScreen,
     toggleMute,
+    duration,
+    styles,
+    videoRef,
+    error,
+    isSpeedVisible,
+    setSpeedVisible,
     isLoading,
     setIsLoading,
-    selectedSubtitle,
-    setSelectedSubtitle,
-    isFullScreenVisible,
-    setIsFullScreenVisible,
-    unmuteOnVolumeChange,
     onMenuPress,
     toggleControlsVisibility,
     updateProgress,
     controlsVisible,
+    showAds,
     ad,
     skipAd,
-    isSpeedVisible, // Add this line
-    setSpeedVisible, // Add this line
-
     setPlaybackRate,
-    toggleFullScreen, // Update this line
-    screenDimensions, // Add this line
-    animatedStyle, // Add this line
+    toggleFullScreen,
+    isFullScreenVisible,
     setError,
   };
 };

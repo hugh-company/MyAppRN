@@ -23,7 +23,7 @@ export const HeaderHome = ({ children }: HeaderHomeProps) => {
   });
 
   const bannerHeightStyle = useAnimatedStyle(() => ({
-    height: interpolate(scrollY.value, [0, Spacing.height315], [Spacing.height315, 100], Extrapolate.CLAMP),
+    height: interpolate(scrollY.value, [0, Spacing.height315], [Spacing.height315, top ? Spacing.height100 : Spacing.height50], Extrapolate.CLAMP),
   }));
 
   const bannerOpacityStyle = useAnimatedStyle(() => ({
@@ -43,21 +43,23 @@ export const HeaderHome = ({ children }: HeaderHomeProps) => {
       <Animated.View style={[styles.container]}>
         <Animated.View style={[styles.banner, bannerHeightStyle]}>
 
-          <BannerHome data={[{
-            title: 'All In One',
-            description: 'App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game ',
-            image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
-          }, {
-            title: 'All In One',
-            description: 'App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game ',
-            image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
-          }, {
-            title: 'All In One',
-            description: 'The best of the best',
-            image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
-          }]} />
+          <BannerHome
+            style={styles.banner}
+            data={[{
+              title: 'All In One',
+              description: 'App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game ',
+              image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
+            }, {
+              title: 'All In One',
+              description: 'App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game App Hẹn Hò, Xem Phim, Đọc Truyện, Chơi Game ',
+              image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
+            }, {
+              title: 'All In One',
+              description: 'The best of the best',
+              image: 'https://i.ytimg.com/vi/uYPbbksJxIg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLACA9IK0xYW9AGiLGNH4sIRPbLeLA',
+            }]} />
 
-          <Animated.View style={[styles.header, { paddingTop: top }, headerBackgroundColorStyle]}>
+          <Animated.View style={[styles.header, { paddingTop: top }, { height: top ? Spacing.height100 : Spacing.height50 }, headerBackgroundColorStyle]}>
             {/* open drawer */}
             <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
               <MenuIcon color={themeColors.text} />
@@ -82,8 +84,6 @@ export const HeaderHome = ({ children }: HeaderHomeProps) => {
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      borderBottomRightRadius: Spacing.width32,
-      borderBottomLeftRadius: Spacing.width32,
       overflow: 'hidden',
     },
     linear: {
@@ -100,6 +100,7 @@ const createStyles = (themeColors: ThemeColors) =>
       left: 0,
       right: 0,
       zIndex: 1,
+      height: Spacing.height50,
     },
     btnMenu: {
       width: Spacing.width32,
@@ -108,6 +109,6 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
     },
     banner: {
-      position: 'relative',
+
     },
   });

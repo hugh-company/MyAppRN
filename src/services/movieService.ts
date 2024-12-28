@@ -245,6 +245,7 @@ export const categoryMovies = [
 
 export const favoriteMovies = [
   {
+    id: 1,
     name: 'Hành động',
     data: [
       {
@@ -257,14 +258,21 @@ export const favoriteMovies = [
         genres: ['Drama'],
         likes: 1,
         views: 100000,
-        image:
+        image: [
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        ],
+        poster:
           'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
       },
       {
-        id: 1,
+        id: 2,
         name: 'One Piece',
-        image:
+        poster:
           'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+
+        image: [
+          'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+        ],
         year: 1994,
         rating: 9.2,
         category: 1,
@@ -274,7 +282,7 @@ export const favoriteMovies = [
         views: 100000,
       },
       {
-        id: 2,
+        id: 3,
         name: 'The Godfather',
         year: 1972,
         rating: 9.1,
@@ -283,8 +291,11 @@ export const favoriteMovies = [
         likes: 123131,
         genres: ['Crime', 'Drama'],
         views: 1,
-        image:
+        poster:
           'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        image: [
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        ],
       },
       {
         id: 3,
@@ -296,12 +307,16 @@ export const favoriteMovies = [
         genres: ['Action', 'Crime', 'Drama'],
         likes: 1002,
         views: 2,
-        image:
+        poster:
           'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        image: [
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        ],
       },
     ],
   },
   {
+    id: 2,
     name: 'Phưu lưu',
     data: [
       {
@@ -314,8 +329,11 @@ export const favoriteMovies = [
         genres: ['Drama'],
         likes: 1,
         views: 100000,
-        image:
+        poster:
           'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        image: [
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        ],
       },
       {
         id: 2,
@@ -327,8 +345,11 @@ export const favoriteMovies = [
         likes: 123131,
         genres: ['Crime', 'Drama'],
         views: 1,
-        image:
+        poster:
           'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        image: [
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        ],
       },
       {
         id: 3,
@@ -340,8 +361,11 @@ export const favoriteMovies = [
         genres: ['Action', 'Crime', 'Drama'],
         likes: 1002,
         views: 2,
-        image:
+        poster:
           'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        image: [
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        ],
       },
     ],
   },
@@ -450,6 +474,436 @@ export const moviesAnimates: movieInterface[] = [
     ],
     totalEpisodes: 1070,
     currentEpisode: 1070,
+  },
+];
+
+//
+
+export const dashboardMovies = [
+  {
+    id: 1,
+    name: 'Phim đang hot 🔥',
+    type: 'banner',
+    data: [
+      {
+        id: 1,
+        name: 'Kimetsu no Yaiba Anime (2018)',
+        description:
+          'Kimetsu no Yaiba Anime (2018) - The setting is Taisho era Japan. Tanjiro is a kindhearted ',
+        poster:
+          'https://cdn.popsww.com/blog/sites/2/2022/01/thanh-guom-diet-quy-review.jpg',
+        image: [
+          'https://cdn.popsww.com/blog/sites/2/2022/01/thanh-guom-diet-quy-review.jpg',
+        ],
+        totalEpisodes: 24,
+        currentEpisode: 15,
+      },
+      {
+        id: 2,
+        name: 'Attack on Titan',
+        poster:
+          'https://kenh14cdn.com/203336854389633024/2022/1/12/photo-1-16419835990032047201468.jpeg',
+        image: [
+          'https://kenh14cdn.com/203336854389633024/2022/1/12/photo-1-16419835990032047201468.jpeg',
+        ],
+        description:
+          'Humans fight against giant humanoid creatures known as Titans.',
+        views: 12000000,
+        likes: 950000,
+        episodes: [
+          {
+            id: 1,
+            title: 'To You, in 2000 Years',
+            duration: '24m',
+            releaseDate: '2013-04-06',
+          },
+          {
+            id: 2,
+            title: 'That Day',
+            duration: '24m',
+            releaseDate: '2013-04-13',
+          },
+        ],
+        totalEpisodes: 87,
+        currentEpisode: 87,
+      },
+      {
+        id: 4,
+        name: 'Jujutsu Kaisen',
+        poster:
+          'https://wibu.com.vn/wp-content/uploads/2024/09/jujutsu-kaisen-rotated.jpg',
+        image: [
+          'https://wibu.com.vn/wp-content/uploads/2024/09/jujutsu-kaisen-rotated.jpg',
+        ],
+        description:
+          'Yuji Itadori joins a secret organization to battle curses and uncover secrets.',
+        views: 10000000,
+        likes: 850000,
+        episodes: [
+          {
+            id: 1,
+            title: 'Ryomen Sukuna',
+            duration: '24m',
+            releaseDate: '2020-10-03',
+          },
+          {
+            id: 2,
+            title: 'For Myself',
+            duration: '24m',
+            releaseDate: '2020-10-10',
+          },
+        ],
+        totalEpisodes: 24,
+        currentEpisode: 24,
+      },
+      {
+        id: 5,
+        name: 'Spy x Family',
+        image: 'https://static.zenmarket.jp/images/blog/d1imrav4.xf5',
+        description:
+          'A spy, an assassin, and a telepath form an unlikely family for a secret mission.',
+        views: 8000000,
+        likes: 700000,
+        episodes: [
+          {
+            id: 1,
+            title: 'Operation Strix',
+            duration: '25m',
+            releaseDate: '2022-04-09',
+          },
+          {
+            id: 2,
+            title: 'Secure a Wife',
+            duration: '25m',
+            releaseDate: '2022-04-16',
+          },
+        ],
+        totalEpisodes: 25,
+        currentEpisode: 25,
+      },
+      {
+        id: 6,
+        name: 'One Piece',
+        poster:
+          'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+        image: [
+          'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+        ],
+        description:
+          'Monkey D. Luffy and his crew sail to find the legendary One Piece treasure.',
+        views: 20000000,
+        likes: 1500000,
+        episodes: [
+          {
+            id: 1,
+            title: "I'm Luffy! The Man Who's Gonna Be King of the Pirates!",
+            duration: '22m',
+            releaseDate: '1999-10-20',
+          },
+          {
+            id: 2,
+            title: 'Enter the Great Swordsman! Pirate Hunter Roronoa Zoro!',
+            duration: '22m',
+            releaseDate: '1999-10-27',
+          },
+        ],
+        totalEpisodes: 1070,
+        currentEpisode: 1070,
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Thể loại được yêu thích',
+    type: 'slider',
+    data: [
+      {
+        id: 1,
+        name: 'Hành động',
+        data: [
+          {
+            id: 1,
+            name: 'The Shawshank Redemption',
+            year: 1994,
+            rating: 9.2,
+            category: 1,
+            duration: '2h 22min',
+            genres: ['Drama'],
+            likes: 1,
+            views: 100000,
+            poster:
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+            image: [
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+            ],
+          },
+          {
+            id: 1,
+            name: 'One Piece',
+            poster:
+              'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+            image: [
+              'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+            ],
+            year: 1994,
+            rating: 9.2,
+            category: 1,
+            duration: '2h 22min',
+            genres: ['Drama'],
+            likes: 1,
+            views: 100000,
+          },
+          {
+            id: 2,
+            name: 'The Godfather',
+            year: 1972,
+            rating: 9.1,
+            category: 1,
+            duration: '2h 55min',
+            likes: 123131,
+            genres: ['Crime', 'Drama'],
+            views: 1,
+            poster:
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            image: [
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            ],
+          },
+          {
+            id: 3,
+            name: 'The Dark Knight',
+            year: 2008,
+            rating: 9.0,
+            category: 1,
+            duration: '2h 32min',
+            genres: ['Action', 'Crime', 'Drama'],
+            likes: 1002,
+            views: 2,
+            poster:
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+            image:
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+          },
+        ],
+      },
+      {
+        id: 2,
+        name: 'Phưu lưu',
+        data: [
+          {
+            id: 1,
+            name: 'The Shawshank Redemption',
+            year: 1994,
+            rating: 9.2,
+            category: 1,
+            duration: '2h 22min',
+            genres: ['Drama'],
+            likes: 1,
+            views: 100000,
+            poster:
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+            image:
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+          },
+          {
+            id: 2,
+            name: 'The Godfather',
+            year: 1972,
+            rating: 9.1,
+            category: 1,
+            duration: '2h 55min',
+            likes: 123131,
+            genres: ['Crime', 'Drama'],
+            views: 1,
+            poster:
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            image: [
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            ],
+          },
+          {
+            id: 3,
+            name: 'The Dark Knight',
+            year: 2008,
+            rating: 9.0,
+            category: 1,
+            duration: '2h 32min',
+            genres: ['Action', 'Crime', 'Drama'],
+            likes: 1002,
+            views: 2,
+            poster:
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+            image: [
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+            ],
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: 'Phưu lưu',
+        data: [
+          {
+            id: 1,
+            name: 'The Shawshank Redemption',
+            year: 1994,
+            rating: 9.2,
+            category: 1,
+            duration: '2h 22min',
+            genres: ['Drama'],
+            likes: 1,
+            views: 100000,
+            poster:
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+            image: [
+              'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+            ],
+          },
+          {
+            id: 2,
+            name: 'The Godfather',
+            year: 1972,
+            rating: 9.1,
+            category: 1,
+            duration: '2h 55min',
+            likes: 123131,
+            genres: ['Crime', 'Drama'],
+            views: 1,
+            poster:
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            image: [
+              'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+            ],
+          },
+          {
+            id: 3,
+            name: 'The Dark Knight',
+            year: 2008,
+            rating: 9.0,
+            category: 1,
+            duration: '2h 32min',
+            genres: ['Action', 'Crime', 'Drama'],
+            likes: 1002,
+            views: 2,
+            poster:
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+            image: [
+              'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Phim đang hot 🔥',
+    type: 'horizontal',
+    data: [
+      {
+        id: 1,
+        name: 'The Shawshank Redemption',
+        year: 1994,
+        rating: 9.2,
+        category: 1,
+        duration: '2h 22min',
+        genres: ['Drama'],
+        likes: 1,
+        views: 100000,
+        poster:
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        image: [
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        ],
+      },
+      {
+        id: 2,
+        name: 'The Godfather',
+        year: 1972,
+        rating: 9.1,
+        category: 1,
+        duration: '2h 55min',
+        likes: 123131,
+        genres: ['Crime', 'Drama'],
+        views: 1,
+        poster:
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        image: [
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        ],
+      },
+      {
+        id: 3,
+        name: 'The Dark Knight',
+        year: 2008,
+        rating: 9.0,
+        category: 1,
+        duration: '2h 32min',
+        genres: ['Action', 'Crime', 'Drama'],
+        likes: 1002,
+        views: 2,
+        poster:
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        image: [
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        ],
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Nhiều lươt xem nhất',
+    type: 'horizontal',
+    data: [
+      {
+        id: 1,
+        name: 'The Shawshank Redemption',
+        year: 1994,
+        rating: 9.2,
+        category: 1,
+        duration: '2h 22min',
+        genres: ['Drama'],
+        likes: 1,
+        views: 100000,
+        poster:
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        image: [
+          'https://vcdn1-giaitri.vnecdn.net/2022/03/31/shawshank-redemption-137394414-7901-5918-1648713782.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=NHDalOvuyN33Ug53_kOC2Q',
+        ],
+      },
+      {
+        id: 2,
+        name: 'The Godfather',
+        year: 1972,
+        rating: 9.1,
+        category: 1,
+        duration: '2h 55min',
+        likes: 123131,
+        genres: ['Crime', 'Drama'],
+        views: 1,
+        poster:
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        image: [
+          'https://www.hoasen.edu.vn/wp-content/uploads/2021/11/29a-the-godfather-1972.jpg',
+        ],
+      },
+      {
+        id: 3,
+        name: 'The Dark Knight',
+        year: 2008,
+        rating: 9.0,
+        category: 1,
+        duration: '2h 32min',
+        genres: ['Action', 'Crime', 'Drama'],
+        likes: 1002,
+        views: 2,
+        poster:
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        image: [
+          'https://play-lh.googleusercontent.com/qhfncXOqccJ5Y_IBPaRy0O79QZQDl7L5FyKQAsLFICt8c9-2Vfmqd2bniAPESto0ZmSLTOzjl-o1F_jgb2Nr',
+        ],
+      },
+    ],
   },
 ];
 export const getMoviesApi = () => {

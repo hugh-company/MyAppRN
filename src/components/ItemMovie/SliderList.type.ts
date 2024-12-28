@@ -7,7 +7,7 @@ export interface itemListSlider {
 }
 export interface ItemProps {
   id: number;
-  image: string;
+  poster: string;
   name: string;
 }
 export interface SliderListProps {

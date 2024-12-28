@@ -31,6 +31,7 @@ export const AppImage = React.memo((props: propsImage) => {
           // setError(true);
           setLoading(false);
         }
+        setLoading(false);
       });
     } else {
       setLoading(false);

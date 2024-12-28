@@ -1,20 +1,20 @@
 import { BrandIcon, LikeActiveIcon, RightIcon } from '@assets';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { TypeListMovie } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React, { useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 interface HorizontalListProps {
   title?: string;
   titleViewMore?: string;
   onViewMore?: () => void;
-  data?: { image: string, id: number }[];
+  data?: { poster: string, id: number }[];
   style?: StyleProp<ViewStyle>;
-  type?: 'games' | 'chapters' | 'movies';
+  type?: TypeListMovie;
   itemStyle?: StyleProp<ViewStyle>;
 }
 
@@ -24,26 +24,27 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   style, titleViewMore = t('home.viewMore'), onViewMore, type = 'games', itemStyle,
 }) => {
   const { themeColors } = useTheme();
-  const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: any) => {
     switch (type) {
-      case 'games':
+      case TypeListMovie.GAMES:
         return (
           <TouchableOpacity style={[styles.btnGame, itemStyle]}>
-            <AppImage uri={item.image} style={styles.image} />
+            <AppImage uri={item.poster} style={styles.image} />
           </TouchableOpacity>
         );
-      case 'movies':
-      case 'chapters':
+      case TypeListMovie.MOVIES:
+      case TypeListMovie.CHAPTERS:
         return (
           <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => {
-            if (type === 'movies') {
+            if (type === TypeListMovie.MOVIES) {
               navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item });
+            } else {
+              navigate(SCREEN_ROUTE.CHAPTER_DETAIL, { chapter: item });
             }
           }}>
-            <AppImage uri={item.image} style={styles.image} />
+            <AppImage uri={item.poster} style={styles.image} />
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
               <AppText numberOfLines={2} style={styles.name}>{item.name}</AppText>
               <View style={styles.viewOption}>
@@ -62,6 +63,8 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
             </View>
           </TouchableOpacity>
         );
+      default:
+        return null;
     }
   };
 
@@ -72,7 +75,15 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
           {title}
         </AppText>
         <TouchableOpacity onPress={() => {
-          onViewMore?.();
+          onViewMore ? onViewMore?.() : navigate(SCREEN_ROUTE.VIEW_LIST,
+            {
+              name: title,
+              type: type,
+              typeList: 'list',
+
+              list: data, // Flatten the list array
+            }
+          );
         }} style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>
             {titleViewMore}
@@ -80,7 +91,11 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
           <RightIcon />
         </TouchableOpacity>
       </View>
-      <FlatList data={data} horizontal keyExtractor={(item) => `child_${title}${item?.id?.toString()}`} renderItem={renderItem} />
+      <FlatList
+        data={data}
+        horizontal
+        keyExtractor={(item) => `child_${title}${item?.id?.toString()}`}
+        renderItem={renderItem} />
 
     </View>
   );
@@ -89,8 +104,8 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      marginTop: Spacing.width48,
-      marginBottom: Spacing.width24,
+
+      marginTop: Spacing.width24,
 
     },
 

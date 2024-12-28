@@ -10,24 +10,23 @@ export interface AppInputSearchProps {
   onChangeText?: (text: string) => void;
   editable?: boolean;
   placeholder?: string;
+  inputStyle?: ViewStyle;
 }
 const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) => {
-  const { value, style, onChangeText, placeholder } = props;
+  const { value, style, onChangeText, placeholder, inputStyle } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.inputContainer}>
+      <View style={[styles.inputContainer, inputStyle]}>
         <SearchIcon size={Spacing.width20} color={themeColors.subtile} />
         <TextInput
           ref={ref}
-
           style={[
             styles.input,
-            style,
+
 
           ]}
-
           placeholderTextColor={themeColors.placeholder}
           placeholder={placeholder || t('search.movies')}
           value={value}

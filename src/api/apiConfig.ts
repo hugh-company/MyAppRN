@@ -13,7 +13,7 @@ export const ACCESS_TOKEN = '';
 export const API_URL = '';
 const ENV_NAME = Config.ENV as keyof typeof END_POINT;
 export const API_CONFIG = {
-  BASE_URL: '',
+  BASE_URL: 'https://virtserver.swaggerhub.com/KYOOMIBU/EntertainmentAPI/1.0.0',
   TIMEOUT: 10000,
   HEADERS: {
     'Content-Type': 'application/json',
@@ -34,7 +34,8 @@ export const REQUEST_METHODS = {
 };
 
 export const API_ENDPOINTS = {
-  LOGIN: '/login',
+  LOGIN: '/EN/api/v1/auth/login/',
+  REGISTER: '/EN/api/v1/auth/register/',
   USER_PROFILE: '/users',
   // Thêm các endpoint khác ở đây
 };

@@ -3,6 +3,7 @@ import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../AppText';
 
@@ -29,7 +30,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
-    <View style={[styles.container, style, { marginTop: top }]}>
+    <Animated.View style={[styles.container, style, { paddingTop: top }]}>
       <View style={styles.flex1}>
         {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
           <LeftIcon />
@@ -37,7 +38,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
         <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>
       </View>
       {rightComponent}
-    </View>
+    </Animated.View>
   );
 };
 
@@ -49,7 +50,7 @@ const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: 'transparent',
       alignItems: 'center',
       flexDirection: 'row',
-
+      paddingBottom: Spacing.width16,
     },
 
     title: {

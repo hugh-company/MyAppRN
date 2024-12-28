@@ -26,7 +26,7 @@ export const MovieHome = ({ style }: MovieHomeProps) => {
       <FlatList showsHorizontalScrollIndicator={false} data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
 
       {/*  */}
-      <SliderList title={t('home.typeFavorite')} data={favoriteMovies} />
+      <SliderList title={t('home.typeFavorite')} data={favoriteMovies} type={'movies'} />
     </View>
   );
 };

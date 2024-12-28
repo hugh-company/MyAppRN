@@ -43,3 +43,4 @@ export {default as UnmuteIcon} from './UnmuteIcon';
 
 export {default as ExitFullScreenIcon} from './ExitFullScreenIcon';
 export {default as FullScreenIcon} from './FullScreenIcon';
+export {default as NewIcon} from './NewIcon';

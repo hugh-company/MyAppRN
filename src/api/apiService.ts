@@ -1,13 +1,13 @@
+import NetInfo from '@react-native-community/netinfo';
+import {store} from '@redux';
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   CancelTokenSource,
 } from 'axios';
-import NetInfo from '@react-native-community/netinfo';
 import {API_CONFIG, ERROR_MESSAGES, REQUEST_METHODS} from './apiConfig';
 import {handleResponse} from './responseHandler';
-import {store} from '@redux';
 
 class ApiService {
   private axiosInstance: AxiosInstance;
@@ -72,7 +72,7 @@ class ApiService {
   }
 
   private async getToken() {
-    const token = store.getState().user.token;
+    const token = store.getState().accountSlice.token;
     return token;
   }
   public async request<T>(config: AxiosRequestConfig): Promise<T> {

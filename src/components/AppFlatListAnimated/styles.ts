@@ -19,4 +19,8 @@ export const createStyles = (themeColors: ThemeColors) =>
       width: '80%',
       textAlign: 'center',
     },
+    imageNotFound: {
+      width: Spacing.width200,
+      height: Spacing.width100,
+    },
   });

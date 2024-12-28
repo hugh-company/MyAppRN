@@ -1,9 +1,10 @@
-import { IconNotFound } from '@assets';
-import { Spacing, useTheme } from '@theme';
+import { NoSearchImage } from '@assets';
+import { useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, StyleProp, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
+import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 import { createStyles } from './styles';
 export interface AppFlatListAnimatedProps {
@@ -43,16 +44,18 @@ export interface AppFlatListAnimatedProps {
   initialScrollIndex?: number;
   removeClippedSubviews?: boolean;
   perPage?: number;
+  style?: StyleProp<ViewStyle>;
 
 }
-const AppFlatListAnimated = ({ data, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading,
+const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading,
   horizontal, ListFooterComponent, ListHeaderComponent,
   contentContainerStyle,
   onLoadMore,
   onRefresh, onEndReachedThreshold,
   pagingEnabled,
   initialScrollIndex,
-  removeClippedSubviews, perPage = 14,
+  removeClippedSubviews,
+  perPage = 14,
   ListEmptyComponent,
 }: AppFlatListAnimatedProps) => {
   const { themeColors } = useTheme();
@@ -62,7 +65,7 @@ const AppFlatListAnimated = ({ data, onScroll, scrollEventThrottle, renderItem, 
     if (!isLoading) {
       return (
         <View style={styles.viewEmpty}>
-          <IconNotFound color={themeColors.text} size={Spacing.width70} />
+          <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />
           <AppText style={styles.txtNotFound}>{t('notFound')}</AppText>
         </View>
       );
@@ -77,6 +80,7 @@ const AppFlatListAnimated = ({ data, onScroll, scrollEventThrottle, renderItem, 
       horizontal={horizontal}
       ListHeaderComponent={ListHeaderComponent}
       contentContainerStyle={[styles.container, contentContainerStyle]}
+      style={style}
       numColumns={numColumns}
       renderItem={renderItem}
       columnWrapperStyle={columnWrapperStyle}

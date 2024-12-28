@@ -1,6 +1,7 @@
 import { HeaderItemHome, HorizontalList, ItemGame } from '@components';
 import { categoryMovies, movies } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { TypeListMovie } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
@@ -26,7 +27,7 @@ export const StoryHome = ({ style }: StoryHomeProps) => {
       <FlatList data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
 
       {/*  */}
-      <HorizontalList title={t('home.multipPeopleRead')} type="chapters" data={movies} titleViewMore={t('home.rank')} />
+      <HorizontalList title={t('home.multipPeopleRead')} type={TypeListMovie.CHAPTERS} data={movies} titleViewMore={t('home.rank')} />
     </View>
   );
 };

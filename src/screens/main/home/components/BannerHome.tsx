@@ -85,6 +85,9 @@ const createStyles = (themeColors: ThemeColors) =>
     btn: {
       width: WidthScreen,
       height: Spacing.height315,
+      borderBottomRightRadius: Spacing.width32,
+      borderBottomLeftRadius: Spacing.width32,
+      overflow: 'hidden',
     },
     image: {
       width: '100%',

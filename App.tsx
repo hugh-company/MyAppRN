@@ -8,7 +8,7 @@ import { ThemeProvider } from '@theme';
 import { initI18n } from '@translations';
 
 import React, { useEffect } from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { LogBox, Platform, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalPortal } from 'react-native-modals';
@@ -54,7 +54,9 @@ function App(): React.JSX.Element {
     SplashScreen.hide();
     Orientation.unlockAllOrientations();
   }, []);
-
+  LogBox.ignoreLogs([
+    /Support for defaultProps will be removed/,
+  ]);
   return (
     <GestureHandlerRootView style={styles.container}>
       <ThemeProvider >

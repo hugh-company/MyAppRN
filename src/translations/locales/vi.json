@@ -118,6 +118,15 @@
     "speed": "Tốc độ",
     "error": "Video không thể phát"
   },
+  "chapter": {
+    "title": "Truyện tranh",
+    "readChapter": "Đọc truyện",
+    "newChapter": "Chương mới"
+  },
+  "games": {
+    "title": "Game online",
+    "playGame": "Bắt đầu game"
+  },
   "cancel": "Hủy",
   "save": "Lưu",
   "confirm": "Xác nhận",
@@ -127,5 +136,7 @@
   "liked": "Đã thích",
   "rating": "Đánh giá",
   "saveMovie": "Lưu lại",
-  "share": "Chia sẻ"
+  "share": "Chia sẻ",
+  "back": "Trở lại",
+  "type": "Thể loại"
 }
