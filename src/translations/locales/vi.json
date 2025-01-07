@@ -8,18 +8,27 @@
     "forgot": "Quên mật khẩu",
     "email": "Email",
     "password": "Mật khẩu",
-    "youCanAccount": "Bạn chưa có tài khoản?"
+    "youCanAccount": "Bạn chưa có tài khoản?",
+    "username": "Tên tài khoản",
+    "loginSuccess": "Đăng nhập thành công",
+    "loginFail": "Đăng nhập thất bại",
+    "fullname": "Họ và tên"
   },
   "register": {
     "title": "Đăng ký tài khoản",
+
     "descripstion": "Nhận thêm các ưu đãi đặc biệt dành cho các thành viên",
     "name": "Tên",
     "email": "Email",
     "password": "Mật khẩu",
     "confirmPassword": "Xác nhận mật khẩu",
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "registerSuccess": "Đăng ký thành công",
+    "registerFail": "Đăng ký thất bại"
   },
   "validate": {
+    "validate_fullname": "Vui lòng nhập họ và tên",
+    "validate_username": "Vui lòng nhập tên tài khoản",
     "validate_email": "Email không hợp lệ",
     "email_req": "Vui lòng nhập email",
     "validate_password": "Mật khẩu không hợp lệ",
@@ -33,7 +42,19 @@
     "password_max": "Mật khẩu không được dài quá 32 ký tự",
 
     "validate_confirmPassword_min": "Mật khẩu phải ít nhất 6 ký tự",
-    "validate_confirmPassword_max": "Mật khẩu không được dài quá 32 ký tự"
+    "validate_confirmPassword_max": "Mật khẩu không được dài quá 32 ký tự",
+    "validate_avatar": "Vui lòng chọn ảnh đại diện",
+    "validate_avatar_type": "Ảnh đại diện phải là ảnh jpg, jpeg, png",
+    "validate_avatar_size": "Kích thước ảnh đại diện không được lớn hơn 2MB",
+
+    "validate_about_me": "Vui lòng nhập thông tin giới thiệu",
+    "validate_about_max": "Thông tin giới thiệu không được dài quá 500 ký tự",
+    "validate_phone": "Vui lòng nhập số điện thoại",
+    "validate_country": "Vui lòng chọn quốc gia",
+    "validate_phone_number": "Số điện thoại không hợp lệ",
+    "validate_phone_min": "Số điện thoại phải ít nhất 10 ký tự",
+    "validate_birthday": "Vui lòng chọn ngày sinh",
+    "validate_gender": "Vui lòng chọn giới tính"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -60,7 +81,11 @@
     "chapter_saved": "Truyện đã lưu",
     "selectLanguage": "Chọn ngôn ngữ",
     "english": "Tiếng Anh",
-    "vietnamese": "Tiếng Việt"
+    "vietnamese": "Tiếng Việt",
+    "package_member": "Gói thành viên",
+    "rank_membership": "Hạng Membership",
+    "rank_gold": "Hạng Gold",
+    "rank_diamond": "Hạng Diamond"
   },
   "home": {
     "datingTitle": "Tìm một nửa của bạn",
@@ -91,6 +116,7 @@
     "chapters": "Tìm kiếm truyện",
     "games": "Tìm kiếm game",
     "search": "Tìm kiếm phim, diễn viên, đạo diễn, ...",
+    "searchCountry": "Tìm kiếm theo quốc gia",
     "type": "Thể loại",
     "sort": "Sắp xếp",
     "movie": "Phim",
@@ -102,7 +128,9 @@
     "searchVariety": "Tìm kiếm đa dạng",
     "searchResults": "Kết quả tìm kiếm cho “NAME”:",
     "duration": "Thời lượng: ",
-    "searchNotFound": "Chúng tôi không tìm thấy từ khoá bạn yêu cầu"
+    "searchNotFound": "Chúng tôi không tìm thấy từ khoá bạn yêu cầu",
+    "novel": "Truyện chữ",
+    "comic": "Truyện tranh"
   },
   "movie": {
     "list_chapters": "Danh sách tập",
@@ -116,7 +144,9 @@
     "content": "Nội dung",
     "skipsAd": "Bỏ qua quảng cáo",
     "speed": "Tốc độ",
-    "error": "Video không thể phát"
+    "error": "Video không thể phát",
+    "mute": "Tắt tiếng",
+    "unmute": "Bật tiếng"
   },
   "chapter": {
     "title": "Truyện tranh",
@@ -126,6 +156,47 @@
   "games": {
     "title": "Game online",
     "playGame": "Bắt đầu game"
+  },
+  "ratings": {
+    "title": "Đánh giá trải nghiệm",
+    "content": "Nội dung đánh giá...",
+    "sendRating": "Gửi đánh giá",
+    "description": "Bộ phim này xứng đáng bao nhiêu điểm?",
+    "ratingSuccess": "Đánh giá thành công",
+    "successMessage": "Cảm ơn bạn đã đánh giá",
+
+    "ratingFail": "Đánh giá thất bại",
+    "failMessage": "Đánh giá không thành công, vui lòng thử lại sau"
+  },
+  "dating": {
+    "title": "Hẹn hò",
+    "description": "Hãy xem ai là người sẽ hiểu được phần sâu bên trong con người bạn.",
+    "goDating": "Đi đến trang hẹn hò",
+    "titleMeetingNewPeople": "Let’s meeting new people around you",
+    "createProfile": "Tạo hồ sơ ngay",
+    "createNewProfile": "Tạo hồ sơ mới",
+    "desNewProfile": "Điền các thông tin cơ bản",
+    "favorite": "Sở thích",
+    "descriptionFavorite": "Bạn muốn hẹn hò voiws..."
+  },
+  "favorite": {
+    "photography": "Nhiếp ảnh",
+    "shopping": "Mua sắm",
+    "karaoke": "Hát karaoke",
+    "yoga": "Yoga",
+    "cooking": "Nấu ăn",
+    "tennis": "Tennis",
+    "run": "Chạy bộ",
+    "swimming": "Bơi lội",
+    "traveling": "Du lịch",
+    "art": "Nghệ thuật",
+    "extreme": "Mạo hiểm",
+    "music": "Âm nhạc",
+    "drink": "Uống nước",
+    "videoGame": "Chơi game"
+  },
+  "view_list": {
+    "titleCategory": "Danh sách theo thể loại"
   },
   "cancel": "Hủy",
   "save": "Lưu",
@@ -138,5 +209,22 @@
   "saveMovie": "Lưu lại",
   "share": "Chia sẻ",
   "back": "Trở lại",
-  "type": "Thể loại"
+  "type": "Thể loại",
+  "phone": "Số điện thoại",
+  "name": "Tên",
+  "birthday": "Ngày sinh",
+  "selectGender": "Chọn giới tính",
+  "gender": "Giới tính",
+  "about_me": "Giới thiệu bản thân",
+  "placeholderPhone": "Nhập số điện thoại",
+  "male": "Nam",
+  "girl": "Nữ",
+  "allGender": "Cả hai",
+  "other": "Khác",
+  "next": "Tiếp theo",
+  "start": "Bắt đầu",
+  "filter": "Bộ lọc",
+  "reset": "Làm lại",
+  "maxLocation": "Khoảng cách tối đa",
+  "age": "Độ tuổi"
 }

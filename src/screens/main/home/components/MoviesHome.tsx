@@ -1,32 +1,22 @@
-import { HeaderItemHome, ItemMovie, SliderList } from '@components';
-import { categoryMovies, favoriteMovies, movies } from '@services';
+import { ListProductCategory, SliderList } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { KeyHomeData, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface MovieHomeProps {
   style?: StyleProp<ViewStyle>;
-
+  data?: any;
+  isReset?: boolean;
 }
-export const MovieHome = ({ style }: MovieHomeProps) => {
+export const MovieHome = ({ style, data, isReset }: MovieHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [activeCategory, setActiveCategory] = React.useState(1);
-
-  const renderItem = ({ item }) => {
-    return (
-      <ItemMovie item={item} />
-    );
-  };
   return (
-    <View style={styles.container}>
-      <HeaderItemHome title={t('home.libraryMovie')} categoryIdSelected={activeCategory} categories={categoryMovies} onSelectedCategory={setActiveCategory} />
-
-      <FlatList showsHorizontalScrollIndicator={false} data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
-
-      {/*  */}
-      <SliderList title={t('home.typeFavorite')} data={favoriteMovies} type={'movies'} />
+    <View style={[styles.container, style]}>
+      <ListProductCategory title={data?.label} type={KeyHomeData.MOVIES} categories={data?.tabs} reset={isReset} />
+      <SliderList title={t('home.libraryMovie')} data={data?.term_favourite || []} type={PostTypeKey.MOVIES} />
     </View>
   );
 };

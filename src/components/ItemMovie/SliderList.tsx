@@ -2,19 +2,21 @@ import { RightIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { t } from 'i18next';
+import { ButtonInterface, CategoryItem, PostTypeKey, TypeList } from '@types';
+import { goToDetail } from '@utils';
 import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
-import { itemListSlider, SliderListProps } from './SliderList.type';
+import { SliderListProps } from './SliderList.type';
 
 interface Props extends SliderListProps {
   style?: StyleProp<ViewStyle>;
   onViewMore?: () => void;
-  type?: 'movies' | 'games' | 'chapters';
+  type?: PostTypeKey;
+  button?: ButtonInterface
 }
 const widthItem = Spacing.width240;
-const SliderList = React.memo(({ style, title, data, onViewMore, type }: Props) => {
+const SliderList = React.memo(({ style, title, data, onViewMore, type, button }: Props) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
@@ -38,24 +40,33 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type }: Props) 
     }
   }, []);
 
-  const renderItem = useCallback(({ item, index }: { item: itemListSlider, index: number }) => (
+  const renderItem = useCallback(({ item, index }: { item: CategoryItem, index: number }) => (
     <View style={styles.itemType}>
-
       <FlatList
         style={styles.listMovie}
         scrollEnabled={false}
         numColumns={2}
-        data={item.data}
+        data={item.items}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item, index }) => (
-          <View style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}>
-            <AppImage uri={item.poster} style={styles.image} />
-          </View>
+          <TouchableOpacity onPress={() => {
+            goToDetail({ item, type });
+          }} style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}>
+            <AppImage uri={item.feature.square} style={styles.image} />
+          </TouchableOpacity>
         )}
       />
 
       <TouchableOpacity onPress={() => {
-        navigate(SCREEN_ROUTE.VIEW_LIST, { name: item.name, type: type, typeList: 'list', list: item.data });
+        navigate(SCREEN_ROUTE.VIEW_LIST,
+          {
+            name: title,
+            type: type,
+            typeList: TypeList.CATEGORY,
+            categories: data,
+            categoryIdSelected: item.id,
+          }
+        );
       }} style={styles.viewType}>
         <AppText style={styles.txtType}>{item.name}</AppText>
         <RightIcon />
@@ -73,12 +84,17 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type }: Props) 
           {
             name: title,
             type: type,
-            typeList: 'category',
-            categories: data.map((item) => ({ id: item.id, name: item.name })),
-            list: data.flatMap((item) => item.data), // Flatten the list array
+            typeList: TypeList.CATEGORY,
+            list: data.flatMap((item) => item.data),
+            categories: data?.map(elm => {
+              return {
+                id: elm.id,
+                name: elm.name,
+              };
+            }),
           }
         )} style={styles.btnViewMore}>
-          <AppText style={styles.txtViewMore}>{t('home.viewMore')}</AppText>
+          <AppText style={styles.txtViewMore}>{button?.label}</AppText>
           <RightIcon />
         </TouchableOpacity>
       </View>

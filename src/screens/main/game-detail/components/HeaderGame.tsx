@@ -6,13 +6,11 @@ import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 interface HeaderGameProps {
   name: string;
   logo?: string;
-  duration?: string;
-  views?: number;
   likes?: number;
   poster?: string;
   children?: React.ReactNode;
@@ -20,33 +18,29 @@ interface HeaderGameProps {
 
 export const HeaderGame = ({
   name,
-
-  duration,
-  views,
-  likes,
-  poster,
-  logo,
-
+  likes = 0,
+  poster = '',
+  logo = '',
   children }: HeaderGameProps) => {
+  console.log({ logo });
+
   const { themeColors } = useTheme();
   const scrollY = useSharedValue(0);
-
-
   const scrollHandler = useAnimatedScrollHandler((event) => {
     scrollY.value = event.contentOffset.y;
   });
 
   const styles = createStyles(themeColors);
 
-  const animatedStyle = useAnimatedStyle(() => {
-    const height = interpolate(
-      scrollY.value,
-      [0, 200],
-      [HeightScreen / 2, HeightScreen / 3],
-      Extrapolate.CLAMP
-    );
-    return { height };
-  });
+  // const animatedStyle = useAnimatedStyle(() => {
+  //   const height = interpolate(
+  //     scrollY.value,
+  //     [0, 200],
+  //     [HeightScreen / 2, HeightScreen / 3],
+  //     Extrapolate.CLAMP
+  //   );
+  //   return { height };
+  // });
   const backgroundStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: scrollY.value > HeightScreen / 2.5 ? themeColors.primary : 'transparent',
@@ -70,7 +64,6 @@ export const HeaderGame = ({
 
   return (
     <>
-
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -90,10 +83,12 @@ export const HeaderGame = ({
               <View style={styles.body}>
                 {/* info game */}
                 <View style={styles.info}>
-                  <AppImage uri={logo} style={styles.logo} />
+                  <View style={styles.viewLogo}>
+                    <AppImage uri={logo} style={styles.logo} />
+                  </View>
                   <View style={styles.viewName}>
                     <AppText numberOfLines={3} style={styles.txtName}>{name}</AppText>
-                    {renderItem(<LikeActiveIcon color={themeColors.star} />, `${getPrettyNumberString(views || 0, '1.234k')} ${t('home.likes')}`)}
+                    {renderItem(<LikeActiveIcon color={themeColors.star} />, `${getPrettyNumberString(likes || 0, '1.234k')} ${t('home.likes')}`)}
                   </View>
 
                 </View>
@@ -123,6 +118,9 @@ const createStyles = (themeColors: ThemeColors) =>
     logo: {
       width: Spacing.width96,
       height: Spacing.width96,
+
+    },
+    viewLogo: {
       borderRadius: Spacing.width8,
       borderWidth: 3,
       borderColor: themeColors.text,

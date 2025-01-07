@@ -87,7 +87,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       paddingVertical: Spacing.width16,
       right: 0,
       textAlign: 'center',
-      paddingHorizontal: Spacing.width32,
+      marginHorizontal: Spacing.width50,
     },
     viewSearch: {
       marginTop: Spacing.width16,

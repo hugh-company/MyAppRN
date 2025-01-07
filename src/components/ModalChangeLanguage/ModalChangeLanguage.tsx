@@ -17,8 +17,6 @@ const ModalChangeLanguage = ({ }: ModalChangeLanguageProps) => {
   const { bottom } = useSafeAreaInsets();
   useEffect(() => {
     DeviceEventEmitter.addListener('showModalChangeLanguage', (status) => {
-      console.log({ status });
-
       setIsVisible(status);
     });
 

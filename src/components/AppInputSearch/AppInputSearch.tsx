@@ -24,13 +24,12 @@ const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) =
           ref={ref}
           style={[
             styles.input,
-
-
           ]}
           placeholderTextColor={themeColors.placeholder}
           placeholder={placeholder || t('search.movies')}
           value={value}
           onChangeText={onChangeText}
+
 
         />
         {value && <TouchableOpacity style={styles.btnClose} onPress={() => {

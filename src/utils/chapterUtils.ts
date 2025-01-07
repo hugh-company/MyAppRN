@@ -1,3 +1,5 @@
+import {push, SCREEN_ROUTE} from '@navigation';
+import {PostTypeKey} from '@types';
 import {DeviceEventEmitter} from 'react-native';
 
 export const showModalChapter = (visible: boolean, data: any[] | string) => {
@@ -6,3 +8,17 @@ export const showModalChapter = (visible: boolean, data: any[] | string) => {
     data,
   });
 };
+export const goToDetail = ({item, type}: {item: any; type?: PostTypeKey}) => {
+  switch (type) {
+    case PostTypeKey.GAMES:
+      return push(SCREEN_ROUTE.GAME_DETAIL, {game: item});
+
+    case PostTypeKey.COMIC:
+    case PostTypeKey.NOVEL:
+      return push(SCREEN_ROUTE.CHAPTER_DETAIL, {chapter: item, type: type});
+    case PostTypeKey.MOVIES:
+      return push(SCREEN_ROUTE.MOVIE_DETAIL, {movie: item});
+  }
+};
+
+export const goToListView = ({type}: {type: PostTypeKey}) => {};

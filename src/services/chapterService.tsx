@@ -6136,6 +6136,120 @@ export const viewListChapter = [
     currentEpisode: 1070,
   },
 ];
+export const listStorys = [{
+  id: 1,
+  name: 'Kimetsu no Yaiba Anime (2018)',
+  description:
+    'Kimetsu no Yaiba Anime (2018) - The setting is Taisho era Japan. Tanjiro is a kindhearted ',
+  poster:
+    'https://cdn.popsww.com/blog/sites/2/2022/01/thanh-guom-diet-quy-review.jpg',
+  totalEpisodes: 24,
+  currentEpisode: 15,
+},
+{
+  id: 2,
+  name: 'Attack on Titan',
+
+  poster:
+    'https://kenh14cdn.com/203336854389633024/2022/1/12/photo-1-16419835990032047201468.jpeg',
+  description:
+    'Humans fight against giant humanoid creatures known as Titans.',
+  views: 12000000,
+  likes: 950000,
+  episodes: [
+    {
+      id: 1,
+      title: 'To You, in 2000 Years',
+      duration: '24m',
+      releaseDate: '2013-04-06',
+    },
+    {
+      id: 2,
+      title: 'That Day',
+      duration: '24m',
+      releaseDate: '2013-04-13',
+    },
+  ],
+  totalEpisodes: 87,
+  currentEpisode: 87,
+},
+{
+  id: 4,
+  name: 'Jujutsu Kaisen',
+  poster:
+    'https://wibu.com.vn/wp-content/uploads/2024/09/jujutsu-kaisen-rotated.jpg',
+  description:
+    'Yuji Itadori joins a secret organization to battle curses and uncover secrets.',
+  views: 10000000,
+  likes: 850000,
+  episodes: [
+    {
+      id: 1,
+      title: 'Ryomen Sukuna',
+      duration: '24m',
+      releaseDate: '2020-10-03',
+    },
+    {
+      id: 2,
+      title: 'For Myself',
+      duration: '24m',
+      releaseDate: '2020-10-10',
+    },
+  ],
+  totalEpisodes: 24,
+  currentEpisode: 24,
+},
+{
+  id: 5,
+  name: 'Spy x Family',
+  poster: 'https://static.zenmarket.jp/posters/blog/d1imrav4.xf5',
+  description:
+    'A spy, an assassin, and a telepath form an unlikely family for a secret mission.',
+  views: 8000000,
+  likes: 700000,
+  episodes: [
+    {
+      id: 1,
+      title: 'Operation Strix',
+      duration: '25m',
+      releaseDate: '2022-04-09',
+    },
+    {
+      id: 2,
+      title: 'Secure a Wife',
+      duration: '25m',
+      releaseDate: '2022-04-16',
+    },
+  ],
+  totalEpisodes: 25,
+  currentEpisode: 25,
+},
+{
+  id: 6,
+  name: 'One Piece',
+  poster:
+    'https://cdn.tuoitre.vn/zoom/700_390/471584752817336320/2024/10/15/one-piece-egg-head-arc-anime-key-art-1728982505821164134226.jpg',
+  description:
+    'Monkey D. Luffy and his crew sail to find the legendary One Piece treasure.',
+  views: 20000000,
+  likes: 1500000,
+  episodes: [
+    {
+      id: 1,
+      title: "I'm Luffy! The Man Who's Gonna Be King of the Pirates!",
+      duration: '22m',
+      releaseDate: '1999-10-20',
+    },
+    {
+      id: 2,
+      title: 'Enter the Great Swordsman! Pirate Hunter Roronoa Zoro!',
+      duration: '22m',
+      releaseDate: '1999-10-27',
+    },
+  ],
+  totalEpisodes: 1070,
+  currentEpisode: 1070,
+}];
 export const detailChapterWithText = {
   data: `« tính danh: Hàn Tuyệt »
 « tuổi thọ: 11/65 »

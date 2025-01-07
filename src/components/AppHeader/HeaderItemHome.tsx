@@ -1,25 +1,25 @@
 import { ImageBook, ImageGame, ImageMovie } from '@assets';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { KeyHomeData } from '@types';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppCategoryList } from '../AppCategoryList';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
-type IconType = 'movies' | 'games' | 'chapters';
 interface HeaderItemHomeProps {
   title?: string;
   categoryIdSelected: number;
   categories: { id: number, name: string }[];
   onSelectedCategory: (category: number) => void;
-  type?: IconType;
+  type?: KeyHomeData;
   style?: StyleProp<ViewStyle>;
   styleHeader?: StyleProp<ViewStyle>
 }
 
 export const HeaderItemHome: React.FC<HeaderItemHomeProps> = ({
   title,
-  type = 'movies',
+  type = KeyHomeData.MOVIES,
   categoryIdSelected,
   categories,
   onSelectedCategory,
@@ -28,13 +28,13 @@ export const HeaderItemHome: React.FC<HeaderItemHomeProps> = ({
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
-  const renderIcon = (typeAp: IconType) => {
+  const renderIcon = (typeAp: KeyHomeData) => {
     switch (typeAp) {
-      case 'movies':
+      case KeyHomeData.MOVIES:
         return ImageMovie;
-      case 'games':
+      case KeyHomeData.GAMES:
         return ImageGame;
-      case 'chapters':
+      case KeyHomeData.COMIC:
         return ImageBook;
 
     }
@@ -49,7 +49,7 @@ export const HeaderItemHome: React.FC<HeaderItemHomeProps> = ({
       </View>
 
       <View style={[styles.body, styleHeader]} >
-        <AppCategoryList data={categories} categoryId={categoryIdSelected} onSelectedCategory={onSelectedCategory} />
+        <AppCategoryList data={categories} categoryId={categoryIdSelected} onSelectedCategory={(item) => onSelectedCategory?.(item?.id)} />
 
       </View>
     </View>

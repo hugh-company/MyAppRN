@@ -1,17 +1,13 @@
 import {useRoute} from '@react-navigation/native';
 import {useTheme} from '@theme';
-import {TypeListMovie} from '@types';
+import {PostTypeKey} from '@types';
 import {t} from 'i18next';
-import {useEffect, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {TextInput} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyles} from './styles';
 interface SearchInterface {
-  type:
-    | TypeListMovie.CHAPTERS
-    | TypeListMovie.GAMES
-    | TypeListMovie.MOVIES
-    | undefined;
+  type: PostTypeKey;
 }
 
 export const useSearchScreen = () => {
@@ -20,10 +16,12 @@ export const useSearchScreen = () => {
   const {type} = (router?.params as unknown as SearchInterface) || {
     type: undefined,
   };
+  const [dataDashboard, setDataDashboard] = useState([]);
   const [data, setData] = useState([]);
   const refSearch = useRef<TextInput>(null);
   const [search, setSearch] = useState('');
   const [typeScreen, setTypeScreen] = useState(type);
+  const [loading, setLoading] = useState(true);
   const [sort, setSort] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -32,16 +30,20 @@ export const useSearchScreen = () => {
   const [isFilterType, setIsFilterType] = useState(false);
   const menuType = [
     {
-      key: TypeListMovie.MOVIES,
+      key: PostTypeKey.MOVIES,
       value: t('search.movie'),
     },
     {
-      key: TypeListMovie.GAMES,
+      key: PostTypeKey.GAMES,
       value: t('search.game'),
     },
     {
-      key: TypeListMovie.CHAPTERS,
+      key: PostTypeKey.COMIC,
       value: t('search.chapter'),
+    },
+    {
+      key: PostTypeKey.NOVEL,
+      value: t('search.novel'),
     },
   ];
   const menuSort = [
@@ -54,28 +56,17 @@ export const useSearchScreen = () => {
       value: t('search.likes'),
     },
   ];
-  useEffect(() => {
-    if (refSearch.current) {
-      setTimeout(() => {
-        refSearch.current?.focus();
-      }, 500);
-    }
-  }, [refSearch]);
+
   const onSearch = (text: string) => {
     setSearch(text);
   };
-  const filterByType = ({
-    key,
-    value,
-  }: {
-    key: TypeListMovie.CHAPTERS | TypeListMovie.GAMES | TypeListMovie.MOVIES;
-    value: string;
-  }) => {
+  const filterByType = ({key, value}: {key: PostTypeKey; value: string}) => {
     setTypeScreen(key);
   };
   const filterBySort = ({key, value}: {key: string; value: string}) => {
     setTypeScreen(key);
   };
+
   return {
     data,
     themeColors,
@@ -96,5 +87,6 @@ export const useSearchScreen = () => {
     refSearch,
     filterBySort,
     filterByType,
+    dataDashboard,
   };
 };

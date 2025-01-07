@@ -1,3 +1,5 @@
+import {CategoryItem} from '@types';
+
 export interface itemListSlider {
   id: number;
   name: string;
@@ -12,5 +14,5 @@ export interface ItemProps {
 }
 export interface SliderListProps {
   title: string;
-  data: any[];
+  data: CategoryItem[];
 }

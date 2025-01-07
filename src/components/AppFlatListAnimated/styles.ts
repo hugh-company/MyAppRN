@@ -23,4 +23,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       width: Spacing.width200,
       height: Spacing.width100,
     },
+    bottom: {
+      height: Spacing.height40,
+    },
   });

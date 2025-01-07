@@ -1,61 +1,124 @@
-import {categoryMovies, dashboardMovies} from '@services';
+import {getPostDashboardApi} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {useEffect, useRef, useState} from 'react';
-import {Animated} from 'react-native';
+import {
+  ModuleItemInterface,
+  PostTypeKey,
+  TabsInterface,
+  TypeKeyListApi,
+} from '@types';
+import {useCallback, useEffect, useState} from 'react';
+import {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {createStyles} from './styles';
 
 export const useMovieScreen = () => {
-  const [data, setData] = useState(dashboardMovies);
-  const [dataCategory, setDataCategory] = useState([]);
+  const [data, setData] = useState<ModuleItemInterface[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-  const [activeCategory, setActiveCategory] = useState(1);
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const [tabSelect, setTabSelect] = useState<TabsInterface | undefined>({
+    id: 0,
+    name: '',
+    type: '',
+  });
+  const scrollY = useSharedValue(0);
 
-  const scrollHandler = Animated.event(
-    [{nativeEvent: {contentOffset: {y: scrollY}}}],
-    {useNativeDriver: false},
-  );
+  // Call Api
+  useEffect(() => {
+    callApi();
+  }, []);
 
-  const inputSearchStyle = {
-    opacity: scrollY.interpolate({
-      inputRange: [0, 50],
-      outputRange: [1, 0],
-      extrapolate: 'clamp',
-    }),
-    height: scrollY.interpolate({
-      inputRange: [0, 50],
-      outputRange: [50, 0],
-      extrapolate: 'clamp',
-    }),
-    marginTop: scrollY.interpolate({
-      inputRange: [0, 50],
-      outputRange: [Spacing.width16, 0],
-      extrapolate: 'clamp',
-    }),
+  const callApi = async (filter?: string) => {
+    try {
+      const params = {
+        filter: filter,
+      };
+      const response = await getPostDashboardApi(PostTypeKey.MOVIES, params);
+
+      setData(response.data?.modules || []);
+
+      const category: any = response.data?.modules.find(
+        item => item.type === TypeKeyListApi.TYPE_TABS,
+      );
+      // console.log({tabSelect: tabSelect?.name});
+
+      if (category && category?.items?.[0] && tabSelect?.name === undefined) {
+        setTabSelect(category?.items?.[0]);
+      }
+      setLoading(false);
+      setRefresh(false);
+    } catch (error) {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefresh(true);
   };
 
   useEffect(() => {
-    // fetch data
-    setDataCategory(categoryMovies || []);
-  }, []);
-  const onSearch = (text: string) => {
+    if (refresh) {
+      callApi();
+    }
+  }, [refresh]);
+
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+  const heightStyle = useAnimatedStyle(() => ({
+    height: interpolate(
+      scrollY.value,
+      [0, Spacing.height50],
+      [Spacing.height50, 0],
+      Extrapolate.CLAMP,
+    ),
+  }));
+
+  // action
+  const onSearch = useCallback((text: string) => {
     setSearch(text);
-  };
-  const onSelectedCategory = (id: number) => {
-    setActiveCategory(id);
-  };
+  }, []);
+  const onSelectedCategory = useCallback((item: TabsInterface) => {
+    setTabSelect(item);
+    setLoading(true);
+    const textFilter = `${item.type}/${item.id}`;
+    callApi(textFilter);
+  }, []);
+  const handleSearchChange = useCallback(
+    (text: string) => {
+      onSearch(text);
+    },
+    [onSearch],
+  );
+
+  interface HandleCategorySelect {
+    (item: TabsInterface): void;
+  }
+
+  const handleCategorySelect: HandleCategorySelect = useCallback(
+    (item: TabsInterface) => {
+      onSelectedCategory(item);
+    },
+    [onSelectedCategory],
+  );
+
   return {
     data,
-    themeColors,
     styles,
     search,
-    onSearch,
-    activeCategory,
-    onSelectedCategory,
-    inputSearchStyle,
+    tabSelect,
+    heightStyle,
+    handleCategorySelect,
     scrollHandler,
-    dataCategory,
+    onRefresh,
+    loading,
+    handleSearchChange,
   };
 };

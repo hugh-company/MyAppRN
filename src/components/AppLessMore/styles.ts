@@ -1,4 +1,4 @@
-import {FontWithFamily, ThemeColors} from '@theme';
+import {FontWithFamily, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -21,6 +21,8 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     btnMore: {
       alignItems: 'center',
+
+      paddingVertical: Spacing.height12,
     },
     txtMore: {
       ...FontWithFamily.FontWithFamily_600,

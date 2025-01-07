@@ -57,5 +57,6 @@
     "editor.defaultFormatter": "jock.svg"
   },
   "editor.formatOnPaste": false,
-  "editor.formatOnType": false
+  "editor.formatOnType": false,
+  "cSpell.words": ["descripton"]
 }

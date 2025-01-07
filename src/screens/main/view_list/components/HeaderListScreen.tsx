@@ -2,7 +2,7 @@ import { SearchIcon } from '@assets';
 import { AppCategoryList, AppHeader, AppInputSearch, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
-import { TypeListMovie } from '@types';
+import { KeyHomeData, PostTypeKey } from '@types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
@@ -15,7 +15,7 @@ interface HeaderListScreenProps {
   activeCategory?: number;
   scrollY: SharedValue<number>;
   categories?: { id: number, name: string }[];
-  type?: TypeListMovie;
+  type?: PostTypeKey;
 
 }
 export const HeaderListScreen = ({ title, search, onSearch, categories = [], scrollY, onSelectedCategory, activeCategory = 0, type }: HeaderListScreenProps) => {
@@ -38,15 +38,14 @@ export const HeaderListScreen = ({ title, search, onSearch, categories = [], scr
     <View style={styles.container}>
       <AppHeader title={isCategory ? title : ''} rightComponent={
         <TouchableOpacity
-          onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: TypeListMovie.MOVIES })}
+          onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: KeyHomeData.MOVIES })}
           style={[styles.btnSearchCategory, !isCategory && styles.btnSearch]}>
           <SearchIcon size={Spacing.width24} />
         </TouchableOpacity>} />
-      {(isCategory || type === TypeListMovie.MOVIES) && <>
+      {(isCategory && type === PostTypeKey.MOVIES) && <>
         <Animated.View style={[styles.inputSearch, heightStyle, opacityStyle]}>
           <AppInputSearch
             value={search}
-
             onChangeText={(text) => {
               onSearch?.(text);
             }}
@@ -55,18 +54,18 @@ export const HeaderListScreen = ({ title, search, onSearch, categories = [], scr
         <AppCategoryList
           data={categories}
           categoryId={activeCategory}
-          onSelectedCategory={(id) => onSelectedCategory?.(id)}
+          onSelectedCategory={(item) => onSelectedCategory?.(item?.id)}
           listStyle={styles.listCategory} />
       </>}
 
 
       {!isCategory && <AppText style={styles.title}>{title}</AppText>}
 
-      {(type === TypeListMovie.CHAPTERS && isCategory) && <>
+      {(type === PostTypeKey.COMIC && isCategory) && <>
         <AppCategoryList
           data={categories}
           categoryId={activeCategory}
-          onSelectedCategory={(id) => onSelectedCategory?.(id)}
+          onSelectedCategory={(item) => onSelectedCategory?.(item?.id)}
           listStyle={styles.listCategory} />
       </>}
 

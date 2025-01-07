@@ -1,10 +1,12 @@
 import axios, {AxiosError} from 'axios';
 import {Alert} from 'react-native';
 
+import {logout, store} from '@redux';
 import {ERROR_MESSAGES} from './apiConfig';
-import {clearToken, store} from '@redux';
 
 export const handleResponse = async (error: unknown) => {
+  console.log('sssdsadas:', error);
+
   if (axios.isCancel(error)) {
     console.log(
       ERROR_MESSAGES.REQUEST_CANCELLED,
@@ -12,20 +14,20 @@ export const handleResponse = async (error: unknown) => {
     );
   } else if (axios.isAxiosError(error) && error.response) {
     if (error.response.status === 401) {
-      await handleTokenExpiration();
+      // await handleTokenExpiration();
     }
-    console.log('Response error:', error.response.data);
   } else if (axios.isAxiosError(error) && error.request) {
     console.log('Request error:', error.request);
   } else {
     console.log('Error:', (error as Error).message);
   }
-  return Promise.reject(error);
+
+  return Promise.reject(error.response.data);
 };
 
 const handleTokenExpiration = async () => {
   try {
-    store.dispatch(clearToken());
+    store.dispatch(logout());
 
     Alert.alert(
       'Session Expired',

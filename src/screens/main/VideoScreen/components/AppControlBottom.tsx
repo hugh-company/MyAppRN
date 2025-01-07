@@ -3,7 +3,7 @@ import { AppText } from '@components';
 import Slider from '@react-native-community/slider';
 import { FontWithFamily, Spacing, useTheme } from '@theme';
 import { formatTimeSeconds } from '@utils';
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface AppControlBottomProps {
@@ -20,6 +20,15 @@ interface AppControlBottomProps {
   isFullScreenVisible: boolean; // Add this prop
   isError?: boolean; // Add this prop
 }
+
+const SliderComponent = memo(Slider, (prevProps, nextProps) => {
+  return prevProps.value === nextProps.value &&
+    prevProps.minimumValue === nextProps.minimumValue &&
+    prevProps.maximumValue === nextProps.maximumValue &&
+    prevProps.minimumTrackTintColor === nextProps.minimumTrackTintColor &&
+    prevProps.maximumTrackTintColor === nextProps.maximumTrackTintColor &&
+    prevProps.thumbTintColor === nextProps.thumbTintColor;
+});
 
 export const AppControlBottom = ({ isMuted, isError, duration, setSpeedVisible, toggleMute, videoRef, currentTime = 0, loading, setCurrentTime, toggleFullScreen, isFullScreenVisible }: AppControlBottomProps) => {
   const { themeColors } = useTheme();
@@ -59,7 +68,7 @@ export const AppControlBottom = ({ isMuted, isError, duration, setSpeedVisible, 
       <View style={styles.viewTime}>
         <AppText style={styles.txtTime}>{formatTimeSeconds(seeking ? seekTime : currentTime)}</AppText>
       </View>
-      <Slider
+      <SliderComponent
         style={styles.slider}
         minimumValue={0}
         maximumValue={duration}

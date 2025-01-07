@@ -6,6 +6,8 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       flex: 1,
       backgroundColor: themeColors.background,
+      width: '100%',
+      height: '100%',
     },
     video: {
       flex: 1,

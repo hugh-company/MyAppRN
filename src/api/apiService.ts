@@ -1,142 +1,188 @@
-import NetInfo from '@react-native-community/netinfo';
 import {store} from '@redux';
-import axios, {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelTokenSource,
-} from 'axios';
-import {API_CONFIG, ERROR_MESSAGES, REQUEST_METHODS} from './apiConfig';
+import axios, {AxiosResponse, CancelTokenSource} from 'axios';
+import i18next from 'i18next';
+import {ApiConfigs} from './apiConfig';
 import {handleResponse} from './responseHandler';
+class AxiosClass {
+  static instance: AxiosClass;
 
-class ApiService {
-  private axiosInstance: AxiosInstance;
-  private cancelTokenSource: CancelTokenSource | null = null;
+  static default() {
+    if (!AxiosClass.instance) {
+      AxiosClass.instance = new AxiosClass();
+    }
+    return AxiosClass.instance;
+  }
+
+  api: any;
+  incrementRequestId = 0;
+  token = '';
+  storeKey = '';
 
   constructor() {
-    this.axiosInstance = axios.create({
-      baseURL: API_CONFIG.BASE_URL,
-      timeout: API_CONFIG.TIMEOUT,
-      headers: API_CONFIG.HEADERS,
+    this.api = axios.create({
+      ...ApiConfigs,
+      timeout: 30000, // Add timeout configuration
+    });
+    this.api.interceptors.response.use(
+      this.interceptorResponses,
+      (err: any) => {
+        if (err.code === 'ECONNABORTED') {
+          console.error('Request timeout');
+        }
+        return handleResponse(err);
+      },
+    );
+    this.api.interceptors.request.use(this.interceptorRequests);
+  }
+
+  interceptorRequests = async (config: any): Promise<any> => {
+    const token = await store.getState().accountSlice.token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  };
+
+  interceptorResponses = (response: AxiosResponse): Promise<any> => {
+    const {data} = response;
+    console.log({data});
+
+    return Promise.resolve(data);
+  };
+
+  setToken = async (token: string) => {
+    this.token = `Bearer ${token}`;
+    this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
+  };
+
+  setTokenWithoutSaveLocal = async (token: string) => {
+    this.token = token;
+    this.api.defaults.headers.common.Authorization = token;
+  };
+
+  clear = () => {
+    this.token = '';
+    this.api.defaults.headers.common.Authorization = null;
+  };
+  getToken = () => this.token;
+  setStoreKey = (key: string) => {
+    this.storeKey = key;
+  };
+
+  setBaseURL = (baseURL?: string) => {
+    const language = i18next.language;
+    if (baseURL) {
+      this.api.defaults.baseURL = baseURL.replace('{language}', language);
+    } else {
+      this.api.defaults.baseURL = ApiConfigs.baseURL.replace(
+        '{language}',
+        language,
+      );
+    }
+  };
+
+  get<T>(
+    url: string,
+    params?: any,
+    headers?:
+      | any
+      | {
+          cancelToken: CancelTokenSource;
+        },
+  ): Promise<T> {
+    console.log('GET ------->>', url, this.api.defaults.headers);
+    const newHeader: any = {
+      headers: {
+        ...this.api.defaults.headers,
+        // ...headers,
+      },
+    };
+    if (params) {
+      newHeader.params = {
+        ...params,
+      };
+    }
+    if (headers?.cancelToken) {
+      newHeader.cancelToken = headers.cancelToken;
+    }
+    console.log(url, {
+      ...newHeader,
     });
 
-    this.setupInterceptors();
+    return this.api.get(url, {
+      ...newHeader,
+    });
   }
 
-  private setupInterceptors() {
-    this.axiosInstance.interceptors.request.use(
-      async config => {
-        // Log request
-        console.log('🚀 REQUEST:', config.method?.toUpperCase());
-        console.log('📦 REQUEST BODY:', config.data);
+  del<T>(url: string): Promise<T> {
+    console.log('DEL ------->>', url);
 
-        // ... existing code ...
-        // Kiểm tra kết nối internet
-        const netInfo = await NetInfo.fetch();
-        if (!netInfo.isConnected) {
-          return Promise.reject(new Error(ERROR_MESSAGES.NO_INTERNET));
-        }
-
-        // Thêm token vào header
-        const token = await this.getToken();
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-
-        return config;
-      },
-      error => Promise.reject(error),
-    );
-
-    this.axiosInstance.interceptors.response.use(
-      response => {
-        // Log response
-        console.log('✅ RESPONSE:', response.status, response.config.url);
-        console.log('📦 RESPONSE DATA:', response.data);
-        return response;
-      },
-      error => {
-        if (error.response) {
-          console.log(
-            '❌ ERROR RESPONSE:',
-            error.response.status,
-            error.config.url,
-          );
-          console.log('📦 ERROR DATA:', error.response.data);
-        } else {
-          console.log('❌ ERROR:', error.message);
-        }
-        handleResponse(error);
-      },
-    );
-  }
-
-  private async getToken() {
-    const token = store.getState().accountSlice.token;
-    return token;
-  }
-  public async request<T>(config: AxiosRequestConfig): Promise<T> {
-    try {
-      if (this.cancelTokenSource) {
-        this.cancelTokenSource.cancel(ERROR_MESSAGES.REQUEST_CANCELLED);
-      }
-
-      this.cancelTokenSource = axios.CancelToken.source();
-
-      const response: AxiosResponse<T> = await this.axiosInstance.request({
-        ...config,
-        cancelToken: this.cancelTokenSource.token,
-      });
-
-      return response.data;
-    } catch (error) {
-      if (axios.isCancel(error)) {
-        console.log(ERROR_MESSAGES.REQUEST_CANCELLED, error.message);
-      }
-      throw error;
-    }
-  }
-
-  public cancelRequest() {
-    if (this.cancelTokenSource) {
-      this.cancelTokenSource.cancel(ERROR_MESSAGES.REQUEST_CANCELLED);
-    }
-  }
-
-  public async get<T>(url: string, params?: any): Promise<T> {
-    return this.request<T>({method: REQUEST_METHODS.GET, url, params});
-  }
-
-  public async post<T>(url: string, data?: any): Promise<T> {
-    return this.request<T>({method: REQUEST_METHODS.POST, url, data});
-  }
-
-  public async put<T>(url: string, data?: any): Promise<T> {
-    return this.request<T>({method: REQUEST_METHODS.PUT, url, data});
-  }
-
-  public async delete<T>(url: string): Promise<T> {
-    return this.request<T>({method: REQUEST_METHODS.DELETE, url});
-  }
-
-  public async uploadFile<T>(
-    url: string,
-    file: File,
-    onUploadProgress?: (progressEvent: any) => void,
-  ): Promise<T> {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.request<T>({
-      method: REQUEST_METHODS.POST,
-      url,
-      data: formData,
+    return this.api.delete(url, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        _id: this.incrementRequestId,
+        ...this.api.defaults.headers,
       },
-      onUploadProgress,
+    });
+  }
+
+  postNormal<T>(url: string, body?: any, header: any = {}): Promise<T> {
+    console.log('POSTNORMAL ------->>', url, body, this.token, {
+      headers: {
+        ...header,
+      },
+    });
+    return this.api.post(url, body, {
+      headers: {
+        ...header,
+      },
+    });
+  }
+
+  put<T>(url: string, body: any, header: any = {}): Promise<T> {
+    return this.api.put(url, body, {
+      headers: {
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        ...header,
+      },
+    });
+  }
+
+  delete<T>(url: string, body: any): Promise<T> {
+    console.log('detlete NORMAL ------->>', url, body, this.token);
+    return this.api.delete(url, {
+      data: body,
+      headers: {
+        _id: this.incrementRequestId,
+        lang: i18next.language.toLowerCase(),
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    });
+  }
+  post<T>(url: string, body: any): Promise<T> {
+    console.log('POST ------->>', url, body, this.token);
+    return this.api.post(url, body, {
+      headers: {
+        _id: this.incrementRequestId,
+        lang: i18next.language.toLowerCase(),
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+  uploadFile<T>(url: string, body: FormData, header: any = {}): Promise<T> {
+    let newBody = body ? {...body} : {};
+    console.log('POSTNORMAL ------->>', url, newBody, this.token);
+    return this.api.post(url, body, {
+      headers: {
+        lang: i18next.language.toLowerCase(),
+        _id: this.incrementRequestId,
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'multipart/form-data',
+        ...header,
+      },
     });
   }
 }
 
-export const apiService = new ApiService();
+export const apiService = AxiosClass.default();

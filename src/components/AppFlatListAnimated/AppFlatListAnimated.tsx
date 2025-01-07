@@ -2,14 +2,14 @@ import { NoSearchImage } from '@assets';
 import { useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
-import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, StyleProp, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, RefreshControlProps, StyleProp, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 import { createStyles } from './styles';
 export interface AppFlatListAnimatedProps {
   data: any[];
-  renderItem: ({ item, index }: { item: any, index: number }) => JSX.Element;
+  renderItem: ({ item, index }: { item: any, index?: number }) => JSX.Element;
 
   onScroll?: | ((event: NativeSyntheticEvent<NativeScrollEvent>) => void)
   | undefined;
@@ -34,6 +34,7 @@ export interface AppFlatListAnimatedProps {
   | undefined;
   isLoading?: boolean;
   emptyText?: string;
+  refreshing?: boolean;
   onRefresh?: () => void;
   onLoadMore?: () => void;
   isShort?: boolean;
@@ -45,9 +46,12 @@ export interface AppFlatListAnimatedProps {
   removeClippedSubviews?: boolean;
   perPage?: number;
   style?: StyleProp<ViewStyle>;
+  keyExtractor?: ((item: any, index: number) => string) | undefined;
+  refreshControlProps?: Partial<RefreshControlProps>;
+
 
 }
-const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading,
+const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading, keyExtractor,
   horizontal, ListFooterComponent, ListHeaderComponent,
   contentContainerStyle,
   onLoadMore,
@@ -57,6 +61,8 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
   removeClippedSubviews,
   perPage = 14,
   ListEmptyComponent,
+  refreshControlProps, refreshing = false,
+
 }: AppFlatListAnimatedProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
@@ -87,9 +93,10 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
       refreshControl={
         onRefresh && (
           <RefreshControl
-            refreshing={false}
+            refreshing={refreshing}
             onRefresh={onRefresh}
             tintColor={themeColors.text}
+            {...refreshControlProps}
           />
         )
       }
@@ -100,9 +107,9 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
           ListFooterComponent
         ) : data && data?.length > perPage - 1 && isLoading ? (
           <View>
-            <ActivityIndicator size={'small'} color={themeColors.primary} />
+            <ActivityIndicator size={'small'} color={themeColors.text} />
           </View>
-        ) : null
+        ) : <View style={styles.bottom} />
       }
       ListEmptyComponent={ListEmptyComponent || ListEmptyComponentBase}
       showsHorizontalScrollIndicator={false}
@@ -110,6 +117,7 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
       pagingEnabled={pagingEnabled}
       initialScrollIndex={initialScrollIndex}
       removeClippedSubviews={removeClippedSubviews}
+      keyExtractor={keyExtractor || ((item, index) => index.toString())}
     />
   );
 };

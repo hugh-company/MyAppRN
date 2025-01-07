@@ -1,3 +1,4 @@
+import { BASE_IMAGE_URL } from '@api';
 import { AppImage } from '@components';
 import { WidthScreen } from '@theme';
 import React, { useEffect, useState } from 'react';
@@ -12,7 +13,7 @@ const ImageChapter = ({ uri }: ImageChapterProps) => {
 
   useEffect(() => {
     Image.getSize(
-      uri,
+      `${BASE_IMAGE_URL}${uri}`,
       (width, height) => {
         const screenWidth = Dimensions.get('window').width;
         const scaleFactor = screenWidth / width;

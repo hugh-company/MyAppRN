@@ -1,7 +1,8 @@
 import {useRoute} from '@react-navigation/native';
+import {getListPostApi} from '@services';
 import {useTheme} from '@theme';
-import {chapterInterface} from '@types';
-import {useState} from 'react';
+import {chapterInterface, PostTypeKey, TypeList} from '@types';
+import {useEffect, useState} from 'react';
 import {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -10,25 +11,25 @@ import {createStyles} from './styles';
 
 interface ViewListScreenProps {
   name: string;
-  type: 'chapters' | 'movies' | 'games';
-  typeList: 'category' | 'list';
-  list: chapterInterface[];
+  type: PostTypeKey;
+  typeList: TypeList;
   categories?: {id: number; name: string}[];
+  categoryIdSelected?: number;
 }
 
 export const useViewListScreen = () => {
   // router name , type, params
   const router = useRoute();
-  const {name, type, list, categories} =
+  const {name, type, categories, categoryIdSelected} =
     router?.params as unknown as ViewListScreenProps;
-  console.log({list}, {categories});
+  const [loading, setLoading] = useState(true);
 
-  const [data, setData] = useState<chapterInterface[]>(list || []);
+  const [data, setData] = useState<chapterInterface[]>([]);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [categoriesList, setCategoriesList] = useState(categories || []);
-  const [activeCategory, setActiveCategory] = useState(1);
+  const [activeCategory, setActiveCategory] = useState(categoryIdSelected);
   const scrollY = useSharedValue(0);
 
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -37,7 +38,34 @@ export const useViewListScreen = () => {
   const onSelectedCategory = (id: number) => {
     setActiveCategory(id);
   };
+  // callapi
+  useEffect(() => {
+    callApi();
+  }, []);
+  const callApi = async () => {
+    try {
+      let params: any = {
+        page: 1,
+        limit: 10,
+      };
+      if (activeCategory) {
+        params = {
+          ...params,
+          sort: `tags/${activeCategory}`,
+        };
+      }
+      console.log({params});
 
+      const response: any = await getListPostApi(type);
+      console.log({list: response?.data?.data});
+      setData(response?.data?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log({error});
+
+      setLoading(false);
+    }
+  };
   const onSearch = (text: string) => {
     setSearch(text);
   };
@@ -56,5 +84,6 @@ export const useViewListScreen = () => {
     categoriesList,
     setCategoriesList,
     type,
+    loading,
   };
 };

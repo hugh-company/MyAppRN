@@ -14,7 +14,7 @@ export enum SCREEN_ROUTE {
   // Main
   HOME = 'Home',
   MOVIES = 'Movies',
-  CHAPTERS = 'Chapters',
+  COMIC = 'Comic',
   DATING = 'Dating',
   DATING_DETAILS = 'DATING_DETAILS',
 
@@ -36,4 +36,10 @@ export enum SCREEN_ROUTE {
   // Games
   GAME_DETAIL = 'GameDetail',
   PREVIEW_GAME = 'PreviewGame',
+
+  // Dating
+  CREATE_PROFILE = 'CreateProfile',
+  SETTING_FAVORITE = 'SettingFavorite',
+  FILTER_DATING = 'FilterDating',
+  LIST_DATING = 'ListDating',
 }

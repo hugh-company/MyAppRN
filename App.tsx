@@ -1,11 +1,12 @@
-import { setupCachePersister, setupGraphQlClient } from '@api';
-import { ApolloProvider } from '@apollo/client';
-import { GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
+import { apiService, setupCachePersister } from '@api';
+
+import { GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { persistor, store } from '@redux';
 import { ThemeProvider } from '@theme';
 import { initI18n } from '@translations';
+import FlashMessage from 'react-native-flash-message';
 
 import React, { useEffect } from 'react';
 import { LogBox, Platform, StyleSheet } from 'react-native';
@@ -17,10 +18,11 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
+import { enableScreens } from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-
+enableScreens();
 // Ask for consent first if necessary
 // Possibly only do this for iOS if no need to handle a GDPR-type flow
 Settings.initializeSDK();
@@ -34,25 +36,25 @@ GoogleSignin.configure({
 
 initI18n();
 const persistorCache = setupCachePersister();
-const client = setupGraphQlClient();
-const useGraphQLClient = () => {
-  React.useEffect(() => {
-    const loadCache = async () => {
-      await persistorCache.restore();
-    };
+// const client = setupGraphQlClient();
+// const useGraphQLClient = () => {
+//   React.useEffect(() => {
+//     const loadCache = async () => {
+//       await persistorCache.restore();
+//     };
 
-    loadCache();
-  }, []);
+//     loadCache();
+//   }, []);
 
-  return client;
-};
+//   return client;
+// };
 function App(): React.JSX.Element {
-  const client = useGraphQLClient();
 
   useEffect(() => {
     // Hide splash screen once app is ready
     SplashScreen.hide();
     Orientation.unlockAllOrientations();
+    apiService.setBaseURL();
   }, []);
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
@@ -61,21 +63,23 @@ function App(): React.JSX.Element {
     <GestureHandlerRootView style={styles.container}>
       <ThemeProvider >
         <Provider store={store}>
-          <ApolloProvider client={client}>
-            <PersistGate loading={null} persistor={persistor}>
-              <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                <AppNavigator
-                  ref={(navigatorRef: any) => {
-                    NavigationUtils.setTopLevelNavigator(navigatorRef);
-                  }}
-                />
-                <ModalPortal />
-                <ModalConfirmation />
-                <ModalChangeLanguage />
-              </SafeAreaProvider>
-              <GlobalUI />
-            </PersistGate>
-          </ApolloProvider>
+          {/* <ApolloProvider client={client}> */}
+          <PersistGate loading={null} persistor={persistor}>
+            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+              <AppNavigator
+                ref={(navigatorRef: any) => {
+                  NavigationUtils.setTopLevelNavigator(navigatorRef);
+                }}
+              />
+              <ModalPortal />
+              <ModalConfirmation />
+              <ModalChangeLanguage />
+              <FlashMessage position="top" />
+              <GlobalUI ref={GlobalService.globalUIRef} />
+            </SafeAreaProvider>
+
+          </PersistGate>
+          {/* </ApolloProvider> */}
         </Provider>
       </ThemeProvider>
     </GestureHandlerRootView>

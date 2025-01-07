@@ -1,33 +1,29 @@
-import { HeaderItemHome, HorizontalList, ItemGame } from '@components';
-import { categoryMovies, movies } from '@services';
+import { HorizontalList, ListProductCategory } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { TypeListMovie } from '@types';
+import { KeyHomeData, Module } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface StoryHomeProps {
   style?: StyleProp<ViewStyle>;
-
+  data?: Module;
 }
-export const StoryHome = ({ style }: StoryHomeProps) => {
+export const StoryHome = ({ style, data }: StoryHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [activeCategory, setActiveCategory] = React.useState(1);
 
-  const renderItem = ({ item }) => {
-    return (
-      <ItemGame item={item} />
-    );
-  };
   return (
     <View style={styles.container}>
-      <HeaderItemHome title={t('home.comicManage')} categoryIdSelected={activeCategory} type="chapters" categories={categoryMovies} onSelectedCategory={setActiveCategory} styleHeader={styles.header} />
-
-      <FlatList data={movies} horizontal keyExtractor={(item) => item.id.toString()} renderItem={renderItem} />
-
-      {/*  */}
-      <HorizontalList title={t('home.multipPeopleRead')} type={TypeListMovie.CHAPTERS} data={movies} titleViewMore={t('home.rank')} />
+      <ListProductCategory
+        title={data?.label}
+        data={data?.latest}
+        type={KeyHomeData.COMIC}
+        categories={data?.tabs} />
+      <HorizontalList
+        title={t('home.multiplayer')}
+        type={KeyHomeData.COMIC} data={data?.trending || []}
+        titleViewMore={t('home.rank')} />
     </View>
   );
 };

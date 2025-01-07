@@ -5,6 +5,7 @@ import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { WebView } from 'react-native-webview';
 import { usePreviewGame } from './PreviewGame.hook';
 
 const PreviewGame = () => {
@@ -20,6 +21,16 @@ const PreviewGame = () => {
           <DotsIcon />
         </TouchableOpacity>
       </Animated.View>
+      <WebView
+        source={{ uri: link }}
+        onLoadStart={() => setLoading(true)}
+        onLoadEnd={() => setLoading(false)}
+        onError={() => setLoading(false)}
+        onMessage={(event) => {
+          console.log('onMessage', event.nativeEvent.data);
+        }}
+        style={{ flex: 1 }}
+      />
     </View>
   );
 };

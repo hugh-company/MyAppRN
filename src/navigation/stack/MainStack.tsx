@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChapterDetail, GameDetailScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchScreen, VideoScreen, ViewListScreen } from '@screens';
+import { ChapterDetail, CreateProfileScreen, FilterDating, GameDetailScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -27,6 +27,12 @@ const MainStackComponent = memo(() => {
         <MainStack.Screen name={SCREEN_ROUTE.PREVIEW_CHAPTER} component={PreviewChapter} />
         <MainStack.Screen name={SCREEN_ROUTE.PREVIEW_GAME} component={PreviewGame} />
         <MainStack.Screen name={SCREEN_ROUTE.GAME_DETAIL} component={GameDetailScreen} />
+        {/* Dating */}
+
+        <MainStack.Screen name={SCREEN_ROUTE.CREATE_PROFILE} component={CreateProfileScreen} />
+        <MainStack.Screen name={SCREEN_ROUTE.SETTING_FAVORITE} component={SettingFavorite} />
+        <MainStack.Screen name={SCREEN_ROUTE.FILTER_DATING} component={FilterDating} />
+
       </MainStack.Navigator>
     </>
   );

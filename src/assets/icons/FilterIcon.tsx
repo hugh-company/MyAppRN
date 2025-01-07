@@ -1,7 +1,9 @@
+import { Spacing } from '@theme';
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
+import { IconProps } from './types';
 
-const FilterIcon = ({ size = 16, color = '#B2B2B2' }: { size?: number, color?: string }) => {
+const FilterIcon = ({ size = Spacing.width16, color = '#B2B2B2' }: IconProps) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 16 16" fill="none">
       <Path

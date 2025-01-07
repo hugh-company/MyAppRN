@@ -1,7 +1,8 @@
 import {useRoute} from '@react-navigation/native';
+import {getDetailPostApi} from '@services';
 import {useTheme} from '@theme';
-import {gameInterface} from '@types';
-import {useState} from 'react';
+import {gameInterface, KeyHomeData} from '@types';
+import {useEffect, useState} from 'react';
 import {
   useAnimatedStyle,
   useSharedValue,
@@ -18,17 +19,25 @@ export const useGameDetailScreen = () => {
   const {themeColors} = useTheme();
   const opacity = useSharedValue(0);
   const styles = createStyles(themeColors);
+  const [loading, setLoading] = useState(true);
 
   // Animated style for the overlay
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: withTiming(opacity.value, {duration: 500}),
   }));
-  const showDetails = () => {
-    opacity.value = 1; // Show overlay
-  };
+  useEffect(() => {
+    callApi();
+  }, []);
+  const callApi = async () => {
+    try {
+      const response: any = await getDetailPostApi(KeyHomeData.GAMES, game.id);
 
-  const hideDetails = () => {
-    opacity.value = 0; // Hide overlay
+      setData(response?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log({error});
+      setLoading(false);
+    }
   };
-  return {data, themeColors, styles};
+  return {data, themeColors, styles, loading};
 };

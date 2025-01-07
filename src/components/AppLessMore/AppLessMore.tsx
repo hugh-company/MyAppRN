@@ -19,17 +19,24 @@ const AppLessMore = ({ html, initialNumberOfLines = 3, text }: AppLessMoreProps)
   const styles = createStyles(themeColors);
   const [isExpanded, setIsExpanded] = useState(false);
   const [lengthMore, setLengthMore] = useState(false);
+  const [layoutMeasured, setLayoutMeasured] = useState(false);
 
-  const toggleExpand = () => setIsExpanded(!isExpanded);
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
+
+
+  const onLayout = (e: LayoutChangeEvent) => {
+    if (!layoutMeasured) {
+      setLengthMore(e.nativeEvent.layout.height >= 100);
+      setLayoutMeasured(true);
+    }
+  };
   const onTextLayout = useCallback((e: any) => {
-    setLengthMore(e.nativeEvent.lines.length >= initialNumberOfLines);
-  }, [initialNumberOfLines]);
-
-  const onLayout = useCallback((e: LayoutChangeEvent) => {
-    setLengthMore(e.nativeEvent.layout.height >= 100);
+    setLengthMore(e.nativeEvent.lines.length > initialNumberOfLines); //to check the text is more than 4 lines or not
+    // console.log(e.nativeEvent);
   }, []);
-
   return (
     <View style={styles.container}>
       {text ? (
@@ -40,13 +47,19 @@ const AppLessMore = ({ html, initialNumberOfLines = 3, text }: AppLessMoreProps)
             {text}
           </AppText>
           {lengthMore && (
-            <TouchableOpacity onPress={toggleExpand}>
-              <AppText>{isExpanded ? t('movie.show_less') : t('movie.more')}</AppText>
+            <TouchableOpacity hitSlop={
+              { top: 10, bottom: 10, left: 10, right: 10 }
+            } style={styles.btnMore} onPress={toggleExpand}>
+              <AppText style={styles.txtMore}>{isExpanded ? t('movie.show_less') : t('movie.more')}</AppText>
             </TouchableOpacity>
           )}
         </>
       ) : (
-        <View onLayout={onLayout} style={[styles.content, lengthMore && (!isExpanded ? { height: Spacing.height100 } : { height: 'auto' })]}>
+        <View
+          onLayout={onLayout}
+          style={[styles.content, lengthMore && (!isExpanded ? { height: Spacing.height100 } : { height: 'auto' })]}
+
+        >
           <RenderHTML
             contentWidth={WidthScreen - Spacing.width32}
             source={{ html: html || '' }}
@@ -92,7 +105,9 @@ const AppLessMore = ({ html, initialNumberOfLines = 3, text }: AppLessMoreProps)
         </View>
       )}
       {lengthMore && !text && (
-        <TouchableOpacity style={styles.btnMore} onPress={toggleExpand}>
+        <TouchableOpacity hitSlop={
+          { top: 10, bottom: 10, left: 10, right: 10 }
+        } style={styles.btnMore} onPress={() => toggleExpand()}>
           <AppText style={styles.txtMore}>{isExpanded ? t('movie.show_less') : t('movie.more')}</AppText>
         </TouchableOpacity>
       )}

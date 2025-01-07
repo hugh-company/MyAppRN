@@ -24,11 +24,15 @@ export const createStyles = (themeColors: ThemeColors) =>
       fontSize: FontSize.FontSize14,
       color: themeColors.inputText,
       backgroundColor: themeColors.inputBackground,
-      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
     },
     txtInput: {
       alignItems: 'center',
       justifyContent: 'center',
+
+      flex: 1,
     },
     txtPlaceholder: {
       color: themeColors.placeholder,

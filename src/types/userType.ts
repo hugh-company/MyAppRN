@@ -5,4 +5,10 @@ export interface UserInterface {
   phone: string;
   address: string;
   avatar: string;
+  username: string;
+
+  fullname: string;
+  // admin |moderator|author|member
+  role: string;
+  status: string;
 }

@@ -2,19 +2,15 @@ import {t} from 'i18next';
 import {z} from 'zod';
 
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, t('validate.email_req'))
-    .email(t('validate.validate_email')),
+  username: z.string().min(1, t('validate.validate_username')),
+
   password: z.string().min(1, t('validate.password_req')),
 });
 export type loginFormData = z.infer<typeof loginSchema>;
 
 export const registerSchema = z.object({
-  name: z
-    .string()
-    .min(1, {message: t('validate.validate_name')})
-    .max(50, {message: t('validate.validate_max_name')}),
+  username: z.string().min(1, {message: t('validate.validate_username')}),
+  fullname: z.string().min(1, {message: t('validate.validate_fullname')}),
   email: z
     .string()
     .min(1, t('validate.email_req'))

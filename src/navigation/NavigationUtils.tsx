@@ -16,13 +16,33 @@ export function setTopLevelNavigator(navigatorRef: typeNavigation) {
   _navigator = navigatorRef;
 }
 
+let lastNavigateTime = 0;
+const DEBOUNCE_TIME = 200; // Reduced debounce time
+
+function debounceNavigation(action: () => void) {
+  const currentTime = Date.now();
+  if (currentTime - lastNavigateTime > DEBOUNCE_TIME) {
+    action();
+    lastNavigateTime = currentTime;
+  }
+}
+
 export function navigate(routeName: string, params?: object | undefined) {
-  _navigator?.dispatch(
-    CommonActions.navigate({
-      name: routeName,
-      params,
-    }),
-  );
+  debounceNavigation(() => {
+    _navigator?.dispatch(
+      CommonActions.navigate({
+        name: routeName,
+        params,
+      }),
+    );
+  });
+}
+
+// thêm màn hình vào stack nếu có rồi
+export function push(routeName: string, params?: object | undefined) {
+  debounceNavigation(() => {
+    _navigator?.dispatch(StackActions.push(routeName, params));
+  });
 }
 
 export function resetApp() {
@@ -34,17 +54,18 @@ export function navigateToStack(
   screenName: string,
   params?: object | undefined
 ) {
-  _navigator?.dispatch(
-    CommonActions.navigate({
-      name: stackName,
-      params: {
-        screen: screenName,
-        params,
-      },
-    }),
-  );
+  debounceNavigation(() => {
+    _navigator?.dispatch(
+      CommonActions.navigate({
+        name: stackName,
+        params: {
+          screen: screenName,
+          params,
+        },
+      }),
+    );
+  });
 }
-
 
 export function goBack() {
   if (_navigator?.canGoBack()) {

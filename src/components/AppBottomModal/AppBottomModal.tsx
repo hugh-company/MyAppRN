@@ -1,6 +1,7 @@
 import { useTheme } from '@theme';
 import React from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import { BottomModal } from 'react-native-modals';
 import { useAnimatedGestureHandler } from 'react-native-reanimated';
 import { createStyles } from './styles';
@@ -23,8 +24,6 @@ const AppBottomModal = ({ visible, isLine = true,
   const handleGesture = useAnimatedGestureHandler({
     onActive: (event) => {
       const { translationY } = event;
-      console.log({ translationY });
-
       if (translationY > 100) {
         onClose?.();
       }
@@ -41,12 +40,14 @@ const AppBottomModal = ({ visible, isLine = true,
 
       onTouchOutside={() => onClose?.()} >
       <View style={styles.container} >
-        {/* <PanGestureHandler onGestureEvent={handleGesture}> */}
-        <>
-          {children}
-          {isLine && <View style={styles.line} />}
-        </>
-        {/* </PanGestureHandler> */}
+        <PanGestureHandler onGestureEvent={handleGesture}>
+
+          <>
+            {children}
+            {isLine && <View style={styles.line} />}
+          </>
+
+        </PanGestureHandler>
 
       </View>
     </BottomModal>

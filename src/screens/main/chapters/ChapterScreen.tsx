@@ -1,5 +1,5 @@
 import { AppInputSearch, HeaderMain, HorizontalList, SliderList } from '@components';
-import { TypeListMovie } from '@types';
+import { KeyHomeData } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
@@ -24,7 +24,7 @@ const ChapterScreen = () => {
         return (
           <HorizontalList
             title={item.name}
-            type={TypeListMovie.CHAPTERS}
+            type={KeyHomeData.STORY}
             data={item.data}
             titleViewMore={t('home.viewAll')}
             itemStyle={styles.itemStyle}

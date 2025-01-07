@@ -7,11 +7,11 @@ import { useLoginScreen } from './LoginScreen.hook';
 
 const LoginScreen = () => {
   const { styles, control, errors, onSubmit } = useLoginScreen();
-  console.log({ errors });
+
 
   return (
     <ContainerAuth style={styles.container}>
-      <AppInput name="email" placeholder={t('login.email')} error={errors.email?.message} control={control} />
+      <AppInput name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
       <AppInput name="password" placeholder={t('login.password')} error={errors.password?.message} control={control} secureTextEntry={true} />
       <AppButton onPress={() => onSubmit()} label={t('login.login')} style={styles.btnLogin} />
       <TouchableOpacity style={styles.btnForgot} onPress={() => navigate(SCREEN_ROUTE.FORGOT_PASSWORD)}>

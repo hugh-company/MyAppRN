@@ -55,3 +55,6 @@ export const formatTimeSeconds = (seconds: number): string => {
   const formatted = dayjs.duration(seconds, 'seconds').format('HH:mm:ss');
   return formatted.startsWith('00:') ? formatted.slice(3) : formatted;
 };
+export const isValidateDate = (date: string): boolean => {
+  return dayjs(date).isValid();
+};

@@ -34,6 +34,7 @@ export const lightColors = {
   star: '#F4C26C',
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
+  buttonHover: '#FF1F44',
 };
 
 export const darkColors = {
@@ -42,6 +43,7 @@ export const darkColors = {
   secondary: '#5E5CE6',
   tertiary: '#30D158',
   quaternary: '#FF375F',
+  buttonHover: '#FF1F44',
   background: '#000000',
   surface: '#1C1C1E',
   text: '#FFFFFF',

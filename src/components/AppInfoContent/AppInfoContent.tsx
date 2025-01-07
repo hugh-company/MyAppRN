@@ -1,75 +1,116 @@
-import { AddIcon, LikeIcon, SendIcon, StarIcon } from '@assets';
-import { AppLessMore, AppText } from '@components';
+import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
+import { AppLessMore, AppRatingMovie, AppText } from '@components';
+import { favoriteMovieApi, likePostApi, paramFavoriteMovie } from '@services';
 import { Spacing, useTheme } from '@theme';
-import { TypeListMovie } from '@types';
+import { PersonInterface, PostTypeKey, TabsInterface } from '@types';
+import { onShareInfo } from '@utils';
 import { t } from 'i18next';
-import React from 'react';
-import { StyleProp, View, ViewStyle } from 'react-native';
+import React, { useState } from 'react';
+import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppInfoContentProps {
-  type: TypeListMovie;
+  type: PostTypeKey;
   isLiked?: boolean;
   isSave?: boolean;
   releaseDate?: string;
-  tags?: string[];
-  main_actors?: string[];
+  tags?: TabsInterface[];
+  main_actors?: PersonInterface[];
   description?: any;
-  director?: string;
+  director?: PersonInterface[];
   style?: StyleProp<ViewStyle>;
   typeGame?: string;
+  id: number;
+  name?: string;
+
 
 }
 const AppInfoContent = ({
   type,
   isLiked,
-  isSave,
+  id,
   releaseDate,
   typeGame,
   tags,
   main_actors,
   description,
-  director, style,
+  director, style, name,
 }: AppInfoContentProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const [showRating, setShowRating] = useState(false);
+  const [like, setLike] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  // call api
+  const callApiLike = async () => {
+    try {
+      const response = await likePostApi(id, type, { like: 1 });
+      console.log({ response });
+      setLike(true);
+    } catch (error) {
+      setLike(false);
+    }
+  };
+  const onShare = async () => {
+    console.log('share', name);
 
-  const renderItem = (icon: any, title: string) => {
+    onShareInfo(name || '', name);
+  };
+  const callApiFavorite = async () => {
+    try {
+      const params: paramFavoriteMovie = {
+        post_id: id,
+        posttype: type,
+      };
+      const response = await favoriteMovieApi(params);
+      console.log({ response });
+      setIsFavorite(true);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+  //
+  const renderItem = (icon: any, title: string, onPress?: () => void) => {
     return (
-      <View style={styles.viewRow}>
+      <TouchableOpacity onPress={onPress} style={styles.viewRow}>
         <View style={styles.btnIcon}>
           {icon}
         </View>
         <AppText style={styles.txtLike}>
           {title}
         </AppText>
-      </View>
+      </TouchableOpacity>
     );
   };
   const renderOption = () => {
     switch (type) {
-      case TypeListMovie.CHAPTERS:
-      case TypeListMovie.MOVIES:
+      case PostTypeKey.COMIC:
+      case PostTypeKey.MOVIES:
         return (
           <View style={styles.viewOption} >
-            {renderItem(<LikeIcon />, t(isLiked ? 'liked' : 'like'))}
-            {renderItem(<StarIcon color="#EDEDED" />, t('rating'))}
-            {renderItem(<AddIcon size={Spacing.width16} />, t('saveMovie'))}
-            {renderItem(<SendIcon />, t('share'))}
+            {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
+            {renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => setShowRating(true))}
+            {renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t('saveMovie'), () => {
+              if (!isFavorite) {
+                callApiFavorite();
+              }
+            })}
+            {renderItem(<SendIcon />, t('share'), () => onShare())}
           </View>
         );
-      case TypeListMovie.GAMES:
+      case PostTypeKey.GAMES:
         return (
           <View style={[styles.viewOption, { justifyContent: 'center', gap: Spacing.width32 }]} >
-            {renderItem(<SendIcon />, t('share'))}
+            {renderItem(<SendIcon />, t('share'), () => onShare())}
             {renderItem(<LikeIcon />, t(isLiked ? 'liked' : 'like'))}
           </View>
         );
     }
   };
   const renderInfo = () => {
+    const infoTags = tags?.map((elm) => elm.name)?.join(', ');
     switch (type) {
-      case TypeListMovie.CHAPTERS:
-      case TypeListMovie.MOVIES:
+      case PostTypeKey.COMIC:
+      case PostTypeKey.MOVIES:
         return (
           <>
 
@@ -80,22 +121,22 @@ const AppInfoContent = ({
               </View>
               <View style={styles.info2}>
                 <AppText style={styles.titleInfo}>{t('movie.tags')}</AppText>
-                <AppText style={styles.valueInfo}>{tags?.join(', ')}</AppText>
+                <AppText style={styles.valueInfo}>{infoTags}</AppText>
               </View>
             </View>
             <View style={styles.infoRow}>
               <View style={styles.info1}>
                 <AppText style={styles.titleInfo}>{t('movie.director')}</AppText>
-                <AppText style={styles.valueInfo}>{director}</AppText>
+                <AppText style={styles.valueInfo}>{director?.map((elm) => elm.title)?.join(', ')}</AppText>
               </View>
               <View style={styles.info2}>
                 <AppText style={styles.titleInfo}>{t('movie.actor')}</AppText>
-                <AppText style={styles.valueInfo}>{main_actors?.join(', ')}</AppText>
+                <AppText style={styles.valueInfo}>{main_actors?.map((elm) => elm.title)?.join(', ')}</AppText>
               </View>
             </View>
           </>
         );
-      case TypeListMovie.GAMES:
+      case PostTypeKey.GAMES:
         return (
 
           <View style={styles.infoRow}>
@@ -105,7 +146,7 @@ const AppInfoContent = ({
             </View>
             <View style={styles.info2}>
               <AppText style={styles.titleInfo}>{t('movie.tags')}</AppText>
-              <AppText style={styles.valueInfo}>{tags?.join(', ')}</AppText>
+              <AppText style={styles.valueInfo}>{infoTags}</AppText>
             </View>
           </View>
         );
@@ -118,10 +159,13 @@ const AppInfoContent = ({
 
       <View style={styles.viewContent}>
         <AppText style={styles.titleContent}>{t('movie.content')}</AppText>
-        <AppLessMore html={description} />
+        <AppLessMore text={description} />
       </View>
 
-
+      <AppRatingMovie
+        id={id}
+        visible={showRating}
+        onClose={() => setShowRating(false)} />
     </View>
   );
 };

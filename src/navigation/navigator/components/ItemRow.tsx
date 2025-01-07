@@ -24,9 +24,9 @@ const styleItem = StyleSheet.create({
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Spacing.width12,
+    // paddingVertical: Spacing.width8,
     gap: Spacing.width16,
-
+    height: Spacing.width40,
   },
   txtItem: {
     fontSize: FontSize.FontSize18,

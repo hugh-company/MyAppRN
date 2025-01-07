@@ -21,6 +21,13 @@ export const DrawerAuth = ({ listNavigation }: DrawerAuthProps) => {
   const styles = createStyles(themeColors);
   return (
     <View style={styles.container}>
+
+      <ItemRow Icon={SearchIcon} key={'search'} title={t('drawer.search')} onPress={() => { }} styles={styles.search} />
+      <View style={styles.listMenuAuth}>
+        {listNavigation.map((item, index) => (
+          <ItemRow key={item.key} Icon={item.Icon} title={item.name} onPress={() => navigate(item.key)} />
+        ))}
+      </View>
       <AppText style={styles.title}>{t('drawer.title')}</AppText>
       <AppText style={styles.description}>{t('drawer.description')}</AppText>
       <View style={styles.viewAuth}>
@@ -28,12 +35,6 @@ export const DrawerAuth = ({ listNavigation }: DrawerAuthProps) => {
           navigateToStack(SCREEN_ROUTE.AUTH_STACK, SCREEN_ROUTE.LOGIN);
         }} />
         <AppButton style={styles.btnRegister} label={t('drawer.register')} onPress={() => navigateToStack(SCREEN_ROUTE.AUTH_STACK, SCREEN_ROUTE.REGISTER)} />
-      </View>
-      <ItemRow Icon={SearchIcon} key={'search'} title={t('drawer.search')} onPress={() => { }} styles={styles.search} />
-      <View style={styles.listMenuAuth}>
-        {listNavigation.map((item, index) => (
-          <ItemRow key={item.key} Icon={item.Icon} title={item.name} onPress={() => navigate(item.key)} />
-        ))}
       </View>
       <ItemRow Icon={InternetIcon} title={t('drawer.language')} onPress={() => showModalLanguage(true)} styles={styles.language} key={'language'} />
     </View>
@@ -43,13 +44,13 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       paddingHorizontal: Spacing.width16,
-      marginTop: Spacing.width48,
+      // marginTop: Spacing.width48,
     },
     title: {
       fontSize: FontSize.FontSize38,
       ...FontWithFamily.FontWithFamily_700,
       color: themeColors.primary,
-
+      marginTop: Spacing.width72,
     },
     description: {
       // background: var(--Content-on-surface, #EDEDED);
@@ -88,9 +89,9 @@ const createStyles = (themeColors: ThemeColors) =>
 
     },
     search: {
-      marginTop: Spacing.width32,
+      // marginTop: Spacing.width32,
       borderBottomWidth: 1,
-      borderBottomColor: themeColors.btnSocial,
+      borderBottomColor: themeColors.text,
 
     },
     language: {

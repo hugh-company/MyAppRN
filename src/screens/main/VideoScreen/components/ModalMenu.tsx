@@ -12,7 +12,7 @@ export interface ModalMenuVideoProps {
   onClose: () => void;
   currentLanguage?: string;
 }
-const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuVideoProps) => {
+export const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuVideoProps) => {
 
   const { bottom } = useSafeAreaInsets();
 
@@ -20,14 +20,14 @@ const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuVideoPro
   const styles = createStyles(themeColors);
 
 
-  const dataLanguage = [
+  const menu = [
     {
-      name: t('drawer.english'),
+      name: t('movie.speed'),
       icon: <FlagEnglish />,
-      code: 'en',
+      code: 'speed',
     },
     {
-      name: t('drawer.vietnamese'),
+      name: t('movie.mute'),
       icon: <FlagVietNam />,
       code: 'vi',
     },
@@ -45,7 +45,7 @@ const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuVideoPro
           <AppText style={styles.subtitle}>{t('drawer.choosePreferredLanguage')}</AppText> {/* New subtitle */}
           <View style={styles.list}>
             {
-              dataLanguage.map((item, index) => (
+              menu.map((item, index) => (
                 <View key={index} style={[styles.item, currentLanguage === item.code ? styles.btnActive : null]}  >
                   <View style={styles.flag}>
                     {item.icon}

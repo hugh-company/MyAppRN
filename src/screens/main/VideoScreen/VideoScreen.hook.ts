@@ -1,14 +1,20 @@
 import {goBack} from '@navigation';
+import {useRoute} from '@react-navigation/native';
 import {useTheme} from '@theme';
-import {useEffect, useRef, useState} from 'react';
+import {episodeInterface} from '@types';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {createStyles} from './styles';
-
+interface VideoScreenProps {
+  video: episodeInterface;
+}
 export const useVideoScreen = () => {
-  const [uri, setUri] = useState(
-    'https://vip.opstream10.com/20220309/177_4a9b764f/index.m3u8',
-  );
+  const router = useRoute();
+  const {video} = (router?.params as unknown as VideoScreenProps) || {
+    video: undefined,
+  };
+  const [urlVideo, setUrlVideo] = useState(video?.source?.[0]?.link || '');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const videoRef = useRef<any>(null);
@@ -16,7 +22,7 @@ export const useVideoScreen = () => {
   const [showAds, setShowAds] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [paused, setPaused] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  const currentTimeRef = useRef(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const [isLoading, setIsLoading] = useState(true);
@@ -25,19 +31,6 @@ export const useVideoScreen = () => {
 
   // state speed to control speed video
   const [isSpeedVisible, setSpeedVisible] = useState(false); // Add this line
-
-  const ads = [
-    {
-      type: 'video',
-      uri: 'https://www.w3schools.com/html/mov_bbb.mp4',
-      startTime: 10000,
-    },
-    {
-      type: 'image',
-      uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQlQgBYHc-oK1CtI_SeIkYNHT0UWkIaPLQCQ&s',
-      startTime: 20000,
-    },
-  ];
 
   const [ad, setAd] = useState<{
     type: 'video' | 'image';
@@ -72,40 +65,48 @@ export const useVideoScreen = () => {
   //   }
   // }, []);
 
-  const skipAd = () => {
+  const skipAd = useCallback(() => {
     setShowAds(false);
     setPaused(false);
-  };
+  }, []);
 
-  const toggleMute = () => {
-    setIsMuted(!isMuted);
-  };
+  const toggleMute = useCallback(() => {
+    setIsMuted(prev => !prev);
+  }, []);
 
-  const togglePlayPause = () => {
+  const togglePlayPause = useCallback(() => {
     if (paused) {
       videoRef?.current?.resume();
     } else {
       videoRef.current?.pause();
     }
-    setPaused(!paused);
-  };
-  const goBackScreen = () => {
+    setPaused(prev => !prev);
+  }, [paused]);
+
+  const goBackScreen = useCallback(() => {
+    Orientation.lockToPortrait(); // Ensure it locks to portrait mode when going back
     goBack();
-  };
+  }, []);
 
-  const fastForward = () => {
-    const newTime = currentTime + 10;
-    videoRef.current.seek(newTime);
-    setCurrentTime(newTime);
-    setPaused(false); // Ensure video continues playing after seeking
-  };
+  useEffect(() => {
+    return () => {
+      Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
+    };
+  }, []);
 
-  const rewind = () => {
-    const newTime = currentTime - 10;
+  const fastForward = useCallback(() => {
+    const newTime = currentTimeRef.current + 10;
     videoRef.current.seek(newTime);
-    setCurrentTime(newTime);
+    currentTimeRef.current = newTime;
     setPaused(false); // Ensure video continues playing after seeking
-  };
+  }, []);
+
+  const rewind = useCallback(() => {
+    const newTime = currentTimeRef.current - 10;
+    videoRef.current.seek(newTime);
+    currentTimeRef.current = newTime;
+    setPaused(false); // Ensure video continues playing after seeking
+  }, []);
 
   const [controlsVisible, setControlsVisible] = useState(false);
   // sau 3s không tương tác thì ẩn control
@@ -118,59 +119,95 @@ export const useVideoScreen = () => {
       setControlsTimeout(timeout);
     }
   }, [controlsVisible, isSpeedVisible]);
-  const updateProgress = time => {
-    setCurrentTime(time);
-  };
-  const toggleControlsVisibility = () => {
-    setControlsVisible(!controlsVisible);
-  };
+  const updateProgress = useCallback(time => {
+    currentTimeRef.current = time;
+  }, []);
+  const toggleControlsVisibility = useCallback(() => {
+    setControlsVisible(prev => !prev);
+  }, []);
   const onMenuPress = () => {};
   const rotation = useSharedValue(0);
 
-  const toggleFullScreen = () => {
+  const toggleFullScreen = useCallback(() => {
     setControlsVisible(false);
     if (isFullScreenVisible) {
       Orientation.unlockAllOrientations();
+      Orientation.lockToPortrait(); // Ensure it locks to portrait mode
       rotation.value = withTiming(0, {duration: 300});
     } else {
       Orientation.lockToLandscape();
       rotation.value = withTiming(90, {duration: 300});
     }
-    setIsFullScreenVisible(!isFullScreenVisible);
-  };
+    setIsFullScreenVisible(prev => !prev);
+  }, [isFullScreenVisible, rotation]);
 
-  return {
-    setCurrentTime,
-    currentTime,
-    playbackRate,
-    uri,
+  return useMemo(
+    () => ({
+      setCurrentTime: time => {
+        currentTimeRef.current = time;
+      },
+      currentTime: currentTimeRef.current,
+      playbackRate,
+      urlVideo,
 
-    fastForward,
-    paused,
-    togglePlayPause,
-    rewind,
-    setDuration,
-    isMuted,
-    goBackScreen,
-    toggleMute,
-    duration,
-    styles,
-    videoRef,
-    error,
-    isSpeedVisible,
-    setSpeedVisible,
-    isLoading,
-    setIsLoading,
-    onMenuPress,
-    toggleControlsVisibility,
-    updateProgress,
-    controlsVisible,
-    showAds,
-    ad,
-    skipAd,
-    setPlaybackRate,
-    toggleFullScreen,
-    isFullScreenVisible,
-    setError,
-  };
+      fastForward,
+      paused,
+      togglePlayPause,
+      rewind,
+      setDuration,
+      isMuted,
+      goBackScreen,
+      toggleMute,
+      duration,
+      styles,
+      videoRef,
+      error,
+      isSpeedVisible,
+      setSpeedVisible,
+      isLoading,
+      setIsLoading,
+      onMenuPress,
+      toggleControlsVisibility,
+      updateProgress,
+      controlsVisible,
+      showAds,
+      ad,
+      skipAd,
+      setPlaybackRate,
+      toggleFullScreen,
+      isFullScreenVisible,
+      setError,
+    }),
+    [
+      playbackRate,
+      urlVideo,
+      fastForward,
+      paused,
+      togglePlayPause,
+      rewind,
+      setDuration,
+      isMuted,
+      goBackScreen,
+      toggleMute,
+      duration,
+      styles,
+      videoRef,
+      error,
+      isSpeedVisible,
+      setSpeedVisible,
+      isLoading,
+      setIsLoading,
+      onMenuPress,
+      toggleControlsVisibility,
+      updateProgress,
+      controlsVisible,
+      showAds,
+      ad,
+      skipAd,
+      setPlaybackRate,
+      toggleFullScreen,
+      isFullScreenVisible,
+      setError,
+    ],
+  );
 };

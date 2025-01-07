@@ -1,25 +1,25 @@
-import Config from 'react-native-config';
-
 const END_POINT = {
   production: {
-    BASE_URL: Config.BASE_URL_PRODUCTION,
+    BASE_URL: 'https://serverapiphu.com',
   },
   staging: {
-    BASE_URL: Config.BASE_URL_STAGING,
+    BASE_URL: 'https://oninapp.com',
   },
 };
-
 export const ACCESS_TOKEN = '';
 export const API_URL = '';
-const ENV_NAME = Config.ENV as keyof typeof END_POINT;
-export const API_CONFIG = {
-  BASE_URL: 'https://virtserver.swaggerhub.com/KYOOMIBU/EntertainmentAPI/1.0.0',
-  TIMEOUT: 10000,
-  HEADERS: {
-    'Content-Type': 'application/json',
+const ENV_ENVIRONMENT = 'staging' as keyof typeof END_POINT;
+export const ApiConfigs = {
+  baseURL: `${END_POINT[ENV_ENVIRONMENT].BASE_URL}/{language}/api/v1`,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json application/x-www-form-urlencoded',
     Accept: 'application/json',
+    timeout: 30000,
   },
+  timeout: 30000,
 };
+export const BASE_IMAGE_URL = END_POINT[ENV_ENVIRONMENT].BASE_URL;
 export const ERROR_MESSAGES = {
   NO_INTERNET: 'No internet connection',
   REQUEST_CANCELLED: 'Request was cancelled',
@@ -34,8 +34,31 @@ export const REQUEST_METHODS = {
 };
 
 export const API_ENDPOINTS = {
-  LOGIN: '/EN/api/v1/auth/login/',
-  REGISTER: '/EN/api/v1/auth/register/',
-  USER_PROFILE: '/users',
+  // auth
+  LOGIN: '/auth/login',
+  REGISTER: '/auth/register',
+  LOGOUT: '/auth/logout',
+  CSRF_TOKEN: '/auth/csrf_create/',
+  // account
+  USER_PROFILE: '/user/info/',
+  UPDATE_PROFILE: '/user/info',
   // Thêm các endpoint khác ở đây
+  // home
+  HOME: '/home/index/',
+  MOVIES: '/terms/lists/',
+  DETAIL: '/posts/detail/',
+  LIST: '/posts/lists/',
+
+  //rating
+  RATING: '/reviews/rating/',
+  // report
+  REPORT: '/posts/report/',
+  // like
+  LIKE: '/posts/like/',
+  // favorite
+  FAVORITE: '/posts/favorites/',
+  // view
+  VIEW: '/posts/views/',
+  // search
+  SEARCH: '/posts/search/',
 };

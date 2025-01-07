@@ -69,25 +69,23 @@ const ButtonTabGame = ({ tabKey, onPress, styles, isFocused, name, Icon }: Butto
     </Animated.View>
   );
 };
-const ButtonBottomTab = (keyTab: 'Home' | 'Movies' | 'Games' | 'Chapters' | 'Dating', onPress: () => void, styles: any, isFocused: boolean) => {
+const ButtonBottomTab = (keyTab: 'Home' | 'Movies' | 'Games' | 'Comic' | 'Dating', onPress: () => void, styles: any, isFocused: boolean) => {
   const menu = {
     'Home': { name: t('navigation.home'), key: SCREEN_ROUTE.HOME, Icon: HomeIcon },
     'Movies': { name: t('navigation.movies'), key: SCREEN_ROUTE.MOVIES, Icon: MovieIcon },
     'Games': { name: t('navigation.games'), key: SCREEN_ROUTE.GAMES, Icon: GameIcon },
-    'Chapters': { name: t('navigation.chapters'), key: SCREEN_ROUTE.CHAPTERS, Icon: ChapterIcon },
+    'Comic': { name: t('navigation.chapters'), key: SCREEN_ROUTE.COMIC, Icon: ChapterIcon },
     'Dating': { name: t('navigation.dating'), key: SCREEN_ROUTE.DATING, Icon: DatingIcon },
   };
   const { key, name, Icon } = menu[keyTab];
   switch (key) {
     case SCREEN_ROUTE.MOVIES:
-    case SCREEN_ROUTE.CHAPTERS:
+    case SCREEN_ROUTE.COMIC:
     case SCREEN_ROUTE.DATING:
     case SCREEN_ROUTE.HOME:
       return (
         <ButtonTab tabKey={key} name={name} Icon={Icon} onPress={onPress} styles={styles} isFocused={isFocused} />
       );
-
-
     case SCREEN_ROUTE.GAMES:
       return <ButtonTabGame tabKey={key} name={name} Icon={Icon} onPress={onPress} styles={styles} isFocused={isFocused} />;
 

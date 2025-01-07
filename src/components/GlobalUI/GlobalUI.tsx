@@ -41,8 +41,6 @@ export const GlobalUI = React.forwardRef((props, ref) => {
   );
 
   const showLoading = () => {
-    console.log('asdasd');
-
     setLoading(true);
   };
 

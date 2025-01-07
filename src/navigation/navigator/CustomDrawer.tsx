@@ -1,4 +1,4 @@
-import { ChapterIcon, DatingIcon, GameIcon, HomeIcon, ImageBook, ImageGame, ImageMovie, MovieIcon, PageProfileIcon, SavedIcon } from '@assets';
+import { ChapterIcon, DatingIcon, GameIcon, HomeIcon, ImageBook, ImageGame, ImageMovie, InternetIcon, MovieIcon, SaveComicIcon, SaveMovieIcon } from '@assets';
 import { AppImage } from '@components';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
 import { getToken } from '@redux';
@@ -22,10 +22,10 @@ interface CustomDrawerProps extends DrawerContentComponentProps {
 const CustomDrawer = (props: CustomDrawerProps) => {
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
-  const { bottom } = useSafeAreaInsets();
-
+  const { bottom, top } = useSafeAreaInsets();
   const styles = createStyles(themeColors);
-  const colors = token ? ['#050505', '#2D0C0C'] : ['#B1062E', '#1E1111'];
+  // const colors = token ? ['#050505', '#2D0C0C'] : ['#B1062E', '#1E1111'];
+  const colors = ['#B1062E', '#1E1111'];
   const dataNavigation = [
     {
       name: t('navigation.home'),
@@ -44,7 +44,7 @@ const CustomDrawer = (props: CustomDrawerProps) => {
     },
     {
       name: t('navigation.chapters'),
-      key: SCREEN_ROUTE.CHAPTERS,
+      key: SCREEN_ROUTE.COMIC,
       Icon: ChapterIcon,
     },
     {
@@ -55,20 +55,22 @@ const CustomDrawer = (props: CustomDrawerProps) => {
   ];
 
   const dataSettings = [
-    {
-      name: t('drawer.profile'),
-      key: SCREEN_ROUTE.PROFILE,
-      Icon: PageProfileIcon,
-    },
+
+
     {
       name: t('drawer.movie_saved'),
       key: SCREEN_ROUTE.SAVED_MOVIE,
-      Icon: SavedIcon,
+      Icon: SaveComicIcon,
     },
     {
       name: t('drawer.chapter_saved'),
       key: SCREEN_ROUTE.SAVED_CHAPTER,
-      Icon: SavedIcon,
+      Icon: SaveMovieIcon,
+    },
+    {
+      name: t('drawer.language'),
+      key: 'language',
+      Icon: InternetIcon,
     },
   ];
   return (
@@ -79,7 +81,7 @@ const CustomDrawer = (props: CustomDrawerProps) => {
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
       >
-        <View style={[styles.viewImage, {}]}>
+        <View style={[styles.viewImage, { marginTop: top || Spacing.width16, marginBottom: bottom || Spacing.width16 }]}>
           {[ImageBook, ImageGame, ImageMovie].map((item, index) => (
             <View key={index}>
               <AppImage key={index.toString()} resizeMode={'stretch'} style={styles.image} defaultSource={item} />
@@ -102,8 +104,8 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     gradient: {
       flex: 1,
-      height: '100%',
-      width: '100%',
+      // justifyContent: 'center',
+      // alignItems: 'center',
     },
     viewImage: {
       flexDirection: 'row',

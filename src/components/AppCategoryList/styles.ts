@@ -10,7 +10,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     itemCategory: {
       height: Spacing.width40,
-      maxWidth: Spacing.width160,
+      // maxWidth: Spacing.width160,
       minWidth: Spacing.width70,
       justifyContent: 'center',
       alignItems: 'center',

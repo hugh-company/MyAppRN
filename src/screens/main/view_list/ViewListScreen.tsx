@@ -1,4 +1,4 @@
-import { AppListMovies } from '@components';
+import { AppListMovies, LoadingList } from '@components';
 import React from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -7,7 +7,7 @@ import { HeaderListScreen } from './components/HeaderListScreen';
 
 const ViewListScreen = () => {
   const { data, type, styles, name, search, onSearch, activeCategory, onSelectedCategory, scrollHandler, scrollY,
-    categoriesList,
+    categoriesList, loading,
   } = useViewListScreen();
 
   return (
@@ -21,14 +21,15 @@ const ViewListScreen = () => {
         categories={categoriesList}
         type={type}
         scrollY={scrollY} />
-      <Animated.View style={styles.listContainer}>
+      {loading ? <LoadingList numColumns={categoriesList.length > 0 ? 2 : 1} /> : <Animated.View style={styles.listContainer}>
         <AppListMovies
           numColumns={categoriesList.length > 0 ? 2 : 0}
           onScroll={scrollHandler}
           scrollEventThrottle={16}
           data={data}
+          type={type}
         />
-      </Animated.View>
+      </Animated.View>}
     </View>
   );
 };

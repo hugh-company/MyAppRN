@@ -31,6 +31,12 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
+    episodes: {
+      marginHorizontal: Spacing.width16,
+    },
+    infoRow: {
+      marginHorizontal: Spacing.width16,
+    },
     viewInfo: {
       position: 'absolute',
       bottom: 0,
@@ -69,5 +75,8 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.text,
       ...FontWithFamily.FontWithFamily_600,
       textAlign: 'center',
+    },
+    paddingBottom: {
+      paddingBottom: Spacing.width50,
     },
   });

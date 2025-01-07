@@ -1,42 +1,42 @@
-import { AppFlatListAnimated, AppText, HorizontalList } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
+import { AppListDashboard, AppText } from '@components';
+import { getPostDashboardApi } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface DashboardSearchProps {
-  data: any[]
+
 }
 
-export const DashboardSearch = ({ data }: DashboardSearchProps) => {
+export const DashboardSearch = ({ }: DashboardSearchProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    callApiDashboard();
+  }, []);
+  const callApiDashboard = async () => {
+    try {
+      const response = await getPostDashboardApi(ItemListDashboard.SEARCH);
+      console.log({ response });
 
-  const renderItem = ({ item }) => (
-    <HorizontalList
-      style={styles.item}
-      itemStyle={styles.itemImage}
-      title={item.name}
-      type={item.type}
-      data={item.data?.map(elm => ({
-        ...elm,
-        image: elm?.poster,
-      }))}
-      titleViewMore={t('home.viewAll')}
-      onViewMore={() => {
-        navigate(SCREEN_ROUTE.VIEW_LIST, { type: item.type, name: item.name, id: item.id });
-      }}
-    />
-  );
-
+      setData(response?.data?.modules || []);
+      setLoading(false);
+    } catch (error) {
+      // console.log({error});
+      setLoading(false);
+    }
+  };
   return (
     <View style={styles.container}>
-      <AppFlatListAnimated
-        ListHeaderComponent={<AppText style={styles.title}>{t('search.searchVariety')}</AppText>}
+      <AppListDashboard
         data={data}
-        renderItem={renderItem}
-        onRefresh={() => { }}
+        ListHeaderComponent={<AppText style={styles.title}>{t('search.searchVariety')}</AppText>}
+        loading={loading}
+        typeScreen={ItemListDashboard.SEARCH}
       />
     </View>
   );

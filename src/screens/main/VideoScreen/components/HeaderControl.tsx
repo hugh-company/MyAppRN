@@ -14,16 +14,19 @@ export const HeaderControl = ({ goBackScreen, onMenuPress }: HeaderControlProps)
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { top } = useSafeAreaInsets();
+  const [isMenuVisible, setIsMenuVisible] = React.useState(false);
 
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
-      <TouchableOpacity style={styles.btnBack} onPress={goBackScreen}>
-        <LeftIcon />
-      </TouchableOpacity>
-      {/* <TouchableOpacity style={styles.btnBack} onPress={onMenuPress}>
-        <DotsIcon />
-      </TouchableOpacity> */}
-    </View>
+    <>
+      <View style={[styles.container, { paddingTop: top }]}>
+        <TouchableOpacity style={styles.btnBack} onPress={goBackScreen}>
+          <LeftIcon />
+        </TouchableOpacity>
+        {/* <TouchableOpacity style={styles.btnBack} onPress={() => setIsMenuVisible(true)}>
+          <DotsIcon />
+        </TouchableOpacity> */}
+      </View>
+    </>
   );
 };
 

@@ -21,7 +21,9 @@ const RegisterScreen = () => {
           </AppText>
 
         </View>
-        <AppInput name="name" placeholder={t('register.name')} error={errors.email?.message} control={control} />
+        <AppInput name="fullname" placeholder={t('login.fullname')} error={errors.fullname?.message} control={control} />
+
+        <AppInput name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
 
         <AppInput name="email" placeholder={t('register.email')} error={errors.email?.message} control={control} />
         <AppInput name="password" placeholder={t('register.password')} error={errors.password?.message} control={control} secureTextEntry={true} />

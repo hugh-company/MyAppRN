@@ -1,8 +1,7 @@
-import { DotsIcon, LikeActiveIcon, NewIcon, PlayIcon, PlayStackedIcon, StarIcon } from '@assets';
-import { AppHeader, AppImage, AppText } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
+import { LikeActiveIcon, NewIcon, PlayIcon, PlayStackedIcon, StarIcon } from '@assets';
+import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
-import { TypeListMovie } from '@types';
+import { KeyHomeData } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
@@ -13,8 +12,8 @@ import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimat
 interface HeaderDetailProps {
   name: string;
   typeData: 'series' | 'short';
-  type: TypeListMovie;
-  duration?: string;
+  type: KeyHomeData;
+  duration?: number;
   views?: number;
   likes?: number;
   rating?: number;
@@ -74,14 +73,14 @@ export const HeaderDetail = ({
 
   const renderNavigation = () => {
     switch (type) {
-      case TypeListMovie.MOVIES:
+      case KeyHomeData.MOVIES:
         return <>
-          <TouchableOpacity onPress={() => onPlay ? onPlay() : navigate(SCREEN_ROUTE.VIDEO,)} style={styles.btnPlay}>
+          <TouchableOpacity onPress={() => onPlay?.()} style={styles.btnPlay}>
             <PlayIcon />
             <AppText style={styles.txtPlay}>{t('play')}</AppText>
           </TouchableOpacity>
         </>;
-      case TypeListMovie.CHAPTERS:
+      case KeyHomeData.CHAPTERS:
         return <View style={styles.viewChapter}>
           <TouchableOpacity onPress={() => onPlay?.()} style={styles.btnPlay}>
             <PlayIcon />
@@ -92,27 +91,17 @@ export const HeaderDetail = ({
             <AppText style={styles.txtPlay}>{t('chapter.newChapter')}</AppText>
           </TouchableOpacity>
         </View>;
-      case TypeListMovie.GAMES:
-        return <View style={styles.viewChapter}>
-          <TouchableOpacity onPress={() => onPlay ? onPlay() : navigate(SCREEN_ROUTE.VIDEO,)} style={styles.btnPlay}>
-            <PlayIcon />
-            <AppText style={styles.txtPlay}>{t('play')}</AppText>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => onPlay ? onPlay() : navigate(SCREEN_ROUTE.VIDEO,)} style={styles.btnPlay}>
-            <PlayIcon />
-            <AppText style={styles.txtPlay}>{t('play')}</AppText>
-          </TouchableOpacity>
-        </View>;
+      case KeyHomeData.GAMES:
+        return <></>;
     }
 
   };
 
   return (
     <>
-
-      <Animated.View style={[styles.container, animatedStyle]}>
+      <Animated.View style={[styles.container]}>
         <AppImage resizeMode={'contain'} uri={poster} style={styles.banner} />
-        <AppHeader style={styles.header} rightComponent={<TouchableOpacity style={styles.btnDots}><DotsIcon /></TouchableOpacity>} />
+        {/* <AppHeader style={styles.header} rightComponent={<TouchableOpacity style={styles.btnDots}><DotsIcon /></TouchableOpacity>} /> */}
         <View style={styles.viewInfo}>
           <LinearGradient
             colors={['rgba(0, 0, 0, 0)', '#010101', '#010101']}
@@ -143,6 +132,7 @@ export const HeaderDetail = ({
         style={{ backgroundColor: themeColors.background }}
       >
         {children}
+        <View style={styles.bottom} />
       </Animated.ScrollView>
     </>
   );
@@ -241,5 +231,8 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     info: {
       marginHorizontal: Spacing.width16,
+    },
+    bottom: {
+      height: 100,
     },
   });

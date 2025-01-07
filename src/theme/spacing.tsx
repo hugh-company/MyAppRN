@@ -5,8 +5,8 @@ const DW = 375;
 const DH = 812;
 const vh = height / DH;
 const vw = width / DW;
-const sizeWidth = (number: number) => number * (width < height ? vw : vh);
-const sizeHeight = (number: number) => number * (width > height ? vw : vh);
+export const sizeWidth = (number: number) => number * (width < height ? vw : vh);
+export const sizeHeight = (number: number) => number * (width > height ? vw : vh);
 
 export const Spacing = {
   width1: sizeWidth(1),
@@ -433,6 +433,7 @@ export const Spacing = {
   height215: sizeHeight(215),
   height220: sizeHeight(220),
   height225: sizeHeight(225),
+  height236: sizeHeight(236),
   height240: sizeHeight(240),
   height250: sizeHeight(250),
   height243: sizeHeight(243),

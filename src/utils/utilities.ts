@@ -1,3 +1,4 @@
+import {showMessage} from 'react-native-flash-message';
 import {MMKV} from 'react-native-mmkv';
 export const AsyncStorage = new MMKV();
 export const mmkvStorage = {
@@ -5,15 +6,27 @@ export const mmkvStorage = {
   setItem: (key: string, value: string) => AsyncStorage.set(key, value),
   removeItem: (key: string) => AsyncStorage.delete(key),
 };
-export const showNotificationSuccess = (
-  title: string,
-  description: string,
-) => {};
-export const showNotificationError = (title: string, description: string) => {};
-export const showNotificationWarning = (
-  title: string,
-  description: string,
-) => {};
+export const showNotificationSuccess = (title: string, description: string) => {
+  showMessage({
+    message: title,
+    description: description,
+    type: 'info',
+  });
+};
+export const showNotificationError = (title: string, description: string) => {
+  showMessage({
+    message: title,
+    description: description,
+    type: 'danger',
+  });
+};
+export const showNotificationWarning = (title: string, description: string) => {
+  showMessage({
+    message: title,
+    description: description,
+    type: 'warning',
+  });
+};
 
 export const generateId = () => {
   return Date.now().toString();

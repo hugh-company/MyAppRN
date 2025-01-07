@@ -30,7 +30,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
-    <Animated.View style={[styles.container, style, { paddingTop: top }]}>
+    <Animated.View style={[styles.container, style, { paddingTop: top || Spacing.width16 }]}>
       <View style={styles.flex1}>
         {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
           <LeftIcon />

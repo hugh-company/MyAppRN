@@ -1,17 +1,17 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
-const GameIcon = ({ color = '#fff' }) => (
+const GameIcon = ({ size = 32, color = '#fff' }) => (
   <Svg
-    width={24}
-    height={25}
-    viewBox="0 0 24 25"
+    width={size}
+    height={size}
+    viewBox="0 0 32 32"
     fill="none"
 
   >
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
-      d="M15.375 8.375v-4.5h-6.75v4.5L12 11.75l3.375-3.375zm-7.5.75h-4.5v6.75h4.5L11.25 12.5 7.875 9.125zm12.75 0h-4.5L12.75 12.5l3.375 3.375h4.5v-6.75zm-5.25 7.5v4.5h-6.75v-4.5L12 13.25l3.375 3.375z"
+      d="M20.5 10.5v-6h-9v6L16 15l4.5-4.5zm-10 1h-6v9h6L15 16l-4.5-4.5zm17 0h-6L17 16l4.5 4.5h6v-9zm-7 10v6h-9v-6L16 17l4.5 4.5z"
       fill={color}
     />
   </Svg>

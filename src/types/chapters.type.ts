@@ -1,63 +1,76 @@
-export type chapterType = 'chapter' | 'series';
+import {TabsInterface} from './home.type';
+import {Media, PersonInterface} from './movies.type';
 
-export interface episodeChapterInterface {
-  id: number;
-  name: string;
-  duration?: string;
-  releaseDate?: string;
-  link?: string;
-  type?: 'list' | 'text';
+interface ContentBlock {
+  id: string;
+  type: string;
+  data: {
+    text: string;
+  };
 }
-export interface chapterInterface {
+
+interface Content {
+  time: number;
+  blocks: ContentBlock[];
+  version: string;
+}
+
+interface ChapterContent {
   id: number;
   name: string;
-  image?: string[];
-  description?: string;
-  views?: number;
-  likes?: number;
-  chapters?: episodeChapterInterface[];
-  totalChapters?: number;
-  currentChapter?: number;
-  poster?: string;
-  type: chapterType;
-  isLiked?: boolean;
-  isFavorite?: boolean;
-  isWatched?: boolean;
-  rating?: string;
-  director?: string;
-  actors?: string;
-  main_actors?: string[];
-  genres?: string;
-  release_date?: string;
-  duration?: string;
-  tags?: string[];
-  releaseDate?: string;
+  path: string;
+}
+
+export interface ChapterEpisode {
+  id: number;
+  title: string;
+  slug: string;
+  lang_slug: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  seo_title: string;
+  seo_desc: string;
+  index: string;
+  content: ChapterContent[] | Content;
+  feature: Media | null;
+  rating_count: number;
+  rating_total: number;
+  views_day: number;
+  views_week: number;
+  views: number;
+}
+
+interface SocialMedia {
+  name_social: string;
+  url_social: string;
 }
 
 export interface chapterDetailInterface {
   id: number;
-  name: string;
-  image?: string[];
-  description?: string;
-  views?: number;
-  likes?: number;
-  rating?: number;
-  chapters?: episodeChapterInterface[];
-  totalChapters?: number;
-  currentChapter?: number;
-  poster?: string;
-  type: chapterType;
-
-  isLiked?: boolean;
-  isFavorite?: boolean;
-  isWatched?: boolean;
-
-  director?: string;
-  actors?: string;
-  main_actors?: string[];
-  genres?: string;
-  release_date?: string;
-  duration?: string;
-  tags?: string[];
-  releaseDate?: string;
+  title: string;
+  slug: string;
+  lang_slug: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  seo_title: string;
+  seo_desc: string;
+  content: Content;
+  feature: Media;
+  banner: Media;
+  author: number;
+  rating_count: number;
+  rating_total: number;
+  views_day: number;
+  views_week: number;
+  views: number;
+  like_count: number;
+  public_status: string;
+  release_date: string;
+  chapter: ChapterEpisode[];
+  creator: PersonInterface[];
+  description: string;
+  ccomic: TabsInterface[];
+  tags: TabsInterface[];
 }

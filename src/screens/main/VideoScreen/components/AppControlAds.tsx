@@ -1,7 +1,7 @@
 import { AppImage } from '@components';
 import { HeightScreen, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { t } from 'i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Video from 'react-native-video';
 interface AppControlAdsProps {
@@ -20,20 +20,20 @@ const AppControlAds = ({ ad, onSkipAd }: AppControlAdsProps) => {
 
   const [showSkipButton, setShowSkipButton] = useState(false);
 
-  useEffect(() => {
-    const skipButtonTimer = setTimeout(() => {
-      setShowSkipButton(true);
-    }, 5000);
+  // useEffect(() => {
+  //   const skipButtonTimer = setTimeout(() => {
+  //     setShowSkipButton(true);
+  //   }, 5000);
 
-    const autoSkipTimer = setTimeout(() => {
-      onSkipAd();
-    }, ad.startTime);
+  //   const autoSkipTimer = setTimeout(() => {
+  //     onSkipAd();
+  //   }, ad.startTime);
 
-    return () => {
-      clearTimeout(skipButtonTimer);
-      clearTimeout(autoSkipTimer);
-    };
-  }, [ad, onSkipAd]);
+  //   return () => {
+  //     clearTimeout(skipButtonTimer);
+  //     clearTimeout(autoSkipTimer);
+  //   };
+  // }, [ad, onSkipAd]);
 
   return (
     <View style={styles.adsContainer}>

@@ -1,63 +1,88 @@
-import { AppEpisodes, AppInfoContent, HeaderDetail, HorizontalList } from '@components';
+import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList, LoadingDetailMovie } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { viewListChapter } from '@services';
-import { TypeListMovie } from '@types';
+import { PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { View } from 'react-native';
+import { RefreshControl, View } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { data, themeColors, styles } = useChapterDetail();
+  const { styles, detail, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, data, themeColors, type } = useChapterDetail();
 
-  if (!data) {
+  if (loading) {
+    return <LoadingDetailMovie />;
+  }
+  if (!detail) {
     return null;
   }
+  const posterMovie = detail?.feature?.path;
+
   return (
     <View style={styles.container}>
-      <HeaderDetail name={data?.name}
-        rating={data?.rating}
-        typeData={'series'}
-        type={TypeListMovie.CHAPTERS}
-        duration={data?.duration}
-        views={data?.views}
-        likes={data?.likes}
-        poster={data?.poster}
-        totalEpisodes={data?.totalChapters}
-        onPlay={() => {
-          if (data?.chapters?.length) {
-            navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[data?.chapters?.length - 1] });
-          }
-        }}
-        onNewChapter={() => {
-          if (data?.chapters?.length) {
-            navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[0] });
-
-          }
-        }}
-
-
+      <Animated.ScrollView
+        // refetch data
+        refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={themeColors.text} />}
+        showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
       >
-        {data?.type === 'series' && <AppEpisodes episodes={data.chapters} total={data?.totalChapters} style={styles.episodes} />}
+        <PosterDetail
+          name={detail?.title}
+          rating={detail?.rating_count}
+          typeData={'series'}
+          type={PostTypeKey.COMIC}
+
+          views={detail?.views}
+          likes={detail?.like_count}
+          poster={posterMovie}
+          totalEpisodes={detail?.chapter?.length}
+          onPlay={() => {
+            if (detail?.chapter?.length) {
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapter?.[detail?.chapter?.length - 1], type });
+            }
+          }}
+          onNewChapter={() => {
+            if (detail?.chapter?.length) {
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapter?.[0], type });
+            }
+          }}
+        />
+        <AppEpisodes episodes={detail?.chapter} style={styles.episodes} onSelectChapter={(item) => {
+          console.log({ item });
+          navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: item, type });
+
+        }} />
+
         <AppInfoContent
-          type={TypeListMovie.CHAPTERS}
-          isLiked={data?.isLiked}
+          type={type}
+          // isLiked={data?.isLiked}
+          id={detail?.id}
+          name={detail?.seo_title}
           style={styles.infoRow}
           isSave={false}
-          releaseDate={data?.releaseDate}
-          tags={data?.tags}
-          main_actors={data?.main_actors}
-          description={data?.description}
-          director={data?.director}
+          releaseDate={detail?.release_date}
+          tags={detail?.ccomic}
+          main_actors={detail?.creator}
+          description={detail?.description}
+        // director={detail?.director}
         />
         <HorizontalList
-          data={viewListChapter}
-          type={TypeListMovie.CHAPTERS}
+          data={data}
+          type={PostTypeKey.MOVIES}
           title={t('movie.otherMovie')}
           itemStyle={styles.itemImage}
 
         />
-      </HeaderDetail>
+        <View style={styles.paddingBottom} />
+      </Animated.ScrollView>
+      <AppHeader
+        style={[styles.header, headerBackgroundColorStyle]}
+      // rightComponent={<TouchableOpacity
+      //   // onPress={() => setShowRating(true)}
+      //   style={styles.btnDots}><DotsIcon /></TouchableOpacity>}
+      />
+
     </View>
   );
 };

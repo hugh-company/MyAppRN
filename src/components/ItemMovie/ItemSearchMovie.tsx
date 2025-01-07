@@ -17,10 +17,10 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
 
   return (
     <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item })} style={[styles.container]}>
-      <AppImage uri={item?.poster} style={styles.image} />
+      <AppImage uri={item?.feature?.path} style={styles.image} />
       <View style={styles.viewInfo}>
         <View>
-          <AppText numberOfLines={2} style={styles.name}>{item.name}</AppText>
+          <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
           <AppText numberOfLines={1} style={styles.director}>{item.director}</AppText>
         </View>
         <View style={styles.viewOption}>
@@ -34,7 +34,7 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
           </View>
           <View style={styles.viewRow}>
             <LikeActiveIcon size={Spacing.width12} color={themeColors.warning} />
-            <AppText style={styles.duration}>{`${t('search.likes')} ${getPrettyNumberString(item.likes)}`}</AppText>
+            <AppText style={styles.duration}>{`${t('search.likes')} ${getPrettyNumberString(item.like_count)}`}</AppText>
           </View>
         </View>
       </View>

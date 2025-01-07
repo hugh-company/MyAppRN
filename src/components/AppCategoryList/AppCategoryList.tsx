@@ -1,16 +1,16 @@
 import { AppText } from '@components';
 import { useTheme } from '@theme';
+import { TabsInterface } from '@types';
 import React, { memo, useCallback, useRef } from 'react';
 import { FlatList, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 
 export interface AppCategoryListProps {
-  data: { id: number, name: string }[];
+  data: { id: number, name: string }[] | undefined;
   categoryId: number;
-  onSelectedCategory: (categoryId: number) => void;
+  onSelectedCategory: (item: TabsInterface) => void;
   style?: StyleProp<ViewStyle>;
   listStyle?: StyleProp<ViewStyle>;
-  type?: 'list' | 'tab'
 }
 
 const CategoryItem = memo(({ item, index, categoryId, handleCategoryPress, styles }: any) => (
@@ -26,13 +26,23 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, style, listStyl
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
 
-  const handleCategoryPress = useCallback((id: number, index: number) => {
-    onSelectedCategory(id);
-    flatListRef.current?.scrollToIndex({ index, animated: true });
+  // useEffect(() => {
+  //   // nếu categoryId thay đổi thì scroll tới vị trí của categoryId
+  //   if (categoryId) {
+  //     const index = data?.findIndex((item) => item.id === categoryId);
+  //     console.log({ index });
+
+  //     if (index !== undefined && index !== -1) {
+  //       flatListRef.current?.scrollToIndex({ index, animated: true });
+  //     }
+  //   }
+  // }, [categoryId, flatListRef.current]);
+  const handleCategoryPress = useCallback((item: TabsInterface, index: number) => {
+    onSelectedCategory(item);
   }, [onSelectedCategory]);
 
   const renderItem = useCallback(({ item, index }) => (
-    <CategoryItem item={item} index={index} categoryId={categoryId} handleCategoryPress={handleCategoryPress} styles={styles} />
+    <CategoryItem item={item} index={index} categoryId={categoryId} handleCategoryPress={() => handleCategoryPress(item, index)} styles={styles} />
   ), [categoryId, handleCategoryPress, styles]);
 
   return (

@@ -1,9 +1,9 @@
 import { AppText } from '@components';
 import { t } from 'i18next';
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { TouchableOpacity } from 'react-native';
 import Animated, { runOnJS } from 'react-native-reanimated';
-import Video, { SelectedTrackType } from 'react-native-video';
+import Video from 'react-native-video';
 import { useVideoScreen } from './VideoScreen.hook';
 import AppControlAds from './components/AppControlAds';
 import { AppControlBottom } from './components/AppControlBottom';
@@ -16,7 +16,7 @@ const VideoScreen = () => {
     setCurrentTime,
     currentTime,
     playbackRate,
-    uri,
+    urlVideo,
 
     fastForward,
     paused,
@@ -31,33 +31,37 @@ const VideoScreen = () => {
     setError,
   } = useVideoScreen();
 
+  const handlePress = useCallback(() => {
+    toggleControlsVisibility();
+  }, [toggleControlsVisibility]);
+
   return (
     <TouchableOpacity
       style={[styles.container]}
-      onPress={toggleControlsVisibility}
+      onPress={handlePress}
     >
       <Video
-        source={{ uri: uri }}
+        source={{ uri: urlVideo }}
         style={styles.video}
         controls={false}
         ref={videoRef}
         resizeMode="contain"
         onError={() => {
-
           setError(true);
         }}
         onProgress={(data) => runOnJS(updateProgress)(data.currentTime)}
-        onLoad={({ duration }) => setDuration(duration)}
+        onLoad={({ duration }) => {
+          setDuration(duration);
+        }}
         muted={isMuted}
         paused={paused || showAds} // Pause the main video if an ad is shown
         rate={playbackRate}
         onLoadStart={() => setIsLoading(true)}
         onReadyForDisplay={() => setIsLoading(false)}
+      // selectedTextTrack={{
+      //   type: SelectedTrackType.LANGUAGE,
 
-        selectedTextTrack={{
-          type: SelectedTrackType.LANGUAGE,
-
-        }}
+      // }}
       />
 
       {error && (
@@ -68,12 +72,12 @@ const VideoScreen = () => {
 
       {controlsVisible && (
         <Animated.View style={[styles.controls]}>
-          <HeaderControl
+          <MemoizedHeaderControl
             onMenuPress={onMenuPress}
             goBackScreen={goBackScreen}
           />
-          <ControlCenter isError={error} isLoading={isLoading} onPlayPause={togglePlayPause} onSkipBackward={rewind} onSkipForward={fastForward} paused={paused} />
-          <AppControlBottom
+          <MemoizedControlCenter isError={error} isLoading={isLoading} onPlayPause={togglePlayPause} onSkipBackward={rewind} onSkipForward={fastForward} paused={paused} />
+          <MemoizedAppControlBottom
             isFullScreenVisible={isFullScreenVisible}
             isSpeedVisible={isSpeedVisible}
             setSpeedVisible={setSpeedVisible}
@@ -88,15 +92,14 @@ const VideoScreen = () => {
             toggleFullScreen={toggleFullScreen} />
         </Animated.View>
       )}
-      {showAds && <AppControlAds ad={ad} onSkipAd={skipAd} />}
-      <ModalSpeed
+      {showAds && <MemoizedAppControlAds ad={ad} onSkipAd={skipAd} />}
+      <MemoizedModalSpeed
         visible={isSpeedVisible}
         currentSpeed={playbackRate}
         onSelectSpeed={(speed) => {
           setPlaybackRate(speed);
           setSpeedVisible(false);
-        }
-        }
+        }}
         onClose={() => {
           setSpeedVisible(false);
         }} />
@@ -104,4 +107,23 @@ const VideoScreen = () => {
   );
 };
 
-export default VideoScreen;
+export default React.memo(VideoScreen);
+
+// Wrap child components with React.memo and custom comparison function
+const MemoizedHeaderControl = memo(HeaderControl);
+const MemoizedControlCenter = memo(ControlCenter);
+const MemoizedAppControlBottom = memo(AppControlBottom, (prevProps, nextProps) => {
+  return prevProps.isFullScreenVisible === nextProps.isFullScreenVisible &&
+    prevProps.isSpeedVisible === nextProps.isSpeedVisible &&
+    prevProps.isError === nextProps.isError &&
+    prevProps.isMuted === nextProps.isMuted &&
+    prevProps.setCurrentTime === nextProps.setCurrentTime &&
+    prevProps.toggleMute === nextProps.toggleMute &&
+    prevProps.videoRef === nextProps.videoRef &&
+    prevProps.duration === nextProps.duration &&
+    prevProps.currentTime === nextProps.currentTime &&
+    prevProps.loading === nextProps.loading &&
+    prevProps.toggleFullScreen === nextProps.toggleFullScreen;
+});
+const MemoizedAppControlAds = memo(AppControlAds);
+const MemoizedModalSpeed = memo(ModalSpeed);

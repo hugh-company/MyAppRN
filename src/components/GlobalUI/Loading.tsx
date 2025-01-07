@@ -17,6 +17,8 @@ export const Loading: React.FC<Loading> = props => {
     borderRadius = 0,
     style,
   } = props;
+  console.log({ isLoading });
+
   if (isLoading) {
     return (
       <Box style={[styles.container, { borderRadius: borderRadius }, style]}>
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // width: '100%',
     // height: '100%',
-    backgroundColor: 'rgba(51,51,51,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 99,
   },
   background: {

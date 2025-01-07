@@ -1,3 +1,4 @@
+import { DropdownIcon } from '@assets';
 import { useTheme } from '@theme';
 import React, { forwardRef, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
@@ -30,6 +31,7 @@ const AppInputDropdownDefault = forwardRef<SelectDropdown, AppInputDropdownDefau
               <AppText style={[styles.txtInput, value ? styles.txtInput : styles.txtPlaceholder, styleInput]}>
                 {(value && data.find(item => item.value === value)?.label) || placeholder}
               </AppText>
+              <DropdownIcon />
             </View>
           );
         }}

@@ -1,34 +1,23 @@
 import { AppBottomModal, AppFlatListAnimated, AppInputSearch, AppText } from '@components';
 import { Spacing, useTheme } from '@theme';
+import { ChapterEpisode, episodeInterface } from '@types';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppEpisodesProps {
-  episodes?: {
-    id: number;
-    name: string;
-    duration?: string;
-    releaseDate?: string;
-    link?: string;
-  }[];
-  total?: number;
+  episodes?: episodeInterface[] | ChapterEpisode[];
+
   title?: string;
   style?: StyleProp<ViewStyle>;
-  onSelectChapter?: (item: {
-    id: number;
-    name: string;
-    duration?: string;
-    releaseDate?: string;
-    link?: string;
-  }) => void;
+  onSelectChapter?: (item: episodeInterface) => void;
 }
 const AppEpisodes = ({
 
   style,
 
   episodes = [],
-  total,
+
   onSelectChapter,
   title,
 }: AppEpisodesProps) => {
@@ -54,19 +43,20 @@ const AppEpisodes = ({
       setFilteredEpisodes(episodes);
     } else {
       const filtered = episodes.filter((episode) =>
-        episode.name.toLowerCase().includes(text.toLowerCase())
+        episode.title.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredEpisodes(filtered);
     }
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: episodeInterface }) => {
     return (
       <TouchableOpacity onPress={() => {
         setSelectEpisodes(item.id);
         onSelectChapter?.(item);
+        setShowModal(false);
       }} style={[styles.itemChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
-        <AppText style={[styles.txtChapterItem, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.name}</AppText>
+        <AppText style={[styles.txtChapterItem, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.title}</AppText>
       </TouchableOpacity>
     );
   };
@@ -83,12 +73,12 @@ const AppEpisodes = ({
 
                 onSelectChapter?.(item);
               }} style={[styles.btnChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
-                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.name}</AppText>
+                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.title}</AppText>
               </TouchableOpacity>
             );
           })}
         </View>
-        {(lineHeight * filteredEpisodes?.length) > maxHeightList && (
+        {filteredEpisodes?.length > 10 && (
           <TouchableOpacity style={styles.btnMore} onPress={handleLoadMore}>
             <AppText style={styles.txtMore}>{showAll ? t('movie.show_less') : t('movie.more')}</AppText>
           </TouchableOpacity>
@@ -116,10 +106,7 @@ const AppEpisodes = ({
               onChangeText={handleSearch}
             />
           </View>
-
-
           <AppFlatListAnimated
-
             data={filteredEpisodes}
             renderItem={renderItem}
           />

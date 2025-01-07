@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ImageStyle, StyleProp, StyleSheet } from 'react-native';
+import { ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
 import FastImage, { ResizeMode, Source } from 'react-native-fast-image';
 
+import { BASE_IMAGE_URL } from '@api';
 import { NoImage } from '@assets';
-import { Box, useTheme } from '@theme';
+import { Box } from '@theme';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface propsImage {
   uri?: string | null;
@@ -12,23 +14,26 @@ interface propsImage {
   defaultSource?: Source | null;
   imgSource?: Source;
   checkNetworking?: boolean;
+  isBase?: boolean;
 }
 
 export const AppImage = React.memo((props: propsImage) => {
-  const { uri, style, resizeMode, defaultSource, checkNetworking, imgSource } = props;
+  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, imgSource } = props;
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
-
-  const { themeColors } = useTheme();
+  const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
   useEffect(() => {
     setLoading(true);
-  }, [uri]);
+  }, [uriBase]);
 
   useEffect(() => {
-    if (uri) {
-      fetch(uri).then(data => {
+
+    if (uriBase) {
+
+      fetch(uriBase).then(data => {
+
         if (data.status !== 200) {
-          // setError(true);
+          setError(true);
           setLoading(false);
         }
         setLoading(false);
@@ -36,8 +41,11 @@ export const AppImage = React.memo((props: propsImage) => {
     } else {
       setLoading(false);
     }
-  }, [uri, checkNetworking]);
-  const source = isError ? NoImage : imgSource ? imgSource : uri ? { uri } : (defaultSource ? defaultSource : NoImage);
+  }, [uriBase, checkNetworking]);
+
+
+  const source = isError ? NoImage : imgSource ? imgSource : uri ? { uri: uriBase } : (defaultSource ? defaultSource : NoImage);
+
   return (
     <Box justifyContent={'center'} alignItems="center">
       <FastImage
@@ -50,14 +58,14 @@ export const AppImage = React.memo((props: propsImage) => {
         onError={() => setLoading(false)}
       />
       {isLoading && (
-        <ActivityIndicator
-          color={themeColors.primary}
-          style={{ position: 'absolute' }}
-        />
+        <SkeletonPlaceholder>
+          <View style={[styles.image, style]} />
+        </SkeletonPlaceholder>
       )}
     </Box>
   );
 });
+
 const styles = StyleSheet.create({
   image: {
     height: '100%',
