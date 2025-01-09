@@ -1,7 +1,7 @@
-import { AppCategoryList, AppFlatListAnimated, HorizontalList, LoadingHome, LoadingMovieScreen, SliderList } from '@components';
+import { AppCategoryList, AppFlatListAnimated, HorizontalList, LoadingDashboardSearch, LoadingGame, LoadingHome, LoadingMovieScreen, SliderList } from '@components';
 import { BannerMovie } from '@screens';
 import { sizeWidth, useTheme } from '@theme';
-import { ItemListDashboard, ModuleItemInterface, PostTypeKey, TabsInterface, TypeKeyListApi } from '@types';
+import { ItemListDashboard, ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface, TypeKeyListApi } from '@types';
 import React from 'react';
 import { View } from 'react-native';
 import { BannerHome } from './components/BannerHome';
@@ -10,6 +10,7 @@ import { DatingItem } from './components/DatingItem';
 import { LabelView } from './components/LabelView';
 import { ListVertical } from './components/ListVertical';
 import { createStyles } from './styles';
+
 export interface AppListDashboardProps {
   ListHeaderComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined
   typeScreen: ItemListDashboard;
@@ -17,21 +18,22 @@ export interface AppListDashboardProps {
   loading?: boolean;
   onRefresh?: () => void;
   onScroll?: (event: any) => void;
-  // categoryId: number;
   categoryId?: number;
-  onSelectedCategory?: (item: TabsInterface) => void;
+  onSelectedCategory?: (item: TabInterface) => void;
 }
+
 const AppListDashboard = ({
   typeScreen = ItemListDashboard.HOME,
   data = [], onScroll,
   loading, onRefresh,
-  onSelectedCategory,
+  onSelectedCategory = () => { },
   ListHeaderComponent,
-  categoryId }: AppListDashboardProps) => {
+  categoryId,
+}: AppListDashboardProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = React.useState(false);
-  // render loading
+
   const renderLoading = () => {
     switch (typeScreen) {
       case ItemListDashboard.HOME:
@@ -41,60 +43,56 @@ const AppListDashboard = ({
       case ItemListDashboard.NOVEL:
         return <LoadingMovieScreen />;
       case ItemListDashboard.GAMES:
-        return <></>;
-
+        return <LoadingGame />;
+      case ItemListDashboard.SEARCH:
+        return <LoadingDashboardSearch />;
       default:
         return <></>;
     }
   };
+
   const onRefreshList = () => {
     if (onRefresh) {
       setIsReset(true);
       onRefresh();
       setTimeout(() => {
         setIsReset(false);
-      }
-        , 1000);
+      }, 1000);
     }
   };
 
   const renderItem = ({ item }: { item: ModuleItemInterface }) => {
     switch (item?.type) {
       case TypeKeyListApi.BANNER:
-        // return typeScreen === ItemListDashboard.HOME ? <BannerHome data={item?.items} /> : <BannerMovie data={item?.items} />;
-        return <BannerHome data={item?.items} />;
+        return <BannerHome data={item?.items as ItemListProduct[]} />;
       case TypeKeyListApi.POST_TYPE:
-        return <BannerMovie data={item?.items} isGame={item?.posttype === PostTypeKey.GAMES} />;
-      //
+        return <BannerMovie data={item?.items as ItemListProduct[]} isGame={item?.posttype === PostTypeKey.GAMES} />;
       case TypeKeyListApi.TYPE_TABS:
-        return <AppCategoryList data={item?.items} categoryId={categoryId} onSelectedCategory={onSelectedCategory} />;
+        return <AppCategoryList data={item?.items as TabInterface[]} categoryId={categoryId} onSelectedCategory={onSelectedCategory} />;
       case TypeKeyListApi.CHAT_HOME:
         return <DatingItem />;
       case TypeKeyListApi.BLOCK_LABEL:
-
         return <LabelView title={item?.label} type={item?.posttype} uri={item?.images} />;
-
       case TypeKeyListApi.LIST_ITEM_TAB:
-        return <CategoryListItem data={item?.items} type={item?.posttype} />;
+        return <CategoryListItem data={item?.items as TabInterface[]} type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:
-        return <SliderList title={item?.label} button={item?.button} data={item?.items || []} type={item?.posttype} />;
-
+        return <SliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
       case TypeKeyListApi.LIST_HORIZONTAL:
         return <HorizontalList
           title={item?.labels}
           type={item?.posttype}
-          data={item?.items || []}
+          data={item?.items as ItemListProduct[]}
           button={item?.button}
           titleViewMore={item.label} />;
       case TypeKeyListApi.LIST_VERTICAL:
-        return <ListVertical data={item?.items} type={item?.posttype} title={item?.label} button={item?.button} />;
+        return <ListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       case TypeKeyListApi.SPACE:
-        return <View style={{ height: sizeWidth(item?.height) }} />;
+        return <View style={{ height: sizeWidth(item?.height || 0) }} />;
       default:
         return <></>;
-
     }
   };
+
   return (
     <View style={styles.container}>
       {loading ? renderLoading() :

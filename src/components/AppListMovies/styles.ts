@@ -1,4 +1,10 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -11,6 +17,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     item: {
       flex: 1,
       justifyContent: 'space-between',
+      maxWidth: (WidthScreen - Spacing.width48) / 2,
     },
     columnWrapper: {
       gap: Spacing.width16,

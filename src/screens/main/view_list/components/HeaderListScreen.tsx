@@ -2,7 +2,7 @@ import { SearchIcon } from '@assets';
 import { AppCategoryList, AppHeader, AppInputSearch, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
-import { KeyHomeData, PostTypeKey } from '@types';
+import { KeyHomeData, PostTypeKey, TabInterface } from '@types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
@@ -11,10 +11,10 @@ interface HeaderListScreenProps {
   title: string;
   search?: string;
   onSearch?: (text: string) => void;
-  onSelectedCategory?: (id: number) => void;
+  onSelectedCategory?: (item: TabInterface) => void;
   activeCategory?: number;
   scrollY: SharedValue<number>;
-  categories?: { id: number, name: string }[];
+  categories?: TabInterface[];
   type?: PostTypeKey;
 
 }
@@ -54,7 +54,7 @@ export const HeaderListScreen = ({ title, search, onSearch, categories = [], scr
         <AppCategoryList
           data={categories}
           categoryId={activeCategory}
-          onSelectedCategory={(item) => onSelectedCategory?.(item?.id)}
+          onSelectedCategory={(item) => onSelectedCategory?.(item)}
           listStyle={styles.listCategory} />
       </>}
 
@@ -65,7 +65,7 @@ export const HeaderListScreen = ({ title, search, onSearch, categories = [], scr
         <AppCategoryList
           data={categories}
           categoryId={activeCategory}
-          onSelectedCategory={(item) => onSelectedCategory?.(item?.id)}
+          onSelectedCategory={(item) => onSelectedCategory?.(item)}
           listStyle={styles.listCategory} />
       </>}
 

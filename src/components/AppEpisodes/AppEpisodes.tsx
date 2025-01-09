@@ -1,29 +1,25 @@
 import { AppBottomModal, AppFlatListAnimated, AppInputSearch, AppText } from '@components';
 import { Spacing, useTheme } from '@theme';
-import { ChapterEpisode, episodeInterface } from '@types';
+import { chapterEpisodeInterface, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppEpisodesProps {
-  episodes?: episodeInterface[] | ChapterEpisode[];
-
+  episodes?: chapterEpisodeInterface[];
+  type?: PostTypeKey
   title?: string;
   style?: StyleProp<ViewStyle>;
-  onSelectChapter?: (item: episodeInterface) => void;
+  onSelectChapter?: (item: chapterEpisodeInterface) => void;
 }
 const AppEpisodes = ({
-
   style,
-
   episodes = [],
-
   onSelectChapter,
   title,
 }: AppEpisodesProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [showAll, setShowAll] = useState(false);
   const [selectEpisodes, setSelectEpisodes] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState('');
@@ -49,7 +45,7 @@ const AppEpisodes = ({
     }
   };
 
-  const renderItem = ({ item }: { item: episodeInterface }) => {
+  const renderItem = ({ item }: { item: chapterEpisodeInterface }) => {
     return (
       <TouchableOpacity onPress={() => {
         setSelectEpisodes(item.id);
@@ -80,7 +76,7 @@ const AppEpisodes = ({
         </View>
         {filteredEpisodes?.length > 10 && (
           <TouchableOpacity style={styles.btnMore} onPress={handleLoadMore}>
-            <AppText style={styles.txtMore}>{showAll ? t('movie.show_less') : t('movie.more')}</AppText>
+            <AppText style={styles.txtMore}>{t('movie.more')}</AppText>
           </TouchableOpacity>
         )}
       </View>

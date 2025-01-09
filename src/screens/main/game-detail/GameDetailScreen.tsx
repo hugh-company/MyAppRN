@@ -1,4 +1,4 @@
-import { AppInfoContent, AppText, LoadingDetailMovie } from '@components';
+import { AppInfoContent, AppText, HorizontalList, LoadingDetailMovie } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
@@ -29,17 +29,24 @@ const GameDetailScreen = () => {
           <AppText style={styles.txtPlay}>{t('games.playGame')}</AppText>
         </TouchableOpacity>
         <AppInfoContent
+          id={data?.id}
           type={PostTypeKey.GAMES}
           name={data?.seo_title}
           style={styles.infoRow}
           isSave={false}
 
           tags={data?.tags}
-          typeGame={data?.cgame?.map(elm => elm.name).join(', ')}
+          typeGame={data?.categories?.map(elm => elm.name).join(', ')}
           description={data?.description}
 
         />
+        <HorizontalList
+          data={data.related_post}
+          type={PostTypeKey.GAMES}
+          title={t('view_list.otherGame')}
+          itemStyle={styles.itemImage}
 
+        />
       </HeaderGame>
     </View>
   );

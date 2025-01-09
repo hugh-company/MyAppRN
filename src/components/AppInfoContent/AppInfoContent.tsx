@@ -1,8 +1,8 @@
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppRatingMovie, AppText } from '@components';
-import { favoriteMovieApi, likePostApi, paramFavoriteMovie } from '@services';
+import { favoriteMovieApi, likePostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
-import { PersonInterface, PostTypeKey, TabsInterface } from '@types';
+import { PersonInterface, PostTypeKey, TabInterface } from '@types';
 import { onShareInfo } from '@utils';
 import { t } from 'i18next';
 import React, { useState } from 'react';
@@ -13,7 +13,7 @@ export interface AppInfoContentProps {
   isLiked?: boolean;
   isSave?: boolean;
   releaseDate?: string;
-  tags?: TabsInterface[];
+  tags?: TabInterface[];
   main_actors?: PersonInterface[];
   description?: any;
   director?: PersonInterface[];
@@ -57,11 +57,8 @@ const AppInfoContent = ({
   };
   const callApiFavorite = async () => {
     try {
-      const params: paramFavoriteMovie = {
-        post_id: id,
-        posttype: type,
-      };
-      const response = await favoriteMovieApi(params);
+
+      const response = await favoriteMovieApi(id, type);
       console.log({ response });
       setIsFavorite(true);
     } catch (error) {
@@ -129,10 +126,14 @@ const AppInfoContent = ({
                 <AppText style={styles.titleInfo}>{t('movie.director')}</AppText>
                 <AppText style={styles.valueInfo}>{director?.map((elm) => elm.title)?.join(', ')}</AppText>
               </View>
-              <View style={styles.info2}>
-                <AppText style={styles.titleInfo}>{t('movie.actor')}</AppText>
-                <AppText style={styles.valueInfo}>{main_actors?.map((elm) => elm.title)?.join(', ')}</AppText>
-              </View>
+              {
+                main_actors && (
+                  <View style={styles.info2}>
+                    <AppText style={styles.titleInfo}>{t('movie.main_actors')}</AppText>
+                    <AppText style={styles.valueInfo}>{main_actors?.map((elm) => elm.title)?.join(', ')}</AppText>
+                  </View>
+                )
+              }
             </View>
           </>
         );

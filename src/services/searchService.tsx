@@ -1,12 +1,20 @@
-import { API_ENDPOINTS, apiService } from '@api';
-import { KeyHomeData } from '@types';
-interface paramSearchInterface {
-  s: string;
-  sort: 'like_count' | 'views' | 'release_date';
+import { API_ENDPOINTS, ApiConfigs, apiService } from '@api';
+import { ItemListProduct } from '@types';
+export interface paramSearchInterface {
+  q?: string;
+  sortby?: 'views__desc' | 'likes__desc' | '';
+  filter?: 'posttype__movie' | 'posttype__game' | 'posttype__comic' | 'posttype__novel';
 }
-export const searchApi = async (params: paramSearchInterface, type: KeyHomeData) => {
-
-  const uri = `${API_ENDPOINTS.SEARCH}${type}`;
-  return apiService.get(uri, params);
+interface responseSearch {
+  status?: string;
+  message?: string;
+  data?: {
+    data: ItemListProduct[]
+  }
+}
+export const searchApi = async (params: paramSearchInterface) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const uri = `${API_ENDPOINTS.SEARCH}`;
+  return apiService.get<responseSearch>(uri, params);
 
 };

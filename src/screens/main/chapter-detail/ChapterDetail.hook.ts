@@ -1,7 +1,7 @@
 import {useRoute} from '@react-navigation/native';
-import {getDetailListPostApi, getDetailPostApi, viewsPostApi} from '@services';
+import {getDetailPostApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {chapterDetailInterface, KeyTypeWithCategory, PostTypeKey} from '@types';
+import {detailPostInterface, PostTypeKey} from '@types';
 import {useEffect, useState} from 'react';
 import {
   interpolateColor,
@@ -11,15 +11,14 @@ import {
 } from 'react-native-reanimated';
 import {createStyles} from './styles';
 interface ChapterDetailInterface {
-  chapter: chapterDetailInterface;
+  chapter: detailPostInterface;
   type: PostTypeKey;
 }
 export const useChapterDetail = () => {
   const router = useRoute();
   const {chapter, type = PostTypeKey.COMIC} =
     router.params as ChapterDetailInterface;
-  const [data, setData] = useState([]);
-  const [detail, setDetail] = useState(chapter);
+  const [detail, setDetail] = useState<detailPostInterface>(chapter);
   const [loading, setLoading] = useState(true);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -29,7 +28,7 @@ export const useChapterDetail = () => {
     callAllApi();
   }, []);
   const callAllApi = async () => {
-    Promise.all([callApi(), listMovieApi(), viewMovieApi()]).finally(() => {
+    Promise.all([callApi(), viewMovieApi()]).finally(() => {
       setLoading(false);
     });
   };
@@ -54,22 +53,7 @@ export const useChapterDetail = () => {
       setLoading(false);
     }
   };
-  const listMovieApi = async () => {
-    try {
-      const response: any = await getDetailListPostApi(
-        type,
-        type === PostTypeKey.COMIC
-          ? KeyTypeWithCategory.COMIC
-          : KeyTypeWithCategory.NOVEL,
-      );
-      const newData = response?.data?.data || [];
-      // remove item trung lap vs movie dang xem
-      const filterData = newData.filter((item: any) => item.id !== chapter.id);
-      setData(filterData || []);
-    } catch (error) {
-      console.log({error});
-    }
-  };
+
   const onRefresh = () => {
     callApi();
   };
@@ -92,7 +76,7 @@ export const useChapterDetail = () => {
     scrollHandler,
     headerBackgroundColorStyle,
     onRefresh,
-    data,
+
     themeColors,
     type,
   };

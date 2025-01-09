@@ -3,7 +3,7 @@ import {useTheme} from '@theme';
 import {
   ModuleItemInterface,
   PostTypeKey,
-  TabsInterface,
+  TabInterface,
   TypeKeyListApi,
 } from '@types';
 import {useEffect, useState} from 'react';
@@ -14,7 +14,7 @@ export const useGameScreen = () => {
   const {themeColors} = useTheme();
   const [loading, setLoading] = useState(true);
   const styles = createStyles(themeColors);
-  const [tabSelect, setTabSelect] = useState<TabsInterface | undefined>({
+  const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
     type: '',
@@ -48,7 +48,7 @@ export const useGameScreen = () => {
   const onRefresh = () => {
     callApi();
   };
-  const handleCategorySelect = (item: TabsInterface) => {
+  const handleCategorySelect = (item: TabInterface) => {
     setTabSelect(item);
   };
   return {

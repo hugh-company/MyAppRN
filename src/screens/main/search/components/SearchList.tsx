@@ -1,12 +1,13 @@
 import { NoSearchImage } from '@assets';
 import { AppFlatListAnimated, AppImage, AppText, ItemSearchMovie } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { ItemListProduct } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface SearchListProps {
-  data: any[],
+  data: ItemListProduct[],
   valueSearch?: string
 }
 
@@ -14,7 +15,7 @@ export const SearchList = ({ data, valueSearch }: SearchListProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
-  const renderItem = ({ item }) => <ItemSearchMovie item={item} />;
+  const renderItem = ({ item }: { item: ItemListProduct }) => <ItemSearchMovie item={item} />;
   const renderEmpty = () => (
     <View style={styles.empty}>
       <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />

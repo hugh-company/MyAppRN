@@ -3,7 +3,7 @@ import {Spacing, useTheme} from '@theme';
 import {
   ModuleItemInterface,
   PostTypeKey,
-  TabsInterface,
+  TabInterface,
   TypeKeyListApi,
 } from '@types';
 import {useCallback, useEffect, useState} from 'react';
@@ -23,7 +23,7 @@ export const useComicScreen = () => {
   const {themeColors} = useTheme();
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
-  const [tabSelect, setTabSelect] = useState<TabsInterface | undefined>({
+  const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
     type: '',
@@ -80,7 +80,7 @@ export const useComicScreen = () => {
   const onSearch = useCallback((text: string) => {
     setSearch(text);
   }, []);
-  const onSelectedCategory = useCallback((item: TabsInterface) => {
+  const onSelectedCategory = useCallback((item: TabInterface) => {
     setTabSelect(item);
     setLoading(true);
     const textFilter = `${item.type}/${item.id}`;
@@ -94,11 +94,11 @@ export const useComicScreen = () => {
   );
 
   interface HandleCategorySelect {
-    (item: TabsInterface): void;
+    (item: TabInterface): void;
   }
 
   const handleCategorySelect: HandleCategorySelect = useCallback(
-    (item: TabsInterface) => {
+    (item: TabInterface) => {
       onSelectedCategory(item);
     },
     [onSelectedCategory],

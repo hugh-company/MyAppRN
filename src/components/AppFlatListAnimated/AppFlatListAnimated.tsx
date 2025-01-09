@@ -67,6 +67,11 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
+  const MemoizedRenderItem = React.useCallback(
+    ({ item, index }: any) => renderItem({ item, index }),
+    [renderItem]
+  );
+
   const ListEmptyComponentBase = React.useCallback(() => {
     if (!isLoading) {
       return (
@@ -88,7 +93,7 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
       contentContainerStyle={[styles.container, contentContainerStyle]}
       style={style}
       numColumns={numColumns}
-      renderItem={renderItem}
+      renderItem={MemoizedRenderItem}
       columnWrapperStyle={columnWrapperStyle}
       refreshControl={
         onRefresh && (

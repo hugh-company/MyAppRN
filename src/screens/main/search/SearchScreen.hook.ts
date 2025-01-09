@@ -1,8 +1,10 @@
 import {useRoute} from '@react-navigation/native';
+import {paramSearchInterface, searchApi} from '@services';
 import {useTheme} from '@theme';
-import {PostTypeKey} from '@types';
+import {FilterKey, ItemListProduct, PostTypeKey} from '@types';
 import {t} from 'i18next';
-import {useRef, useState} from 'react';
+import {debounce} from 'lodash';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {TextInput} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {createStyles} from './styles';
@@ -16,15 +18,15 @@ export const useSearchScreen = () => {
   const {type} = (router?.params as unknown as SearchInterface) || {
     type: undefined,
   };
-  const [dataDashboard, setDataDashboard] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ItemListProduct[]>([]);
   const refSearch = useRef<TextInput>(null);
   const [search, setSearch] = useState('');
   const [typeScreen, setTypeScreen] = useState(type);
   const [loading, setLoading] = useState(true);
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState<FilterKey | ''>('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
+  const [page, setPage] = useState(1);
   const {top} = useSafeAreaInsets();
   const [isFilterSort, setIsFilterSort] = useState(false);
   const [isFilterType, setIsFilterType] = useState(false);
@@ -48,23 +50,71 @@ export const useSearchScreen = () => {
   ];
   const menuSort = [
     {
-      key: 'views',
+      key: 'views__desc',
       value: t('search.viewer'),
     },
     {
-      key: 'likes',
+      key: 'likes__desc',
       value: t('search.likes'),
     },
   ];
+  const callApiSearch = async (filter?: {
+    search?: string;
+    typeScreen?: PostTypeKey;
+    sort?: string;
+  }) => {
+    setLoading(true);
+    const params: paramSearchInterface = {};
+    if (filter?.search) {
+      params.q = filter.search;
+    }
+    if (filter?.typeScreen) {
+      params.filter = `posttype__${typeScreen}`;
+    }
+    if (filter?.sort) {
+      params.sortby = sort;
+    }
+    console.log({params});
+
+    const responseSearch = await searchApi(params);
+    console.log({responseSearch});
+
+    setData(responseSearch.data?.data || []);
+    setLoading(false);
+  };
+  // filter
+  useEffect(() => {
+    if (typeScreen || sort) {
+      console.log('aaa');
+
+      callApiSearch({
+        search,
+        typeScreen,
+        sort,
+      });
+    }
+  }, [typeScreen, sort]);
+  // search use debounce
+  const debounceSearch = useCallback(
+    debounce((text: string) => {
+      callApiSearch({
+        search: text,
+        typeScreen,
+        sort,
+      });
+    }, 1000),
+    [],
+  );
 
   const onSearch = (text: string) => {
     setSearch(text);
+    debounceSearch(text);
   };
-  const filterByType = ({key, value}: {key: PostTypeKey; value: string}) => {
+  const filterByType = ({key}: {key: PostTypeKey}) => {
     setTypeScreen(key);
   };
-  const filterBySort = ({key, value}: {key: string; value: string}) => {
-    setTypeScreen(key);
+  const filterBySort = ({key}: {key: FilterKey}) => {
+    setSort(key);
   };
 
   return {
@@ -87,6 +137,6 @@ export const useSearchScreen = () => {
     refSearch,
     filterBySort,
     filterByType,
-    dataDashboard,
+    loading,
   };
 };

@@ -14,27 +14,25 @@ export interface AppRatingMovieProps {
   onClose: () => void;
   id: number;
 }
-interface dataType {
 
-}
-const AppRatingMovie = ({ type = PostTypeKey.MOVIES, visible, onClose }: AppRatingMovieProps) => {
+const AppRatingMovie = ({ type = PostTypeKey.MOVIES, visible, onClose, id }: AppRatingMovieProps) => {
   const { themeColors } = useTheme();
   const [txt, setTxt] = React.useState<string>('');
-  const [data, setData] = React.useState([]);
   const styles = createStyles(themeColors);
   const [rating, setRating] = React.useState(0);
-  const refInput = React.useRef(null);
   const [scaleAnim] = React.useState(new Animated.Value(1));
 
   const onSendRating = async () => {
     try {
-      await ratingPostApi(1, type, { rating, content: txt });
+      await ratingPostApi(id, type, { rating, content: txt });
 
       showNotificationSuccess(t('ratings.success'), t('ratings.successMessage'));
       onClose?.();
       setTxt('');
       setRating(0);
     } catch (error) {
+      console.log({ error });
+
       showNotificationError(t('ratings.ratingFail'), t('ratings.failMessage'));
     }
 

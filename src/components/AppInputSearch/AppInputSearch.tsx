@@ -11,14 +11,19 @@ export interface AppInputSearchProps {
   editable?: boolean;
   placeholder?: string;
   inputStyle?: ViewStyle;
+  onClickSearch?: () => void;
 }
 const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) => {
-  const { value, style, onChangeText, placeholder, inputStyle } = props;
+  const { value, style, onChangeText, placeholder, inputStyle, editable = true } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   return (
     <View style={[styles.container, style]}>
-      <View style={[styles.inputContainer, inputStyle]}>
+      <TouchableOpacity onPress={() => {
+        if (!editable) {
+          props.onClickSearch && props.onClickSearch();
+        }
+      }} style={[styles.inputContainer, inputStyle]}>
         <SearchIcon size={Spacing.width20} color={themeColors.subtile} />
         <TextInput
           ref={ref}
@@ -29,15 +34,19 @@ const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) =
           placeholder={placeholder || t('search.movies')}
           value={value}
           onChangeText={onChangeText}
-
-
+          editable={editable}
+          onPress={() => {
+            if (!editable) {
+              props.onClickSearch && props.onClickSearch();
+            }
+          }}
         />
         {value && <TouchableOpacity style={styles.btnClose} onPress={() => {
           if (onChangeText) {
             onChangeText('');
           }
         }}><CloseIcon size={Spacing.width12} color={themeColors.subtile} /></TouchableOpacity>}
-      </View>
+      </TouchableOpacity>
 
     </View>
   );

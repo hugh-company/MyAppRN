@@ -1,9 +1,8 @@
 import { RightIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ButtonInterface, CategoryItem, PostTypeKey, TypeList } from '@types';
-import { goToDetail } from '@utils';
+import { ButtonNavigationInterface, PostTypeKey, TabInterface } from '@types';
+import { goToDetail, goToListView } from '@utils';
 import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
@@ -12,8 +11,8 @@ import { SliderListProps } from './SliderList.type';
 interface Props extends SliderListProps {
   style?: StyleProp<ViewStyle>;
   onViewMore?: () => void;
-  type?: PostTypeKey;
-  button?: ButtonInterface
+  type: PostTypeKey;
+  button?: ButtonNavigationInterface
 }
 const widthItem = Spacing.width240;
 const SliderList = React.memo(({ style, title, data, onViewMore, type, button }: Props) => {
@@ -40,7 +39,7 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
     }
   }, []);
 
-  const renderItem = useCallback(({ item, index }: { item: CategoryItem, index: number }) => (
+  const renderItem = useCallback(({ item, index }: { item: TabInterface, index: number }) => (
     <View style={styles.itemType}>
       <FlatList
         style={styles.listMovie}
@@ -58,15 +57,13 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
       />
 
       <TouchableOpacity onPress={() => {
-        navigate(SCREEN_ROUTE.VIEW_LIST,
-          {
-            name: title,
-            type: type,
-            typeList: TypeList.CATEGORY,
-            categories: data,
-            categoryIdSelected: item.id,
-          }
-        );
+        console.log({ item });
+
+        goToListView({
+          ...button,
+          keyCategory: item.slug,
+          label: title,
+        });
       }} style={styles.viewType}>
         <AppText style={styles.txtType}>{item.name}</AppText>
         <RightIcon />
@@ -80,27 +77,18 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
     <View style={[styles.container, style]}>
       <View style={styles.header}>
         <AppText style={styles.title}>{title}</AppText>
-        <TouchableOpacity onPress={() => onViewMore ? onViewMore() : navigate(SCREEN_ROUTE.VIEW_LIST,
-          {
-            name: title,
-            type: type,
-            typeList: TypeList.CATEGORY,
-            list: data.flatMap((item) => item.data),
-            categories: data?.map(elm => {
-              return {
-                id: elm.id,
-                name: elm.name,
-              };
-            }),
-          }
-        )} style={styles.btnViewMore}>
+        <TouchableOpacity onPress={() => onViewMore ? onViewMore() : goToListView({
+          ...button,
+          label: title,
+        })
+        } style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>{button?.label}</AppText>
           <RightIcon />
         </TouchableOpacity>
       </View>
       <Animated.FlatList
         ref={flatListRef}
-        data={data}
+        data={data || []}
         horizontal
         // pagingEnabled
         showsHorizontalScrollIndicator={false}

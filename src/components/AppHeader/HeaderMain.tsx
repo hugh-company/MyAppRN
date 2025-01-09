@@ -1,6 +1,7 @@
 import { HomeIcon, SearchIcon } from '@assets';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { PostTypeKey } from '@types';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -12,6 +13,7 @@ interface HeaderMainProps {
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
   isHome?: boolean
+  type?: PostTypeKey
 }
 
 export const HeaderMain: React.FC<HeaderMainProps> = ({
@@ -19,6 +21,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
   isHome = true,
   style,
   titleStyle,
+  type,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -31,7 +34,9 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
         </TouchableOpacity>}
         <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
       </View>
-      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnSearch}>
+      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, {
+        type,
+      })} style={styles.btnSearch}>
         <SearchIcon size={Spacing.width24} />
       </TouchableOpacity>
     </View>

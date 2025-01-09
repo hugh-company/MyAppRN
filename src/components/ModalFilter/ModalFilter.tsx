@@ -1,5 +1,6 @@
 import { AppButton, AppText } from '@components';
 import { useTheme } from '@theme';
+import { FilterKey, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -16,7 +17,7 @@ export interface ModalFilterProps {
     value: string,
   }[]
   onSelect?: (item: {
-    key: string,
+    key: PostTypeKey | FilterKey,
     value: string,
   }) => void
 }

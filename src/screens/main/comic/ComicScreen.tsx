@@ -1,5 +1,6 @@
 import { AppInputSearch, AppListDashboard, HeaderMain } from '@components';
-import { ItemListDashboard } from '@types';
+import { navigate, SCREEN_ROUTE } from '@navigation';
+import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
@@ -13,11 +14,12 @@ const ComicScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderMain title={t('chapter.title')} />
+      <HeaderMain title={t('chapter.title')} type={PostTypeKey.COMIC} />
       <Animated.View style={[styles.inputSearch, heightStyle]}>
         <AppInputSearch
-          value={search}
-          onChangeText={handleSearchChange}
+          value={''}
+          onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: PostTypeKey.COMIC })}
+          editable={false}
         />
       </Animated.View>
       <AppListDashboard

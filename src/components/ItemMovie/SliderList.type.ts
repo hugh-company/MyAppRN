@@ -1,4 +1,4 @@
-import {CategoryItem} from '@types';
+import {TabInterface} from '@types';
 
 export interface itemListSlider {
   id: number;
@@ -13,6 +13,6 @@ export interface ItemProps {
   name: string;
 }
 export interface SliderListProps {
-  title: string;
-  data: CategoryItem[];
+  title: string | undefined;
+  data: TabInterface[];
 }

@@ -6,28 +6,30 @@ import { useViewListScreen } from './ViewListScreen.hook';
 import { HeaderListScreen } from './components/HeaderListScreen';
 
 const ViewListScreen = () => {
-  const { data, type, styles, name, search, onSearch, activeCategory, onSelectedCategory, scrollHandler, scrollY,
-    categoriesList, loading,
+  const { data, type, styles, label, search, onSearch, slugCategory, onSelectedCategory, scrollHandler, scrollY,
+    categoriesList, loading, list,
+    onLoadMore,
   } = useViewListScreen();
 
   return (
     <View style={styles.container}>
       <HeaderListScreen
-        title={name}
+        title={label || ''}
         search={search}
         onSearch={onSearch}
         onSelectedCategory={onSelectedCategory}
-        activeCategory={activeCategory}
+        activeCategory={categoriesList?.find((item) => item?.slug === slugCategory)?.id}
         categories={categoriesList}
-        type={type}
+        type={data?.posttype}
         scrollY={scrollY} />
-      {loading ? <LoadingList numColumns={categoriesList.length > 0 ? 2 : 1} /> : <Animated.View style={styles.listContainer}>
+      {loading ? <LoadingList numColumns={2} /> : <Animated.View style={styles.listContainer}>
         <AppListMovies
-          numColumns={categoriesList.length > 0 ? 2 : 0}
+          numColumns={2}
           onScroll={scrollHandler}
           scrollEventThrottle={16}
-          data={data}
-          type={type}
+          data={list}
+          type={data?.posttype}
+          onLoadMore={onLoadMore}
         />
       </Animated.View>}
     </View>

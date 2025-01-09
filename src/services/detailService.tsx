@@ -19,10 +19,14 @@ interface ratingInterface {
 }
 export const ratingPostApi = (id: number, type: PostTypeKey, params: ratingInterface,) => {
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const uri = `${API_ENDPOINTS.RATING}${type}/${id}/`;
+  const uri = `${API_ENDPOINTS.RATING}${type}/${id}`;
+  const formData = new FormData();
+  formData.append('rating', params.rating?.toString());
+  formData.append('content', params.content);
   const formUrlEncoded = transformData(params);
-  return apiService.postNormal(uri, formUrlEncoded, {
-    'Content-Type': 'application/x-www-form-urlencoded',
+  return apiService.postNormal(uri, formData, {
+    'Content-Type': 'multipart/form-data',
+    // 'Content-Type': 'application/x-www-form-urlencoded',
   });
 };
 
@@ -57,14 +61,15 @@ export interface paramFavoriteMovie {
   posttype: PostTypeKey;
   post_id: number;
 }
-export const favoriteMovieApi = async (params: paramFavoriteMovie) => {
+export const favoriteMovieApi = async (id: number, type: PostTypeKey) => {
   const responseToken: any = await csrfTokenApi();
   apiService.setBaseURL(ApiConfigs.baseURL);
   const formUrlEncoded = transformData({
-    ...params,
     csrf_token: responseToken.data.csrf_token,
   });
-  return apiService.postNormal(API_ENDPOINTS.FAVORITE, formUrlEncoded, {
+  const formData = new FormData();
+  formData.append('csrf_token', responseToken.data.csrf_token);
+  return apiService.postNormal(`${API_ENDPOINTS.FAVORITE}${type}/${id}`, formData, {
     'Content-Type': 'application/x-www-form-urlencoded',
   });
 };

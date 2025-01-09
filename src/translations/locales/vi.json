@@ -196,7 +196,10 @@
     "videoGame": "Chơi game"
   },
   "view_list": {
-    "titleCategory": "Danh sách theo thể loại"
+    "titleCategory": "Danh sách theo thể loại",
+    "otherMovie": "Phim liên quan",
+    "otherChapter": "Truyện liên quan",
+    "otherGame": "Game liên quan"
   },
   "cancel": "Hủy",
   "save": "Lưu",

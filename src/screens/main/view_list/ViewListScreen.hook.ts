@@ -1,7 +1,8 @@
 import {useRoute} from '@react-navigation/native';
-import {getListPostApi} from '@services';
+import {getCategoryApi, getListPostApi} from '@services';
 import {useTheme} from '@theme';
-import {chapterInterface, PostTypeKey, TypeList} from '@types';
+import {ItemListProduct, PostTypeKey, TabInterface, TypeList} from '@types';
+import {navigateViewListProps} from '@utils';
 import {useEffect, useState} from 'react';
 import {
   useAnimatedScrollHandler,
@@ -9,56 +10,83 @@ import {
 } from 'react-native-reanimated';
 import {createStyles} from './styles';
 
-interface ViewListScreenProps {
-  name: string;
-  type: PostTypeKey;
-  typeList: TypeList;
-  categories?: {id: number; name: string}[];
-  categoryIdSelected?: number;
-}
-
 export const useViewListScreen = () => {
   // router name , type, params
   const router = useRoute();
-  const {name, type, categories, categoryIdSelected} =
-    router?.params as unknown as ViewListScreenProps;
-  const [loading, setLoading] = useState(true);
+  const {label, keyCategory, type, data, paged, sortby} =
+    router?.params as unknown as navigateViewListProps;
+  //
+  console.log({label, keyCategory, type, data, paged, sortby});
 
-  const [data, setData] = useState<chapterInterface[]>([]);
+  //
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(paged || 1);
+  const [list, setList] = useState<ItemListProduct[]>([]);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-  const [categoriesList, setCategoriesList] = useState(categories || []);
-  const [activeCategory, setActiveCategory] = useState(categoryIdSelected);
+  const [categoriesList, setCategoriesList] = useState<TabInterface[]>([]);
+  const [slugCategory, setSlugCategory] = useState<string>(keyCategory || '');
   const scrollY = useSharedValue(0);
-
+  const [isNext, setIsNext] = useState(true);
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
-  const onSelectedCategory = (id: number) => {
-    setActiveCategory(id);
+  const onSelectedCategory = (item: TabInterface) => {
+    console.log({item});
+    setSlugCategory(item.slug);
+    setPage(1);
+    setIsNext(true);
+    setList([]);
+    setLoading(true);
   };
   // callapi
   useEffect(() => {
     callApi();
-  }, []);
+  }, [slugCategory]);
+  //
+
+  // call api category
+  useEffect(() => {
+    if (data?.type === TypeList.CATEGORY) {
+      callApiCategory();
+    }
+  }, [data?.type]);
+  const callApiCategory = async () => {
+    const responseCategory: any = await getCategoryApi(
+      data?.posttype || PostTypeKey.MOVIES,
+    );
+    setCategoriesList(responseCategory?.data);
+  };
+  //
   const callApi = async () => {
+    if (!isNext) {
+      setLoading(false);
+      return;
+    }
     try {
       let params: any = {
-        page: 1,
-        limit: 10,
+        paged: page,
       };
-      if (activeCategory) {
+      if (sortby) {
         params = {
           ...params,
-          sort: `tags/${activeCategory}`,
+          sortby: sortby,
         };
       }
-      console.log({params});
 
-      const response: any = await getListPostApi(type);
-      console.log({list: response?.data?.data});
-      setData(response?.data?.data);
+      const response: any = await getListPostApi(
+        data?.api || '',
+        params,
+        slugCategory,
+      );
+      console.log({response});
+
+      setIsNext(response?.data?.is_next || false);
+      //
+      const newList = [...list, ...response?.data?.data];
+
+      setList(newList);
       setLoading(false);
     } catch (error) {
       console.log({error});
@@ -69,15 +97,31 @@ export const useViewListScreen = () => {
   const onSearch = (text: string) => {
     setSearch(text);
   };
+  // load more
+  useEffect(() => {
+    if (page > 1) {
+      callApi();
+    }
+  }, [page]);
+  const onLoadMore = () => {
+    if (!isNext) {
+      return;
+    }
+    if (loading) {
+      return;
+    }
+    setPage(prev => prev + 1);
+  };
   return {
     data,
     themeColors,
     styles,
-    name,
+    label,
     search,
     onSearch,
-    activeCategory,
-    setActiveCategory,
+    list,
+    slugCategory,
+    onLoadMore,
     scrollHandler,
     onSelectedCategory,
     scrollY,

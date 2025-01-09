@@ -1,19 +1,21 @@
 import {goBack} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {useTheme} from '@theme';
-import {episodeInterface} from '@types';
+import {chapterEpisodeInterface} from '@types';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Orientation from 'react-native-orientation-locker';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {createStyles} from './styles';
 interface VideoScreenProps {
-  video: episodeInterface;
+  video: chapterEpisodeInterface;
 }
 export const useVideoScreen = () => {
   const router = useRoute();
   const {video} = (router?.params as unknown as VideoScreenProps) || {
     video: undefined,
   };
+  console.log({video: video?.source});
+
   const [urlVideo, setUrlVideo] = useState(video?.source?.[0]?.link || '');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -31,6 +33,7 @@ export const useVideoScreen = () => {
 
   // state speed to control speed video
   const [isSpeedVisible, setSpeedVisible] = useState(false); // Add this line
+  console.log({urlVideo});
 
   const [ad, setAd] = useState<{
     type: 'video' | 'image';

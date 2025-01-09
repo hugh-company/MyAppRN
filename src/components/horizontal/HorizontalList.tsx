@@ -1,8 +1,7 @@
 import { BrandIcon, LikeActiveIcon, RightIcon } from '@assets';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ItemListProduct, PostTypeKey, TypeList } from '@types';
-import { getPrettyNumberString, goToDetail } from '@utils';
+import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
+import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -17,13 +16,19 @@ interface HorizontalListProps {
   style?: StyleProp<ViewStyle>;
   type?: PostTypeKey;
   itemStyle?: StyleProp<ViewStyle>;
+  button?: ButtonNavigationInterface
 }
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
   title,
   data,
-  style, titleViewMore = t('home.viewMore'), onViewMore, type = PostTypeKey.GAMES, itemStyle,
+  style,
+  titleViewMore = t('home.viewMore'),
+  onViewMore, type = PostTypeKey.GAMES,
+  itemStyle,
+  button,
 }) => {
+
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
 
@@ -64,7 +69,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
           </TouchableOpacity>
         );
       default:
-        return null;
+        return <></>;
     }
   };
 
@@ -77,14 +82,12 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         <TouchableOpacity hitSlop={{
           top: 30, bottom: 30, right: 20, left: 20,
         }} onPress={() => {
-          onViewMore ? onViewMore?.() : navigate(SCREEN_ROUTE.VIEW_LIST,
-            {
-              name: title,
-              type: type,
-              typeList: TypeList.LIST,
-              list: data,
-            }
-          );
+          console.log({ button });
+
+          onViewMore ? onViewMore?.() : goToListView({
+            ...button,
+            label: title,
+          });
         }} style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>
             {titleViewMore}
@@ -93,7 +96,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         </TouchableOpacity>
       </View>
       <AppFlatListAnimated
-        data={data}
+        data={data || []}
         horizontal
         keyExtractor={(item) => `child_${title}${item?.id?.toString()}`}
         renderItem={renderItem} />

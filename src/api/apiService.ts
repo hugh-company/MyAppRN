@@ -45,8 +45,9 @@ class AxiosClass {
 
   interceptorResponses = (response: AxiosResponse): Promise<any> => {
     const {data} = response;
-    console.log({data});
-
+    if (data?.status === 'error') {
+      return Promise.reject(data);
+    }
     return Promise.resolve(data);
   };
 
@@ -97,6 +98,12 @@ class AxiosClass {
         // ...headers,
       },
     };
+    if (params?.paged) {
+      url = `${url}paged/${params.paged}`;
+    }
+    if (params?.sortby) {
+      url = `${url}?sortby=${params.sortby}`;
+    }
     if (params) {
       newHeader.params = {
         ...params,

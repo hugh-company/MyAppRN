@@ -1,12 +1,13 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
+import { ItemListProduct } from '@types';
 import React, { useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 
 interface BannerHomeProps {
-  data?: { images: string, label: string, name: string }[];
+  data?: ItemListProduct[];
   style?: StyleProp<ViewStyle>
 }
 export const BannerHome = ({ data = [], style }: BannerHomeProps) => {

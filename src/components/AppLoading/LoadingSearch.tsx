@@ -2,44 +2,31 @@ import { Spacing } from '@theme';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-export interface LoadingHomeProps {
-  numColumns?: number
-}
-const LoadingList = ({ numColumns }: LoadingHomeProps) => {
-  const renderItemTwo = () => {
-    return (
-      <View style={styles.list}>
-        <View style={styles.item} />
-        <View style={styles.item} />
-      </View>
-    );
-  };
-  const renderOne = () => {
-    return (
-      <View style={styles.list}>
 
-        <View style={styles.imageOne} />
-        <View style={styles.itemOne}>
-          <View style={{ gap: 6 }}>
-            <View style={styles.name} />
-            <View style={styles.name2} />
-          </View>
+const LoadingSearch = () => {
 
-          <View style={{ gap: 6 }}>
-            <View style={styles.name3} />
-            <View style={styles.name2} />
-            <View style={styles.name2} />
-          </View>
-        </View>
-      </View>
-    );
-  };
+
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
       <SkeletonPlaceholder>
         <ScrollView >
           {Array.from({ length: 10 }).map((_, index) => (
-            numColumns === 2 ? renderItemTwo() : renderOne()
+            <View style={styles.list}>
+
+              <View style={styles.imageOne} />
+              <View style={styles.itemOne}>
+                <View style={{ gap: 6 }}>
+                  <View style={styles.name} />
+                  <View style={styles.name2} />
+                </View>
+
+                <View style={{ gap: 6 }}>
+                  <View style={styles.name3} />
+                  <View style={styles.name2} />
+                  <View style={styles.name2} />
+                </View>
+              </View>
+            </View>
           ))}
         </ScrollView>
       </SkeletonPlaceholder>
@@ -83,4 +70,4 @@ const styles = StyleSheet.create({
     height: Spacing.width15,
   },
 });
-export default LoadingList;
+export default LoadingSearch;

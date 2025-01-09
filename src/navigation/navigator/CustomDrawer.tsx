@@ -24,7 +24,6 @@ const CustomDrawer = (props: CustomDrawerProps) => {
   const token = useSelector(getToken);
   const { bottom, top } = useSafeAreaInsets();
   const styles = createStyles(themeColors);
-  // const colors = token ? ['#050505', '#2D0C0C'] : ['#B1062E', '#1E1111'];
   const colors = ['#B1062E', '#1E1111'];
   const dataNavigation = [
     {
@@ -55,8 +54,6 @@ const CustomDrawer = (props: CustomDrawerProps) => {
   ];
 
   const dataSettings = [
-
-
     {
       name: t('drawer.movie_saved'),
       key: SCREEN_ROUTE.SAVED_MOVIE,
@@ -80,6 +77,8 @@ const CustomDrawer = (props: CustomDrawerProps) => {
         style={styles.gradient}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
+        useAngle={true} // Added this line
+        angle={45} // Added this line
       >
         <View style={[styles.viewImage, { marginTop: top || Spacing.width16, marginBottom: bottom || Spacing.width16 }]}>
           {[ImageBook, ImageGame, ImageMovie].map((item, index) => (

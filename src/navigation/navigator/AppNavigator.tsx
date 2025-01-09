@@ -27,7 +27,6 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
       <NavigationContainer ref={ref}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
-
             name={SCREEN_ROUTE.MAIN_STACK}
             component={MainStackComponent}
           />

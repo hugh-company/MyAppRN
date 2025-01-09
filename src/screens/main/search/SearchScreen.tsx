@@ -1,5 +1,5 @@
 import { FilterIcon, SortIcon } from '@assets';
-import { AppInputSearch, AppText, ModalFilter } from '@components';
+import { AppInputSearch, AppText, LoadingSearch, ModalFilter } from '@components';
 import { goBack } from '@navigation';
 import { t } from 'i18next';
 import React from 'react';
@@ -9,7 +9,7 @@ import { DashboardSearch } from './components/DashboardSearch';
 import { SearchList } from './components/SearchList';
 
 const SearchScreen = () => {
-  const { data, themeColors, styles, typeScreen, isFilterSort, menuSort, dataDashboard,
+  const { data, loading, styles, typeScreen, isFilterSort, menuSort,
     setIsFilterSort, isFilterType, setIsFilterType, top, search, onSearch, sort, menuType, refSearch, filterByType, filterBySort } = useSearchScreen();
 
   return (
@@ -37,7 +37,7 @@ const SearchScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {search || sort || typeScreen ? <SearchList data={[]} valueSearch={search} /> : <DashboardSearch />}
+      {search || sort || typeScreen ? loading ? <LoadingSearch /> : <SearchList data={data} valueSearch={search} /> : <DashboardSearch />}
       <ModalFilter
         visible={isFilterType}
         onClose={() => setIsFilterType(false)}

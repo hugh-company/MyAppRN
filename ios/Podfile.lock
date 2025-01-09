@@ -1602,7 +1602,7 @@ PODS:
     - Yoga
   - react-native-splash-screen (3.3.0):
     - React-Core
-  - react-native-video (6.8.2):
+  - react-native-video (6.9.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1615,7 +1615,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.8.2)
+    - react-native-video/Video (= 6.9.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1624,7 +1624,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Fabric (6.8.2):
+  - react-native-video/Fabric (6.9.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1645,7 +1645,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.8.2):
+  - react-native-video/Video (6.9.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2126,7 +2126,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (4.3.0):
+  - RNScreens (4.4.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2147,9 +2147,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.3.0)
+    - RNScreens/common (= 4.4.0)
     - Yoga
-  - RNScreens/common (4.3.0):
+  - RNScreens/common (4.4.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -2606,7 +2606,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 2500e4fe998caad50ad3bc51ec23ef951308569e
   react-native-slider: 124ce99f9cd2d04c79f020da6dee9f8d38a6b8c7
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
-  react-native-video: 02120ed628f1ca8956b1e67e4e2ec8825e2f2710
+  react-native-video: 10dc1099e2b0a4d7988c9d2f4424ff68b3922208
   react-native-webview: 40b8823be3fac70f0404016e6aed754ef4307517
   React-nativeconfig: aeed6e2a8ac02b2df54476afcc7c663416c12bf7
   React-NativeModulesApple: c5b7813da94136f50ef084fa1ac077332dcfc658
@@ -2646,7 +2646,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 0e5ae8d72ef4afb855e98dcdbe60f27d938abe13
   RNGoogleSignin: edec18754ff4af2cfee46072609ec5a7a754291a
   RNReanimated: 006a5d3961bf09c1e96d62ed436e02b2e43b89bb
-  RNScreens: 44a3e358d5ccd7815c5ae9148988c562826992b2
+  RNScreens: d022507f2b6d76c73335e9e35aedcf7bb2f791b0
   RNSVG: b2fbe96b2bb3887752f8abc1f495953847e90384
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d

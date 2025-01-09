@@ -1,7 +1,6 @@
 import { DotsIcon } from '@assets';
 import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList, LoadingDetailMovie } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { useNavigation } from '@react-navigation/native';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
@@ -12,7 +11,8 @@ import { PosterDetail } from './components/PosterDetail';
 
 
 const MovieDetailScreen = () => {
-  const { styles, detailMovie, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, data, themeColors } = useMovieDetailScreen();
+
+  const { styles, detailMovie, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors } = useMovieDetailScreen();
 
   if (loading) {
     return <LoadingDetailMovie />;
@@ -22,7 +22,6 @@ const MovieDetailScreen = () => {
   }
 
   const posterMovie = detailMovie?.feature?.path;
-  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <Animated.ScrollView
@@ -41,9 +40,12 @@ const MovieDetailScreen = () => {
           views={detailMovie?.views}
           likes={detailMovie?.like_count}
           poster={posterMovie}
-          totalEpisodes={detailMovie?.episode_total}
+          totalEpisodes={detailMovie?.chapter_total
+          }
           onPlay={() => {
-            navigate(SCREEN_ROUTE.VIDEO, { video: detailMovie?.episode?.[0] });
+            console.log({ detailMovie: detailMovie?.chapters?.[0] });
+
+            navigate(SCREEN_ROUTE.VIDEO, { video: detailMovie?.chapters?.[0] });
             // if (data?.chapters?.length) {
             //   navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[data?.chapters?.length - 1] });
             // }
@@ -54,11 +56,13 @@ const MovieDetailScreen = () => {
             // }
           }}
         />
-        {detailMovie?.movie_type === 'tvseries' && <AppEpisodes episodes={detailMovie?.episode} style={styles.episodes} onSelectChapter={(item) => {
-          console.log({ item });
-          navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: item });
+        {detailMovie?.movie_type === 'tvseries' && <AppEpisodes
+          episodes={detailMovie?.chapters} style={styles.episodes}
+          onSelectChapter={(item) => {
+            console.log({ item });
+            navigate(SCREEN_ROUTE.VIDEO, { video: item });
 
-        }} />
+          }} />
         }
         <AppInfoContent
           type={PostTypeKey.MOVIES}
@@ -67,15 +71,15 @@ const MovieDetailScreen = () => {
           style={styles.infoRow}
           isSave={false}
           releaseDate={detailMovie?.release_date}
-          tags={detailMovie?.cmovie}
-          main_actors={detailMovie?.actor}
+          tags={detailMovie?.categories}
+          main_actors={detailMovie?.actors}
           description={detailMovie?.description}
-          director={detailMovie?.director}
+          director={detailMovie?.directors}
         />
         <HorizontalList
-          data={data}
+          data={detailMovie.related_post}
           type={PostTypeKey.MOVIES}
-          title={t('movie.otherMovie')}
+          title={t('view_list.otherMovie')}
           itemStyle={styles.itemImage}
 
         />

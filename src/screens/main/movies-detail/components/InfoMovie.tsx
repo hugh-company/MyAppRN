@@ -1,14 +1,14 @@
 import { AddIcon, LikeIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { episodeInterface, movieDetailInterface } from '@types';
+import { chapterEpisodeInterface, movieDetailInterface } from '@types';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface InfoMovieProps {
   movie: movieDetailInterface | undefined;
-  onSelectChapter?: (item: episodeInterface) => void;
+  onSelectChapter?: (item: chapterEpisodeInterface) => void;
   chapter?: number
 }
 export const InfoMovie = ({ movie, onSelectChapter, chapter }: InfoMovieProps) => {
@@ -37,8 +37,8 @@ export const InfoMovie = ({ movie, onSelectChapter, chapter }: InfoMovieProps) =
       </View>
     );
   };
-  const episodesToShow = showAll ? movie?.episodes : movie?.episodes?.slice(0, 8);
-  const showLoadMoreButton = movie?.episodes && movie.episodes.length > 8;
+  const episodesToShow = showAll ? movie?.chapters : movie?.chapters?.slice(0, 8);
+  const showLoadMoreButton = movie?.chapters && movie.chapters.length > 8;
   const descriptionToShow = showAllDescription ? movie?.description : movie?.description?.slice(0, 100);
 
   return (

@@ -13,10 +13,11 @@ export interface AppListMoviesProps {
   | undefined;
   scrollEventThrottle?: number;
   numColumns?: number;
-  type?: PostTypeKey
+  type?: PostTypeKey;
+  onLoadMore?: () => void;
 }
 
-const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScroll }: AppListMoviesProps) => {
+const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScroll, onLoadMore }: AppListMoviesProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
@@ -53,8 +54,10 @@ const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScro
       data={data}
       horizontal={numColumns === 1}
       contentContainerStyle={styles.container}
+      keyExtractor={(item) => item.id.toString()}
       numColumns={numColumns}
       renderItem={renderItem}
+      onLoadMore={onLoadMore}
       columnWrapperStyle={numColumns === 2 ? styles.columnWrapper : undefined}
     />
 

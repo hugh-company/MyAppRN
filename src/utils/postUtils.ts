@@ -1,5 +1,5 @@
-import {push, SCREEN_ROUTE} from '@navigation';
-import {PostTypeKey} from '@types';
+import {navigate, push, SCREEN_ROUTE} from '@navigation';
+import {ButtonNavigationInterface, PostTypeKey} from '@types';
 import {DeviceEventEmitter} from 'react-native';
 
 export const showModalChapter = (visible: boolean, data: any[] | string) => {
@@ -20,5 +20,12 @@ export const goToDetail = ({item, type}: {item: any; type?: PostTypeKey}) => {
       return push(SCREEN_ROUTE.MOVIE_DETAIL, {movie: item});
   }
 };
-
-export const goToListView = ({type}: {type: PostTypeKey}) => {};
+//
+export interface navigateViewListProps extends ButtonNavigationInterface {
+  keyCategory?: string;
+}
+export const goToListView = (props: navigateViewListProps) => {
+  navigate(SCREEN_ROUTE.VIEW_LIST, {
+    ...props,
+  });
+};

@@ -43,7 +43,6 @@ export const useHomeScreen = () => {
   const callApi = async () => {
     try {
       const res: responseDashboard = await getDataDashboardApi();
-
       setData(res?.data?.modules || []);
       setLoading(false);
     } catch (error) {

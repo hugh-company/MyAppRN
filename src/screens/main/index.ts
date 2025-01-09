@@ -1,5 +1,4 @@
 export * from './chapter-detail';
-export * from './chapters';
 export * from './comic';
 export * from './create-profile';
 export * from './DashboardCreateProfile';

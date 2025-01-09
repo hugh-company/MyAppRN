@@ -15,10 +15,8 @@ export enum KeyTypeWithCategory {
   NOVEL = 'cnovel',
 }
 export enum TypeList {
-  SLIDER = 'SLIDER',
-  CATEGORY = 'CATEGORY',
-  LIST = 'LIST',
-  HORIZONTAL = 'HORIZONTAL',
+  CATEGORY = 'category',
+  LIST = 'list',
 }
 // new
 export enum TypeKeyListApi {
@@ -46,4 +44,9 @@ export enum ItemListDashboard {
   NOVEL = 'novel',
   HOME = 'home',
   SEARCH = 'search',
+}
+export enum FilterKey {
+  // 'views__desc' | 'likes__desc'
+  VIEWS_DESC = 'views__desc',
+  LIKES_DESC = 'likes__desc',
 }

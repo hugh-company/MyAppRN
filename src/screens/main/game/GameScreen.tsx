@@ -4,7 +4,6 @@ import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
 import { useGameScreen } from './GameScreen.hook';
-import ItemGame from './components/ItemGame';
 
 const GameScreen = () => {
   const { data,
@@ -14,20 +13,11 @@ const GameScreen = () => {
     onRefresh,
     tabSelect,
     handleCategorySelect } = useGameScreen();
-  const renderItem = ({ item }) => {
-    return <ItemGame item={item} />;
-  };
-  const renderListHeader = () => {
-    return (
-      <View style={styles.header}>
-        {/* <BannerMovie data={data} isGame={true} title={'Game nổi bật'} style={styles.banner} /> */}
-        {/* <GirdContainer data={gameCategories} /> */}
-      </View>
-    );
-  };
+
   return (
     <View style={styles.container}>
       <HeaderMain title={t('games.title')} isHome={false} />
+
       <AppListDashboard
         data={data}
         loading={loading}

@@ -1,14 +1,14 @@
 import { AppText } from '@components';
 import { useTheme } from '@theme';
-import { TabsInterface } from '@types';
+import { TabInterface } from '@types';
 import React, { memo, useCallback, useRef } from 'react';
 import { FlatList, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 
 export interface AppCategoryListProps {
-  data: { id: number, name: string }[] | undefined;
-  categoryId: number;
-  onSelectedCategory: (item: TabsInterface) => void;
+  data: TabInterface[] | undefined;
+  categoryId?: number;
+  onSelectedCategory: (item: TabInterface) => void;
   style?: StyleProp<ViewStyle>;
   listStyle?: StyleProp<ViewStyle>;
 }
@@ -37,12 +37,17 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, style, listStyl
   //     }
   //   }
   // }, [categoryId, flatListRef.current]);
-  const handleCategoryPress = useCallback((item: TabsInterface, index: number) => {
+  const handleCategoryPress = useCallback((item: TabInterface, index: number) => {
     onSelectedCategory(item);
   }, [onSelectedCategory]);
 
-  const renderItem = useCallback(({ item, index }) => (
-    <CategoryItem item={item} index={index} categoryId={categoryId} handleCategoryPress={() => handleCategoryPress(item, index)} styles={styles} />
+  const renderItem = useCallback(({ item, index }: any) => (
+    <CategoryItem
+      item={item}
+      index={index}
+      categoryId={categoryId}
+      handleCategoryPress={() => handleCategoryPress(item, index)}
+      styles={styles} />
   ), [categoryId, handleCategoryPress, styles]);
 
   return (

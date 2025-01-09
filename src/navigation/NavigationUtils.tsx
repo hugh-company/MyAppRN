@@ -17,7 +17,7 @@ export function setTopLevelNavigator(navigatorRef: typeNavigation) {
 }
 
 let lastNavigateTime = 0;
-const DEBOUNCE_TIME = 200; // Reduced debounce time
+const DEBOUNCE_TIME = 0; // Reduced debounce time
 
 function debounceNavigation(action: () => void) {
   const currentTime = Date.now();

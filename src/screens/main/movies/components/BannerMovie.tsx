@@ -2,7 +2,7 @@ import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppBanners, AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ItemListProduct } from '@types';
-import { getPrettyNumberString } from '@utils';
+import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -17,8 +17,15 @@ interface BannerMovieProps {
 export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const navigateBanner = (item: ItemListProduct) => {
+
+    goToDetail({
+      item,
+      // type: item?.
+    });
+  };
   const renderItemBanner = ({ item }: { item: ItemListProduct }) => (
-    <TouchableOpacity style={styles.banner}>
+    <TouchableOpacity onPress={() => navigateBanner(item)} style={styles.banner}>
       <AppImage uri={item.banner.path} style={styles.image} />
       <LinearGradient
         colors={['rgba(0, 0, 0, 0)', 'black']}

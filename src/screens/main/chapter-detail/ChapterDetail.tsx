@@ -9,7 +9,7 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, data, themeColors, type } = useChapterDetail();
+  const { styles, detail, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors, type } = useChapterDetail();
 
   if (loading) {
     return <LoadingDetailMovie />;
@@ -36,23 +36,26 @@ const ChapterDetail = () => {
           views={detail?.views}
           likes={detail?.like_count}
           poster={posterMovie}
-          totalEpisodes={detail?.chapter?.length}
+          totalEpisodes={detail?.chapters?.length}
           onPlay={() => {
-            if (detail?.chapter?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapter?.[detail?.chapter?.length - 1], type });
+            if (detail?.chapters?.length) {
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[detail?.chapter?.length - 1], type });
             }
           }}
           onNewChapter={() => {
-            if (detail?.chapter?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapter?.[0], type });
+            if (detail?.chapters?.length) {
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[0], type });
             }
           }}
         />
-        <AppEpisodes episodes={detail?.chapter} style={styles.episodes} onSelectChapter={(item) => {
-          console.log({ item });
-          navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: item, type });
+        <AppEpisodes
+          episodes={detail?.chapters}
+          style={styles.episodes}
+          onSelectChapter={(item) => {
+            console.log({ item });
+            navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: item, type });
 
-        }} />
+          }} />
 
         <AppInfoContent
           type={type}
@@ -62,15 +65,15 @@ const ChapterDetail = () => {
           style={styles.infoRow}
           isSave={false}
           releaseDate={detail?.release_date}
-          tags={detail?.ccomic}
-          main_actors={detail?.creator}
+          tags={detail?.categories}
+          main_actors={detail?.actors}
           description={detail?.description}
-        // director={detail?.director}
+          director={detail?.creators}
         />
         <HorizontalList
-          data={data}
-          type={PostTypeKey.MOVIES}
-          title={t('movie.otherMovie')}
+          data={detail.related_post}
+          type={type}
+          title={t('view_list.otherChapter')}
           itemStyle={styles.itemImage}
 
         />

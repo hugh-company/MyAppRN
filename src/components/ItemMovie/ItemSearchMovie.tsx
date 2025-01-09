@@ -2,13 +2,14 @@ import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
+import { ItemListProduct } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export interface ItemSearchMovieProps {
-  item: any;
+  item: ItemListProduct;
 }
 
 const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
@@ -21,12 +22,12 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
       <View style={styles.viewInfo}>
         <View>
           <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
-          <AppText numberOfLines={1} style={styles.director}>{item.director}</AppText>
+          {/* <AppText numberOfLines={1} style={styles.director}>{item.}</AppText> */}
         </View>
         <View style={styles.viewOption}>
           <View style={styles.viewRow}>
             <PlayStackedIcon width={Spacing.width16} height={Spacing.width15} />
-            <AppText style={styles.duration}>{`${t('search.duration')} ${item.duration}`}</AppText>
+            <AppText style={styles.duration}>{item?.duration ? `${t('search.duration')} ${item.duration}` : `${item?.chapter_total}`}</AppText>
           </View>
           <View style={styles.viewRow}>
             <PlayIcon size={Spacing.width12} color={themeColors.primary} />

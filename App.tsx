@@ -9,7 +9,7 @@ import { initI18n } from '@translations';
 import FlashMessage from 'react-native-flash-message';
 
 import React, { useEffect } from 'react';
-import { LogBox, Platform, StyleSheet } from 'react-native';
+import { LogBox, Platform, StatusBar, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalPortal } from 'react-native-modals';
@@ -61,6 +61,7 @@ function App(): React.JSX.Element {
   ]);
   return (
     <GestureHandlerRootView style={styles.container}>
+      <StatusBar translucent backgroundColor="transparent" />
       <ThemeProvider >
         <Provider store={store}>
           {/* <ApolloProvider client={client}> */}

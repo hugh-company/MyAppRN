@@ -1,4 +1,7 @@
+export {default as LoadingDashboardSearch} from './LoadingDashboardSearch';
 export {default as LoadingDetailMovie} from './LoadingDetailMovie';
+export {default as LoadingGame} from './LoadingGame';
 export {default as LoadingHome} from './LoadingHome';
 export {default as LoadingList} from './LoadingList';
 export {default as LoadingMovieScreen} from './LoadingMovieScreen';
+export {default as LoadingSearch} from './LoadingSearch';

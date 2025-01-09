@@ -1,7 +1,7 @@
 import { AppText } from '@components';
 import { t } from 'i18next';
 import React, { memo, useCallback } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { Platform, TouchableOpacity } from 'react-native';
 import Animated, { runOnJS } from 'react-native-reanimated';
 import Video from 'react-native-video';
 import { useVideoScreen } from './VideoScreen.hook';
@@ -46,7 +46,9 @@ const VideoScreen = () => {
         controls={false}
         ref={videoRef}
         resizeMode="contain"
-        onError={() => {
+        onError={(e) => {
+          console.log({ e });
+
           setError(true);
         }}
         onProgress={(data) => runOnJS(updateProgress)(data.currentTime)}
@@ -58,10 +60,12 @@ const VideoScreen = () => {
         rate={playbackRate}
         onLoadStart={() => setIsLoading(true)}
         onReadyForDisplay={() => setIsLoading(false)}
-      // selectedTextTrack={{
-      //   type: SelectedTrackType.LANGUAGE,
-
-      // }}
+        // Add the following props for Android
+        {...(Platform.OS === 'android' && {
+          ignoreSilentSwitch: 'ignore',
+          playInBackground: true,
+          playWhenInactive: true,
+        })}
       />
 
       {error && (

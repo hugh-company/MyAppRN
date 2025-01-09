@@ -3,7 +3,7 @@ import {Spacing, useTheme} from '@theme';
 import {
   ModuleItemInterface,
   PostTypeKey,
-  TabsInterface,
+  TabInterface,
   TypeKeyListApi,
 } from '@types';
 import {useCallback, useEffect, useState} from 'react';
@@ -23,7 +23,7 @@ export const useMovieScreen = () => {
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-  const [tabSelect, setTabSelect] = useState<TabsInterface | undefined>({
+  const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
     type: '',
@@ -41,6 +41,7 @@ export const useMovieScreen = () => {
         filter: filter,
       };
       const response = await getPostDashboardApi(PostTypeKey.MOVIES, params);
+      console.log({response});
 
       setData(response.data?.modules || []);
 
@@ -85,7 +86,7 @@ export const useMovieScreen = () => {
   const onSearch = useCallback((text: string) => {
     setSearch(text);
   }, []);
-  const onSelectedCategory = useCallback((item: TabsInterface) => {
+  const onSelectedCategory = useCallback((item: TabInterface) => {
     setTabSelect(item);
     setLoading(true);
     const textFilter = `${item.type}/${item.id}`;
@@ -99,11 +100,11 @@ export const useMovieScreen = () => {
   );
 
   interface HandleCategorySelect {
-    (item: TabsInterface): void;
+    (item: TabInterface): void;
   }
 
   const handleCategorySelect: HandleCategorySelect = useCallback(
-    (item: TabsInterface) => {
+    (item: TabInterface) => {
       onSelectedCategory(item);
     },
     [onSelectedCategory],

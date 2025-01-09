@@ -48,17 +48,18 @@ export const API_ENDPOINTS = {
   MOVIES: '/terms/lists/',
   DETAIL: '/posts/detail/',
   LIST: '/posts/lists/',
-
+  // CATEGORY: '/posts/category/',
+  CATEGORY: '/terms/lists/',
   //rating
-  RATING: '/reviews/rating/',
+  RATING: '/posts/action/rating/',
   // report
   REPORT: '/posts/report/',
   // like
-  LIKE: '/posts/like/',
+  LIKE: '/posts/action/like/',
   // favorite
-  FAVORITE: '/posts/favorites/',
+  FAVORITE: '/posts/action/favorites/',
   // view
-  VIEW: '/posts/views/',
+  VIEW: '/posts/action/views/',
   // search
   SEARCH: '/posts/search/',
 };

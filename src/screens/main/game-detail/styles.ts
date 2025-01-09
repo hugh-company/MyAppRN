@@ -27,4 +27,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.text,
       ...FontWithFamily.FontWithFamily_600,
     },
+    itemImage: {
+      width: Spacing.width120,
+    },
   });
