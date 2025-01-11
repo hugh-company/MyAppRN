@@ -1,8 +1,8 @@
 import { LeftIcon } from '@assets';
 import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import React, { useMemo } from 'react';
-import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Platform, StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../AppText';
@@ -15,6 +15,7 @@ interface AppHeaderProps {
   onRightPress?: () => void;
   style?: StyleProp<ViewStyle>;
   titleStyle?: StyleProp<TextStyle>;
+  backgroundColor?: string;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -25,32 +26,46 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onRightPress,
   style,
   titleStyle,
+
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+  console.log({ style });
+
+
+  useEffect(() => {
+    console.log({ style });
+
+  }, [style]);
   return (
-    <Animated.View style={[styles.container, style, { paddingTop: top || Spacing.width16 }]}>
-      <View style={styles.flex1}>
-        {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
-          <LeftIcon />
-        </TouchableOpacity>}
-        <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>
-      </View>
-      {rightComponent}
-    </Animated.View>
+    <>
+      <Animated.View style={[styles.container, style, { paddingTop: top || Spacing.width16 }]}>
+        <View style={styles.flex1}>
+          {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
+            <LeftIcon />
+          </TouchableOpacity>}
+          <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>
+        </View>
+        {rightComponent}
+      </Animated.View>
+    </>
   );
 };
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      // height: Spacing.height56,
+      height: Platform.OS === 'android' ? Spacing.height64 : undefined,
       paddingHorizontal: Spacing.width16,
       backgroundColor: 'transparent',
       alignItems: 'center',
       flexDirection: 'row',
-      paddingBottom: Spacing.width16,
+      paddingBottom: Spacing.width8,
+      top: 0,
+      left: 0,
+      right: 0,
+
     },
 
     title: {
@@ -60,8 +75,8 @@ const createStyles = (themeColors: ThemeColors) =>
 
     },
     btnBack: {
-      width: Spacing.width40,
-      height: Spacing.width40,
+      width: Spacing.width35,
+      height: Spacing.width35,
       borderRadius: Spacing.height24,
       backgroundColor: themeColors.btnSocial,
       alignItems: 'center',

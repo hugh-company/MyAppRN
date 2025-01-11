@@ -1,6 +1,6 @@
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppRatingMovie, AppText } from '@components';
-import { favoriteMovieApi, likePostApi } from '@services';
+import { likePostApi, savedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { PersonInterface, PostTypeKey, TabInterface } from '@types';
 import { onShareInfo } from '@utils';
@@ -58,7 +58,7 @@ const AppInfoContent = ({
   const callApiFavorite = async () => {
     try {
 
-      const response = await favoriteMovieApi(id, type);
+      const response = await savedPostApi(id, type);
       console.log({ response });
       setIsFavorite(true);
     } catch (error) {

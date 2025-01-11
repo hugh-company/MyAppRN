@@ -2,15 +2,22 @@ import { FilterIcon, SortIcon } from '@assets';
 import { AppInputSearch, AppText, LoadingSearch, ModalFilter } from '@components';
 import { goBack } from '@navigation';
 import { t } from 'i18next';
-import React from 'react';
+import React, { memo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { useSearchScreen } from './SearchScreen.hook';
-import { DashboardSearch } from './components/DashboardSearch';
-import { SearchList } from './components/SearchList';
+import DashboardSearch from './components/DashboardSearch';
+import SearchList from './components/SearchList';
+
+const MemoizedModalFilter = memo(ModalFilter);
+const MemoizedDashboardSearch = memo(DashboardSearch);
+const MemoizedSearchList = memo(SearchList);
 
 const SearchScreen = () => {
   const { data, loading, styles, typeScreen, isFilterSort, menuSort,
-    setIsFilterSort, isFilterType, setIsFilterType, top, search, onSearch, sort, menuType, refSearch, filterByType, filterBySort } = useSearchScreen();
+    setIsFilterSort, isFilterType, setIsFilterType, top, search,
+    onSearch, sort, menuType, refSearch, filterByType, filterBySort,
+    onLoadMore } = useSearchScreen();
+
 
   return (
     <View style={styles.container}>
@@ -33,19 +40,19 @@ const SearchScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity onPress={() => setIsFilterSort(true)} style={[styles.btnType, sort && styles.btnActive]}>
           <SortIcon />
-          <AppText style={styles.txtType}>{sort || t('search.sort')}</AppText>
+          <AppText style={styles.txtType}>{sort ? `${menuSort?.find((elm) => elm.key === sort)?.value}` : t('search.sort')}</AppText>
         </TouchableOpacity>
       </View>
 
-      {search || sort || typeScreen ? loading ? <LoadingSearch /> : <SearchList data={data} valueSearch={search} /> : <DashboardSearch />}
-      <ModalFilter
+      {search || sort || typeScreen ? loading ? <LoadingSearch /> : <MemoizedSearchList onLoadMore={onLoadMore} data={data} valueSearch={search} /> : <MemoizedDashboardSearch />}
+      <MemoizedModalFilter
         visible={isFilterType}
         onClose={() => setIsFilterType(false)}
         label={`${t('search.type')}:`}
         onSelect={filterByType}
         data={menuType}
       />
-      <ModalFilter
+      <MemoizedModalFilter
         visible={isFilterSort}
         onClose={() => setIsFilterSort(false)}
         label={`${t('search.sort')}:`}

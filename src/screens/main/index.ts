@@ -3,6 +3,7 @@ export * from './comic';
 export * from './create-profile';
 export * from './DashboardCreateProfile';
 export * from './dating';
+export * from './FavoriteScreen';
 export * from './filter-dating';
 export * from './game';
 export * from './game-detail';

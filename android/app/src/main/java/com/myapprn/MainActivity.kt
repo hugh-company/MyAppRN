@@ -12,7 +12,12 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this)
     super.onCreate(savedInstanceState)
-
+    // Set full screen mode
+    val decorView = window.decorView
+    val uiOptions = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+            or View.SYSTEM_UI_FLAG_FULLSCREEN
+            or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+    decorView.systemUiVisibility = uiOptions
   }
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule

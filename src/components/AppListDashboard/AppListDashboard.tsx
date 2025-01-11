@@ -2,7 +2,7 @@ import { AppCategoryList, AppFlatListAnimated, HorizontalList, LoadingDashboardS
 import { BannerMovie } from '@screens';
 import { sizeWidth, useTheme } from '@theme';
 import { ItemListDashboard, ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface, TypeKeyListApi } from '@types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import { BannerHome } from './components/BannerHome';
 import { CategoryListItem } from './components/CategoryListItem';
@@ -20,6 +20,7 @@ export interface AppListDashboardProps {
   onScroll?: (event: any) => void;
   categoryId?: number;
   onSelectedCategory?: (item: TabInterface) => void;
+  keyExtractor?: (item: ModuleItemInterface, index: number) => string;
 }
 
 const AppListDashboard = ({
@@ -29,12 +30,15 @@ const AppListDashboard = ({
   onSelectedCategory = () => { },
   ListHeaderComponent,
   categoryId,
+  keyExtractor,
 }: AppListDashboardProps) => {
+  console.log('aaaa');
+
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = React.useState(false);
 
-  const renderLoading = () => {
+  const renderLoading = useCallback(() => {
     switch (typeScreen) {
       case ItemListDashboard.HOME:
         return <LoadingHome />;
@@ -49,9 +53,9 @@ const AppListDashboard = ({
       default:
         return <></>;
     }
-  };
+  }, [typeScreen]);
 
-  const onRefreshList = () => {
+  const onRefreshList = useCallback(() => {
     if (onRefresh) {
       setIsReset(true);
       onRefresh();
@@ -59,9 +63,9 @@ const AppListDashboard = ({
         setIsReset(false);
       }, 1000);
     }
-  };
+  }, [onRefresh]);
 
-  const renderItem = ({ item }: { item: ModuleItemInterface }) => {
+  const renderItem = useCallback(({ item }: { item: ModuleItemInterface }) => {
     switch (item?.type) {
       case TypeKeyListApi.BANNER:
         return <BannerHome data={item?.items as ItemListProduct[]} />;
@@ -79,11 +83,11 @@ const AppListDashboard = ({
         return <SliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
       case TypeKeyListApi.LIST_HORIZONTAL:
         return <HorizontalList
-          title={item?.labels}
+          title={item?.label}
           type={item?.posttype}
           data={item?.items as ItemListProduct[]}
           button={item?.button}
-          titleViewMore={item.label} />;
+        />;
       case TypeKeyListApi.LIST_VERTICAL:
         return <ListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       case TypeKeyListApi.SPACE:
@@ -91,7 +95,7 @@ const AppListDashboard = ({
       default:
         return <></>;
     }
-  };
+  }, [categoryId, onSelectedCategory]);
 
   return (
     <View style={styles.container}>
@@ -103,9 +107,10 @@ const AppListDashboard = ({
           onScroll={onScroll}
           onRefresh={onRefreshList}
           refreshing={isReset}
+          keyExtractor={keyExtractor}
           renderItem={renderItem} />}
     </View>
   );
 };
 
-export default AppListDashboard;
+export default React.memo(AppListDashboard);

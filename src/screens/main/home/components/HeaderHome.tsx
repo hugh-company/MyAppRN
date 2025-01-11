@@ -16,12 +16,13 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { top } = useSafeAreaInsets();
+  console.log({ top });
 
   const navigation = useNavigation();
 
 
   return (
-    <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: top ? Spacing.height100 : Spacing.height50 }, styleHeader]}>
+    <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: top > 0 ? Spacing.height100 : Spacing.height64 }, styleHeader]}>
       {/* open drawer */}
       <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
         <MenuIcon color={themeColors.text} />

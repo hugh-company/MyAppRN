@@ -1,3 +1,4 @@
+import {setDataSetting} from '@redux';
 import {
   getDataDashboardApi,
   getUserProfileApi,
@@ -15,6 +16,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useHomeScreen = () => {
@@ -24,7 +26,8 @@ export const useHomeScreen = () => {
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
@@ -43,6 +46,15 @@ export const useHomeScreen = () => {
   const callApi = async () => {
     try {
       const res: responseDashboard = await getDataDashboardApi();
+      console.log({res: res?.data});
+      dispatch(
+        setDataSetting({
+          notices: res?.data?.notices || [],
+          bottomNavigation: res?.data?.navbar || [],
+          dataDrawer: res?.data?.menus || [],
+        }),
+      );
+
       setData(res?.data?.modules || []);
       setLoading(false);
     } catch (error) {

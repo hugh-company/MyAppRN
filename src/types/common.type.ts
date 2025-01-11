@@ -44,6 +44,10 @@ export enum ItemListDashboard {
   NOVEL = 'novel',
   HOME = 'home',
   SEARCH = 'search',
+  CHAT = 'chat',
+  LANGUAGES = 'languages',
+  DASHBOARD = 'dash',
+  LOGIN = 'login',
 }
 export enum FilterKey {
   // 'views__desc' | 'likes__desc'

@@ -3,14 +3,14 @@ import { getPostDashboardApi } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface DashboardSearchProps {
 
 }
 
-export const DashboardSearch = ({ }: DashboardSearchProps) => {
+const DashboardSearch = ({ }: DashboardSearchProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [loading, setLoading] = useState(true);
@@ -41,6 +41,8 @@ export const DashboardSearch = ({ }: DashboardSearchProps) => {
     </View>
   );
 };
+
+export default memo(DashboardSearch);
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({

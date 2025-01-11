@@ -19,9 +19,10 @@ export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieP
   const styles = createStyles(themeColors);
   const navigateBanner = (item: ItemListProduct) => {
 
+
     goToDetail({
       item,
-      // type: item?.
+      type: item?.posttype,
     });
   };
   const renderItemBanner = ({ item }: { item: ItemListProduct }) => (

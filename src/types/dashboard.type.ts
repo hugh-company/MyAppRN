@@ -1,5 +1,6 @@
 import {PostTypeKey, TypeKeyListApi} from './common.type';
 import {ItemListProduct} from './post.type';
+import {menuNavigationInterface, NotificationInterface} from './setting.type';
 
 //
 export interface ButtonNavigationInterface {
@@ -35,35 +36,7 @@ export interface TabInterface {
   items?: ItemListProduct[];
 }
 //
-export interface Nav {
-  label: string;
-  icon: string;
-}
-interface Menu {
-  languages: {
-    label: string;
-    name: string;
-    icon: string;
-  };
-  login: {
-    name: string;
-    type: string;
-    label: string;
-    items: {
-      login: string;
-      register: string;
-    };
-  };
-  nav: {
-    search: Nav;
-    home: Nav;
-    game: Nav;
-    comic: Nav;
-    novel: Nav;
-    movie: Nav;
-    chat: Nav;
-  };
-}
+
 //
 export interface ModuleItemInterface {
   id: number;
@@ -79,6 +52,8 @@ export interface ModuleItemInterface {
 }
 // response data dashboard
 export interface ResponseDataDashboard {
-  menu: Menu;
+  menus?: menuNavigationInterface[];
+  navbar?: menuNavigationInterface[];
   modules: ModuleItemInterface[];
+  notices?: NotificationInterface[];
 }

@@ -38,7 +38,7 @@ const VideoScreen = () => {
   return (
     <TouchableOpacity
       style={[styles.container]}
-      onPress={handlePress}
+
     >
       <Video
         source={{ uri: urlVideo }}

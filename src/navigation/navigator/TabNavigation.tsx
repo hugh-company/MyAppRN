@@ -4,14 +4,15 @@ import React from 'react';
 import { SCREEN_ROUTE } from '../router';
 import { CustomTabBar } from './CustomTabBar';
 const Tab = createBottomTabNavigator();
-export const TabBarNavigation = () => {
-
+const TabBarNavigation = React.memo(() => {
   return (
-    <Tab.Navigator screenOptions={
-      {
+    <Tab.Navigator
+      screenOptions={{
         headerShown: false,
-      }
-    } tabBar={(props) => <CustomTabBar {...props} />}>
+      }}
+      tabBar={(props) => <CustomTabBar {...props} />}
+      detachInactiveScreens={true} // Added prop
+    >
       <Tab.Screen name={SCREEN_ROUTE.HOME} component={HomeScreen} />
       <Tab.Screen name={SCREEN_ROUTE.MOVIES} component={MovieScreen} />
       <Tab.Screen name={SCREEN_ROUTE.GAMES} component={GameScreen} />
@@ -19,4 +20,5 @@ export const TabBarNavigation = () => {
       <Tab.Screen name={SCREEN_ROUTE.DATING} component={DashboardCreateProfile} />
     </Tab.Navigator>
   );
-};
+});
+export { TabBarNavigation };

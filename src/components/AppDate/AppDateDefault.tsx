@@ -42,8 +42,6 @@ const InputDateDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) =
   const openDatePicker = () => {
     setOpen(true);
   };
-  console.log('aaa:', props.value);
-
   return (
     <>
 

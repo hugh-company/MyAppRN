@@ -9,7 +9,7 @@ import { initI18n } from '@translations';
 import FlashMessage from 'react-native-flash-message';
 
 import React, { useEffect } from 'react';
-import { LogBox, Platform, StatusBar, StyleSheet } from 'react-native';
+import { LogBox, Platform, StyleSheet, View } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalPortal } from 'react-native-modals';
@@ -59,9 +59,10 @@ function App(): React.JSX.Element {
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
   ]);
+  return <View style={styles.container} />;
   return (
     <GestureHandlerRootView style={styles.container}>
-      <StatusBar translucent backgroundColor="transparent" />
+      {/* <StatusBar translucent backgroundColor="transparent" hidden={true} /> */}
       <ThemeProvider >
         <Provider store={store}>
           {/* <ApolloProvider client={client}> */}

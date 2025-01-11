@@ -1,1 +1,1 @@
-export { default as AppFlatListAnimated } from './AppFlatListAnimated';
+export * from './AppFlatListAnimated';

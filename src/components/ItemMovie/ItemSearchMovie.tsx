@@ -2,7 +2,7 @@ import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
-import { ItemListProduct } from '@types';
+import { ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
@@ -22,13 +22,13 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
       <View style={styles.viewInfo}>
         <View>
           <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
-          {/* <AppText numberOfLines={1} style={styles.director}>{item.}</AppText> */}
+          <AppText numberOfLines={1} style={styles.director}>{item.directors?.map((elm) => elm.title).join(', ')}</AppText>
         </View>
         <View style={styles.viewOption}>
-          <View style={styles.viewRow}>
+          {item?.posttype !== PostTypeKey.GAMES && <View style={styles.viewRow}>
             <PlayStackedIcon width={Spacing.width16} height={Spacing.width15} />
-            <AppText style={styles.duration}>{item?.duration ? `${t('search.duration')} ${item.duration}` : `${item?.chapter_total}`}</AppText>
-          </View>
+            <AppText style={styles.duration}>{item?.duration ? `${t('search.duration')} ${item.duration} ${t('home.minute')}` : `${item?.chapter_total || item?.episode_current} ${t('home.episodes')}`}</AppText>
+          </View>}
           <View style={styles.viewRow}>
             <PlayIcon size={Spacing.width12} color={themeColors.primary} />
             <AppText style={styles.duration}>{`${t('search.viewer')} ${getPrettyNumberString(item.views)}`}</AppText>

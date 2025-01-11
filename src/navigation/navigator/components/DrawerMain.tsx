@@ -1,10 +1,10 @@
 import { ImagePackage, LogoutIcon, SearchIcon, VipIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { navigate } from '@navigation';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { DrawerActions } from '@react-navigation/native';
 import { logout } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { showModalConfirmation } from '@utils';
+import { showModalConfirmation, showModalLanguage } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -26,9 +26,7 @@ export const DrawerMain = ({ listNavigation, listSettings }: DrawerMainProps) =>
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const dispatch = useDispatch();
-  const renderBackground = () => {
 
-  };
   return (
     <View style={styles.container}>
       <ItemRow Icon={SearchIcon} title={t('drawer.search')} onPress={() => { }} styles={styles.search} labelStyle={styles.title} size={Spacing.width32} />
@@ -37,6 +35,8 @@ export const DrawerMain = ({ listNavigation, listSettings }: DrawerMainProps) =>
           {listNavigation.map((item, index) => (
             <ItemRow key={item.key} Icon={item.Icon} title={item.name} labelStyle={styles.title} size={Spacing.width32} onPress={() => {
               dispatch(DrawerActions.closeDrawer());
+
+
               setTimeout(() => {
                 navigate(item.key);
               }, 250); // Adjust the timeout as needed
@@ -64,7 +64,16 @@ export const DrawerMain = ({ listNavigation, listSettings }: DrawerMainProps) =>
 
           {/*  */}
           {listSettings.map((item, index) => (
-            <ItemRow key={item.key} Icon={item.Icon} title={item.name} labelStyle={styles.title} size={Spacing.width32} onPress={() => { }} />
+            <ItemRow key={`list_save_${index}`} Icon={item.Icon} title={item.name} labelStyle={styles.title} size={Spacing.width32} onPress={() => {
+              if (item?.key === SCREEN_ROUTE.FAVORITE) {
+                setTimeout(() => {
+                  navigate(SCREEN_ROUTE.FAVORITE, { type: item?.type });
+                }, 250);
+                return;
+              } else {
+                showModalLanguage(true);
+              }
+            }} />
           ))}
           <ItemRow Icon={LogoutIcon} title={t('drawer.logout')} onPress={() => {
             showModalConfirmation({

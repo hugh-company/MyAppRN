@@ -1,15 +1,13 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { SCREEN_ROUTE } from '../router';
 import CustomDrawer from './CustomDrawer';
 import { TabBarNavigation } from './TabNavigation';
 
-const Drawer = createDrawerNavigator();
-const DrawerContent = (props: any) => <CustomDrawer {...props} />;
 
-export const DrawerNavigation = () => {
-  const navigation = useNavigation();
+const DrawerContent = (props: any) => <CustomDrawer {...props} />;
+const Drawer = createDrawerNavigator();
+const DrawerNavigation = React.memo(() => {
 
   return (
     <Drawer.Navigator
@@ -17,18 +15,16 @@ export const DrawerNavigation = () => {
       screenOptions={{
         headerShown: false,
         drawerType: 'front',
-        detachInactiveScreens: true, // Added this line
-      }}
-      // Add this alistener to close the drawer when navigating to a different tab
-      screenListeners={{
-        // state: (e) => {
-        //   if (e.data.state.history.length > 1) {
-        //     navigation.dispatch(DrawerActions.closeDrawer());
-        //   }
-        // },
+        swipeEnabled: true, // Enable/disable swipe gestures
+        overlayColor: 'rgba(0,0,0,0.5)', // Drawer overlay color
+        lazy: true, // Chỉ load màn hình khi cần thiết
+
+
       }}
     >
       <Drawer.Screen name={SCREEN_ROUTE.BOTTOM_NAVIGATION} component={TabBarNavigation} />
     </Drawer.Navigator>
   );
-};
+});
+
+export { DrawerNavigation };

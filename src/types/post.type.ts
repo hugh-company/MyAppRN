@@ -1,4 +1,5 @@
 import {PostTypeKey} from './common.type';
+import {PersonInterface} from './details.type';
 
 export interface MediaFeature {
   id: number;
@@ -28,5 +29,8 @@ export interface ItemListProduct {
   release_date: string;
   posttype: PostTypeKey;
   chapter_total?: number;
+  episode_current?: number;
+
+  directors: PersonInterface[];
   // game
 }

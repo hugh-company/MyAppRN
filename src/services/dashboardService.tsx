@@ -1,10 +1,10 @@
 import { ApiConfigs, apiService } from '@api';
-import { ItemListDashboard, PostTypeKey, responseHomeInterface } from '@types';
+import { ItemListDashboard, PostTypeKey, ResponseDataDashboard } from '@types';
 
 interface responseDashboard {
   status?: string;
   message?: string;
-  data?: responseHomeInterface
+  data?: ResponseDataDashboard;
 }
 interface paramsGetListInterface {
   filter?: string

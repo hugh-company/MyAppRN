@@ -1,5 +1,5 @@
 import {TabInterface} from './dashboard.type';
-import {ItemListProduct} from './home.type';
+import {ItemListProduct} from './post.type';
 
 interface ContentBlock {
   id: string;
@@ -50,7 +50,7 @@ export interface chapterEpisodeInterface {
   suburl: string;
   index_number: number;
 }
-interface PersonInterface {
+export interface PersonInterface {
   id: number;
   title: string;
   slug: string;

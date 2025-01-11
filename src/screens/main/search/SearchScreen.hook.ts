@@ -27,6 +27,7 @@ export const useSearchScreen = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [page, setPage] = useState(1);
+  const [isNext, setIsNext] = useState(true);
   const {top} = useSafeAreaInsets();
   const [isFilterSort, setIsFilterSort] = useState(false);
   const [isFilterType, setIsFilterType] = useState(false);
@@ -54,7 +55,7 @@ export const useSearchScreen = () => {
       value: t('search.viewer'),
     },
     {
-      key: 'likes__desc',
+      key: 'like_count__desc',
       value: t('search.likes'),
     },
   ];
@@ -63,30 +64,44 @@ export const useSearchScreen = () => {
     typeScreen?: PostTypeKey;
     sort?: string;
   }) => {
-    setLoading(true);
-    const params: paramSearchInterface = {};
-    if (filter?.search) {
-      params.q = filter.search;
+    if (!isNext) {
+      setLoading(false);
+      return;
     }
-    if (filter?.typeScreen) {
-      params.filter = `posttype__${typeScreen}`;
-    }
-    if (filter?.sort) {
-      params.sortby = sort;
-    }
-    console.log({params});
 
-    const responseSearch = await searchApi(params);
-    console.log({responseSearch});
+    try {
+      const params: paramSearchInterface = {
+        paged: page,
+      };
+      if (filter?.search) {
+        params.q = filter.search;
+      }
+      if (filter?.typeScreen) {
+        params.filter = `posttype__${typeScreen}`;
+      }
+      if (filter?.sort) {
+        params.sortby = sort;
+      }
+      console.log({params});
 
-    setData(responseSearch.data?.data || []);
-    setLoading(false);
+      const responseSearch = await searchApi(params);
+      console.log({responseSearch});
+
+      setData(responseSearch.data?.data || []);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
+  useEffect(() => {
+    if (loading) {
+      setIsNext(true);
+      setPage(1);
+    }
+  }, [loading]);
   // filter
   useEffect(() => {
     if (typeScreen || sort) {
-      console.log('aaa');
-
       callApiSearch({
         search,
         typeScreen,
@@ -111,12 +126,31 @@ export const useSearchScreen = () => {
     debounceSearch(text);
   };
   const filterByType = ({key}: {key: PostTypeKey}) => {
+    setLoading(true);
     setTypeScreen(key);
   };
   const filterBySort = ({key}: {key: FilterKey}) => {
+    setLoading(true);
     setSort(key);
   };
-
+  useEffect(() => {
+    if (page > 1) {
+      callApiSearch({
+        search,
+        typeScreen,
+        sort,
+      });
+    }
+  }, [page]);
+  const onLoadMore = () => {
+    if (!isNext) {
+      return;
+    }
+    if (loading) {
+      return;
+    }
+    setPage(prev => prev + 1);
+  };
   return {
     data,
     themeColors,
@@ -138,5 +172,6 @@ export const useSearchScreen = () => {
     filterBySort,
     filterByType,
     loading,
+    onLoadMore,
   };
 };

@@ -98,7 +98,7 @@ class AxiosClass {
         // ...headers,
       },
     };
-    if (params?.paged) {
+    if (params?.paged && params?.paged > 1) {
       url = `${url}paged/${params.paged}`;
     }
     if (params?.sortby) {

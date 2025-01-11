@@ -24,3 +24,22 @@ export const getCategoryApi = async (type: PostTypeKey) => {
   const uri = `${API_ENDPOINTS.CATEGORY}${type}/categories`;
   return apiService.get(uri);
 };
+
+// get favorite
+interface paramFavorite {
+  paged?: number;
+  sortby?: string;
+}
+export const getFavoriteApi = async (type: PostTypeKey, param: paramFavorite) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+
+  const uri = `${API_ENDPOINTS.LIST}${type}/favorites/`;
+  return apiService.get(uri, param);
+};
+
+export const getSavedApi = async (type: PostTypeKey, param: paramFavorite) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+
+  const uri = `${API_ENDPOINTS.LIST}${type}/save/`;
+  return apiService.get(uri, param);
+};

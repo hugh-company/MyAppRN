@@ -14,18 +14,22 @@ const HomeScreen = () => {
   } = useHomeScreen();
   return (
     <View style={[styles.container]}>
-      <AppListDashboard
+      <MemoizedAppListDashboard
         data={data}
         onScroll={scrollHandler}
         loading={loading}
         onRefresh={onRefresh}
         typeScreen={ItemListDashboard.HOME}
+        keyExtractor={(item, index) => `home_dashboard_${index}`}
       />
-      <HeaderHome
+      <MemoizedHeaderHome
         styleHeader={[headerBackgroundColorStyle, headerBackgroundColorStyle]}
       />
     </View>
   );
 };
+
+const MemoizedAppListDashboard = React.memo(AppListDashboard);
+const MemoizedHeaderHome = React.memo(HeaderHome);
 
 export default HomeScreen;

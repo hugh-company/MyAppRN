@@ -5,6 +5,8 @@ export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       justifyContent: 'flex-end',
+      margin: 0,
+      flex: 1,
     },
     content: {
       margin: 0,

@@ -103,7 +103,8 @@
     "comicManage": "Truyện tranh",
     "multipPeopleRead": "Nhiều người đọc",
     "episodes": "tập",
-    "likes": "lượt thích"
+    "likes": "lượt thích",
+    "minute": "phút"
   },
   "movies": {
     "movieGood": "Phim hay",
@@ -200,6 +201,13 @@
     "otherMovie": "Phim liên quan",
     "otherChapter": "Truyện liên quan",
     "otherGame": "Game liên quan"
+  },
+  "favorites": {
+    "title": "Đã lưu",
+    "movieSaves": "Phim đã lưu",
+    "chapterSaves": "Truyện đã lưu",
+    "gameSaves": "Game đã lưu",
+    "novelSaves": "Truyện chữ đã lưu"
   },
   "cancel": "Hủy",
   "save": "Lưu",

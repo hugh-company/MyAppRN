@@ -42,4 +42,7 @@ export enum SCREEN_ROUTE {
   SETTING_FAVORITE = 'SettingFavorite',
   FILTER_DATING = 'FilterDating',
   LIST_DATING = 'ListDating',
+
+  // Favorite
+  FAVORITE = 'Favorite',
 }

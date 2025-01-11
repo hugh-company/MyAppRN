@@ -73,6 +73,19 @@ export const favoriteMovieApi = async (id: number, type: PostTypeKey) => {
     'Content-Type': 'application/x-www-form-urlencoded',
   });
 };
+
+export const savedPostApi = async (id: number, type: PostTypeKey) => {
+  const responseToken: any = await csrfTokenApi();
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const formUrlEncoded = transformData({
+    csrf_token: responseToken.data.csrf_token,
+  });
+  const formData = new FormData();
+  formData.append('csrf_token', responseToken.data.csrf_token);
+  return apiService.postNormal(`${API_ENDPOINTS.SAVED}${type}/${id}`, formData, {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  });
+};
 // views
 export const viewsPostApi = async (id: number, type: PostTypeKey) => {
   const responseToken: any = await csrfTokenApi();

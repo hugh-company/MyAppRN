@@ -3,15 +3,16 @@ import { AppFlatListAnimated, AppImage, AppText, ItemSearchMovie } from '@compon
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListProduct } from '@types';
 import { t } from 'i18next';
-import React from 'react';
+import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 interface SearchListProps {
   data: ItemListProduct[],
-  valueSearch?: string
+  valueSearch?: string,
+  onLoadMore: () => void,
 }
 
-export const SearchList = ({ data, valueSearch }: SearchListProps) => {
+const SearchList = ({ data, valueSearch, onLoadMore }: SearchListProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
@@ -32,10 +33,14 @@ export const SearchList = ({ data, valueSearch }: SearchListProps) => {
         ListEmptyComponent={renderEmpty}
         renderItem={renderItem}
         onRefresh={() => { }}
+        keyExtractor={(item) => `item_search_${item.id}`}
+        onLoadMore={onLoadMore}
       />
     </View>
   );
 };
+
+export default memo(SearchList);
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({

@@ -90,7 +90,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
           });
         }} style={styles.btnViewMore}>
           <AppText style={styles.txtViewMore}>
-            {titleViewMore}
+            {button?.label || titleViewMore}
           </AppText>
           <RightIcon />
         </TouchableOpacity>

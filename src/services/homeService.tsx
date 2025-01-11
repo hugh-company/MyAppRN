@@ -1,12 +1,12 @@
 import { ApiConfigs, apiService } from '@api';
-import { responseHomeInterface } from '@types';
+import { ResponseDataDashboard } from '@types';
 
 
 //
 export interface responseDashboard {
   status?: string;
   message?: string;
-  data?: responseHomeInterface
+  data?: ResponseDataDashboard
 }
 //
 

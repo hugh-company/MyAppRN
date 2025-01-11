@@ -51,7 +51,7 @@ export interface AppFlatListAnimatedProps {
 
 
 }
-const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading, keyExtractor,
+export const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading, keyExtractor,
   horizontal, ListFooterComponent, ListHeaderComponent,
   contentContainerStyle,
   onLoadMore,
@@ -83,6 +83,7 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
     }
     return null;
   }, [isLoading]);
+
   return (
     <Animated.FlatList
       onScroll={onScroll}
@@ -105,6 +106,9 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
           />
         )
       }
+      getItemLayout={(data, index) => (
+        { length: 100, offset: 100 * index, index }
+      )}
       onEndReachedThreshold={onEndReachedThreshold}
       onEndReached={onLoadMore}
       ListFooterComponent={
@@ -127,4 +131,3 @@ const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle, rende
   );
 };
 
-export default AppFlatListAnimated;

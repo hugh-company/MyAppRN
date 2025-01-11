@@ -89,7 +89,7 @@ export const useMovieScreen = () => {
   const onSelectedCategory = useCallback((item: TabInterface) => {
     setTabSelect(item);
     setLoading(true);
-    const textFilter = `${item.type}/${item.id}`;
+    const textFilter = `${item.type}__${item.id}`;
     callApi(textFilter);
   }, []);
   const handleSearchChange = useCallback(

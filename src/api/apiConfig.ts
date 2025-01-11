@@ -58,6 +58,7 @@ export const API_ENDPOINTS = {
   LIKE: '/posts/action/like/',
   // favorite
   FAVORITE: '/posts/action/favorites/',
+  SAVED: '/posts/action/save/',
   // view
   VIEW: '/posts/action/views/',
   // search

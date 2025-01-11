@@ -12,7 +12,7 @@
     "create-screens": "node createFile.js screen ",
     "create-components": "node createFile.js component",
     "create-icon": "node createAsset.js icon",
-    "apk": "cd android && ./gradlew assembleRelease",
+    "apk": "cd android && ./gradlew assembleRelease -PminifyEnabled=true -PshrinkResources=true",
     "aab": "cd android && ./gradlew bundleRelease",
     "postinstall": "patch-package",
     "clear_android": "cd android && ./gradlew clean && cd ..",
