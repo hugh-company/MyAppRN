@@ -180,6 +180,7 @@ export const useVideoScreen = () => {
       toggleFullScreen,
       isFullScreenVisible,
       setError,
+      video,
     }),
     [
       playbackRate,
@@ -211,6 +212,7 @@ export const useVideoScreen = () => {
       toggleFullScreen,
       isFullScreenVisible,
       setError,
+      video,
     ],
   );
 };

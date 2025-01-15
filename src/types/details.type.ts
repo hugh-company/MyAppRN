@@ -1,4 +1,5 @@
-import {TabInterface} from './dashboard.type';
+import {PostTypeKey} from './common.type';
+import {ButtonNavigationInterface, TabInterface} from './dashboard.type';
 import {ItemListProduct} from './post.type';
 
 interface ContentBlock {
@@ -49,6 +50,7 @@ export interface chapterEpisodeInterface {
   source: Source[];
   suburl: string;
   index_number: number;
+  name?: string;
 }
 export interface PersonInterface {
   id: number;
@@ -142,5 +144,11 @@ export interface detailPostInterface {
   creators: Array<PersonInterface>;
   // game
   iframe_game?: string;
-  related_post?: ItemListProduct[];
+  related_post?: {
+    button: ButtonNavigationInterface;
+    items: ItemListProduct[];
+    label: string;
+    name: string;
+    posttype: PostTypeKey;
+  };
 }

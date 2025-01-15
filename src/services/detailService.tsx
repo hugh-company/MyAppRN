@@ -17,13 +17,14 @@ interface ratingInterface {
   rating?: number;
   content?: string;
 }
-export const ratingPostApi = (id: number, type: PostTypeKey, params: ratingInterface,) => {
+export const ratingPostApi = async (id: number, type: PostTypeKey, params: ratingInterface,) => {
   apiService.setBaseURL(ApiConfigs.baseURL);
+  const responseToken: any = await csrfTokenApi();
   const uri = `${API_ENDPOINTS.RATING}${type}/${id}`;
   const formData = new FormData();
   formData.append('rating', params.rating?.toString());
   formData.append('content', params.content);
-  const formUrlEncoded = transformData(params);
+  formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(uri, formData, {
     'Content-Type': 'multipart/form-data',
     // 'Content-Type': 'application/x-www-form-urlencoded',

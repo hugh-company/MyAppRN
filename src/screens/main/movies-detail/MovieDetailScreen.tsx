@@ -2,7 +2,6 @@ import { DotsIcon } from '@assets';
 import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList, LoadingDetailMovie } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
-import { t } from 'i18next';
 import React from 'react';
 import { RefreshControl, TouchableOpacity, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -45,7 +44,12 @@ const MovieDetailScreen = () => {
           onPlay={() => {
             console.log({ detailMovie: detailMovie?.chapters?.[0] });
 
-            navigate(SCREEN_ROUTE.VIDEO, { video: detailMovie?.chapters?.[0] });
+            navigate(SCREEN_ROUTE.VIDEO, {
+              video: {
+                ...detailMovie?.chapters?.[0],
+                name: detailMovie?.title,
+              },
+            });
             // if (data?.chapters?.length) {
             //   navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[data?.chapters?.length - 1] });
             // }
@@ -60,7 +64,12 @@ const MovieDetailScreen = () => {
           episodes={detailMovie?.chapters} style={styles.episodes}
           onSelectChapter={(item) => {
             console.log({ item });
-            navigate(SCREEN_ROUTE.VIDEO, { video: item });
+            navigate(SCREEN_ROUTE.VIDEO, {
+              video: {
+                ...item,
+                name: detailMovie?.title,
+              },
+            });
 
           }} />
         }
@@ -77,9 +86,10 @@ const MovieDetailScreen = () => {
           director={detailMovie?.directors}
         />
         <HorizontalList
-          data={detailMovie.related_post}
+          data={detailMovie.related_post?.items}
           type={PostTypeKey.MOVIES}
-          title={t('view_list.otherMovie')}
+          button={detailMovie.related_post?.button}
+          title={detailMovie.related_post?.label}
           itemStyle={styles.itemImage}
 
         />

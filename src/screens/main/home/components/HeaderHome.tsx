@@ -16,7 +16,7 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { top } = useSafeAreaInsets();
-  console.log({ top });
+
 
   const navigation = useNavigation();
 

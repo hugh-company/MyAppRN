@@ -22,14 +22,14 @@ const FavoriteScreen = () => {
   return (
     <View style={styles.container}>
       <AppHeader title={renderTitle()} />
-      {loading ? <LoadingList numColumns={2} /> : <AppListMovies
-        numColumns={2}
-
-        scrollEventThrottle={16}
-        data={data}
-        type={type}
-        onLoadMore={onLoadMore}
-      />}
+      {loading ? <LoadingList numColumns={2} /> :
+        <AppListMovies
+          numColumns={2}
+          scrollEventThrottle={16}
+          data={data}
+          type={type}
+          onLoadMore={onLoadMore}
+        />}
 
     </View>
   );

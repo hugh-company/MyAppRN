@@ -1,4 +1,10 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -11,7 +17,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
       padding: Spacing.width16,
-
+      marginTop: Spacing.height32,
       alignItems: 'center',
     },
     image: {
@@ -38,5 +44,21 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       marginTop: Spacing.height16,
       gap: Spacing.width4,
+    },
+    star: {
+      width: WidthScreen / 12,
+      height: Spacing.width50,
+
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    line: {
+      height: 5,
+      width: Spacing.width36,
+      borderRadius: Spacing.width2,
+      backgroundColor: themeColors.border,
+      alignSelf: 'center',
+      position: 'absolute',
+      top: 4,
     },
   });

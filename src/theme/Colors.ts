@@ -35,6 +35,7 @@ export const lightColors = {
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
   buttonHover: '#FF1F44',
+  active: '#13E398',
 };
 
 export const darkColors = {
@@ -74,6 +75,7 @@ export const darkColors = {
   star: '#F4C26C',
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
+  active: '#13E398',
 };
 
 export type ThemeColors = typeof lightColors;

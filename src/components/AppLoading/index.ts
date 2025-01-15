@@ -1,3 +1,5 @@
+export {default as AppLoading} from './AppLoading';
+export {default as AppLoadingDating} from './AppLoadingDating';
 export {default as LoadingDashboardSearch} from './LoadingDashboardSearch';
 export {default as LoadingDetailMovie} from './LoadingDetailMovie';
 export {default as LoadingGame} from './LoadingGame';

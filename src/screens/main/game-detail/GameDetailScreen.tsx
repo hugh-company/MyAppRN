@@ -41,9 +41,10 @@ const GameDetailScreen = () => {
 
         />
         <HorizontalList
-          data={data.related_post}
+          data={data.related_post?.items}
           type={PostTypeKey.GAMES}
-          title={t('view_list.otherGame')}
+          button={data.related_post?.button}
+          title={data.related_post?.label}
           itemStyle={styles.itemImage}
 
         />

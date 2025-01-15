@@ -53,6 +53,8 @@ export const useMovieDetailScreen = () => {
         PostTypeKey.MOVIES,
         movie.id,
       );
+      console.log({response});
+
       setDetailMovie(response?.data);
     } catch (error) {
       console.log({error});

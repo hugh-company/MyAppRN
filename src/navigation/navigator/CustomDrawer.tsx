@@ -1,19 +1,8 @@
-import { AppButton, AppImage, AppText } from '@components';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { DrawerActions } from '@react-navigation/native';
-import { drawerSettingSelector, getToken } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors } from '@theme';
-import { menuNavigationInterface } from '@types';
-import React, { useCallback } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTheme } from '../../theme/ThemeContext';
-import { navigate } from '../NavigationUtils';
-import { SCREEN_ROUTE } from '../router';
-import { HeaderDrawer } from './components/HeaderDrawer';
-import { ItemRow } from './components/ItemRow';
+import React from 'react';
+import { StyleSheet } from 'react-native';
+import { ListDrawer } from './components/ListDrawer';
 
 interface CustomDrawerProps extends DrawerContentComponentProps {
   // Add your custom props here
@@ -21,70 +10,7 @@ interface CustomDrawerProps extends DrawerContentComponentProps {
 }
 
 const CustomDrawer = React.memo((props: CustomDrawerProps) => {
-  const { themeColors } = useTheme(); // Moved inside the function component
-  const token = useSelector(getToken);
-  const { bottom, top } = useSafeAreaInsets();
-  const styles = createStyles(themeColors);
-  const colors = ['#B1062E', '#1E1111'];
-  const dataMenus = useSelector(drawerSettingSelector);
-  const dispatch = useDispatch();
-  const gotoScreen = useCallback((screen: string) => {
-    dispatch(DrawerActions.closeDrawer());
-
-    setTimeout(() => {
-      navigate(screen);
-    }, 250);
-  }, [dispatch]);
-  const renderBlockAuth = (item: menuNavigationInterface) => {
-    return (
-      <View>
-        <AppText style={styles.description}>{item?.label}</AppText>
-        <View style={styles.viewAuth}>
-          {item?.items?.map((_, index) => (
-            <AppButton key={index} style={[styles.btnLogin, { backgroundColor: _?.color }]} label={_?.label} onPress={() => {
-              gotoScreen(_?.name === SCREEN_ROUTE.LOGIN ? SCREEN_ROUTE.LOGIN : SCREEN_ROUTE.REGISTER);
-            }} />
-          ))}
-        </View>
-      </View>
-    );
-  };
-  const renderItem = ({ item }: { item: menuNavigationInterface }) => {
-    switch (item.name) {
-      case 'search':
-        return <ItemRow linkImage={item?.icon} title={item?.label} onPress={() => { }} styles={styles.search} size={Spacing.width28} />;
-      case 'dash':
-        return <AppImage uri={item?.icon} style={styles.logo} />;
-      case 'login':
-        return renderBlockAuth(item);
-      default:
-        return <ItemRow linkImage={item?.icon} title={item?.label} onPress={() => { }} size={Spacing.width28} />;
-    }
-  };
-  console.log({ dataMenus });
-
-  return (
-    <View style={[styles.container]}>
-      <LinearGradient
-        colors={colors}
-        style={styles.gradient}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        useAngle={true} // Added this line
-        angle={45} // Added this line
-      >
-        <FlatList
-          data={dataMenus}
-          ListHeaderComponent={<HeaderDrawer />}
-          style={{ marginTop: top, marginBottom: bottom, marginHorizontal: Spacing.width16 }}
-          keyExtractor={(item, index) => `drawer_${index}`}
-          renderItem={renderItem}
-        />
-
-        {/* {token ? <DrawerMain listSettings={dataSettings} listNavigation={dataNavigation} /> : <DrawerAuth listNavigation={dataNavigation} />} */}
-      </LinearGradient>
-    </View>
-  );
+  return <ListDrawer {...props} />;
 });
 
 const createStyles = (themeColors: ThemeColors) =>
@@ -154,6 +80,40 @@ const createStyles = (themeColors: ThemeColors) =>
 
       borderRadius: Spacing.width44,
 
+    },
+    line: {
+      height: 1,
+      width: '100%',
+
+    },
+    viewRank: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: Spacing.width12,
+
+      backgroundColor: themeColors.btnSocial,
+      borderRadius: Spacing.width8,
+      paddingHorizontal: Spacing.width8,
+      height: Spacing.width64,
+      marginBottom: Spacing.width8,
+    },
+    txtRank: {
+      fontSize: FontSize.FontSize16,
+      color: themeColors.onSurface,
+    },
+    txtDesRank: {
+      fontSize: FontSize.FontSize18,
+      ...FontWithFamily.FontWithFamily_600,
+      color: themeColors.onSurface,
+    },
+    package: {
+      width: Spacing.width40,
+      height: Spacing.width40,
+    },
+    iconVip: {
+      position: 'absolute',
+      bottom: -Spacing.width8,
+      left: -Spacing.width8,
     },
   });
 

@@ -1,4 +1,4 @@
-import {setDataSetting} from '@redux';
+import {setDataSetting, setUserInfo} from '@redux';
 import {
   getDataDashboardApi,
   getUserProfileApi,
@@ -39,14 +39,14 @@ export const useHomeScreen = () => {
   }, []);
   const callApiProfile = async () => {
     try {
-      const responseUser = await getUserProfileApi();
+      const responseUser: any = await getUserProfileApi();
       console.log({responseUser});
+      dispatch(setUserInfo(responseUser?.data?.me));
     } catch (error) {}
   };
   const callApi = async () => {
     try {
       const res: responseDashboard = await getDataDashboardApi();
-      console.log({res: res?.data});
       dispatch(
         setDataSetting({
           notices: res?.data?.notices || [],

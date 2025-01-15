@@ -14,6 +14,7 @@ interface HeaderMainProps {
   titleStyle?: StyleProp<TextStyle>;
   isHome?: boolean
   type?: PostTypeKey
+  isSearch?: boolean;
 }
 
 export const HeaderMain: React.FC<HeaderMainProps> = ({
@@ -22,6 +23,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
   style,
   titleStyle,
   type,
+  isSearch = true,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -34,11 +36,11 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
         </TouchableOpacity>}
         <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
       </View>
-      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, {
+      {isSearch && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, {
         type,
       })} style={styles.btnSearch}>
         <SearchIcon size={Spacing.width24} />
-      </TouchableOpacity>
+      </TouchableOpacity>}
     </View>
   );
 };

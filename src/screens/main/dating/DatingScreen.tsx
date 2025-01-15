@@ -1,14 +1,20 @@
-import { AppText } from '@components';
+import { HeaderMain } from '@components';
+import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
 import { useDatingScreen } from './DatingScreen.hook';
+import AppListDating from './components/AppListDating';
 
 const DatingScreen = () => {
-  const { data, themeColors, styles } = useDatingScreen();
+  const { data, loading, styles } = useDatingScreen();
 
   return (
     <View style={styles.container}>
-      <AppText>DatingScreen</AppText>
+      <HeaderMain title={t('navigation.dating')} isHome={false} isSearch={false} />
+      <AppListDating
+        data={data}
+        loading={loading}
+      />
     </View>
   );
 };

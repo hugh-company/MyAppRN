@@ -1,10 +1,12 @@
 import { ExitFullScreenIcon, FullScreenIcon, MuteIcon, SpeedIcon, UnmuteIcon } from '@assets';
 import { AppText } from '@components';
 import Slider from '@react-native-community/slider';
-import { FontWithFamily, Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { formatTimeSeconds } from '@utils';
 import React, { memo, useState } from 'react';
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { ButtonAction } from './ButtonAction';
 
 interface AppControlBottomProps {
   isMuted?: boolean;
@@ -19,6 +21,7 @@ interface AppControlBottomProps {
   toggleFullScreen: () => void; // Add this prop
   isFullScreenVisible: boolean; // Add this prop
   isError?: boolean; // Add this prop
+  name?: string; // Add this prop
 }
 
 const SliderComponent = memo(Slider, (prevProps, nextProps) => {
@@ -30,12 +33,22 @@ const SliderComponent = memo(Slider, (prevProps, nextProps) => {
     prevProps.thumbTintColor === nextProps.thumbTintColor;
 });
 
-export const AppControlBottom = ({ isMuted, isError, duration, setSpeedVisible, toggleMute, videoRef, currentTime = 0, loading, setCurrentTime, toggleFullScreen, isFullScreenVisible }: AppControlBottomProps) => {
+export const AppControlBottom = ({ isMuted, isError, duration, name, setSpeedVisible, toggleMute, videoRef, currentTime = 0, loading, setCurrentTime, toggleFullScreen, isFullScreenVisible }: AppControlBottomProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [seeking, setSeeking] = useState(false);
   const [seekTime, setSeekTime] = useState(currentTime);
   const [sliderWidth, setSliderWidth] = useState(0); // Add this line
+
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: scale.value }],
+    };
+  });
+
+
 
   const handleSlidingComplete = (value) => {
     setCurrentTime(value);
@@ -64,38 +77,38 @@ export const AppControlBottom = ({ isMuted, isError, duration, setSpeedVisible, 
 
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="small" color={themeColors.primary} />}
-      <View style={styles.viewTime}>
-        <AppText style={styles.txtTime}>{formatTimeSeconds(seeking ? seekTime : currentTime)}</AppText>
+      <View style={styles.viewHeader}>
+        <AppText style={styles.name}>{name}</AppText>
+        <View style={styles.viewOption}>
+          <ButtonAction Icon={isMuted ? MuteIcon : UnmuteIcon} onPress={() => toggleMute?.()} />
+          <ButtonAction Icon={SpeedIcon} onPress={() => setSpeedVisible(true)} />
+        </View>
+
       </View>
-      <SliderComponent
-        style={styles.slider}
-        minimumValue={0}
-        maximumValue={duration}
-        value={currentTime}
-        onValueChange={handleValueChange}
-        onSlidingComplete={handleSlidingComplete}
-        minimumTrackTintColor={themeColors.primary}
-        maximumTrackTintColor="#444"
-        thumbTintColor="transparent"
-        onLayout={handleSliderLayout} // Add this line
-        onTouchEnd={handleTouchEnd} // Add this line
-      />
-      <View style={styles.viewTime}>
-        <AppText style={styles.txtTime}>{formatTimeSeconds(duration)}</AppText>
+      <View style={styles.viewBottom}>
+        {loading && <ActivityIndicator size="small" color={themeColors.primary} />}
+        <View style={styles.viewTime}>
+          <AppText style={styles.txtTime}>{formatTimeSeconds(seeking ? seekTime : currentTime)}</AppText>
+        </View>
+        <SliderComponent
+          style={styles.slider}
+          minimumValue={0}
+          maximumValue={duration}
+          value={currentTime}
+          onValueChange={handleValueChange}
+          onSlidingComplete={handleSlidingComplete}
+          minimumTrackTintColor={themeColors.primary}
+          maximumTrackTintColor="#444"
+          thumbTintColor="transparent"
+          onLayout={handleSliderLayout} // Add this line
+          onTouchEnd={handleTouchEnd} // Add this line
+        />
+        <View style={styles.viewTime}>
+          <AppText style={styles.txtTime}>{formatTimeSeconds(duration)}</AppText>
+        </View>
+
+        <ButtonAction Icon={isFullScreenVisible ? ExitFullScreenIcon : FullScreenIcon} onPress={toggleFullScreen} />
       </View>
-      <TouchableOpacity onPress={toggleFullScreen}>
-
-        {isFullScreenVisible ? <ExitFullScreenIcon /> : <FullScreenIcon />}
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => setSpeedVisible(true)}>
-        <SpeedIcon />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={toggleMute}>
-        {isMuted ? <MuteIcon /> : <UnmuteIcon />}
-      </TouchableOpacity>
-
-
 
     </View>
   );
@@ -108,16 +121,41 @@ const createStyles = (themeColors: any) =>
       bottom: 0,
       left: 0,
       right: 0,
+
+      padding: Spacing.width16,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+
+    },
+    viewHeader: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      padding: Spacing.width16,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      gap: Spacing.width8,
+    },
+    viewBottom: {
+      flexDirection: 'row',
+
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      gap: Spacing.width8,
+
+      paddingBottom: Spacing.width16,
+    },
+    viewOption: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       gap: Spacing.width8,
     },
     video: {
       width: '100%',
       height: '100%',
+    },
+    btnMute: {
+      width: Spacing.width30,
+      height: Spacing.width30,
+      justifyContent: 'center',
+      alignItems: 'center',
     },
     header: {
       position: 'absolute',
@@ -141,6 +179,11 @@ const createStyles = (themeColors: any) =>
     slider: {
       flex: 1,
       height: 40,
+    },
+    name: {
+      fontSize: FontSize.FontSize18,
+      flex: 1,
+      ...FontWithFamily.FontWithFamily_500,
     },
   });
 

@@ -1,9 +1,8 @@
 import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { ItemListProduct, PostTypeKey } from '@types';
-import { getPrettyNumberString } from '@utils';
+import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -17,7 +16,7 @@ const ItemSearchMovie = ({ item }: ItemSearchMovieProps) => {
   const styles = createStyles(themeColors);
 
   return (
-    <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item })} style={[styles.container]}>
+    <TouchableOpacity onPress={() => goToDetail({ item, type: item.posttype })} style={[styles.container]}>
       <AppImage uri={item?.feature?.path} style={styles.image} />
       <View style={styles.viewInfo}>
         <View>

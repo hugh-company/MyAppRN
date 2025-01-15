@@ -1,7 +1,7 @@
 import { LeftIcon } from '@assets';
 import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Platform, StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -31,13 +31,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
-  console.log({ style });
 
-
-  useEffect(() => {
-    console.log({ style });
-
-  }, [style]);
   return (
     <>
       <Animated.View style={[styles.container, style, { paddingTop: top || Spacing.width16 }]}>

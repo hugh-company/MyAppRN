@@ -1,5 +1,6 @@
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppRatingMovie, AppText } from '@components';
+import { getToken } from '@redux';
 import { likePostApi, savedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { PersonInterface, PostTypeKey, TabInterface } from '@types';
@@ -7,6 +8,7 @@ import { onShareInfo } from '@utils';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { useSelector } from 'react-redux';
 import { createStyles } from './styles';
 export interface AppInfoContentProps {
   type: PostTypeKey;
@@ -40,6 +42,7 @@ const AppInfoContent = ({
   const [showRating, setShowRating] = useState(false);
   const [like, setLike] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const token = useSelector(getToken);
   // call api
   const callApiLike = async () => {
     try {
@@ -83,10 +86,10 @@ const AppInfoContent = ({
       case PostTypeKey.COMIC:
       case PostTypeKey.MOVIES:
         return (
-          <View style={styles.viewOption} >
+          <View style={[styles.viewOption, !token && { justifyContent: 'center', gap: Spacing.width32 }]} >
             {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
-            {renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => setShowRating(true))}
-            {renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t('saveMovie'), () => {
+            {token && renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => setShowRating(true))}
+            {token && renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t('saveMovie'), () => {
               if (!isFavorite) {
                 callApiFavorite();
               }
@@ -153,6 +156,8 @@ const AppInfoContent = ({
         );
     }
   };
+
+
   return (
     <View style={[styles.container, style]}>
       {renderOption()}

@@ -48,6 +48,10 @@ export enum ItemListDashboard {
   LANGUAGES = 'languages',
   DASHBOARD = 'dash',
   LOGIN = 'login',
+  SAVE_MOVIES = 'savedMovies',
+  SAVE_GAMES = 'savedGames',
+  SAVE_COMIC = 'savedComics',
+  LOGOUT = 'logout',
 }
 export enum FilterKey {
   // 'views__desc' | 'likes__desc'

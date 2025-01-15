@@ -58,3 +58,7 @@ export const formatTimeSeconds = (seconds: number): string => {
 export const isValidateDate = (date: string): boolean => {
   return dayjs(date).isValid();
 };
+// get age
+export const getAge = (date: string): number => {
+  return dayjs().diff(date, 'year');
+};

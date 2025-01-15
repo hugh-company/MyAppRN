@@ -213,6 +213,7 @@ export const Spacing = {
   width215: sizeWidth(215),
   width220: sizeWidth(220),
   width225: sizeWidth(225),
+  width230: sizeWidth(230),
   width240: sizeWidth(240),
   width243: sizeWidth(243),
   width255: sizeWidth(255),

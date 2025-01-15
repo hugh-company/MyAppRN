@@ -9,7 +9,7 @@ import { initI18n } from '@translations';
 import FlashMessage from 'react-native-flash-message';
 
 import React, { useEffect } from 'react';
-import { LogBox, Platform, StyleSheet, View } from 'react-native';
+import { LogBox, Platform, StatusBar, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ModalPortal } from 'react-native-modals';
@@ -53,21 +53,23 @@ function App(): React.JSX.Element {
   useEffect(() => {
     // Hide splash screen once app is ready
     SplashScreen.hide();
-    Orientation.unlockAllOrientations();
+    Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
     apiService.setBaseURL();
+
   }, []);
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
   ]);
-  return <View style={styles.container} />;
   return (
     <GestureHandlerRootView style={styles.container}>
-      {/* <StatusBar translucent backgroundColor="transparent" hidden={true} /> */}
       <ThemeProvider >
+        <StatusBar translucent backgroundColor="transparent" hidden={true} />
         <Provider store={store}>
           {/* <ApolloProvider client={client}> */}
           <PersistGate loading={null} persistor={persistor}>
             <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+
+
               <AppNavigator
                 ref={(navigatorRef: any) => {
                   NavigationUtils.setTopLevelNavigator(navigatorRef);

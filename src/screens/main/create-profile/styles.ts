@@ -28,6 +28,12 @@ export const createStyles = (themeColors: ThemeColors) =>
     btn: {
       alignSelf: 'flex-end',
       width: Spacing.width132,
-      marginTop: Spacing.height32,
+    },
+    bottom: {
+      // flex: 1,
+      justifyContent: 'flex-end',
+      marginBottom: Spacing.width32,
+      paddingTop: Spacing.width16,
+      marginHorizontal: Spacing.width16,
     },
   });

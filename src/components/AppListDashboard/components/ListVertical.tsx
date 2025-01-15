@@ -31,9 +31,7 @@ export function ListVertical(props: ListVerticalProps) {
         </TouchableOpacity>
       </View>
       <AppFlatListAnimated
-
         data={data}
-
         renderItem={renderItem} />
     </View>
   );

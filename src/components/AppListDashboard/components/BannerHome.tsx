@@ -92,7 +92,7 @@ const createStyles = (themeColors: ThemeColors) =>
       overflow: 'hidden',
     },
     image: {
-      width: '100%',
+      width: WidthScreen,
       height: Spacing.height315,
     },
     dotsContainer: {

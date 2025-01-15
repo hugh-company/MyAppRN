@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ComicScreen, DashboardCreateProfile, GameScreen, HomeScreen, MovieScreen } from '@screens';
+import { ComicScreen, DatingScreen, GameScreen, HomeScreen, MovieScreen } from '@screens';
 import React from 'react';
 import { SCREEN_ROUTE } from '../router';
 import { CustomTabBar } from './CustomTabBar';
@@ -17,7 +17,8 @@ const TabBarNavigation = React.memo(() => {
       <Tab.Screen name={SCREEN_ROUTE.MOVIES} component={MovieScreen} />
       <Tab.Screen name={SCREEN_ROUTE.GAMES} component={GameScreen} />
       <Tab.Screen name={SCREEN_ROUTE.COMIC} component={ComicScreen} />
-      <Tab.Screen name={SCREEN_ROUTE.DATING} component={DashboardCreateProfile} />
+      {/* <Tab.Screen name={SCREEN_ROUTE.DATING} component={DashboardCreateProfile} /> */}
+      <Tab.Screen name={SCREEN_ROUTE.DATING} component={DatingScreen} />
     </Tab.Navigator>
   );
 });

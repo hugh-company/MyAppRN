@@ -14,12 +14,16 @@ type SubMenuItem = {
   icon?: string;
   color?: string; // Nếu là button
 };
+
 export interface menuNavigationInterface {
-  type: 'navbar' | 'button' | 'block' | 'menu' | 'login';
-  name: ItemListDashboard;
+  type: 'block' | 'space' | 'menu' | 'line';
+  name: ItemListDashboard | 'logo' | 'user';
   label: string;
   active: boolean;
   icon: string;
+  color: string;
+  height?: number;
+  isLogin?: boolean;
   items?: SubMenuItem[];
 }
 export interface NotificationInterface {

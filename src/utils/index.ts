@@ -3,7 +3,7 @@ export * from './errorFormUtils';
 export * from './handleLoadMoreData';
 export * from './listKeysUtils';
 export * from './modalUtils';
+export * from './phoneUtils';
 export * from './postUtils';
 export * from './shareUtils';
-export * from './taskUtils';
 export * from './utilities';

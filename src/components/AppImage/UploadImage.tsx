@@ -27,6 +27,7 @@ export const UploadImage = React.memo((props: propsImage) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
+
   useEffect(() => {
     setLoading(true);
   }, [uriBase]);
@@ -99,17 +100,18 @@ export const UploadImage = React.memo((props: propsImage) => {
 
       );
     }
-
     return (
       <>
         <View>
           <FastImage
-            source={{ uri: uriBase }}
+            source={{ uri: uriBase, cache: 'web' }}
             style={[styles.image, style]}
             resizeMode={resizeMode}
+
             onLoadEnd={() => {
               setLoading(false);
             }}
+
             onError={() => setLoading(false)}
           />
           <View style={styles.btnIconCamera}>

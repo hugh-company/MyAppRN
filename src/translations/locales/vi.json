@@ -54,7 +54,9 @@
     "validate_phone_number": "Số điện thoại không hợp lệ",
     "validate_phone_min": "Số điện thoại phải ít nhất 10 ký tự",
     "validate_birthday": "Vui lòng chọn ngày sinh",
-    "validate_gender": "Vui lòng chọn giới tính"
+    "validate_gender": "Vui lòng chọn giới tính",
+    "validate_galleries": "Vui lòng chọn ảnh",
+    "validate_job": "Vui lòng nhập nghề nghiệp"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -178,7 +180,8 @@
     "createNewProfile": "Tạo hồ sơ mới",
     "desNewProfile": "Điền các thông tin cơ bản",
     "favorite": "Sở thích",
-    "descriptionFavorite": "Bạn muốn hẹn hò voiws..."
+    "descriptionFavorite": "Bạn muốn hẹn hò voiws...",
+    "libraryImage": "Thư viện ảnh"
   },
   "favorite": {
     "photography": "Nhiếp ảnh",
@@ -237,5 +240,11 @@
   "filter": "Bộ lọc",
   "reset": "Làm lại",
   "maxLocation": "Khoảng cách tối đa",
-  "age": "Độ tuổi"
+  "age": "Độ tuổi",
+  "dislike": "Từ chối",
+  "job": "Nghề nghiệp",
+  "selectJob": "Chọn nghề nghiệp",
+  "apply": "Áp dụng",
+  "profile": "Trang cá nhân",
+  "searchStart": "Bắt đầu tìm kiếm"
 }

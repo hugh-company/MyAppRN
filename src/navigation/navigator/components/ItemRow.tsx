@@ -26,7 +26,7 @@ const styleItem = StyleSheet.create({
     alignItems: 'center',
     // paddingVertical: Spacing.width8,
     gap: Spacing.width16,
-    height: Spacing.width40,
+    height: Spacing.width48,
   },
   txtItem: {
     fontSize: FontSize.FontSize18,

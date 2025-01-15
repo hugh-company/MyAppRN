@@ -1,7 +1,6 @@
 import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList, LoadingDetailMovie } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
-import { t } from 'i18next';
 import React from 'react';
 import { RefreshControl, View } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -38,8 +37,11 @@ const ChapterDetail = () => {
           poster={posterMovie}
           totalEpisodes={detail?.chapters?.length}
           onPlay={() => {
+            console.log({ detail: detail?.chapters?.length });
+
+
             if (detail?.chapters?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[detail?.chapter?.length - 1], type });
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[detail?.chapters?.length - 1], type });
             }
           }}
           onNewChapter={() => {
@@ -71,9 +73,10 @@ const ChapterDetail = () => {
           director={detail?.creators}
         />
         <HorizontalList
-          data={detail.related_post}
+          data={detail.related_post?.items}
+          button={detail.related_post?.button}
           type={type}
-          title={t('view_list.otherChapter')}
+          title={detail.related_post?.label}
           itemStyle={styles.itemImage}
 
         />

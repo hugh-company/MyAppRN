@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageStyle, StyleProp, StyleSheet, View } from 'react-native';
+import { ImageStyle, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import FastImage, { ResizeMode, Source } from 'react-native-fast-image';
 
 import { BASE_IMAGE_URL } from '@api';
@@ -9,16 +9,17 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface propsImage {
   uri?: string | null;
-  style?: StyleProp<ImageStyle> | any;
+  style?: StyleProp<ImageStyle | ViewStyle> | any;
   resizeMode?: ResizeMode;
   defaultSource?: Source | null;
   imgSource?: Source;
   checkNetworking?: boolean;
   isBase?: boolean;
+  tintColor?: string;
 }
 
 export const AppImage = React.memo((props: propsImage) => {
-  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, imgSource } = props;
+  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, tintColor = undefined, imgSource } = props;
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
@@ -33,7 +34,7 @@ export const AppImage = React.memo((props: propsImage) => {
       fetch(uriBase).then(data => {
 
         if (data.status !== 200) {
-          setError(true);
+          // setError(true);
           setLoading(false);
         }
         setLoading(false);
@@ -55,6 +56,7 @@ export const AppImage = React.memo((props: propsImage) => {
         onLoadEnd={() => {
           setLoading(false);
         }}
+        tintColor={tintColor}
         onError={() => setLoading(false)}
       />
       {isLoading && (

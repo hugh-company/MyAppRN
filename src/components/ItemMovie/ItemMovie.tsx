@@ -26,8 +26,10 @@ const ItemMovie = ({ item, onPress }: ItemMovieProps) => {
         navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item });
       }
     }} style={styles.container}>
-      <AppImage uri={image} style={styles.image} />
-      <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
+      <View>
+        <AppImage uri={image} style={styles.image} />
+        <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
+      </View>
       <View style={styles.viewOption}>
         <View style={styles.viewRow}>
           <LikeActiveIcon size={Spacing.width16} color={themeColors.star} />
@@ -53,6 +55,7 @@ const createStyles = (themeColors: ThemeColors) =>
       marginLeft: Spacing.width16,
       width: Spacing.width240,
       gap: Spacing.width8,
+      justifyContent: 'space-between',
     },
     image: {
       width: Spacing.width240,

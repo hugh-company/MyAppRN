@@ -1,120 +1,173 @@
-import { AppBottomModal, AppText } from '@components';
-import Slider from '@react-native-community/slider';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { AppBottomModal, AppButton, AppText } from '@components';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
+import { genderInterface } from '@types';
 import { t } from 'i18next';
 import React from 'react';
+import { Controller, useForm } from 'react-hook-form';
+
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export interface ModalFilterDatingProps {
   visible: boolean;
   onClose: () => void;
+  onFilter?: (value: filterParams) => void
 }
 interface filterParams {
   gender: string;
-  location: number
-  age: {
-    from: number;
-    to: number;
-  };
+  location: number[]
+  age: number[];
 }
 const defaultFilter: filterParams = {
   gender: '',
-  location: 0,
-  age: {
-    from: 0,
-    to: 0,
-  },
+  location: [0],
+  age: [18, 30],
 };
 export function ModalFilterDating(props: ModalFilterDatingProps) {
   const {
     visible,
     onClose,
+    onFilter,
   } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [filter, setFilter] = React.useState<filterParams>(defaultFilter);
+
   const gender = [
 
     {
       label: t('girl'),
-      value: 'girl',
+      value: genderInterface.FEMALE,
     },
     {
       label: t('male'),
-      value: 'male',
+      value: genderInterface.MALE,
     },
     {
       label: t('allGender'),
-      value: 'all',
+      value: genderInterface.OTHER,
     },
   ];
-  const onReset = () => {
-    setFilter(defaultFilter);
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: defaultFilter,
+  });
+
+  const onSubmit = (data: filterParams) => {
+
   };
-  return <AppBottomModal width={1} height={0.7} visible={visible} onClose={onClose} modalStyle={{ backgroundColor: themeColors.background }} >
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <AppText style={styles.txtFilter}>{t('filter')}</AppText>
 
-        <TouchableOpacity style={styles.btnReset} onPress={() => onReset()}>
-          <AppText style={styles.txtReset}>{t('reset')}</AppText>
-        </TouchableOpacity>
-      </View>
+  const onReset = () => {
+    reset(defaultFilter);
+  };
+
+  return (
+
+    <AppBottomModal
+      width={1}
+      height={0.7}
+      visible={visible}
+      onClose={() => {
+        console.log('onClose');
+
+        onClose?.();
+      }}
+      modalStyle={{ backgroundColor: themeColors.background }} >
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <AppText style={styles.txtFilter}>{t('filter')}</AppText>
+          <TouchableOpacity style={styles.btnReset} onPress={onReset}>
+            <AppText style={styles.txtReset}>{t('reset')}</AppText>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.body}>
+          {/* gender */}
+          <View style={styles.viewGender}>
+            <AppText style={styles.title}>
+              {t('gender')}
+            </AppText>
+            <View style={styles.listGender}>
+              {gender.map((item, index) => {
+                return (
+                  <Controller
+                    key={index}
+                    control={control}
+                    name="gender"
+                    render={({ field: { onChange, value } }) => (
+                      <TouchableOpacity
+                        style={[styles.itemGender, item.value === value && styles.selectItemGender]}
+                        onPress={() => onChange(item.value)}
+                      >
+                        <AppText style={styles.txtGender}>{item.label}</AppText>
+                      </TouchableOpacity>
+                    )}
+                  />
+                );
+              })}
+            </View>
 
 
-      {/* gender */}
-      <View style={styles.viewGender}>
-        <AppText style={styles.title}>
-          {t('gender')}
-        </AppText>
-        <View style={styles.listGender}>
-          {gender.map((item, index) => {
-            return (
-              <TouchableOpacity style={[styles.itemGender, item.value === filter?.gender && styles.selectItemGender]} key={index} onPress={() => {
-                setFilter({
-                  ...filter,
-                  gender: item.value,
-                });
-              }
-              }>
-                <AppText style={styles.txtGender}>{item.label}</AppText>
-              </TouchableOpacity>
-            );
-          })}
+          </View>
+          <Controller
+            control={control}
+            name="location"
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.viewLocation}>
+                <View style={styles.viewRow}>
+                  <AppText style={styles.title}>
+                    {t('maxLocation')}
+                  </AppText>
+                  <AppText style={styles.txtValue}>
+                    {`${value} km`}
+                  </AppText>
+                </View>
+                <MultiSlider
+                  values={value}
+                  sliderLength={WidthScreen - Spacing.width32}
+                  onValuesChangeFinish={onChange}
+                  min={0}
+                  max={100}
+                  step={1}
+                  selectedStyle={styles.selectedTrack}
+                  unselectedStyle={styles.unselectedTrack}
+                  markerStyle={styles.boxSlider}
+                />
+              </View>
+            )}
+          />
+          {/* age */}
+          <Controller
+            control={control}
+            name="age"
+            render={({ field: { onChange, value } }) => (
+              <View style={styles.viewLocation}>
+                <View style={styles.viewRow}>
+                  <AppText style={styles.title}>
+                    {t('age')}
+                  </AppText>
+                  <AppText style={styles.txtValue}>
+                    {[value[0], value[1]].join(' - ')}
+                  </AppText>
+                </View>
+                <MultiSlider
+                  values={value}
+                  sliderLength={WidthScreen - Spacing.width32}
+                  onValuesChangeFinish={onChange}
+                  min={0}
+                  max={80}
+                  step={1}
+
+                  selectedStyle={styles.selectedTrack}
+                  unselectedStyle={styles.unselectedTrack}
+                  markerStyle={styles.boxSlider}
+                />
+
+              </View>
+            )}
+          />
+          <AppButton label={t('apply')} onPress={() => { }} />
         </View>
 
-
       </View>
-      {/* select location */}
-      <View style={styles.viewLocation}>
-        <View style={styles.viewRow}>
-          <AppText style={styles.title}>
-            {t('maxLocation')}
-          </AppText>
-          <AppText style={styles.txtValue}>
-            {`${filter.location} km`}
-          </AppText>
-        </View>
-        <Slider
-          style={styles.slider}
-          value={filter.location}
-          minimumValue={0}
-          maximumValue={100}
-          step={1}
-          maximumTrackTintColor={themeColors.subtile}
-          minimumTrackTintColor={themeColors.primary}
-
-          onValueChange={(value) => {
-            setFilter({
-              ...filter,
-              location: value,
-            });
-          }
-          }
-
-        />
-      </View>
-    </View>
-  </AppBottomModal>;
+    </AppBottomModal>
+  );
 }
 const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   container: {
@@ -123,6 +176,10 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     padding: Spacing.width16,
 
     alignItems: 'center',
+  },
+  body: {
+    gap: Spacing.height32,
+    marginTop: Spacing.height32,
   },
   header: {
 
@@ -147,7 +204,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   viewGender: {
     gap: Spacing.height16,
-    marginTop: Spacing.height16,
+
   },
   listGender: {
     flexDirection: 'row',
@@ -178,7 +235,6 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   // location
   viewLocation: {
-    marginTop: Spacing.width16,
     gap: Spacing.height16,
   },
   viewRow: {
@@ -191,6 +247,33 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     color: themeColors.subtile,
   },
   slider: {
+
     height: 40,
   },
+  boxSlider: {
+    backgroundColor: themeColors.primary,
+    borderWidth: 4,
+    borderColor: themeColors.whiteColor,
+    borderRadius: Spacing.width20,
+    width: Spacing.width30,
+    height: Spacing.width30,
+  },
+  customMarker: {
+    width: Spacing.width20,
+    height: Spacing.width20,
+    borderRadius: Spacing.width10,
+    backgroundColor: themeColors.primary,
+    borderWidth: 2,
+    borderColor: themeColors.whiteColor,
+  },
+  //
+  selectedTrack: {
+    backgroundColor: themeColors.primary,
+    height: Spacing.height6,
+  },
+  unselectedTrack: {
+    backgroundColor: themeColors.subtile,
+    height: Spacing.height6,
+  },
+
 });

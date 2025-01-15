@@ -8,9 +8,11 @@ const NoSearchImage = require('./NoSearchData.png');
 const NoAvatarImage = require('./notAvatar.png');
 const BackgroundCreateProfile = require('./backgroundFinding.png');
 const ImagePackage = require('./ImagePackage.png');
+const BtnDislike = require('./dislike.png');
 export {
   Background,
   BackgroundCreateProfile,
+  BtnDislike,
   ImageBackgroundDating,
   ImageBook,
   ImageGame,

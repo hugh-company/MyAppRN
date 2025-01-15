@@ -12,5 +12,9 @@ export const createProfileSchema = z.object({
     code: z.string().min(1, {message: t('validate.validate_country')}),
     number: z.string().min(1, {message: t('validate.validate_phone_min')}),
   }),
+  galleries: z
+    .array(z.string())
+    .min(1, {message: t('validate.validate_galleries')}),
+  job: z.string().min(1, {message: t('validate.validate_job')}),
 });
 export type createProfileFormData = z.infer<typeof createProfileSchema>;

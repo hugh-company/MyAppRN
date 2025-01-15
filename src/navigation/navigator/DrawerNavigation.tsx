@@ -12,6 +12,7 @@ const DrawerNavigation = React.memo(() => {
   return (
     <Drawer.Navigator
       drawerContent={DrawerContent}
+
       screenOptions={{
         headerShown: false,
         drawerType: 'front',

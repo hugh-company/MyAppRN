@@ -1,5 +1,6 @@
 export * from './chapterService';
 export * from './dashboardService';
+export * from './datingService';
 export * from './detailService';
 export * from './gameService';
 export * from './homeService';

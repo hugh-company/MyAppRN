@@ -19,8 +19,6 @@ const settingSlice = createSlice({
   initialState,
   reducers: {
     setDataSetting: (state, action) => {
-      console.log({action: action.payload});
-
       state.notices = action.payload.notices;
       state.bottomNavigation = action.payload.menuNavigation;
       state.dataDrawer = action.payload.dataDrawer;

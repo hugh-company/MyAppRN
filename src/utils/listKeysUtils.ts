@@ -28,7 +28,7 @@ export const dataNavigation = [
   },
   {
     name: t('navigation.chapters'),
-    key: SCREEN_ROUTE.CHAPTERS,
+    key: SCREEN_ROUTE.COMIC,
     Icon: ChapterIcon,
   },
   {

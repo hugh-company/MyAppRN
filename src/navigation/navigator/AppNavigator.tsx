@@ -18,6 +18,8 @@ const Stack = createStackNavigator();
 const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
   (props, ref) => {
     const token = useSelector(getToken);
+    console.log({ token });
+
     useEffect(() => {
       if (token) {
         apiService.setToken(token);
