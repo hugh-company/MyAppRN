@@ -1,6 +1,7 @@
 import {
   FontSize,
   FontWithFamily,
+  Shadow,
   Spacing,
   ThemeColors,
   WidthScreen,
@@ -71,6 +72,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'center',
       gap: Spacing.width8,
       flexDirection: 'row',
+      ...Shadow.normal,
     },
     likeText: {
       fontSize: FontSize.FontSize24,

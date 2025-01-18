@@ -58,3 +58,11 @@ export enum FilterKey {
   VIEWS_DESC = 'views__desc',
   LIKES_DESC = 'likes__desc',
 }
+// data local storage
+export enum KeyDataLocal {
+  HOME = 'home',
+  MOVIES = 'movies',
+  COMICS = 'comics',
+  GAMES = 'games',
+  DATING = 'dating',
+}

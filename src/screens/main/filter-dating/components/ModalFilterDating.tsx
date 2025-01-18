@@ -2,7 +2,7 @@ import { AppBottomModal, AppButton, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { genderInterface } from '@types';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -10,16 +10,17 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export interface ModalFilterDatingProps {
   visible: boolean;
   onClose: () => void;
-  onFilter?: (value: filterParams) => void
+  onFilter?: (value: filterParams) => void;
+  filter?: filterParams
 }
 interface filterParams {
   gender: string;
-  location: number[]
+  distance: number[]
   age: number[];
 }
 const defaultFilter: filterParams = {
   gender: '',
-  location: [0],
+  distance: [0],
   age: [18, 30],
 };
 export function ModalFilterDating(props: ModalFilterDatingProps) {
@@ -32,7 +33,6 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
   const styles = createStyles(themeColors);
 
   const gender = [
-
     {
       label: t('girl'),
       value: genderInterface.FEMALE,
@@ -49,10 +49,19 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
   const { control, handleSubmit, reset } = useForm({
     defaultValues: defaultFilter,
   });
-
-  const onSubmit = (data: filterParams) => {
-
-  };
+  useEffect(() => {
+    if (visible) {
+      reset({
+        ...defaultFilter,
+        ...props.filter,
+      });
+    }
+  }, [visible]);
+  const onSubmit = handleSubmit((value) => {
+    onFilter?.(value);
+    onClose?.();
+  }
+  );
 
   const onReset = () => {
     reset(defaultFilter);
@@ -65,8 +74,6 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
       height={0.7}
       visible={visible}
       onClose={() => {
-        console.log('onClose');
-
         onClose?.();
       }}
       modalStyle={{ backgroundColor: themeColors.background }} >
@@ -107,7 +114,7 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
           </View>
           <Controller
             control={control}
-            name="location"
+            name="distance"
             render={({ field: { onChange, value } }) => (
               <View style={styles.viewLocation}>
                 <View style={styles.viewRow}>
@@ -162,7 +169,7 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
               </View>
             )}
           />
-          <AppButton label={t('apply')} onPress={() => { }} />
+          <AppButton label={t('apply')} onPress={() => onSubmit()} />
         </View>
 
       </View>

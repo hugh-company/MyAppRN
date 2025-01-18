@@ -9,8 +9,11 @@ const NoAvatarImage = require('./notAvatar.png');
 const BackgroundCreateProfile = require('./backgroundFinding.png');
 const ImagePackage = require('./ImagePackage.png');
 const BtnDislike = require('./dislike.png');
+const BackgroundChat = require('./backgroundChat.png');
+const ZaloIcon = require('./zaloIcon.png');
 export {
   Background,
+  BackgroundChat,
   BackgroundCreateProfile,
   BtnDislike,
   ImageBackgroundDating,
@@ -21,4 +24,5 @@ export {
   NoAvatarImage,
   NoImage,
   NoSearchImage,
+  ZaloIcon,
 };

@@ -1,5 +1,4 @@
-import {position} from '@shopify/restyle';
-import {Spacing, ThemeColors, WidthScreen} from '@theme';
+import {FontSize, Spacing, ThemeColors, WidthScreen} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -51,5 +50,19 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     containerList: {
       marginHorizontal: Spacing.width16,
+    },
+    bottomStep: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      zIndex: 1,
+    },
+    txtChapter: {
+      fontSize: FontSize.FontSize14,
+      color: themeColors.text,
+    },
+    bottom: {
+      height: Spacing.height50,
     },
   });

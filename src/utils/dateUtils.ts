@@ -62,3 +62,12 @@ export const isValidateDate = (date: string): boolean => {
 export const getAge = (date: string): number => {
   return dayjs().diff(date, 'year');
 };
+
+export const checkMessageTime = (date: Date | string): string => {
+  const messageDate = dayjs(date);
+  const today = dayjs();
+  if (messageDate.isSame(today, 'day')) {
+    return t('today');
+  }
+  return messageDate.format('DD/MM');
+};

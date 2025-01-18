@@ -16,7 +16,8 @@
     "aab": "cd android && ./gradlew bundleRelease",
     "postinstall": "patch-package",
     "clear_android": "cd android && ./gradlew clean && cd ..",
-    "record": "xcrun simctl io booted recordVideo record.mov"
+    "record": "xcrun simctl io booted recordVideo record.mov",
+    "fonts": "npx react-native-asset"
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",
@@ -58,6 +59,7 @@
     "react-native-fbsdk-next": "^13.3.0",
     "react-native-flash-message": "^0.4.2",
     "react-native-fs": "^2.20.0",
+    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-image-picker": "^7.2.1",
     "react-native-image-zoom-viewer": "^3.0.1",

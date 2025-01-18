@@ -7,11 +7,14 @@ const initialState = {
   isCloseNotice: false,
   bottomNavigation: [],
   dataDrawer: [],
+  isDashboardDating: false,
 } as {
   isCloseNotice: boolean;
   notices: NotificationInterface[];
   bottomNavigation: menuNavigationInterface[];
   dataDrawer: menuNavigationInterface[];
+
+  isDashboardDating: boolean;
 };
 
 const settingSlice = createSlice({
@@ -32,9 +35,17 @@ const settingSlice = createSlice({
     setDataDrawer: (state, action) => {
       state.dataDrawer = action.payload;
     },
+    setIsDashboardDating: (state, action) => {
+      state.isDashboardDating = action.payload;
+    },
   },
 });
 
-export const {setNotices, setBottomNavigation, setDataDrawer, setDataSetting} =
-  settingSlice.actions;
+export const {
+  setNotices,
+  setBottomNavigation,
+  setDataDrawer,
+  setDataSetting,
+  setIsDashboardDating,
+} = settingSlice.actions;
 export default settingSlice.reducer;

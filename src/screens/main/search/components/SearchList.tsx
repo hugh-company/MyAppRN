@@ -1,5 +1,5 @@
 import { NoSearchImage } from '@assets';
-import { AppFlatListAnimated, AppImage, AppText, ItemSearchMovie } from '@components';
+import { AppImage, AppListMovies, AppText, ItemSearchMovie } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListProduct } from '@types';
 import { t } from 'i18next';
@@ -26,7 +26,7 @@ const SearchList = ({ data, valueSearch, onLoadMore }: SearchListProps) => {
 
   return (
     <View style={styles.container}>
-      <AppFlatListAnimated
+      {/* <AppFlatListAnimated
         ListHeaderComponent={valueSearch ? <AppText style={styles.title}>{t('search.searchResults').replace('NAME', valueSearch)}</AppText> : null}
         data={data}
         contentContainerStyle={styles.list}
@@ -34,6 +34,14 @@ const SearchList = ({ data, valueSearch, onLoadMore }: SearchListProps) => {
         renderItem={renderItem}
         onRefresh={() => { }}
         keyExtractor={(item) => `item_search_${item.id}`}
+        onLoadMore={onLoadMore}
+      /> */}
+      <AppListMovies
+        numColumns={2}
+
+        scrollEventThrottle={16}
+        data={data}
+
         onLoadMore={onLoadMore}
       />
     </View>

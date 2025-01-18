@@ -445,4 +445,5 @@ export const Spacing = {
   height315: sizeHeight(315),
   height335: sizeHeight(335),
   height375: sizeHeight(375),
+  height560: sizeHeight(560),
 };

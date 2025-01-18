@@ -148,7 +148,7 @@ class AxiosClass {
   put<T>(url: string, body: any, header: any = {}): Promise<T> {
     return this.api.put(url, body, {
       headers: {
-        // 'Content-Type': 'application/x-www-form-urlencoded',
+        // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
         ...header,
       },
     });

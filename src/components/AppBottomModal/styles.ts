@@ -5,7 +5,7 @@ export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: themeColors.background,
+      // backgroundColor: themeColors.background,
     },
     modalContainer: {
       backgroundColor: themeColors.background,

@@ -1,9 +1,9 @@
-import { AppFlatListAnimated, AppInputSearch, AppText } from '@components';
+import { AppBottomModal, AppFlatListAnimated, AppInputSearch, AppText } from '@components';
 import { Spacing, useTheme } from '@theme';
 import { chapterEpisodeInterface, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { useEffect, useState } from 'react';
-import { Modal, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Platform, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppEpisodesProps {
   episodes?: chapterEpisodeInterface[];
@@ -32,7 +32,10 @@ const AppEpisodes = ({
   }, [episodes]);
 
   const handleLoadMore = () => {
-    setShowModal(true);
+    console.log('handleLoadMore');
+    setTimeout(() => {
+      setShowModal(true);
+    }, 300);
     // setShowAll(!showAll);
   };
 
@@ -88,15 +91,11 @@ const AppEpisodes = ({
           </TouchableOpacity>
         )}
       </View>
-      <Modal
-
-        animationType="slide"
-        visible={showModal}
-        transparent={true}
-        onRequestClose={() => setShowModal(false)}
-      >
+      <AppBottomModal
+        width={1}
+        height={Platform.OS === 'ios' ? 0.93 : 1}
+        visible={showModal} onClose={() => setShowModal(false)}>
         <View style={styles.modalContainer}>
-
           <View style={styles.headerModal}>
             <View style={styles.viewTitle}>
               <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
@@ -117,7 +116,8 @@ const AppEpisodes = ({
           />
 
         </View>
-      </Modal>
+
+      </AppBottomModal>
     </>
   );
 };

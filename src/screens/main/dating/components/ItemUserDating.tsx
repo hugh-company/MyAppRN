@@ -1,10 +1,11 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
+import { StatusAccount, UserItemInterface } from '@types';
 import { getAge } from '@utils';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export interface ItemUserDatingProps {
-  item: any;
+  item: UserItemInterface;
   onPress?: () => void
 }
 
@@ -12,21 +13,21 @@ export function ItemUserDating(props: ItemUserDatingProps) {
   const { item, onPress } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  return <TouchableOpacity style={styles.container}>
-    <AppImage style={styles.item} uri={item.avatar} isBase={false} />
+  return <TouchableOpacity style={[styles.container, { borderColor: item?.frameColor }]} onPress={onPress}>
+    <AppImage style={styles.item} uri={item.avatar} />
 
     <View style={styles.viewInfo}>
-      <View style={styles.viewLocation}>
-        <AppText style={styles.txtLocation}>1.3 km away</AppText>
-      </View>
+      {item?.distance && <View style={styles.viewLocation}>
+        <AppText style={styles.txtLocation}>{item?.distance}</AppText>
+      </View>}
       <View style={[styles.viewRow, { gap: 8 }]}>
         <AppText numberOfLines={2} style={styles.txtName}>{[item?.fullname, getAge(item?.birthday)].join(', ')}</AppText>
-        <View style={styles.viewActive} />
+        {item?.online === StatusAccount.ONLINE && <View style={styles.viewActive} />}
       </View>
-      <AppText style={styles.address}>Ho Chi Minh city</AppText>
+      <AppText style={styles.address}>{item?.place}</AppText>
     </View>
-    <View style={styles.viewMatch}>
-      <AppText style={styles.txtMatch}>100% Match</AppText>
+    <View style={[styles.viewMatch, { backgroundColor: item?.frameColor }]}>
+      <AppText style={styles.txtMatch}>{item?.frameLabel}</AppText>
     </View>
 
   </TouchableOpacity>;
@@ -86,6 +87,7 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       paddingVertical: Spacing.width16,
       gap: Spacing.width16,
+      backgroundColor: 'rgba(0,0,0,0.5)',
     },
     viewLocation: {
       flexDirection: 'row',

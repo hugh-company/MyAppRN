@@ -1,13 +1,13 @@
 import { BackgroundCreateProfile } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
+import { navigate, navigateToStack, SCREEN_ROUTE } from '@navigation';
 import { t } from 'i18next';
 import React from 'react';
 import { View } from 'react-native';
 import { useDashboardCreateProfile } from './DashboardCreateProfile.hook';
 
 const DashboardCreateProfile = () => {
-  const { data, themeColors, styles } = useDashboardCreateProfile();
+  const { data, token, styles } = useDashboardCreateProfile();
 
   return (
     <View style={styles.container}>
@@ -15,8 +15,8 @@ const DashboardCreateProfile = () => {
       <AppImage defaultSource={BackgroundCreateProfile} style={styles.images} />
       <AppButton
         style={styles.btn}
-        label={t('dating.createProfile')}
-        onPress={() => navigate(SCREEN_ROUTE.CREATE_PROFILE)} />
+        label={token ? t('dating.createProfile') : t('dating.loginNow')}
+        onPress={() => !token ? navigateToStack(SCREEN_ROUTE.AUTH_STACK, SCREEN_ROUTE.LOGIN) : navigate(SCREEN_ROUTE.CREATE_PROFILE)} />
     </View>
   );
 };

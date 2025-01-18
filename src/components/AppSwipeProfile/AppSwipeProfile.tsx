@@ -23,6 +23,7 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
   const isVisible = useSharedValue(true);
   const heightBanner = Platform.OS === 'android' ? HeightScreen * 0.8 : HeightScreen * 0.7;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [items, setItems] = useState(item?.personal.galleries);
 
   const flatListRef = useRef<FlatList>(null);
   const onViewRef = useRef(({ viewableItems }: any) => {
@@ -35,77 +36,86 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
 
 
   const handleSwipe = (type: 'like' | 'dislike') => {
-    onSwipe(type);
-    isVisible.value = false;
+    runOnJS(onSwipe)(type);
+    runOnJS(setItems)((prevItems) => {
+      const newItems = prevItems.filter((_, index) => index !== currentIndex);
+      if (newItems.length === 0) {
+        isVisible.value = false; // Hide the card if no items are left
+      }
+      return newItems;
+    });
     translateX.value = 0; // Reset translateX after swipe
   };
 
-
-
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, context) => {
-
       context.startX = translateX.value;
-
     },
     onActive: (event, context) => {
-
       translateX.value = context.startX + event.translationX;
-
     },
-    onEnd: (event) => {
-
+    onEnd: () => {
       const threshold = width / 3;
       if (translateX.value > threshold) {
-        translateX.value = withSpring(width);
-        runOnJS(handleSwipe)('like'); // Vuốt sang phải
+        translateX.value = withSpring(width, {}, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
       } else if (translateX.value < -threshold) {
-        translateX.value = withSpring(-width);
-        runOnJS(handleSwipe)('dislike'); // Vuốt sang trái
+        translateX.value = withSpring(-width, {}, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
       } else {
         translateX.value = withSpring(0);
       }
     },
   });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      { translateX: translateX.value },
-      { rotateZ: `${translateX.value / 20}deg` },
-    ],
+  const animatedStyle = useAnimatedStyle(() => {
+    const translateXValue = translateX.value;
+    return {
+      transform: [
+        { translateX: translateXValue },
+        { rotateZ: `${translateXValue / 20}deg` },
+      ],
+    };
+  });
 
-  }));
+  const likeOpacity = useAnimatedStyle(() => {
+    const translateXValue = translateX.value;
+    return {
+      opacity: translateXValue > 50 ? 1 : 0,
+    };
+  });
 
-  const likeOpacity = useAnimatedStyle(() => ({
-    opacity: translateX.value > 50 ? 1 : 0,
+  const shadowImage = useAnimatedStyle(() => {
+    const translateXValue = translateX.value;
+    return {
+      borderColor: translateXValue > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
+      borderWidth: translateXValue > 50 ? 2 : 0,
+      elevation: translateXValue > 50 ? 10 : 0,
+    };
+  });
 
-  }));
-  const shadowImage = useAnimatedStyle(() => ({
-    borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
-    borderWidth: translateX.value > 50 ? 2 : 0,
-    elevation: translateX.value > 50 ? 10 : 0,
-  }));
-  const dislikeOpacity = useAnimatedStyle(() => ({
-    opacity: translateX.value < -50 ? 1 : 0,
-  }));
+  const dislikeOpacity = useAnimatedStyle(() => {
+    const translateXValue = translateX.value;
+    return {
+      opacity: translateXValue < -50 ? 1 : 0,
+    };
+  });
 
   const renderItemBanner = ({ item, index }: any) => (
     <View key={index} style={[styles.btn, { height: heightBanner }]}>
       <Animated.View style={[styles.btn]}>
-        <AppImage uri={item} isBase={false} style={[styles.image, { height: heightBanner }]} />
+        <AppImage uri={item} style={[styles.image, { height: heightBanner }]} />
       </Animated.View>
     </View>
   );
+
+
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View style={[styles.card, shadowImage, animatedStyle, { height: heightBanner }]}>
+      <Animated.View style={[styles.card, shadowImage, animatedStyle, { height: heightBanner, display: isVisible.value ? 'flex' : 'none' }]}>
         <FlatList
           ref={flatListRef}
-          data={item?.personal.galleries}
-          // horizontal // Disable horizontal scrolling
+          data={items}
           pagingEnabled
-          // scrollEnabled={scrollEnabled}
-          showsVerticalScrollIndicator={false} // Change to vertical scroll indicator
+          showsVerticalScrollIndicator={false}
           renderItem={renderItemBanner}
           keyExtractor={(item, index) => index.toString()}
           onViewableItemsChanged={onViewRef.current}
@@ -113,22 +123,20 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
           getItemLayout={(data, index) => (
             { length: heightBanner || HeightScreen, offset: (heightBanner || HeightScreen) * index, index }
           )}
-
         />
-        <View style={styles.dotsContainer}>
+        {items?.length > 1 && <View style={styles.dotsContainer}>
           <View style={styles.dotsView}>
-            {item?.personal.galleries.map((_, index) => (
+            {items.map((_, index) => (
               <View
                 key={index}
                 style={[
                   styles.dot,
                   currentIndex === index ? styles.activeDot : styles.inactiveDot,
                 ]}
-
               />
             ))}
           </View>
-        </View>
+        </View>}
 
         <View style={styles.info}>
           <AppText style={styles.name}>{[item?.fullname, getAge(item?.birthday)].join(', ')}</AppText>
@@ -153,7 +161,7 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
           </View>
         </Animated.View>
       </Animated.View>
-    </PanGestureHandler>
+    </PanGestureHandler >
   );
 };
 

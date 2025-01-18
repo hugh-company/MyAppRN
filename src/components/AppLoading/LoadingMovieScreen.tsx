@@ -16,13 +16,13 @@ const LoadingMovieScreen = ({ }: LoadingHomeProps) => {
         <View>
           <View style={styles.librarySection}>
             {/* <View style={styles.search} /> */}
-            <View style={styles.categorySection}>
+            {/* <View style={styles.categorySection}>
               {Array(14)
                 .fill(0)
                 .map((_, i) => (
                   <View key={i} style={styles.itemCategory} />
                 ))}
-            </View>
+            </View> */}
             <View style={styles.banner} />
 
           </View>

@@ -37,7 +37,7 @@ export const UploadImage = React.memo((props: propsImage) => {
     if (uriBase) {
       fetch(uriBase).then(data => {
         if (data.status !== 200) {
-          setError(true);
+          // setError(true);
           setLoading(false);
         }
         setLoading(false);
@@ -104,7 +104,7 @@ export const UploadImage = React.memo((props: propsImage) => {
       <>
         <View>
           <FastImage
-            source={{ uri: uriBase, cache: 'web' }}
+            source={{ uri: uriBase }}
             style={[styles.image, style]}
             resizeMode={resizeMode}
 

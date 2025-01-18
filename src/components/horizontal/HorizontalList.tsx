@@ -16,7 +16,8 @@ interface HorizontalListProps {
   style?: StyleProp<ViewStyle>;
   type?: PostTypeKey;
   itemStyle?: StyleProp<ViewStyle>;
-  button?: ButtonNavigationInterface
+  button?: ButtonNavigationInterface;
+  renderItem?: ({ item }: { item: ItemListProduct }) => JSX.Element;
 }
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
@@ -26,14 +27,14 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   titleViewMore = t('home.viewMore'),
   onViewMore, type = PostTypeKey.GAMES,
   itemStyle,
-  button,
+  button, renderItem,
 }) => {
 
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
 
 
-  const renderItem = ({ item }: any) => {
+  const renderItemList = ({ item }: any) => {
     const image = item?.feature?.path;
     switch (type) {
       case PostTypeKey.GAMES:
@@ -99,7 +100,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         data={data || []}
         horizontal
         keyExtractor={(item) => `child_${title}${item?.id?.toString()}`}
-        renderItem={renderItem} />
+        renderItem={renderItem || renderItemList} />
 
     </View>
   );

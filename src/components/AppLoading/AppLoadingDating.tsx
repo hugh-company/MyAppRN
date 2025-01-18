@@ -14,7 +14,7 @@ const AppLoadingDating = ({ }: LoadingHomeProps) => {
           {/* Thư viện phim hay */}
           <View style={styles.librarySection}>
 
-            <View style={styles.categorySection}>
+            {/* <View style={styles.categorySection}>
               {Array(14)
                 .fill(0)
                 .map((_, i) => (
@@ -24,7 +24,7 @@ const AppLoadingDating = ({ }: LoadingHomeProps) => {
 
                   </View>
                 ))}
-            </View>
+            </View> */}
 
             <View style={styles.btnSearch} />
             {/*  */}

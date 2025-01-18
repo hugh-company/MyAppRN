@@ -33,15 +33,8 @@ const AppBottomModal = ({ visible, isLine = true,
       swipeDirection={'down'}
       onTouchOutside={() => onClose?.()} >
       <View style={styles.container} >
-
-
-        <>
-          {children}
-          {isLine && <View style={styles.line} />}
-        </>
-
-
-
+        {children}
+        {isLine && <View style={styles.line} />}
       </View>
     </BottomModal>
   );

@@ -39,7 +39,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           {leftComponent ? leftComponent : <TouchableOpacity onPress={() => goBack()} style={styles.btnBack}>
             <LeftIcon />
           </TouchableOpacity>}
-          <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>
+          {title && <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>}
         </View>
         {rightComponent}
       </Animated.View>

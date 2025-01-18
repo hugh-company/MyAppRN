@@ -78,7 +78,22 @@ const AppListDashboard = ({
       case TypeKeyListApi.BLOCK_LABEL:
         return <LabelView title={item?.label} type={item?.posttype} uri={item?.images} />;
       case TypeKeyListApi.LIST_ITEM_TAB:
-        return <CategoryListItem data={item?.items as TabInterface[]} type={item?.posttype} />;
+        return <CategoryListItem
+          data={item?.items as TabInterface[]}
+          isTab={false}
+          goToViewList={() => {
+            console.log({ item });
+
+            // goToListView(
+            //   {
+            //     ...item?.button,
+            //     keyCategory: item.slug,
+            //     label: title,
+            //   }
+            // );
+          }}
+          itemModule={item}
+          type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:
         return <SliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
       case TypeKeyListApi.LIST_HORIZONTAL:

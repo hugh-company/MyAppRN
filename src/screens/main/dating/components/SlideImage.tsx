@@ -1,3 +1,4 @@
+import { BASE_IMAGE_URL } from '@api';
 import { Spacing } from '@theme';
 import React, { useEffect, useState } from 'react';
 import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
@@ -31,7 +32,10 @@ export function SlideImage(props: SlideImageProps) {
   return (
     <View style={[styles.container, style]}>
       <Animated.Image
-        source={{ uri: data[currentIndex] }}
+        source={{
+          uri: BASE_IMAGE_URL + data[currentIndex],
+          cache: 'force-cache',
+        }}
         style={[styles.image, { transform: [{ translateY: translateYAnim }] }]}
       />
     </View>
@@ -47,8 +51,8 @@ const styles = StyleSheet.create({
 
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: Spacing.width56,
+    height: Spacing.width56,
     resizeMode: 'cover',
   },
 });

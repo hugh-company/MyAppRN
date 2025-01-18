@@ -1,6 +1,7 @@
 import { AppText } from '@components';
 import { useTheme } from '@theme';
 import { TabInterface } from '@types';
+import { goToListView } from '@utils';
 import React, { memo, useCallback, useRef } from 'react';
 import { FlatList, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
@@ -11,6 +12,10 @@ export interface AppCategoryListProps {
   onSelectedCategory: (item: TabInterface) => void;
   style?: StyleProp<ViewStyle>;
   listStyle?: StyleProp<ViewStyle>;
+
+  title?: string;
+  isTab?: boolean;
+  goToViewList?: (item: TabInterface) => void;
 }
 
 const CategoryItem = memo(({ item, index, categoryId, handleCategoryPress, styles }: any) => (
@@ -21,7 +26,7 @@ const CategoryItem = memo(({ item, index, categoryId, handleCategoryPress, style
   </TouchableOpacity>
 ));
 
-const AppCategoryList = ({ data, categoryId, onSelectedCategory, style, listStyle }: AppCategoryListProps) => {
+const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, style, listStyle, goToViewList }: AppCategoryListProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
@@ -38,8 +43,19 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, style, listStyl
   //   }
   // }, [categoryId, flatListRef.current]);
   const handleCategoryPress = useCallback((item: TabInterface, index: number) => {
-    onSelectedCategory(item);
-  }, [onSelectedCategory]);
+
+    if (isTab) {
+      onSelectedCategory(item);
+      flatListRef.current?.scrollToIndex({ index, animated: true });
+
+    } else {
+      // goToViewList?.(item);
+      goToListView({
+        ...item.button,
+
+      });
+    }
+  }, [onSelectedCategory, goToViewList]);
 
   const renderItem = useCallback(({ item, index }: any) => (
     <CategoryItem

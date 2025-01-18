@@ -26,10 +26,13 @@ export const transformData = (data: any) => {
 export const loginApi = (data: paramsLogin) => {
 
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const formUrlEncoded = transformData(data);
+  const formData = new FormData();
+  formData.append('username', data.username);
+  formData.append('password', data.password);
 
-  return apiService.postNormal<LoginResponse>(API_ENDPOINTS.LOGIN, formUrlEncoded, {
-    'Content-Type': 'application/x-www-form-urlencoded',
+  return apiService.postNormal<LoginResponse>(API_ENDPOINTS.LOGIN, formData, {
+    'Content-Type': 'multipart/form-data',
+
   });
 };
 export const csrfTokenApi = () => {
@@ -46,11 +49,19 @@ export const registerApi = async ({ username, password, password_repeat, email, 
     fullname,
     csrf_token: responseToken.data.csrf_token,
   };
-  const form = transformData(data);
+  const form = new FormData();
+  form.append('username', data.username);
+  form.append('email', data.email);
+  form.append('password', data.password);
+  form.append('password_repeat', data.password_repeat);
+  form.append('fullname', data.fullname);
+  form.append('csrf_token', data.csrf_token);
+
 
   return apiService.postNormal<LoginResponse>(API_ENDPOINTS.REGISTER, form,
     {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
+      'Content-Type': 'multipart/form-data',
     }
   );
 };

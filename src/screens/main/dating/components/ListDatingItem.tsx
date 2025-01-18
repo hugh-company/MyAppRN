@@ -1,11 +1,13 @@
 import { AppFlatListAnimated, AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { UserItemInterface } from '@types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ItemUserDating } from './ItemUserDating';
 export interface ListDatingItemProps {
   label?: string;
-  data?: any[];
+  data?: UserItemInterface[];
   total?: number
 }
 
@@ -13,9 +15,11 @@ export function ListDatingItem(props: ListDatingItemProps) {
   const { label, data = [], total = 0 } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const renderItem = ({ item, index }: any) => {
+  const renderItem = ({ item, index }: { item: UserItemInterface, index?: number }) => {
     return (
-      <ItemUserDating item={item} />
+      <ItemUserDating item={item} onPress={() => {
+        navigate(SCREEN_ROUTE.DETAIL_USER, { user: item });
+      }} />
     );
   };
   return <View style={styles.container}>

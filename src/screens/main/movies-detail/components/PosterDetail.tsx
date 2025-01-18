@@ -1,6 +1,6 @@
 import { LikeActiveIcon, NewIcon, PlayIcon, PlayStackedIcon, StarIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
@@ -30,19 +30,18 @@ export const PosterDetail = ({
   name,
   type,
   typeData,
-  duration,
-  views,
-  likes,
-  rating,
+  duration = 0,
+  views = 0,
+  likes = 0,
+  rating = 0,
   poster,
-  totalEpisodes,
+  totalEpisodes = 0,
   onNewChapter,
   onPlay,
 }: HeaderDetailProps) => {
   const { themeColors } = useTheme();
 
   const styles = createStyles(themeColors);
-
 
   const renderItem = (icon: any, title: string) => {
     return (
@@ -84,8 +83,8 @@ export const PosterDetail = ({
 
   return (
     <Animated.View style={[styles.container]}>
-      <AppImage resizeMode={'contain'} uri={poster} style={styles.banner} />
-      <View style={styles.viewInfo}>
+      <AppImage uri={poster} style={styles.banner} />
+      <View style={styles.bottomInfoPost}>
         <LinearGradient
           colors={['rgba(0, 0, 0, 0)', '#010101', '#010101']}
           locations={[0, 0.6, 1]}
@@ -94,8 +93,6 @@ export const PosterDetail = ({
           end={{ x: 0, y: 1 }}
         >
           <View style={styles.body}>
-            {renderNavigation()}
-
             {/* info movie */}
             <View style={styles.info}>
               <AppText style={styles.txtName}>{name}</AppText>
@@ -106,7 +103,12 @@ export const PosterDetail = ({
               </View>
             </View>
           </View>
+
+
         </LinearGradient>
+      </View>
+      <View style={styles.control}>
+        {renderNavigation()}
       </View>
     </Animated.View>
 
@@ -116,14 +118,13 @@ export const PosterDetail = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-
     },
     header: {
       position: 'absolute',
     },
     banner: {
       width: '100%',
-      height: HeightScreen / 1.9,
+      height: Spacing.height560,
     },
     btnDots: {
       width: Spacing.width40,
@@ -177,9 +178,25 @@ const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       justifyContent: 'space-between',
       alignItems: 'center',
-
-
     },
+    control: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    //
+    bottomInfoPost: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
+    //
     txtName: {
       fontSize: FontSize.FontSize24,
       color: themeColors.text,

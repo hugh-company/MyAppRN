@@ -1,11 +1,11 @@
-import {setDataSetting, setUserInfo} from '@redux';
+import {setDataSetting, setIsDashboardDating, setUserInfo} from '@redux';
 import {
   getDataDashboardApi,
   getUserProfileApi,
   responseDashboard,
 } from '@services';
 import {Spacing, useTheme} from '@theme';
-import {ModuleItemInterface} from '@types';
+import {ModuleItemInterface, UserInterface} from '@types';
 import {useEffect, useState} from 'react';
 import {
   Extrapolate,
@@ -41,12 +41,23 @@ export const useHomeScreen = () => {
     try {
       const responseUser: any = await getUserProfileApi();
       console.log({responseUser});
+      const userInfo = responseUser?.data?.me as UserInterface;
+      const isShowDating =
+        userInfo?.about_me && userInfo?.personal?.favorites?.length > 0;
+
+      dispatch(
+        setIsDashboardDating(isShowDating),
+        userInfo?.about_me,
+        userInfo?.personal?.favorites,
+      );
       dispatch(setUserInfo(responseUser?.data?.me));
     } catch (error) {}
   };
   const callApi = async () => {
     try {
       const res: responseDashboard = await getDataDashboardApi();
+      console.log({res});
+
       dispatch(
         setDataSetting({
           notices: res?.data?.notices || [],

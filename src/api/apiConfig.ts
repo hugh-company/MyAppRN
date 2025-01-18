@@ -13,7 +13,7 @@ export const ApiConfigs = {
   baseURL: `${END_POINT[ENV_ENVIRONMENT].BASE_URL}/{language}/api/v1`,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
-    'Content-Type': 'application/json application/x-www-form-urlencoded',
+    'Content-Type': 'multipart/form-data',
     Accept: 'application/json',
     timeout: 30000,
   },
@@ -65,4 +65,10 @@ export const API_ENDPOINTS = {
   VIEW: '/posts/action/views/',
   // search
   SEARCH: '/posts/search/',
+  SEND_LOCATION: '/user/location',
+  // dating
+  FIND_DATING: '/dating/finds/',
+  NEAR_YOU: '/dating/nearyou/',
+  LIKE_DATING: '/dating/likeyou/',
+  DATING_HOME: '/dating/',
 };

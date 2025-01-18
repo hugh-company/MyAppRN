@@ -181,7 +181,8 @@
     "desNewProfile": "Điền các thông tin cơ bản",
     "favorite": "Sở thích",
     "descriptionFavorite": "Bạn muốn hẹn hò voiws...",
-    "libraryImage": "Thư viện ảnh"
+    "libraryImage": "Thư viện ảnh",
+    "loginNow": "Đăng nhập ngay"
   },
   "favorite": {
     "photography": "Nhiếp ảnh",
@@ -211,6 +212,13 @@
     "chapterSaves": "Truyện đã lưu",
     "gameSaves": "Game đã lưu",
     "novelSaves": "Truyện chữ đã lưu"
+  },
+  "user_info": {
+    "titleSuccessUpdateUser": "Cập nhật thông tin thành công",
+    "desSuccessUpdateUser": "Thông tin của bạn đã được cập nhật thành công",
+    "dessuccessUpdateFavorite": "Sở thích của bạn đã được cập nhật thành công",
+    "titleErrorUpdateUser": "Cập nhật thông tin thất bại",
+    "desErrorUpdateUser": "Thông tin của bạn chưa được cập nhật, vui lòng thử lại sau"
   },
   "cancel": "Hủy",
   "save": "Lưu",
@@ -246,5 +254,24 @@
   "selectJob": "Chọn nghề nghiệp",
   "apply": "Áp dụng",
   "profile": "Trang cá nhân",
-  "searchStart": "Bắt đầu tìm kiếm"
+  "searchStart": "Bắt đầu tìm kiếm",
+  "styleText": "Kiểu chữ",
+  "style1": "Kiểu 1",
+  "style2": "Kiểu 2",
+  "style3": "Kiểu 3",
+  "sizeText": "Kích thước chữ",
+  "colorText": "Màu chữ",
+  "background": "Màu nền",
+  "today": "Hôm nay",
+  "permission": {
+    "titleLocation": "Vị trí của bạn",
+    "messageLocation": "Chúng tôi cần biết vị trí của bạn để tìm kiếm người phù hợp nhất",
+    "allow": "Cho phép",
+    "notAllow": "Không cho phép",
+    "locationNotFound": "Không tìm thấy vị trí của bạn",
+    "locationError": "Không thể lấy vị trí của bạn",
+    "titleAboutMe": "Giới thiệu bản thân"
+  },
+  "playGame": "Rủ Chơi Cùng",
+  "chatWith": "Chat với"
 }

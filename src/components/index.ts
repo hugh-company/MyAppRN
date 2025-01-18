@@ -24,6 +24,7 @@ export * from './AppListDashboard';
 export * from './AppListMovies';
 export * from './AppLoading';
 export * from './AppRatingMovie';
+export * from './AppSelectColor';
 export * from './AppSwipeProfile';
 export * from './Containers';
 export * from './GirdContainer';

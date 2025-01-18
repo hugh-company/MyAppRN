@@ -1,3 +1,6 @@
+import { API_ENDPOINTS, ApiConfigs, apiService } from '@api';
+import { genderInterface, responseDatingNearYou, TypeTabDatingApi } from '@types';
+
 export const dashboardList = [
   {
     id: 1,
@@ -126,3 +129,18 @@ export const dashboardList = [
     ],
   },
 ];
+export interface UserFindInterface {
+  // age=18-44&gender=female&location=11__98755__106__321124&distance=0
+  age?: string;
+  gender?: genderInterface;
+  location?: string;
+  distance?: number;
+}
+export const findUserApi = async (params: any) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  return apiService.get(API_ENDPOINTS.FIND_DATING, params);
+};
+export const getDatingDashboardApi = async (type: TypeTabDatingApi, params?: any) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  return apiService.get<responseDatingNearYou>(API_ENDPOINTS.DATING_HOME + type, params);
+};

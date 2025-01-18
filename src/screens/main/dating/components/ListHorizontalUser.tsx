@@ -1,65 +1,86 @@
-import { HeadIcon, LocationIcon2, MessageIcon } from '@assets';
 import { AppImage, AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { getUserInfo } from '@redux';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
+import { navHorizontalInterface, TypeOptionsDating } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SlideImage } from './SlideImage';
 export interface ListHorizontalUserProps {
-  data: any[]
+  data: navHorizontalInterface[];
+  onPress?: (item: navHorizontalInterface) => void;
+  style?: StyleProp<ViewStyle>;
+  tabSelected?: TypeOptionsDating;
 }
 
 export function ListHorizontalUser(props: ListHorizontalUserProps) {
-  const { data } = props;
+  const { data, onPress, style, tabSelected = TypeOptionsDating.NEAR_YOU } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const profile = useSelector(getUserInfo);
-  const renderImageNearYou = (item) => {
+  const menuBorderColors = {
+    [TypeOptionsDating.NEAR_YOU]: {
+      borderColor: themeColors.primary,
+      borderWidth: 3,
+    },
+    [TypeOptionsDating.MATCHED]: {
+      borderColor: themeColors.primary,
+      borderWidth: 3,
+    },
+    [TypeOptionsDating.LIKE]: {
+      borderColor: '#6B87F9',
+      borderWidth: 3,
+    },
+  };
+  const renderImageNearYou = (item: navHorizontalInterface) => {
     return (
-      <View style={styles.viewImageNearYou}>
+      <TouchableOpacity onPress={() => {
+        onPress && onPress(item);
+      }} style={[styles.viewImageNearYou, item.heading === tabSelected && menuBorderColors[tabSelected]]}>
         <SlideImage data={item.items} style={styles.imageNearYou} />
         <View style={styles.dots} />
         <View style={styles.location}>
-          <LocationIcon2 />
+          <AppImage uri={item.icon} style={styles.iconSize} />
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
   const renderInfoUser = () => {
     return (
-      <View style={[styles.item, { marginRight: 0 }]}>
+      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CREATE_PROFILE)} style={[styles.item, { marginRight: 0 }]}>
         <AppImage uri={profile?.avatar} style={styles.viewProfile} />
         <AppText style={styles.txt}>{t('profile')}</AppText>
-      </View>
+      </TouchableOpacity>
     );
   };
-  const renderItem = ({ item }) => {
-
+  const renderItem = ({ item }: { item: navHorizontalInterface }) => {
     return (
-      <TouchableOpacity style={styles.item}>
-        {item?.type === 'near_you' ? renderImageNearYou(item) : <View>
+      <TouchableOpacity style={[styles.item]} onPress={() => {
+        onPress && onPress(item);
+      }}>
+        {item?.heading === TypeOptionsDating.NEAR_YOU ? renderImageNearYou(item) : <View>
 
-          <AppImage uri={item?.items?.[0]} style={styles.image} isBase={false} />
+          <AppImage uri={item?.item} style={[styles.image, item?.heading === tabSelected && menuBorderColors[tabSelected]]} />
           <View style={styles.icon}>
-            {item?.type === 'like' ? <HeadIcon height={Spacing.width32} width={Spacing.width32} /> : <MessageIcon />}
+            <AppImage uri={item?.icon} style={styles.iconSize} />
           </View>
         </View>}
-        <AppText style={styles.txt}>{item.name}</AppText>
+        <AppText style={styles.txt}>{item.label}</AppText>
       </TouchableOpacity>
     );
   };
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <FlatList
         data={data}
         renderItem={renderItem}
         horizontal
         style={styles.list}
 
-        keyExtractor={(item) => `list_category_${item.id}`}
+        keyExtractor={(item, index) => `list_category_${index}`}
       />
       {renderInfoUser()}
     </View>
@@ -84,10 +105,16 @@ const createStyles = (themeColors: ThemeColors) =>
     wrapper: {
       gap: Spacing.width16,
     },
+    iconSize: {
+      width: Spacing.width24,
+      height: Spacing.width24,
+
+    },
     item: {
       marginRight: Spacing.width16,
       gap: Spacing.width12,
       alignItems: 'center',
+
     },
     viewProfile: {
       width: Spacing.width56,
@@ -111,10 +138,12 @@ const createStyles = (themeColors: ThemeColors) =>
 
     },
     imageNearYou: {
-      borderWidth: 3,
-      borderColor: themeColors.primary,
+
 
     },
+
+
+    //
     dots: {
       width: Spacing.width12,
       height: Spacing.width12,

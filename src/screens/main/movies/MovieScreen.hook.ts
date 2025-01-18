@@ -18,6 +18,7 @@ import {createStyles} from './styles';
 
 export const useMovieScreen = () => {
   const [data, setData] = useState<ModuleItemInterface[]>([]);
+  const [categories, setCategories] = useState<TabInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState('');
@@ -43,13 +44,17 @@ export const useMovieScreen = () => {
       const response = await getPostDashboardApi(PostTypeKey.MOVIES, params);
       console.log({response});
 
-      setData(response.data?.modules || []);
+      setData(
+        response.data?.modules?.filter(
+          elm => elm.type !== TypeKeyListApi.TYPE_TABS,
+        ) || [],
+      );
 
       const category: any = response.data?.modules.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
       );
       // console.log({tabSelect: tabSelect?.name});
-
+      setCategories(category?.items || []);
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
@@ -77,27 +82,25 @@ export const useMovieScreen = () => {
     height: interpolate(
       scrollY.value,
       [0, Spacing.height50],
-      [Spacing.height50, 0],
+      [Spacing.height44, 0],
+      Extrapolate.CLAMP,
+    ),
+  }));
+  const opacityStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollY.value,
+      [0, Spacing.height50],
+      [1, 0],
       Extrapolate.CLAMP,
     ),
   }));
 
-  // action
-  const onSearch = useCallback((text: string) => {
-    setSearch(text);
-  }, []);
   const onSelectedCategory = useCallback((item: TabInterface) => {
     setTabSelect(item);
     setLoading(true);
     const textFilter = `${item.type}__${item.id}`;
     callApi(textFilter);
   }, []);
-  const handleSearchChange = useCallback(
-    (text: string) => {
-      onSearch(text);
-    },
-    [onSearch],
-  );
 
   interface HandleCategorySelect {
     (item: TabInterface): void;
@@ -120,6 +123,9 @@ export const useMovieScreen = () => {
     scrollHandler,
     onRefresh,
     loading,
-    handleSearchChange,
+
+    categories,
+    scrollY,
+    opacityStyle,
   };
 };

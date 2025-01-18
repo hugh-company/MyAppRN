@@ -58,7 +58,6 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
 
       <TouchableOpacity onPress={() => {
         console.log({ item });
-
         goToListView({
           ...button,
           keyCategory: item.slug,

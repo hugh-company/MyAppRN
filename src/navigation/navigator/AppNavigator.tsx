@@ -5,6 +5,7 @@ import {
   SCREEN_ROUTE,
 } from '@navigation';
 import {
+  DarkTheme,
   NavigationContainer,
   NavigationContainerRef,
 } from '@react-navigation/native';
@@ -26,7 +27,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
       }
     }, [token]);
     return (
-      <NavigationContainer ref={ref}>
+      <NavigationContainer theme={DarkTheme} ref={ref}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen
             name={SCREEN_ROUTE.MAIN_STACK}

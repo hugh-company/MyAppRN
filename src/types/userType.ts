@@ -18,6 +18,7 @@ export interface UserInterface {
   whatsapp: string | null;
   skype: string | null;
   birthday: string; // ISO 8601 or date string
+
   gender: genderInterface; // Enum-like string
   location: string;
   about_me: string;
@@ -26,6 +27,7 @@ export interface UserInterface {
   package_name: string;
   package_exp: string | null; // ISO 8601 or date-time string if used
   personal: {
+    job: string;
     favorites: string[];
     galleries: string[];
   };

@@ -27,7 +27,7 @@ export const ratingPostApi = async (id: number, type: PostTypeKey, params: ratin
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(uri, formData, {
     'Content-Type': 'multipart/form-data',
-    // 'Content-Type': 'application/x-www-form-urlencoded',
+    // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
   });
 };
 
@@ -52,7 +52,7 @@ export const likePostApi = async (
     `${API_ENDPOINTS.LIKE}${type}/${id}`,
     formUrlEncoded,
     {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'multipart/form-data',
     },
   );
 };
@@ -71,7 +71,7 @@ export const favoriteMovieApi = async (id: number, type: PostTypeKey) => {
   const formData = new FormData();
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(`${API_ENDPOINTS.FAVORITE}${type}/${id}`, formData, {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'multipart/form-data',
   });
 };
 
@@ -84,7 +84,7 @@ export const savedPostApi = async (id: number, type: PostTypeKey) => {
   const formData = new FormData();
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(`${API_ENDPOINTS.SAVED}${type}/${id}`, formData, {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'multipart/form-data',
   });
 };
 // views
@@ -98,7 +98,7 @@ export const viewsPostApi = async (id: number, type: PostTypeKey) => {
     `${API_ENDPOINTS.VIEW}${type}/${id}`,
     formUrlEncoded,
     {
-      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'multipart/form-data',
     },
   );
 };

@@ -21,9 +21,9 @@ const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScro
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
-    if (numColumns === 2) {
+    if (numColumns !== 1) {
       return (
-        <TouchableOpacity onPress={() => goToDetail({ item, type })} style={styles.item}>
+        <TouchableOpacity onPress={() => goToDetail({ item, type: type || item?.posttype })} style={styles.item}>
           <AppImage uri={item.feature?.path} style={styles.image} />
           <View style={styles.viewInfo}>
             <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
@@ -58,7 +58,7 @@ const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScro
       numColumns={numColumns}
       renderItem={renderItem}
       onLoadMore={onLoadMore}
-      columnWrapperStyle={numColumns === 2 ? styles.columnWrapper : undefined}
+      columnWrapperStyle={numColumns !== 1 ? styles.columnWrapper : undefined}
     />
 
   );

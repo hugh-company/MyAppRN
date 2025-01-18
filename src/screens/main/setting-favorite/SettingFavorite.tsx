@@ -28,7 +28,7 @@ const SettingFavorite = () => {
 
         <View style={styles.bottom}>
           <AppButton
-            // disabled={selected?.length < 1}
+            disabled={selected?.length < 1}
             label={t('start')} style={styles.btnStart}
             onPress={onFavorite}
           />

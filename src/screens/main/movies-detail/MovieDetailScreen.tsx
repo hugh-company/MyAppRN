@@ -1,5 +1,5 @@
 import { DotsIcon } from '@assets';
-import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList, LoadingDetailMovie } from '@components';
+import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
 import React from 'react';
@@ -13,14 +13,13 @@ const MovieDetailScreen = () => {
 
   const { styles, detailMovie, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors } = useMovieDetailScreen();
 
-  if (loading) {
-    return <LoadingDetailMovie />;
-  }
+  // if (loading) {
+  //   return <LoadingDetailMovie />;
+  // }
   if (!detailMovie) {
     return null;
   }
 
-  const posterMovie = detailMovie?.feature?.path;
   return (
     <View style={styles.container}>
       <Animated.ScrollView
@@ -34,11 +33,10 @@ const MovieDetailScreen = () => {
           rating={detailMovie?.rating_count}
           typeData={'series'}
           type={PostTypeKey.MOVIES}
-
           duration={detailMovie?.duration}
           views={detailMovie?.views}
           likes={detailMovie?.like_count}
-          poster={posterMovie}
+          poster={detailMovie?.feature?.path || ''}
           totalEpisodes={detailMovie?.chapter_total
           }
           onPlay={() => {

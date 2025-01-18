@@ -1,4 +1,4 @@
-import { AppInfoContent, AppText, HorizontalList, LoadingDetailMovie } from '@components';
+import { AppInfoContent, AppText, HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
@@ -9,9 +9,9 @@ import { HeaderGame } from './components/HeaderGame';
 
 const GameDetailScreen = () => {
   const { data, themeColors, styles, loading } = useGameDetailScreen();
-  if (loading) {
-    return <LoadingDetailMovie />;
-  }
+  // if (loading) {
+  //   return <LoadingDetailMovie />;
+  // }
   if (!data) {
     return null;
   }

@@ -39,7 +39,7 @@ export interface chapterEpisodeInterface {
   movie: number;
   seo_title: string;
   seo_desc: string;
-  content: Content;
+  content: Content | any[];
   thumbnail: string;
   author: number;
   rating_count: number;

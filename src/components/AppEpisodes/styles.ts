@@ -14,7 +14,8 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     btnMore: {
       alignItems: 'center',
-      paddingVertical: Spacing.height8,
+      paddingVertical: Spacing.height16,
+      justifyContent: 'center',
     },
     txtMore: {
       ...FontWithFamily.FontWithFamily_600,
@@ -48,7 +49,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     // modal
     modalContainer: {
       flex: 1,
-      backgroundColor: themeColors.background,
+      // backgroundColor: themeColors.background,
     },
     headerModal: {
       padding: Spacing.width16,

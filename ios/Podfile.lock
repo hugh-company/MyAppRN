@@ -1443,6 +1443,8 @@ PODS:
     - FBSDKGamingServicesKit (~> 17.4)
     - FBSDKShareKit (~> 17.4)
     - React-Core
+  - react-native-geolocation-service (5.3.1):
+    - React
   - react-native-image-picker (7.2.1):
     - DoubleConversion
     - glog
@@ -2271,6 +2273,7 @@ DEPENDENCIES:
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-date-picker (from `../node_modules/react-native-date-picker`)
   - react-native-fbsdk-next (from `../node_modules/react-native-fbsdk-next`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
@@ -2432,6 +2435,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-date-picker"
   react-native-fbsdk-next:
     :path: "../node_modules/react-native-fbsdk-next"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
   react-native-mmkv:
@@ -2598,6 +2603,7 @@ SPEC CHECKSUMS:
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-date-picker: 543274fea228bdf7427a917d19b71f8f6eca7a72
   react-native-fbsdk-next: b430fc002cf9b8675b8688d43fe6eddd5ff4e029
+  react-native-geolocation-service: 608e1da71a1ac31b4de64d9ef2815f697978c55b
   react-native-image-picker: f0d593e6da36de7d14923e346f3122d85bcb9911
   react-native-mmkv: bb0824bed68c01f7cc681eefa58059097bdaa796
   react-native-netinfo: f0a9899081c185db1de5bb2fdc1c88c202a059ac

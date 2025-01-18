@@ -15,7 +15,7 @@ export interface BannerUserProps {
   setCurrentIndex?: (index: number) => void;
 }
 
-export const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref) => {
+const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref) => {
   const { data, style, height = HeightScreen * 0.7, scrollEnabled = true, onScrollBeginDrag, onScrollEndDrag,
     currentIndex = 0, setCurrentIndex = () => { },
 
@@ -41,7 +41,7 @@ export const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref
 
   const renderItemBanner = ({ item, index }: any) => (
     <View key={index} style={[styles.btn, { height }]}>
-      <AppImage uri={item} isBase={false} style={[styles.image, { height }]} />
+      <AppImage uri={item} style={[styles.image, { height }]} />
     </View>
   );
   if (data.length === 0) { return null; }
@@ -112,8 +112,8 @@ const createStyles = (themeColors: ThemeColors) =>
       borderRadius: Spacing.width8,
     },
     dot: {
-      width: 50,
-      height: 50,
+      width: Spacing.width8,
+      height: Spacing.width8,
       borderRadius: 4,
       marginHorizontal: 4,
     },
@@ -131,3 +131,4 @@ const createStyles = (themeColors: ThemeColors) =>
       ...StyleSheet.absoluteFillObject,
     },
   });
+export default BannerUser;

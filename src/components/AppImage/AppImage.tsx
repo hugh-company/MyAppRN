@@ -47,6 +47,7 @@ export const AppImage = React.memo((props: propsImage) => {
 
   const source = isError ? NoImage : imgSource ? imgSource : uri ? { uri: uriBase } : (defaultSource ? defaultSource : NoImage);
 
+
   return (
     <Box justifyContent={'center'} alignItems="center">
       <FastImage

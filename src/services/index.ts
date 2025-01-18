@@ -6,6 +6,7 @@ export * from './gameService';
 export * from './homeService';
 export * from './listPostService';
 export * from './loginService';
+export * from './messageService';
 export * from './movieService';
 export * from './searchService';
 export * from './userService';

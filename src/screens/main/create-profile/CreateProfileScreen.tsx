@@ -1,5 +1,4 @@
 import { AppButton, AppDate, AppHeader, AppInput, AppInputDropdown, AppInputPhone, AppText, UploadImage, UploadListImage } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { genderInterface } from '@types';
 import { t } from 'i18next';
 import React from 'react';
@@ -59,7 +58,7 @@ const CreateProfileScreen = () => {
         <AppInputDropdown
           control={control}
           name={'job'}
-          data={jobs.map((item) => ({ label: item.name, value: item.id }))}
+          data={jobs.map((item) => ({ label: item.name, value: item.id?.toString() }))}
           placeholder={t('selectJob')}
         />
         <AppInput
@@ -87,14 +86,14 @@ const CreateProfileScreen = () => {
               label={t('dating.libraryImage')}
               list={value || []}
               onUploadImage={onChange}
+              error={errors?.galleries?.message}
             />
           )} />
 
       </KeyboardAwareScrollView>
       <View style={styles.bottom}>
         <AppButton style={styles.btn} label={t('next')} onPress={() => {
-          navigate(SCREEN_ROUTE.SETTING_FAVORITE);
-          // onSubmit();
+          onSubmit();
         }} />
       </View>
     </View>

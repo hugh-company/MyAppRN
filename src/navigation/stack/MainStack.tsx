@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChapterDetail, CreateProfileScreen, FavoriteScreen, FilterDating, GameDetailScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
+import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -36,6 +36,10 @@ const MainStackComponent = memo(() => {
         <MainStack.Screen name={SCREEN_ROUTE.SETTING_FAVORITE} component={SettingFavorite} />
         <MainStack.Screen name={SCREEN_ROUTE.FILTER_DATING} component={FilterDating} />
 
+        {/* chat */}
+        <MainStack.Screen name={SCREEN_ROUTE.MESSAGES} component={MessageScreen} />
+        <MainStack.Screen name={SCREEN_ROUTE.CHAT} component={ChatScreen} />
+        <MainStack.Screen name={SCREEN_ROUTE.DETAIL_USER} component={DetailUser} />
       </MainStack.Navigator>
     </>
   );

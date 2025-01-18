@@ -1,7 +1,6 @@
 import { AppFlatListAnimated, AppLoadingDating } from '@components';
 import { Spacing, ThemeColors, useTheme } from '@theme';
-import { ModuleItemInterface, TabInterface } from '@types';
-import { t } from 'i18next';
+import { ModuleDating, ModuleItemInterface, TabInterface, TypeDatingInterface } from '@types';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonSearch } from './ButtonSearch';
@@ -11,7 +10,7 @@ import { ListHorizontalUser } from './ListHorizontalUser';
 
 export interface AppListDatingProps {
   ListHeaderComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined
-  data?: ModuleItemInterface[];
+  data?: ModuleDating[];
   loading?: boolean;
   onRefresh?: () => void;
   onScroll?: (event: any) => void;
@@ -27,14 +26,11 @@ const AppListDating = ({
 
   keyExtractor,
 }: AppListDatingProps) => {
-  console.log('aaaa');
+
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = React.useState(false);
-
-
-
   const onRefreshList = useCallback(() => {
     if (onRefresh) {
       setIsReset(true);
@@ -45,14 +41,14 @@ const AppListDating = ({
     }
   }, [onRefresh]);
 
-  const renderItem = useCallback(({ item }: { item: any }) => {
+  const renderItem = useCallback(({ item }: { item: ModuleDating }) => {
     switch (item?.type) {
-      case 'itemHorigental':
-        return <ListHorizontalUser data={item.items} />;
-      case 'search':
-        return <ButtonSearch label={t('searchStart')} style={styles.search} />;
-      case 'list':
-        return <ListDatingItem data={item?.items || []} label={item?.label} total={item?.total} />;
+      case TypeDatingInterface.TOP_NAV:
+        return <ListHorizontalUser data={item.items || []} onPress={() => { }} />;
+      case TypeDatingInterface.BUTTON:
+        return <ButtonSearch label={item.label} style={styles.search} />;
+      case TypeDatingInterface.USERS_LIST:
+        return <ListDatingItem data={item?.items?.data || []} label={item?.label} total={item?.total} />;
       default:
         return <></>;
     }
