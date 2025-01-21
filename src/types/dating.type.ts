@@ -17,31 +17,37 @@ export enum StatusAccount {
 }
 export interface UserItemInterface {
   id: number;
-  frameColor: string;
-  frameLabel: string;
   username: string;
   email: string;
   fullname: string;
   avatar: string;
   phone: string;
-  telegram: string;
-  whatsapp: string;
-  skype: string;
   birthday: string;
+  gender: string;
+  about_me_label: string;
   about_me: string;
-  online: StatusAccount; // 0 for offline, 1 for online
+  online: number;
   place: string;
   age: number;
-  galleries: string[]; // Array of gallery image URLs
-  favorites: string[]; // Array of favorite activities
-  job: string | null; // Nullable
-  distance: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  galleries: string[];
+  favorites: string[];
+  relationship_status: {
+    id: number;
+    name: string;
+    icon: string;
+  }[];
+  socials: {
+    facebook?: string;
+    zalo?: string;
+    instagram?: string;
+  };
+  job: string | null;
 }
-export enum TypeOptionsDating {
-  NEAR_YOU = 'Nearyou',
-  LIKE = 'Likeyou',
-  MATCHED = 'Matched',
-}
+
 export enum TypeTabDatingApi {
   NEAR_YOU = 'nearyou',
   LIKE = 'likeyou',
@@ -49,13 +55,13 @@ export enum TypeTabDatingApi {
 }
 export interface navHorizontalInterface {
   data: {title: string; type: string; api: string};
-  heading: TypeOptionsDating;
+  heading: string;
   icon: string;
   items: string[];
   item: string;
   label: string;
   paged: number;
-  type: string | 'linkpage';
+  type: TypeTabDatingApi;
 }
 export interface ModuleDating {
   type: TypeDatingInterface;

@@ -1,5 +1,5 @@
 import { AppImage } from '@components';
-import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import React, { forwardRef, useRef } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 export interface BannerUserProps {
@@ -7,7 +7,7 @@ export interface BannerUserProps {
   style?: ViewStyle;
   labelStyle?: ViewStyle;
   data: any[];
-  height?: number;
+  width?: number;
   scrollEnabled?: boolean;
   onScrollBeginDrag?: () => void;
   onScrollEndDrag?: () => void;
@@ -16,11 +16,13 @@ export interface BannerUserProps {
 }
 
 const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref) => {
-  const { data, style, height = HeightScreen * 0.7, scrollEnabled = true, onScrollBeginDrag, onScrollEndDrag,
-    currentIndex = 0, setCurrentIndex = () => { },
+  const { data, style, width = WidthScreen, scrollEnabled = true, onScrollBeginDrag, onScrollEndDrag,
+
 
   } = props;
+  const height = HeightScreen * 0.7;
   const { themeColors } = useTheme();
+  const [currentIndex, setCurrentIndex] = React.useState(0);
   const styles = createStyles(themeColors);
   const internalFlatListRef = useRef<FlatList<any>>(null);
   const flatListRef = ref || internalFlatListRef;
@@ -40,17 +42,17 @@ const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref) => {
   };
 
   const renderItemBanner = ({ item, index }: any) => (
-    <View key={index} style={[styles.btn, { height }]}>
-      <AppImage uri={item} style={[styles.image, { height }]} />
+    <View key={index} style={[styles.btn, { height, width }]}>
+      <AppImage uri={item} style={[styles.image, { height, width }]} />
     </View>
   );
   if (data.length === 0) { return null; }
   return (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style, { width: width }]}>
       <FlatList
         ref={flatListRef}
         data={data}
-        // horizontal // Disable horizontal scrolling
+        horizontal // Disable horizontal scrolling
         pagingEnabled
         // scrollEnabled={scrollEnabled}
         showsVerticalScrollIndicator={false} // Change to vertical scroll indicator
@@ -59,7 +61,7 @@ const BannerUser = forwardRef<FlatList<any>, BannerUserProps>((props, ref) => {
         onViewableItemsChanged={onViewRef.current}
         viewabilityConfig={viewConfigRef.current}
         getItemLayout={(data, index) => (
-          { length: height || HeightScreen, offset: (height || HeightScreen) * index, index }
+          { length: width || WidthScreen, offset: (width || WidthScreen) * index, index }
         )}
         onScrollBeginDrag={onScrollBeginDrag} // Handle scroll start
         onScrollEndDrag={onScrollEndDrag} // Handle scroll end
@@ -99,15 +101,17 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     dotsContainer: {
       position: 'absolute',
-      right: Spacing.width16,
       justifyContent: 'center',
-      top: Spacing.width16,
-      bottom: Spacing.width16,
+
+      bottom: Spacing.width80,
+      left: 0,
+      right: 0,
+      alignItems: 'center',
     },
     dotsView: {
       backgroundColor: themeColors.btnSocial,
       paddingVertical: Spacing.width4,
-      // paddingHorizontal: Spacing.width2,
+      flexDirection: 'row',
       gap: Spacing.width8,
       borderRadius: Spacing.width8,
     },

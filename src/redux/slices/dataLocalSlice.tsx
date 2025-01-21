@@ -8,12 +8,14 @@ const initialState = {
   comics: [],
   games: [],
   dating: [],
+  search: [],
 } as {
   home: ModuleItemInterface[];
   movies: ModuleItemInterface[];
   comics: ModuleItemInterface[];
   games: ModuleItemInterface[];
   dating: ModuleItemInterface[];
+  search: ModuleItemInterface[];
 };
 
 const dataLocalSlide = createSlice({
@@ -35,6 +37,9 @@ const dataLocalSlide = createSlice({
     setDating: (state, action) => {
       state.dating = action.payload;
     },
+    setSearch: (state, action) => {
+      state.search = action.payload;
+    },
   },
 });
 
@@ -43,7 +48,7 @@ export const {
   setMovies,
   setComics,
   setGames,
-  setDating,
+  setDating, setSearch,
 
 } = dataLocalSlide.actions;
 export default dataLocalSlide.reducer;

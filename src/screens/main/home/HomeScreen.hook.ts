@@ -1,4 +1,10 @@
-import {setDataSetting, setIsDashboardDating, setUserInfo} from '@redux';
+import {usePostType} from '@hooks';
+import {
+  getToken,
+  setDataSetting,
+  setIsDashboardDating,
+  setUserInfo,
+} from '@redux';
 import {
   getDataDashboardApi,
   getUserProfileApi,
@@ -16,7 +22,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useHomeScreen = () => {
@@ -27,16 +33,23 @@ export const useHomeScreen = () => {
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = useState(false);
   const [loading, setLoading] = useState(true);
+  const token = useSelector(getToken);
   const dispatch = useDispatch();
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
-
+  const {callApiApiDashboard} = usePostType();
   useEffect(() => {
     setLoading(true);
     callApi();
-    callApiProfile();
+
+    callApiApiDashboard();
   }, []);
+  useEffect(() => {
+    if (token) {
+      callApiProfile();
+    }
+  }, [token]);
   const callApiProfile = async () => {
     try {
       const responseUser: any = await getUserProfileApi();
@@ -45,11 +58,7 @@ export const useHomeScreen = () => {
       const isShowDating =
         userInfo?.about_me && userInfo?.personal?.favorites?.length > 0;
 
-      dispatch(
-        setIsDashboardDating(isShowDating),
-        userInfo?.about_me,
-        userInfo?.personal?.favorites,
-      );
+      dispatch(setIsDashboardDating(isShowDating));
       dispatch(setUserInfo(responseUser?.data?.me));
     } catch (error) {}
   };
@@ -80,6 +89,7 @@ export const useHomeScreen = () => {
   useEffect(() => {
     if (isReset) {
       callApi();
+      callApiApiDashboard();
     }
   }, [isReset]);
   const bannerHeightStyle = useAnimatedStyle(() => ({

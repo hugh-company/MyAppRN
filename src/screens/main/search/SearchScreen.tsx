@@ -18,7 +18,16 @@ const SearchScreen = () => {
     onSearch, sort, menuType, refSearch, filterByType, filterBySort,
     onLoadMore } = useSearchScreen();
 
+  const renderBody = () => {
+    if (loading) {
+      return <LoadingSearch />;
+    }
+    if (search?.length > 0 || sort !== '' || typeScreen !== undefined) {
 
+      return <MemoizedSearchList onLoadMore={onLoadMore} data={data} valueSearch={search} />;
+    }
+    return <MemoizedDashboardSearch />;
+  };
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: top }]}>
@@ -44,21 +53,21 @@ const SearchScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {search || sort || typeScreen ? loading ? <LoadingSearch /> : <MemoizedSearchList onLoadMore={onLoadMore} data={data} valueSearch={search} /> : <MemoizedDashboardSearch />}
-      <MemoizedModalFilter
+      {renderBody()}
+      {isFilterType && <MemoizedModalFilter
         visible={isFilterType}
         onClose={() => setIsFilterType(false)}
         label={`${t('search.type')}:`}
         onSelect={filterByType}
         data={menuType}
-      />
-      <MemoizedModalFilter
+      />}
+      {isFilterSort && <MemoizedModalFilter
         visible={isFilterSort}
         onClose={() => setIsFilterSort(false)}
         label={`${t('search.sort')}:`}
         onSelect={filterBySort}
         data={menuSort}
-      />
+      />}
     </View>
   );
 };

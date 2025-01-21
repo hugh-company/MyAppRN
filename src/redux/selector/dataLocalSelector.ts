@@ -1,29 +1,19 @@
-import {KeyDataLocal} from '@types';
 import {RootState} from '../store';
 
-const getHomeModuleLocal = (state: RootState) => state.dataLocalSlide.home;
+export const getHomeModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.home;
 
-const getMoviesModuleLocal = (state: RootState) => state.dataLocalSlide.movies;
+export const getMoviesModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.movies;
 
-const getComicsModuleLocal = (state: RootState) => state.dataLocalSlide.comics;
+export const getComicsModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.comics;
 
-const getGamesModuleLocal = (state: RootState) => state.dataLocalSlide.games;
+export const getGamesModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.games;
 
-const getDatingModuleLocal = (state: RootState) => state.dataLocalSlide.dating;
+export const getDatingModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.dating;
 
-export const getModuleLocal = (state: RootState, type: string) => {
-  switch (type) {
-    case KeyDataLocal.HOME:
-      return getHomeModuleLocal(state);
-    case KeyDataLocal.MOVIES:
-      return getMoviesModuleLocal(state);
-    case KeyDataLocal.COMICS:
-      return getComicsModuleLocal(state);
-    case KeyDataLocal.GAMES:
-      return getGamesModuleLocal(state);
-    case KeyDataLocal.DATING:
-      return getDatingModuleLocal(state);
-    default:
-      return [];
-  }
-};
+export const getSearchModuleLocal = (state: RootState) =>
+  state.dataLocalSlide.search;

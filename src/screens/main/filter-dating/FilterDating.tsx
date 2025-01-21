@@ -1,7 +1,8 @@
-import { CloseBigIcon, FilterIcon, HeadIcon, StarActiveIcon } from '@assets';
-import { AppHeader, AppSwipeProfile } from '@components';
+import { CloseBigIcon, FilterIcon, HeadIcon, NoSearchImage, StarActiveIcon } from '@assets';
+import { AppHeader, AppImage, AppSwipeProfile, AppText } from '@components';
 import { Spacing } from '@theme';
-import React, { useEffect, useState } from 'react';
+import { t } from 'i18next';
+import React, { useEffect, useRef, useState } from 'react';
 import { Platform, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFilterDating } from './FilterDating.hook';
@@ -12,7 +13,8 @@ const FilterDating = () => {
   const { data, themeColors, styles, isFilter, setIsFilter, filter, onFilterApi } = useFilterDating();
   const { bottom } = useSafeAreaInsets();
   const [matchUser, setMatchUser] = useState(null);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const swipeRef = useRef<{ triggerSwipe: (action: string) => void }>(null);
+
   const handleSwipe = (direction, user) => {
     console.log(`Swiped ${direction}`, user);
     if (direction === 'like') {
@@ -21,6 +23,12 @@ const FilterDating = () => {
       handleDislike(user);
     } else if (direction === 'superlike') {
       handleSuperLike(user);
+    }
+  };
+
+  const handleSwipeAction = (action) => {
+    if (swipeRef.current) {
+      swipeRef.current.triggerSwipe(action);
     }
   };
 
@@ -47,34 +55,49 @@ const FilterDating = () => {
     }
   }, [matchUser]);
 
+  const renderList = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        <View style={styles.list}>
+          {data.map((user, index) => (
+            <AppSwipeProfile ref={swipeRef} key={user.id} item={user} onSwipe={(type) => handleSwipe(type, user)} />
+          ))}
+        </View>
+        <View style={[styles.bottomOption, { paddingBottom: bottom || Spacing.width16 }]}>
+          <TouchableOpacity style={styles.btnFavorite} onPress={() => handleSwipeAction('dislike')}>
+            <CloseBigIcon />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconLike} onPress={() => handleSwipeAction('like')}>
+            <HeadIcon />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.btnFavorite} onPress={() => handleSwipeAction('superlike')}>
+            <StarActiveIcon />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+  const renderEmpty = () => {
+    return (
+      <View style={styles.viewEmpty}>
+        <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />
+        <AppText style={styles.txtNotFound}>{t('notFound')}</AppText>
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <AppHeader rightComponent={<TouchableOpacity onPress={() => setIsFilter(true)} style={styles.btnFilter}>
         <FilterIcon size={Spacing.width28} color="white" />
       </TouchableOpacity>} />
-      <View style={styles.list}>
-        {data.map((user, index) => (
-          <AppSwipeProfile key={user.id} item={user} onSwipe={(type) => handleSwipe(type, user)} />
-        ))}
-      </View>
-      <View style={[styles.bottomOption, { paddingBottom: bottom || Spacing.width16 }]}>
-        <TouchableOpacity style={styles.btnFavorite} onPress={() => handleDislike(data[0])}>
-          <CloseBigIcon />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconLike} onPress={() => handleLike(data[0])}>
-          <HeadIcon />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.btnFavorite} onPress={() => handleSuperLike(data[0])}>
-          <StarActiveIcon />
-        </TouchableOpacity>
-      </View>
-      <ModalFilterDating
+      {data.length > 0 ? renderList() : renderEmpty()}
+      {isFilter && <ModalFilterDating
         visible={isFilter}
         filter={filter}
         onClose={() => setIsFilter(false)}
         onFilter={(value) => {
           onFilterApi(value);
-        }} />
+        }} />}
 
       {matchUser && (
         <MatchScreen

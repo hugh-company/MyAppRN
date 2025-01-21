@@ -1,7 +1,7 @@
 import {GlobalService} from '@components';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {navigate, SCREEN_ROUTE} from '@navigation';
-import {getUserInfo, setUserInfo} from '@redux';
+import {getUserInfo, setLocation, setUserInfo} from '@redux';
 import {
   getListJobsApi,
   paramsUpdateProfile,
@@ -72,8 +72,6 @@ export const useCreateProfileScreen = () => {
   const checkInfoUserWithForm = async () => {
     // check info user with form
     if (userInfo) {
-      console.log({userInfo});
-
       const phoneNumber = await getInfoPhoneNumber(userInfo.phone);
       const phone = phoneNumber?.number || '';
       const code = phoneNumber?.country || 'VN';
@@ -84,7 +82,6 @@ export const useCreateProfileScreen = () => {
       const gender = userInfo?.gender || '';
       const job = userInfo?.personal?.job || '';
       const galleries = userInfo?.personal?.galleries || [];
-      console.log('aa:', galleries);
       reset({
         avatar,
         phone: {
@@ -187,6 +184,8 @@ export const useCreateProfileScreen = () => {
               lng: longitude,
             });
             console.log({responseLocation});
+            // dispatch(setUserInfo(responseLocation.data));
+            dispatch(setLocation({latitude: latitude, longitude: longitude}));
           } catch (error) {
             console.log({error});
           }

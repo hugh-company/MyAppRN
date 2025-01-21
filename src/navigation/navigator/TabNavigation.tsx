@@ -9,7 +9,7 @@ const Tab = createBottomTabNavigator();
 const TabBarNavigation = React.memo(() => {
   const userInfo = useSelector(getUserInfo);
   const isDashboardDating = useSelector(isDashboardDatingSelector);
-  console.log({ userInfo });
+  console.log({ isDashboardDating });
   // const isUpdateProfile =
   return (
     <Tab.Navigator

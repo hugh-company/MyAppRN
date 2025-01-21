@@ -22,7 +22,7 @@ export const useSearchScreen = () => {
   const refSearch = useRef<TextInput>(null);
   const [search, setSearch] = useState('');
   const [typeScreen, setTypeScreen] = useState(type);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [sort, setSort] = useState<FilterKey | ''>('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -101,7 +101,7 @@ export const useSearchScreen = () => {
   }, [loading]);
   // filter
   useEffect(() => {
-    if (typeScreen || sort) {
+    if (typeScreen !== undefined || sort !== '') {
       callApiSearch({
         search,
         typeScreen,

@@ -48,6 +48,7 @@ export interface AppFlatListAnimatedProps {
   style?: StyleProp<ViewStyle>;
   keyExtractor?: ((item: any, index: number) => string) | undefined;
   refreshControlProps?: Partial<RefreshControlProps>;
+  nestedScrollEnabled?: boolean;
 
 
 }
@@ -55,14 +56,15 @@ export const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle
   horizontal, ListFooterComponent, ListHeaderComponent,
   contentContainerStyle,
   onLoadMore,
-  onRefresh, onEndReachedThreshold,
+  onRefresh,
+  onEndReachedThreshold = 0.1,
   pagingEnabled,
   initialScrollIndex,
   removeClippedSubviews,
   perPage = 14,
   ListEmptyComponent,
   refreshControlProps, refreshing = false,
-
+  nestedScrollEnabled,
 }: AppFlatListAnimatedProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
@@ -120,11 +122,14 @@ export const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle
           </View>
         ) : <View style={styles.bottom} />
       }
+
       ListEmptyComponent={ListEmptyComponent || ListEmptyComponentBase}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
       pagingEnabled={pagingEnabled}
       initialScrollIndex={initialScrollIndex}
+      nestedScrollEnabled={nestedScrollEnabled}
+      // initialNumToRender={10}
       removeClippedSubviews={removeClippedSubviews}
       keyExtractor={keyExtractor || ((item, index) => index.toString())}
     />

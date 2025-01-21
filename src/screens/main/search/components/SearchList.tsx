@@ -1,8 +1,6 @@
-import { NoSearchImage } from '@assets';
-import { AppImage, AppListMovies, AppText, ItemSearchMovie } from '@components';
+import { AppListMovies } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListProduct } from '@types';
-import { t } from 'i18next';
 import React, { memo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -15,30 +13,11 @@ interface SearchListProps {
 const SearchList = ({ data, valueSearch, onLoadMore }: SearchListProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-
-  const renderItem = ({ item }: { item: ItemListProduct }) => <ItemSearchMovie item={item} />;
-  const renderEmpty = () => (
-    <View style={styles.empty}>
-      <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />
-      <AppText style={styles.txtEmpty}>{t('search.searchNotFound')}</AppText>
-    </View>
-  );
-
   return (
     <View style={styles.container}>
-      {/* <AppFlatListAnimated
-        ListHeaderComponent={valueSearch ? <AppText style={styles.title}>{t('search.searchResults').replace('NAME', valueSearch)}</AppText> : null}
-        data={data}
-        contentContainerStyle={styles.list}
-        ListEmptyComponent={renderEmpty}
-        renderItem={renderItem}
-        onRefresh={() => { }}
-        keyExtractor={(item) => `item_search_${item.id}`}
-        onLoadMore={onLoadMore}
-      /> */}
+
       <AppListMovies
         numColumns={2}
-
         scrollEventThrottle={16}
         data={data}
 

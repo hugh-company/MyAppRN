@@ -19,6 +19,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     setMessage('');
   };
   return (
+
     <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
       <TouchableOpacity style={styles.iconButton}>
         <GlobalIcon />
@@ -50,6 +51,8 @@ export const createStyles = (themeColors: ThemeColors) =>
       paddingHorizontal: Spacing.width16,
       borderTopWidth: 1,
       borderTopColor: 'rgba(41,41,41,1)',
+      position: 'absolute',
+      bottom: 0,
     },
     iconButton: {
       width: Spacing.width40,

@@ -40,8 +40,8 @@ export const API_ENDPOINTS = {
   LOGOUT: '/auth/logout',
   CSRF_TOKEN: '/auth/csrf_create/',
   // account
-  USER_PROFILE: '/user/info/',
-  UPDATE_PROFILE: '/user/info',
+  USER_PROFILE: '/users/info/',
+  UPDATE_PROFILE: '/users/info',
   // Thêm các endpoint khác ở đây
   // home
   HOME: '/home/index/',
@@ -57,7 +57,7 @@ export const API_ENDPOINTS = {
   // like
   LIKE: '/posts/action/like/',
   // favorite
-  LIST_FAVORITE: '/user/favorites',
+  LIST_FAVORITE: '/users/favorites',
   LIST_JOBS: '/user/jobs',
   FAVORITE: '/posts/action/favorites/',
   SAVED: '/posts/action/save/',
@@ -65,10 +65,12 @@ export const API_ENDPOINTS = {
   VIEW: '/posts/action/views/',
   // search
   SEARCH: '/posts/search/',
-  SEND_LOCATION: '/user/location',
+  SEND_LOCATION: '/users/location',
   // dating
-  FIND_DATING: '/dating/finds/',
-  NEAR_YOU: '/dating/nearyou/',
-  LIKE_DATING: '/dating/likeyou/',
-  DATING_HOME: '/dating/',
+  FIND_DATING: '/finder/finds/',
+  NEAR_YOU: '/finder/nearyou/',
+  LIKE_DATING: '/finder/likeyou/',
+  DATING_HOME: '/finder/',
+
+  DETAIL_USER: '/finder/detail/',
 };

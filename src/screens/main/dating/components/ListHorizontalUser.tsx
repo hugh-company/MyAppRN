@@ -2,7 +2,7 @@ import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { getUserInfo } from '@redux';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
-import { navHorizontalInterface, TypeOptionsDating } from '@types';
+import { navHorizontalInterface, TypeTabDatingApi } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -12,24 +12,24 @@ export interface ListHorizontalUserProps {
   data: navHorizontalInterface[];
   onPress?: (item: navHorizontalInterface) => void;
   style?: StyleProp<ViewStyle>;
-  tabSelected?: TypeOptionsDating;
+  tabSelected?: TypeTabDatingApi;
 }
 
 export function ListHorizontalUser(props: ListHorizontalUserProps) {
-  const { data, onPress, style, tabSelected = TypeOptionsDating.NEAR_YOU } = props;
+  const { data, onPress, style, tabSelected = TypeTabDatingApi.NEAR_YOU } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const profile = useSelector(getUserInfo);
   const menuBorderColors = {
-    [TypeOptionsDating.NEAR_YOU]: {
+    [TypeTabDatingApi.NEAR_YOU]: {
       borderColor: themeColors.primary,
       borderWidth: 3,
     },
-    [TypeOptionsDating.MATCHED]: {
+    [TypeTabDatingApi.MATCHED]: {
       borderColor: themeColors.primary,
       borderWidth: 3,
     },
-    [TypeOptionsDating.LIKE]: {
+    [TypeTabDatingApi.LIKE]: {
       borderColor: '#6B87F9',
       borderWidth: 3,
     },
@@ -38,7 +38,7 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
     return (
       <TouchableOpacity onPress={() => {
         onPress && onPress(item);
-      }} style={[styles.viewImageNearYou, item.heading === tabSelected && menuBorderColors[tabSelected]]}>
+      }} style={[styles.viewImageNearYou, item.type === tabSelected && menuBorderColors[tabSelected]]}>
         <SlideImage data={item.items} style={styles.imageNearYou} />
         <View style={styles.dots} />
         <View style={styles.location}>
@@ -57,13 +57,14 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
     );
   };
   const renderItem = ({ item }: { item: navHorizontalInterface }) => {
+
     return (
       <TouchableOpacity style={[styles.item]} onPress={() => {
         onPress && onPress(item);
       }}>
-        {item?.heading === TypeOptionsDating.NEAR_YOU ? renderImageNearYou(item) : <View>
+        {item?.type === TypeTabDatingApi.NEAR_YOU ? renderImageNearYou(item) : <View>
 
-          <AppImage uri={item?.item} style={[styles.image, item?.heading === tabSelected && menuBorderColors[tabSelected]]} />
+          <AppImage uri={item?.item} style={[styles.image, item?.type === tabSelected && menuBorderColors[tabSelected]]} />
           <View style={styles.icon}>
             <AppImage uri={item?.icon} style={styles.iconSize} />
           </View>

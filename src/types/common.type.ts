@@ -65,4 +65,5 @@ export enum KeyDataLocal {
   COMICS = 'comics',
   GAMES = 'games',
   DATING = 'dating',
+  SEARCH = 'search',
 }

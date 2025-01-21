@@ -130,7 +130,7 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
                   sliderLength={WidthScreen - Spacing.width32}
                   onValuesChangeFinish={onChange}
                   min={0}
-                  max={100}
+                  max={1000}
                   step={1}
                   selectedStyle={styles.selectedTrack}
                   unselectedStyle={styles.unselectedTrack}

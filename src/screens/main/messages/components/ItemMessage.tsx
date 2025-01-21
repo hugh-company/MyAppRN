@@ -102,6 +102,6 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   infoMessage: {
     flexDirection: 'row',
-    gap: Spacing.width8,
+    gap: Spacing.width16,
   },
 });

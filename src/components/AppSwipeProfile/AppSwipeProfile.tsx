@@ -1,13 +1,15 @@
 import { CloseBigIcon, HeadIcon, LocationIcon } from '@assets';
 import { AppImage, AppText } from '@components';
+import { useLocation } from '@hooks';
 import { HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
-import React, { useRef, useState } from 'react';
+import { debounce } from 'lodash';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { FlatList, PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
 import { createStyles } from './styles';
 const width = WidthScreen;
 export interface AppSwipeProfileProps {
@@ -15,22 +17,24 @@ export interface AppSwipeProfileProps {
   onSwipe: (type: 'like' | 'dislike') => void;
 
 }
-const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
+const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const translateX = useSharedValue(0);
-
+  const { getDistanceLocation } = useLocation();
   const isVisible = useSharedValue(true);
   const heightBanner = Platform.OS === 'android' ? HeightScreen * 0.8 : HeightScreen * 0.7;
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [items, setItems] = useState(item?.personal.galleries);
+  const [items, setItems] = useState(item.galleries);
 
   const flatListRef = useRef<FlatList>(null);
-  const onViewRef = useRef(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
-      setCurrentIndex(viewableItems[0].index);
-    }
-  });
+  const onViewRef = useRef(
+    debounce(({ viewableItems }: any) => {
+      if (viewableItems.length > 0) {
+        setCurrentIndex(viewableItems[0].index);
+      }
+    }, 200)
+  );
 
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
@@ -47,6 +51,18 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
     translateX.value = 0; // Reset translateX after swipe
   };
 
+  useImperativeHandle(ref, () => ({
+    triggerSwipe: (action) => {
+      if (action === 'like') {
+        translateX.value = withSpring(width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('like'));
+      } else if (action === 'dislike') {
+        translateX.value = withSpring(-width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('dislike'));
+      } else if (action === 'superlike') {
+        // Add your super like logic here
+      }
+    },
+  }));
+
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, context) => {
       context.startX = translateX.value;
@@ -57,45 +73,43 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
     onEnd: () => {
       const threshold = width / 3;
       if (translateX.value > threshold) {
-        translateX.value = withSpring(width, {}, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
+        translateX.value = withSpring(width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
       } else if (translateX.value < -threshold) {
-        translateX.value = withSpring(-width, {}, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
+        translateX.value = withSpring(-width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
       } else {
-        translateX.value = withSpring(0);
+        translateX.value = withSpring(0, { damping: 20, stiffness: 90 });
       }
     },
   });
+  const rotateZ = useDerivedValue(() => `${translateX.value / 20}deg`, [translateX]);
 
   const animatedStyle = useAnimatedStyle(() => {
-    const translateXValue = translateX.value;
+
     return {
       transform: [
-        { translateX: translateXValue },
-        { rotateZ: `${translateXValue / 20}deg` },
+        { translateX: translateX.value },
+        { rotateZ: rotateZ.value },
       ],
     };
   });
 
   const likeOpacity = useAnimatedStyle(() => {
-    const translateXValue = translateX.value;
     return {
-      opacity: translateXValue > 50 ? 1 : 0,
+      opacity: translateX.value > 50 ? 1 : 0,
     };
   });
 
   const shadowImage = useAnimatedStyle(() => {
-    const translateXValue = translateX.value;
     return {
-      borderColor: translateXValue > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
-      borderWidth: translateXValue > 50 ? 2 : 0,
-      elevation: translateXValue > 50 ? 10 : 0,
+      borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
+      borderWidth: translateX.value > 50 ? 2 : 0,
+      elevation: translateX.value > 50 ? 10 : 0,
     };
   });
 
   const dislikeOpacity = useAnimatedStyle(() => {
-    const translateXValue = translateX.value;
     return {
-      opacity: translateXValue < -50 ? 1 : 0,
+      opacity: translateX.value < -50 ? 1 : 0,
     };
   });
 
@@ -140,12 +154,12 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
 
         <View style={styles.info}>
           <AppText style={styles.name}>{[item?.fullname, getAge(item?.birthday)].join(', ')}</AppText>
-          <AppText style={styles.profession}>{item?.personal?.job}</AppText>
+          {item?.job && <AppText style={styles.profession}>{item?.job}</AppText>}
         </View>
         {/* location */}
         <View style={styles.viewLocation}>
           <LocationIcon />
-          <AppText style={styles.txtLocation}>1 km</AppText>
+          <AppText style={styles.txtLocation}>{getDistanceLocation(item?.location)}</AppText>
         </View>
         {/* Like/Dislike Labels */}
         <Animated.View style={[styles.likeContainer, likeOpacity]}>
@@ -163,6 +177,6 @@ const AppSwipeProfile = ({ item, onSwipe }: AppSwipeProfileProps) => {
       </Animated.View>
     </PanGestureHandler >
   );
-};
+});
 
 export default AppSwipeProfile;

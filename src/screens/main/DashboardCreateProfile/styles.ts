@@ -29,4 +29,30 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignSelf: 'center',
       width: Spacing.width177,
     },
+    titleLocation: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_600,
+      marginVertical: Spacing.width16,
+      textAlign: 'center',
+      marginHorizontal: Spacing.width16,
+      width: '70%',
+    },
+    desLocation: {
+      fontSize: FontSize.FontSize14,
+      ...FontWithFamily.FontWithFamily_400,
+      marginHorizontal: Spacing.width16,
+      textAlign: 'center',
+      width: '90%',
+    },
+
+    containerLocation: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginHorizontal: Spacing.width16,
+    },
+    btnLocation: {
+      flex: 1,
+      marginTop: Spacing.width32,
+    },
   });

@@ -15,6 +15,7 @@ interface HeaderMainProps {
   isHome?: boolean
   type?: PostTypeKey
   isSearch?: boolean;
+  renderIconRight?: React.ReactNode;
 }
 
 export const HeaderMain: React.FC<HeaderMainProps> = ({
@@ -23,7 +24,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
   style,
   titleStyle,
   type,
-  isSearch = true,
+  isSearch = true, renderIconRight,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -41,6 +42,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
       })} style={styles.btnSearch}>
         <SearchIcon size={Spacing.width24} />
       </TouchableOpacity>}
+      {renderIconRight && renderIconRight}
     </View>
   );
 };

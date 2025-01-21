@@ -1,8 +1,10 @@
 import {GlobalService} from '@components';
+import {getLocations} from '@redux';
 import {findUserApi} from '@services';
 import {useTheme} from '@theme';
 import {UserFindInterface} from '@types';
 import {useState} from 'react';
+import {useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useFilterDating = () => {
@@ -10,6 +12,8 @@ export const useFilterDating = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [isFilter, setIsFilter] = useState(true);
+  const location = useSelector(getLocations);
+
   const [filter, setFilter] = useState({
     age: [18, 30],
     distance: [0],
@@ -24,6 +28,7 @@ export const useFilterDating = () => {
         age: value.age.join('-'),
         distance: value.distance[0],
         gender: value.gender,
+        location: {...location},
       };
       const response: any = await findUserApi(params);
       console.log({response});

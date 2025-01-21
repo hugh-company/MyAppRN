@@ -21,7 +21,7 @@ export function ItemUserDating(props: ItemUserDatingProps) {
         <AppText style={styles.txtLocation}>{item?.distance}</AppText>
       </View>}
       <View style={[styles.viewRow, { gap: 8 }]}>
-        <AppText numberOfLines={2} style={styles.txtName}>{[item?.fullname, getAge(item?.birthday)].join(', ')}</AppText>
+        <AppText numberOfLines={3} style={styles.txtName}>{[item?.fullname?.trim(), getAge(item?.birthday)].join(', ')}</AppText>
         {item?.online === StatusAccount.ONLINE && <View style={styles.viewActive} />}
       </View>
       <AppText style={styles.address}>{item?.place}</AppText>
@@ -108,7 +108,9 @@ const createStyles = (themeColors: ThemeColors) =>
       fontSize: FontSize.FontSize16,
       ...FontWithFamily.FontWithFamily_600,
       maxWidth: '80%',
+      flex: 1,
       textAlign: 'center',
+
     },
     viewActive: {
       backgroundColor: themeColors.active,
@@ -120,6 +122,7 @@ const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
+
     },
     address: {
       fontSize: FontSize.FontSize12,

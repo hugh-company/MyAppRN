@@ -1,7 +1,9 @@
+import {useLocation} from '@hooks';
 import {useRoute} from '@react-navigation/native';
+import {getDetailUserApi} from '@services';
 import {useTheme} from '@theme';
 import {UserItemInterface} from '@types';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {createStyles} from './styles';
 interface DetailUserInterface {
   user: UserItemInterface;
@@ -12,6 +14,7 @@ export const useDetailUser = () => {
   const [data, setData] = useState(user);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
+  const {getDistanceLocation} = useLocation();
   const [games, setGames] = useState([
     {
       id: 4,
@@ -851,5 +854,14 @@ export const useDetailUser = () => {
       posttype: 'game',
     },
   ]);
-  return {data, themeColors, styles, games};
+
+  useEffect(() => {
+    callApiDetailUser();
+  }, []);
+  const callApiDetailUser = async () => {
+    const response = await getDetailUserApi(user.id);
+    console.log({response});
+    setData(response?.data);
+  };
+  return {data, themeColors, styles, games, getDistanceLocation};
 };

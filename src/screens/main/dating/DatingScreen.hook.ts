@@ -1,3 +1,5 @@
+import {useLocation} from '@hooks';
+import {getToken} from '@redux';
 import {getDatingDashboardApi} from '@services';
 import {useTheme} from '@theme';
 import {
@@ -5,9 +7,10 @@ import {
   navHorizontalInterface,
   responseDatingNearYou,
   TypeDatingInterface,
-  TypeOptionsDating,
+  TypeTabDatingApi,
 } from '@types';
 import {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useDatingScreen = () => {
@@ -15,13 +18,25 @@ export const useDatingScreen = () => {
   const {themeColors} = useTheme();
   const [loading, setLoading] = useState(true);
   const styles = createStyles(themeColors);
-  const [tab, setTab] = useState<TypeOptionsDating>(TypeOptionsDating.NEAR_YOU);
+  const [tab, setTab] = useState<TypeTabDatingApi>(TypeTabDatingApi.NEAR_YOU);
   const [tabNav, setTabNav] = useState<navHorizontalInterface[]>([]);
+  const token = useSelector(getToken);
+  const {checkPermissionLocation, isPermissionLocation, goToSettingLocation} =
+    useLocation();
   useEffect(() => {
     setLoading(true);
     callApi(tab);
   }, [tab]);
-  const callApi = async (type: string) => {
+  useEffect(() => {
+    if (token) {
+      checkLocation();
+    }
+  }, [token]);
+  const checkLocation = async () => {
+    const check = await checkPermissionLocation();
+    console.log({check});
+  };
+  const callApi = async (type: TypeTabDatingApi) => {
     try {
       const response: responseDatingNearYou = await getDatingDashboardApi(type);
       console.log({response});
@@ -40,8 +55,18 @@ export const useDatingScreen = () => {
       setLoading(false);
     }
   };
-  const onSelectTab = (type: TypeOptionsDating) => {
+  const onSelectTab = (type: TypeTabDatingApi) => {
     setTab(type);
   };
-  return {data, themeColors, styles, loading, tab, tabNav, onSelectTab};
+  return {
+    data,
+    themeColors,
+    styles,
+    loading,
+    tab,
+    tabNav,
+    onSelectTab,
+    isPermissionLocation,
+    goToSettingLocation,
+  };
 };

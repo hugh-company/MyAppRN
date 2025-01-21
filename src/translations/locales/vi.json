@@ -270,8 +270,14 @@
     "notAllow": "Không cho phép",
     "locationNotFound": "Không tìm thấy vị trí của bạn",
     "locationError": "Không thể lấy vị trí của bạn",
-    "titleAboutMe": "Giới thiệu bản thân"
+    "permission_location": "Vui lòng cấp quyền truy cập vị trí để sử dụng tính năng này",
+    "des_permission_location": "Chúng tôi cần biết vị trí của bạn để tìm kiếm người phù hợp nhất",
+    "setting_location": "Vào cài đặt để cấp quyền"
   },
   "playGame": "Rủ Chơi Cùng",
-  "chatWith": "Chat với"
+  "chatWith": "Chat với",
+  "titleAboutMe": "Giới thiệu bản thân",
+  "message": {
+    "title": "Tin nhắn"
+  }
 }

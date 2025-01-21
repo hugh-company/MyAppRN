@@ -1,24 +1,28 @@
+import {getGamesModuleLocal, setGames} from '@redux';
 import {getPostDashboardApi} from '@services';
 import {useTheme} from '@theme';
-import {
-  ModuleItemInterface,
-  PostTypeKey,
-  TabInterface,
-  TypeKeyListApi,
-} from '@types';
+import {PostTypeKey, TabInterface, TypeKeyListApi} from '@types';
 import {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useGameScreen = () => {
-  const [data, setData] = useState<ModuleItemInterface[]>([]);
   const {themeColors} = useTheme();
-  const [loading, setLoading] = useState(true);
+  const games = useSelector(getGamesModuleLocal);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
   const styles = createStyles(themeColors);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
     type: '',
   });
+  useEffect(() => {
+    if (games?.length === 0) {
+      setLoading(true);
+    }
+  }, [games]);
+  // Call Api
   useEffect(() => {
     callApi();
   }, []);
@@ -28,9 +32,8 @@ export const useGameScreen = () => {
         filter: filter,
       };
       const response = await getPostDashboardApi(PostTypeKey.GAMES, params);
-      console.log({response});
 
-      setData(response.data?.modules || []);
+      dispatch(setGames(response.data?.modules || []));
 
       const category: any = response.data?.modules.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
@@ -52,7 +55,7 @@ export const useGameScreen = () => {
     setTabSelect(item);
   };
   return {
-    data,
+    games,
     themeColors,
     styles,
     loading,

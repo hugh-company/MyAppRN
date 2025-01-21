@@ -15,7 +15,7 @@ const MessageScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <AppHeader title={title} />
+      <AppHeader title={title || ''} />
       <AppInputSearch
         value={''}
         editable={false}

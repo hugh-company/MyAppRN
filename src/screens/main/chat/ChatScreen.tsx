@@ -2,7 +2,7 @@ import { BackgroundChat, ProfileIcon } from '@assets';
 import { AppHeader } from '@components';
 import { Spacing } from '@theme';
 import React, { useState } from 'react';
-import { FlatList, ImageBackground, KeyboardAvoidingView, TouchableOpacity, View } from 'react-native';
+import { FlatList, ImageBackground, KeyboardAvoidingView, Platform, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useChatScreen } from './ChatScreen.hook';
 import { ControlBottomChat } from './components/ControlBottomChat';
@@ -46,9 +46,7 @@ const ChatScreen = () => {
       <ImageBackground source={BackgroundChat} style={styles.background} />
 
       <KeyboardAvoidingView
-        style={styles.containerList}
-      // behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.containerList}>
         <FlatList
           data={messages}
           keyExtractor={(item) => item.id}
@@ -58,8 +56,11 @@ const ChatScreen = () => {
           inverted
           ItemSeparatorComponent={() => <View style={{ height: Spacing.width16 }} />} // Add spacing between items
         />
+
         <ControlBottomChat onUpdateMessage={handleSend} repliedMessage={repliedMessage} />
+
       </KeyboardAvoidingView>
+
       <AppHeader style={styles.header} rightComponent={<TouchableOpacity>
         <ProfileIcon />
       </TouchableOpacity>} />

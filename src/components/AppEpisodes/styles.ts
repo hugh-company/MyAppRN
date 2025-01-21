@@ -1,4 +1,10 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -31,7 +37,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     btnChapter: {
       borderRadius: Spacing.height6,
       backgroundColor: themeColors.btnSocial,
-      paddingHorizontal: 4,
+      width: WidthScreen / 5 - Spacing.width16,
       height: Spacing.height32,
       alignItems: 'center',
       justifyContent: 'center',

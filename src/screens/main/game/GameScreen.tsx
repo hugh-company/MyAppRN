@@ -6,7 +6,7 @@ import { View } from 'react-native';
 import { useGameScreen } from './GameScreen.hook';
 
 const GameScreen = () => {
-  const { data,
+  const { games,
     themeColors,
     styles,
     loading,
@@ -19,7 +19,7 @@ const GameScreen = () => {
       <HeaderMain title={t('games.title')} isHome={false} />
 
       <AppListDashboard
-        data={data}
+        data={games}
         loading={loading}
         onRefresh={onRefresh}
         categoryId={tabSelect?.id}

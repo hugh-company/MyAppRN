@@ -32,11 +32,22 @@ const AppListDashboard = ({
   categoryId,
   keyExtractor,
 }: AppListDashboardProps) => {
-  console.log('aaaa');
+
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = React.useState(false);
+
+  const MemoizedBannerHome = React.memo(BannerHome);
+  const MemoizedBannerMovie = React.memo(BannerMovie);
+  const MemoizedAppCategoryList = React.memo(AppCategoryList);
+  const MemoizedDatingItem = React.memo(DatingItem);
+  const MemoizedLabelView = React.memo(LabelView);
+  const MemoizedCategoryListItem = React.memo(CategoryListItem);
+  const MemoizedSliderList = React.memo(SliderList);
+  const MemoizedHorizontalList = React.memo(HorizontalList);
+  const MemoizedListVertical = React.memo(ListVertical);
+
 
   const renderLoading = useCallback(() => {
     switch (typeScreen) {
@@ -66,45 +77,38 @@ const AppListDashboard = ({
   }, [onRefresh]);
 
   const renderItem = useCallback(({ item }: { item: ModuleItemInterface }) => {
+
     switch (item?.type) {
       case TypeKeyListApi.BANNER:
-        return <BannerHome data={item?.items as ItemListProduct[]} />;
+        return <MemoizedBannerHome data={item?.items as ItemListProduct[]} />;
       case TypeKeyListApi.POST_TYPE:
-        return <BannerMovie data={item?.items as ItemListProduct[]} isGame={item?.posttype === PostTypeKey.GAMES} />;
+        return <MemoizedBannerMovie data={item?.items as ItemListProduct[]} isGame={item?.posttype === PostTypeKey.GAMES} />;
       case TypeKeyListApi.TYPE_TABS:
-        return <AppCategoryList data={item?.items as TabInterface[]} categoryId={categoryId} onSelectedCategory={onSelectedCategory} />;
+        return <MemoizedAppCategoryList data={item?.items as TabInterface[]} categoryId={categoryId} onSelectedCategory={onSelectedCategory} />;
       case TypeKeyListApi.CHAT_HOME:
-        return <DatingItem />;
+        return <MemoizedDatingItem />;
       case TypeKeyListApi.BLOCK_LABEL:
-        return <LabelView title={item?.label} type={item?.posttype} uri={item?.images} />;
+        return <MemoizedLabelView title={item?.label} type={item?.posttype} uri={item?.images} />;
       case TypeKeyListApi.LIST_ITEM_TAB:
-        return <CategoryListItem
+        return <MemoizedCategoryListItem
           data={item?.items as TabInterface[]}
           isTab={false}
           goToViewList={() => {
-            console.log({ item });
 
-            // goToListView(
-            //   {
-            //     ...item?.button,
-            //     keyCategory: item.slug,
-            //     label: title,
-            //   }
-            // );
           }}
           itemModule={item}
           type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:
-        return <SliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
+        return <MemoizedSliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
       case TypeKeyListApi.LIST_HORIZONTAL:
-        return <HorizontalList
+        return <MemoizedHorizontalList
           title={item?.label}
           type={item?.posttype}
           data={item?.items as ItemListProduct[]}
           button={item?.button}
         />;
       case TypeKeyListApi.LIST_VERTICAL:
-        return <ListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
+        return <MemoizedListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       case TypeKeyListApi.SPACE:
         return <View style={{ height: sizeWidth(item?.height || 0) }} />;
       default:
@@ -123,7 +127,9 @@ const AppListDashboard = ({
           onRefresh={onRefreshList}
           refreshing={isReset}
           keyExtractor={keyExtractor}
-          renderItem={renderItem} />}
+          renderItem={renderItem}
+
+        />}
     </View>
   );
 };

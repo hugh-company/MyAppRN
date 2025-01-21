@@ -1,3 +1,4 @@
+import {getComicsModuleLocal, setComics} from '@redux';
 import {getPostDashboardApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {
@@ -14,22 +15,43 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 export const useComicScreen = () => {
   const [data, setData] = useState<ModuleItemInterface[]>([]);
   const [categories, setCategories] = useState<TabInterface[]>([]);
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
+  const dispatch = useDispatch();
+  const comics = useSelector(getComicsModuleLocal);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
     type: '',
   });
+  useEffect(() => {
+    if (comics?.length > 0) {
+      setData(
+        comics?.filter(elm => elm.type !== TypeKeyListApi.TYPE_TABS) || [],
+      );
+
+      const category: any = comics.find(
+        item => item.type === TypeKeyListApi.TYPE_TABS,
+      );
+      // console.log({tabSelect: tabSelect?.name});
+      setCategories(category?.items || []);
+      if (category && category?.items?.[0] && tabSelect?.name === undefined) {
+        setTabSelect(category?.items?.[0]);
+      }
+    } else {
+      setLoading(true);
+    }
+  }, [comics]);
   // Call Api
   useEffect(() => {
     callApi();
@@ -41,20 +63,7 @@ export const useComicScreen = () => {
         filter: filter,
       };
       const response = await getPostDashboardApi(PostTypeKey.COMIC, params);
-      console.log('response', response);
-      setData(
-        response.data?.modules?.filter(
-          elm => elm.type !== TypeKeyListApi.TYPE_TABS,
-        ) || [],
-      );
-
-      const category: any = response.data?.modules.find(
-        item => item.type === TypeKeyListApi.TYPE_TABS,
-      );
-      setCategories(category?.items || []);
-      if (category && category?.items?.[0] && tabSelect?.name === undefined) {
-        setTabSelect(category?.items?.[0]);
-      }
+      dispatch(setComics(response.data?.modules || []));
       setLoading(false);
       setRefresh(false);
     } catch (error) {

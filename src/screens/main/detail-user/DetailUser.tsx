@@ -4,17 +4,18 @@ import { Spacing } from '@theme';
 import { formatDate, getAge } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
-import { FlatList, TouchableOpacity, View } from 'react-native';
+import { FlatList, Linking, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDetailUser } from './DetailUser.hook';
 import ItemGame from './components/ItemGame';
 
 const DetailUser = () => {
-  const { data, themeColors, styles, games } = useDetailUser();
+  const { data, themeColors, styles, games, getDistanceLocation } = useDetailUser();
   const { bottom } = useSafeAreaInsets();
   const renderItem = ({ item }) => {
     return <ItemGame item={item} />;
   };
+
   return (
 
     <View style={styles.container}>
@@ -28,7 +29,9 @@ const DetailUser = () => {
         renderItem={() => (
           <>
             <View>
-              <BannerUser data={data.galleries} />
+              <BannerUser
+
+                data={data.galleries} />
               <View style={styles.info}>
                 <AppText style={styles.name}>{[data?.fullname, getAge(data?.birthday)].join(', ')}</AppText>
                 {data?.job && <AppText style={styles.profession}>{data?.job}</AppText>}
@@ -36,7 +39,7 @@ const DetailUser = () => {
               {/* location */}
               <View style={styles.viewLocation}>
                 <LocationIcon />
-                <AppText style={styles.txtLocation}>{data?.distance}</AppText>
+                <AppText style={styles.txtLocation}>{getDistanceLocation(data?.location)}</AppText>
               </View>
 
 
@@ -58,15 +61,15 @@ const DetailUser = () => {
             <View style={styles.viewInfo} >
               <View style={styles.view_contact}>
                 <View style={styles.viewIcon}>
-                  <TouchableOpacity>
+                  {data?.socials?.facebook && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.facebook)}>
                     <FacebookIcon size={Spacing.width32} />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
+                  </TouchableOpacity>}
+                  {data?.socials?.instagram && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.instagram)}>
                     <InstagramIcon />
-                  </TouchableOpacity>
-                  <TouchableOpacity>
+                  </TouchableOpacity>}
+                  {data?.socials?.zalo && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.zalo)}>
                     <AppImage defaultSource={ZaloIcon} style={{ width: Spacing.width32, height: Spacing.width32 }} />
-                  </TouchableOpacity>
+                  </TouchableOpacity>}
 
                 </View>
 

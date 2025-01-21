@@ -21,32 +21,19 @@ interface propsImage {
 export const AppImage = React.memo((props: propsImage) => {
   const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, tintColor = undefined, imgSource } = props;
   const [isLoading, setLoading] = useState(true);
-  const [isError, setError] = useState(false);
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
-  useEffect(() => {
-    setLoading(true);
-  }, [uriBase]);
 
   useEffect(() => {
-
     if (uriBase) {
-
       fetch(uriBase).then(data => {
-
-        if (data.status !== 200) {
-          // setError(true);
-          setLoading(false);
-        }
-        setLoading(false);
-      });
+        setLoading(data.status !== 200);
+      }).catch(() => setLoading(false));
     } else {
       setLoading(false);
     }
   }, [uriBase, checkNetworking]);
 
-
-  const source = isError ? NoImage : imgSource ? imgSource : uri ? { uri: uriBase } : (defaultSource ? defaultSource : NoImage);
-
+  const source = imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage);
 
   return (
     <Box justifyContent={'center'} alignItems="center">
@@ -54,9 +41,7 @@ export const AppImage = React.memo((props: propsImage) => {
         source={source}
         style={[styles.image, style]}
         resizeMode={resizeMode}
-        onLoadEnd={() => {
-          setLoading(false);
-        }}
+        onLoadEnd={() => setLoading(false)}
         tintColor={tintColor}
         onError={() => setLoading(false)}
       />
