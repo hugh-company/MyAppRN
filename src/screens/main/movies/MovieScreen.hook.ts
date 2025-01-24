@@ -48,6 +48,8 @@ export const useMovieScreen = () => {
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
+      setLoading(false);
+      setRefresh(false);
     } else {
       setLoading(true);
     }
@@ -65,13 +67,11 @@ export const useMovieScreen = () => {
       const response = await getPostDashboardApi(PostTypeKey.MOVIES, params);
       console.log({response});
       dispatch(setMovies(response.data?.modules || []));
-
-      setRefresh(false);
     } catch (error) {
       console.log({error});
-    } finally {
-      setRefresh(false);
       setLoading(false);
+      setRefresh(false);
+    } finally {
     }
   };
 

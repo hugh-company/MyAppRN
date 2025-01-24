@@ -18,20 +18,20 @@ export function ItemMessage(props: ItemMessageProps) {
       navigate(SCREEN_ROUTE.CHAT, { message: item });
     }}>
       <View>
-        <AppImage uri={item.user.avatar} isBase={false} style={styles.avatar} />
+        <AppImage uri={item.recipient_avatar} style={styles.avatar} />
         {item?.user?.status && <View style={styles.status} />}
       </View>
 
       <View style={{ flex: 1, gap: Spacing.width8 }}>
         <View style={styles.viewInfo}>
-          <AppText style={styles.txtName} numberOfLines={1}>{item.user.name}</AppText>
-          <AppText style={styles.txtDate}>{checkMessageTime(item.message?.time)}</AppText>
+          <AppText style={styles.txtName} numberOfLines={1}>{item.recipient_fullname}</AppText>
+          <AppText style={styles.txtDate}>{checkMessageTime(item.last_message?.content?.time_send)}</AppText>
         </View>
 
         <View style={styles.infoMessage}>
-          <AppText style={styles.txtMessage}>{item.message?.content}</AppText>
-          {item?.count > 0 && <View style={styles.ViewCount}>
-            <AppText style={styles.txtCount} numberOfLines={3}>{item?.count > 9 ? '9+' : item?.count}</AppText>
+          <AppText style={styles.txtMessage}>{item?.last_message?.content?.data}</AppText>
+          {item?.unread_count > 0 && <View style={styles.ViewCount}>
+            <AppText style={styles.txtCount} numberOfLines={3}>{item?.unread_count > 9 ? '9+' : item?.unread_count}</AppText>
           </View>}
         </View>
       </View>

@@ -65,7 +65,12 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
       <View style={styles.headerModal}>
         <View style={styles.viewTitle}>
           <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
-          <TouchableOpacity style={styles.btnBack} onPress={() => setShowModal(false)}>
+          <TouchableOpacity hitSlop={{
+            top: 10,
+            bottom: 10,
+            left: 10,
+            right: 10,
+          }} style={styles.btnBack} onPress={() => setShowModal(false)}>
             <AppText style={styles.txtBack}>{t('back')}</AppText>
           </TouchableOpacity>
         </View>

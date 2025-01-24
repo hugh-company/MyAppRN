@@ -20,20 +20,22 @@ interface propsImage {
 
 export const AppImage = React.memo((props: propsImage) => {
   const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, tintColor = undefined, imgSource } = props;
-  const [isLoading, setLoading] = useState(true);
+  const [status, setStatus] = useState({ isLoading: true, isError: false });
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
 
   useEffect(() => {
     if (uriBase) {
       fetch(uriBase).then(data => {
-        setLoading(data.status !== 200);
-      }).catch(() => setLoading(false));
+        setStatus({ isLoading: false, isError: data.status !== 200 });
+      }).catch(() => {
+        setStatus({ isLoading: false, isError: true });
+      });
     } else {
-      setLoading(false);
+      setStatus({ isLoading: false, isError: true });
     }
   }, [uriBase, checkNetworking]);
 
-  const source = imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage);
+  const source = status.isError ? NoImage : (imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage));
 
   return (
     <Box justifyContent={'center'} alignItems="center">
@@ -41,11 +43,11 @@ export const AppImage = React.memo((props: propsImage) => {
         source={source}
         style={[styles.image, style]}
         resizeMode={resizeMode}
-        onLoadEnd={() => setLoading(false)}
+        onLoadEnd={() => setStatus(prev => ({ ...prev, isLoading: false }))}
         tintColor={tintColor}
-        onError={() => setLoading(false)}
+        onError={() => setStatus({ isLoading: false, isError: true })}
       />
-      {isLoading && (
+      {status.isLoading && (
         <SkeletonPlaceholder>
           <View style={[styles.image, style]} />
         </SkeletonPlaceholder>

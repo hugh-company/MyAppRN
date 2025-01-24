@@ -2,7 +2,7 @@ import { Spacing } from '@theme';
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { IconWidthHeightProps } from './types';
-const GlobalIcon = ({ width = Spacing.width32, height = Spacing.width32, color = '#FF1F44' }: IconWidthHeightProps) => {
+const GlobalIcon = ({ width = Spacing.width32, height = Spacing.width32, color = '#D11030' }: IconWidthHeightProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 32 32" fill="none">
 
@@ -10,17 +10,17 @@ const GlobalIcon = ({ width = Spacing.width32, height = Spacing.width32, color =
         fillRule="evenodd"
         clipRule="evenodd"
         d="M16 26.794c6.312 0 10.794-4.482 10.794-10.794S22.312 5.206 16 5.206 5.206 9.688 5.206 16 9.688 26.794 16 26.794zm0 2.54c7.714 0 13.333-5.62 13.333-13.334 0-7.714-5.619-13.333-13.333-13.333C8.285 2.667 2.666 8.286 2.666 16S8.287 29.333 16 29.333z"
-        fill="#D11030"
+        fill={color}
       />
       <Path
         d="M7.46 14.73H10l.066-.208c.136-.439.375-.883.817-1.008a1.423 1.423 0 01.775 0c.442.125.68.57.817 1.008l.065.208h2.54c0-.462-.17-1.517-.35-1.83a3.823 3.823 0 00-.773-.943 4.034 4.034 0 00-2.687-1.036c-1.126 0-2.052.47-2.687 1.037a3.824 3.824 0 00-.772.942c-.18.313-.35 1.368-.35 1.83zM17.27 14.73h2.54l.064-.208c.137-.439.376-.883.818-1.008a1.424 1.424 0 01.775 0c.442.125.68.57.817 1.008l.065.208h2.54c0-.462-.171-1.517-.35-1.83a3.826 3.826 0 00-.773-.943 4.034 4.034 0 00-2.687-1.036c-1.127 0-2.052.47-2.687 1.037a3.826 3.826 0 00-.773.942c-.179.313-.35 1.368-.35 1.83z"
-        fill="#D11030"
+        fill={color}
       />
       <Path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M14.371 23.023c-2.632-.523-4.658-2.283-5.736-3.721l2.031-1.524c.827 1.101 2.357 2.388 4.2 2.754 1.731.344 4-.072 6.547-2.85l1.872 1.716c-3.04 3.316-6.168 4.17-8.914 3.625z"
-        fill="#D11030"
+        fill={color}
       />
     </Svg>
   );

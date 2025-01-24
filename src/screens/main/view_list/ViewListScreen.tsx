@@ -30,6 +30,8 @@ const ViewListScreen = () => {
           data={list}
           type={data?.posttype}
           onLoadMore={onLoadMore}
+          keyExtractor={(item, index) => `view_list_${item?.id || index}`}
+
         />
       </Animated.View>}
     </View>

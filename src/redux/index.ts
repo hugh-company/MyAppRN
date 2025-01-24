@@ -1,3 +1,3 @@
-export * from './store';
-export * from './slices';
 export * from './selector';
+export * from './slices';
+export * from './store';

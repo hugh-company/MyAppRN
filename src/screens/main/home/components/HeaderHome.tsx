@@ -24,10 +24,14 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
   return (
     <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: top > 0 ? Spacing.height100 : Spacing.height64 }, styleHeader]}>
       {/* open drawer */}
-      <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
+      <TouchableOpacity hitSlop={{
+        top: 10, left: 10, bottom: 10, right: 10,
+      }} onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
         <MenuIcon color={themeColors.text} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnMenu}>
+      <TouchableOpacity hitSlop={{
+        top: 10, left: 10, bottom: 10, right: 10,
+      }} onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnMenu}>
         <SearchIcon />
       </TouchableOpacity>
 

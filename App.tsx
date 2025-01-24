@@ -12,6 +12,7 @@ import React, { useEffect } from 'react';
 import { LogBox, Platform, StatusBar, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { ModalPortal } from 'react-native-modals';
 import Orientation from 'react-native-orientation-locker';
 import {
@@ -63,29 +64,32 @@ function App(): React.JSX.Element {
   return (
     <GestureHandlerRootView style={styles.container}>
       <ThemeProvider >
-        <StatusBar translucent backgroundColor="transparent" hidden={true} />
-        <Provider store={store}>
-          {/* <ApolloProvider client={client}> */}
-          <PersistGate loading={null} persistor={persistor}>
-            <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <KeyboardProvider>
+          <StatusBar translucent backgroundColor="transparent" hidden={true} />
+          <Provider store={store}>
+            {/* <ApolloProvider client={client}> */}
+            <PersistGate loading={null} persistor={persistor}>
+              <SafeAreaProvider initialMetrics={initialWindowMetrics}>
 
 
-              <AppNavigator
-                ref={(navigatorRef: any) => {
-                  NavigationUtils.setTopLevelNavigator(navigatorRef);
-                }}
-              />
-              <ModalPortal />
-              <ModalConfirmation />
-              <ModalChangeLanguage />
-              <FlashMessage position="top" />
-              <GlobalUI ref={GlobalService.globalUIRef} />
-            </SafeAreaProvider>
+                <AppNavigator
+                  ref={(navigatorRef: any) => {
+                    NavigationUtils.setTopLevelNavigator(navigatorRef);
+                  }}
+                />
+                <ModalPortal />
+                <ModalConfirmation />
+                <ModalChangeLanguage />
+                <FlashMessage position="top" />
+                <GlobalUI ref={GlobalService.globalUIRef} />
+              </SafeAreaProvider>
 
-          </PersistGate>
-          {/* </ApolloProvider> */}
-        </Provider>
+            </PersistGate>
+            {/* </ApolloProvider> */}
+          </Provider>
+        </KeyboardProvider>
       </ThemeProvider>
+
     </GestureHandlerRootView>
   );
 }

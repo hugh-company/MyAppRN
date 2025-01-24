@@ -30,7 +30,8 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     list: {
       flex: 1,
-      paddingTop: Spacing.height24,
+      paddingVertical: Spacing.height24,
+      backgroundColor: 'red',
     },
     inputContainer: {
       flexDirection: 'row',

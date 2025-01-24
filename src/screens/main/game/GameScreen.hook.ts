@@ -20,6 +20,8 @@ export const useGameScreen = () => {
   useEffect(() => {
     if (games?.length === 0) {
       setLoading(true);
+    } else {
+      setLoading(false);
     }
   }, [games]);
   // Call Api
@@ -43,7 +45,6 @@ export const useGameScreen = () => {
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
-      setLoading(false);
     } catch (error) {
       setLoading(false);
     }

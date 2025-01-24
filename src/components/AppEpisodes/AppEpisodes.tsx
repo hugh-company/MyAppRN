@@ -41,7 +41,6 @@ const AppEpisodes = ({
             return (
               <TouchableOpacity key={`list_episodes_${index}`} onPress={() => {
                 setSelectEpisodes(item.id);
-
                 onSelectChapter?.(item);
               }} style={[styles.btnChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
                 <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.title}</AppText>
@@ -49,7 +48,7 @@ const AppEpisodes = ({
             );
           })}
         </View>
-        {(((episodes?.length / 2) * lineHeight) > (lineHeight * 2 + Spacing.height16)) && (
+        {(((episodes?.length / 5) * lineHeight) > (lineHeight * 2 + Spacing.height16)) && (
           <TouchableOpacity style={styles.btnMore} onPress={handleLoadMore}>
             <AppText style={styles.txtMore}>{t('movie.more')}</AppText>
           </TouchableOpacity>

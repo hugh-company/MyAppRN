@@ -278,6 +278,10 @@
   "chatWith": "Chat với",
   "titleAboutMe": "Giới thiệu bản thân",
   "message": {
-    "title": "Tin nhắn"
+    "title": "Tin nhắn",
+    "repliedMe": "Đang trả lời chính bạn",
+    "repliedOther": "Đang trả lời USER",
+    "Read": "Đã đọc",
+    "Unread": "Chưa đọc"
   }
 }

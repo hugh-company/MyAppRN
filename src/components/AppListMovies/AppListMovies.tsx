@@ -15,9 +15,10 @@ export interface AppListMoviesProps {
   numColumns?: number;
   type?: PostTypeKey;
   onLoadMore?: () => void;
+  keyExtractor?: ((item: any, index: number) => string) | undefined
 }
 
-const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScroll, onLoadMore }: AppListMoviesProps) => {
+const AppListMovies = ({ data, scrollEventThrottle, type, keyExtractor, numColumns = 2, onScroll, onLoadMore }: AppListMoviesProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
@@ -47,6 +48,7 @@ const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScro
       return <ItemSearchMovie item={item} />;
     }
   };
+  const keyExtractorList = (item: any, index: number) => item?.id || index.toString();
   return (
     <AppFlatListAnimated
       onScroll={onScroll}
@@ -54,7 +56,8 @@ const AppListMovies = ({ data, scrollEventThrottle, type, numColumns = 2, onScro
       data={data}
       horizontal={numColumns === 1}
       contentContainerStyle={styles.container}
-      keyExtractor={(item) => item.id.toString()}
+      keyExtractor={keyExtractor || keyExtractorList}
+
       numColumns={numColumns}
       renderItem={renderItem}
       onLoadMore={onLoadMore}

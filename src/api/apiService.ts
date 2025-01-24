@@ -141,6 +141,12 @@ class AxiosClass {
     return this.api.post(url, body, {
       headers: {
         ...header,
+        'Content-Type': 'multipart/form-data',
+        'X-Requested-With': 'XMLHttpRequest',
+        'Access-Encoding': 'gzip, deflate, br',
+
+        Accept: 'application/json',
+        timeout: 60000,
       },
     });
   }

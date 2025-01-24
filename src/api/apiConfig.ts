@@ -15,9 +15,9 @@ export const ApiConfigs = {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'multipart/form-data',
     Accept: 'application/json',
-    timeout: 30000,
+    timeout: 60000,
   },
-  timeout: 30000,
+  timeout: 60000,
 };
 export const BASE_IMAGE_URL = END_POINT[ENV_ENVIRONMENT].BASE_URL;
 export const ERROR_MESSAGES = {
@@ -35,7 +35,7 @@ export const REQUEST_METHODS = {
 
 export const API_ENDPOINTS = {
   // auth
-  LOGIN: '/auth/login',
+  LOGIN: '/auth/login/',
   REGISTER: '/auth/register',
   LOGOUT: '/auth/logout',
   CSRF_TOKEN: '/auth/csrf_create/',
@@ -73,4 +73,7 @@ export const API_ENDPOINTS = {
   DATING_HOME: '/finder/',
 
   DETAIL_USER: '/finder/detail/',
+  // chat
+  CHAT: '/chat/index/',
+  CHAT_DETAIL: '/chat/detail/',
 };

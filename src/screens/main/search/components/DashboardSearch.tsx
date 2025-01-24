@@ -1,5 +1,5 @@
 import { AppListDashboard, AppText } from '@components';
-import { getSearchModuleLocal, setSearch } from '@redux';
+import { getSearchModuleLocal } from '@redux';
 import { getPostDashboardApi } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListDashboard } from '@types';
@@ -25,7 +25,7 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
       const response = await getPostDashboardApi(ItemListDashboard.SEARCH);
       console.log({ response });
 
-      dispatch(setSearch(response?.data?.modules || []));
+      // dispatch(setSearch(response?.data?.modules || []));
     } catch (error) {
       // console.log({error});
 

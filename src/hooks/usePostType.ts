@@ -46,7 +46,6 @@ export function usePostType() {
   };
   const callApiApiDashboard = async () => {
     Promise.all([
-      callApiHome(),
       callApiSearchDashboard(),
       callApiMovieDashboard(),
       callApiComicDashboard(),

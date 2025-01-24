@@ -117,7 +117,7 @@ export const AppFlatListAnimated = ({ data, style, onScroll, scrollEventThrottle
         ListFooterComponent ? (
           ListFooterComponent
         ) : data && data?.length > perPage - 1 && isLoading ? (
-          <View>
+          <View  >
             <ActivityIndicator size={'small'} color={themeColors.text} />
           </View>
         ) : <View style={styles.bottom} />

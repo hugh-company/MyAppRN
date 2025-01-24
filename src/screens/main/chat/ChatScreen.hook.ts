@@ -1,8 +1,8 @@
 import {useRoute} from '@react-navigation/native';
 import {getUserInfo} from '@redux';
+import {chatList} from '@services';
 import {useTheme} from '@theme';
-import {MessageItem} from '@types';
-import {formatDate} from '@utils';
+import {ChatInterface, MessageItem, MessageType} from '@types';
 import {useState} from 'react';
 import {useSelector} from 'react-redux';
 import {createStyles} from './styles';
@@ -15,36 +15,47 @@ export const useChatScreen = () => {
   const {themeColors} = useTheme();
   const userInfo = useSelector(getUserInfo);
   const styles = createStyles(themeColors);
+  const [repliedMessage, setRepliedMessage] = useState(null);
 
-  const [messages, setMessages] = useState<any>([
-    {
-      id: '1',
-      text: "Of course, let me know if you're on your way 😊",
-      isSentByMe: true,
-      timestamp: '16:46',
-      read: true,
-    },
-    {
-      id: '2',
-      text: 'Can I come over?',
-      isSentByMe: false,
-      timestamp: '16:45',
-      sender: 'Devo Mizuhara',
-    },
-  ]);
+  const [messages, setMessages] = useState<ChatInterface[]>(chatList);
 
-  const handleSend = (txt: string) => {
-    if (txt.trim()) {
-      setMessages([
-        {
-          id: Date.now().toString(),
-          text: txt,
-          isSentByMe: true,
-          timestamp: formatDate(new Date(), 'HH:mm'),
-        },
-        ...messages,
-      ]);
-    }
+  const handleSend = (newMessage: {
+    images?: string[];
+    message?: string;
+    games?: any[];
+  }) => {
+    const params: ChatInterface = {
+      id: Date.now(),
+      userid: userInfo?.id || '',
+      content: {
+        type:
+          newMessage?.images?.length > 0 ? MessageType.IMAGE : MessageType.TEXT,
+        text: newMessage.message,
+        images: newMessage.images,
+        game: newMessage.games,
+        icon: '',
+        status: 'sent',
+        time_created: new Date(),
+        time_updated: new Date(),
+      },
+      reply: repliedMessage,
+    };
+    console.log({newMessage}, {params});
+    setMessages([params, ...messages]);
   };
-  return {messages, themeColors, styles, handleSend, message, userInfo};
+  const handleSwipeToReply = item => {
+    console.log({item});
+    setRepliedMessage(item);
+  };
+  return {
+    messages,
+    themeColors,
+    styles,
+    handleSend,
+    repliedMessage,
+    setRepliedMessage,
+    message,
+    userInfo,
+    handleSwipeToReply,
+  };
 };

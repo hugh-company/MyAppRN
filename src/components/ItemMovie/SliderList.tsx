@@ -5,7 +5,7 @@ import { ButtonNavigationInterface, PostTypeKey, TabInterface } from '@types';
 import { goToDetail, goToListView } from '@utils';
 import React, { useCallback, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import Animated, { Extrapolate, interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 import { SliderListProps } from './SliderList.type';
 
 interface Props extends SliderListProps {
@@ -15,20 +15,27 @@ interface Props extends SliderListProps {
   button?: ButtonNavigationInterface
 }
 const widthItem = Spacing.width240;
-const SliderList = React.memo(({ style, title, data, onViewMore, type, button }: Props) => {
+const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+
+
+
+
+  //
+
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50, minimumViewTime: 300 });
   const scrollX = useSharedValue(0);
 
+
   const onScroll = useAnimatedScrollHandler((event) => {
-    scrollX.value = event.contentOffset.x;
+    scrollX.value = data?.length > 1 ? event.contentOffset.x : 0;
   });
 
   const onViewRef = useCallback(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
+    if (viewableItems.length > 0 && flatListRef) {
       const index = viewableItems[0].index;
       setCurrentIndex(index);
       flatListRef.current?.scrollToIndex({
@@ -57,7 +64,6 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
       />
 
       <TouchableOpacity onPress={() => {
-        console.log({ item });
         goToListView({
           ...button,
           keyCategory: item.slug,
@@ -69,6 +75,7 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
       </TouchableOpacity>
     </View>
   ), [styles]);
+
 
   if (!data) { return null; }
 
@@ -105,33 +112,23 @@ const SliderList = React.memo(({ style, title, data, onViewMore, type, button }:
         onScroll={onScroll}
         scrollEventThrottle={16}
       />
-      <View style={styles.dotsContainer}>
-        {data.map((_, index) => {
-          const animatedDotStyle = useAnimatedStyle(() => {
-            const opacity = interpolate(
-              scrollX.value / widthItem,
-              [index - 1, index, index + 1],
-              [0.3, 1, 0.3],
-              Extrapolate.CLAMP
-            );
-            return { opacity };
-          });
-
-          return (
+      {data.length > 1 && (
+        <View style={styles.dotsContainer}>
+          {data.map((_, index) => (
             <Animated.View
               key={index}
               style={[
                 styles.dot,
                 currentIndex === index ? styles.activeDot : styles.inactiveDot,
-                animatedDotStyle,
+                // animatedDotStyles[index],
               ]}
             />
-          );
-        })}
-      </View>
+          ))}
+        </View>
+      )}
     </View>
   );
-});
+};
 
 export default SliderList;
 

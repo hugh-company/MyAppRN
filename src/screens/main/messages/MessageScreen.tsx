@@ -6,29 +6,30 @@ import { useMessageScreen } from './MessageScreen.hook';
 import { ItemMessage } from './components/ItemMessage';
 
 const MessageScreen = () => {
-  const { data, themeColors, styles, title, onRefreshList } = useMessageScreen();
+  const { data,
+    loading, onRefresh,
+    handleLoadMore, styles, title } = useMessageScreen();
+
+
+
 
   const renderItem = ({ item }: { item: MessageItem }) => {
-    return (
-      <ItemMessage item={item} />
-    );
+    return <ItemMessage item={item} />;
   };
   return (
     <View style={styles.container}>
       <AppHeader title={title || ''} />
-      <AppInputSearch
-        value={''}
-        editable={false}
-        style={styles.inputSearch}
-      />
+      <AppInputSearch value={''} editable={false} style={styles.inputSearch} />
       <AppFlatListAnimated
-        data={data}
+        data={data || []}
         scrollEventThrottle={16}
-
-        onRefresh={onRefreshList}
-
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem} />
+        onRefresh={onRefresh}
+        refreshing={loading}
+        keyExtractor={(item) => item?.conversation_id?.toString()}
+        renderItem={renderItem}
+        onLoadMore={handleLoadMore}
+        onEndReachedThreshold={0.5}
+      />
     </View>
   );
 };

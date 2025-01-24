@@ -1,10 +1,11 @@
 import { Spacing, ThemeColors, useTheme } from '@theme';
+import { ChatInterface } from '@types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { MessageReceived } from './MessageReceived';
 import { MessageSent } from './MessageSent';
 export interface ItemChatProps {
-  item: any;
+  item: ChatInterface;
   userSent: {
     id: string | number;
     name: string;
@@ -12,51 +13,25 @@ export interface ItemChatProps {
   },
   userReceived: {
     id: string | number;
-
     name: string;
     avatar: string;
   };
-  onSwipeToReply: (item: any) => void;
+  onSwipeToReply: (item: ChatInterface) => void;
+  isMe?: boolean;
 }
 
 export function ItemChat(props: ItemChatProps) {
-  const { item, onSwipeToReply } = props;
+  const { item, onSwipeToReply, isMe } = props;
   const { themeColors } = useTheme();
-  const styles = createStyles(themeColors);
   const userSent = props.userSent;
   const userReceived = props.userReceived;
-  console.log({ userReceived });
 
-  if (item.isSentByMe) {
+
+  if (isMe) {
     return <MessageSent user={userSent} item={item} handleReply={onSwipeToReply} />;
   } else {
     return <MessageReceived user={userReceived} item={item} handleReply={onSwipeToReply} />;
   }
-
-  // return (
-  //   <View style={[styles.container, item.isSentByMe ? styles.messageSent : styles.messageReceived]}>
-  //     <View>
-  //       <AppImage style={styles.avatar} uri={item.isSentByMe ? userSent?.avatar : userReceived?.avatar} />
-  //       <View style={styles.status} />
-  //     </View>
-  //     <View
-  //       style={[
-  //         styles.animatedMessageContainer,
-  //       ]}
-  //     >
-  //       {!item.isSentByMe && (
-  //         <AppText style={styles.senderName}>{item.sender}</AppText>
-  //       )}
-  //       <AppText style={styles.messageText}>{item.text}</AppText>
-  //       <View style={styles.timestampContainer}>
-  //         <AppText style={styles.timestamp}>{item.timestamp}</AppText>
-  //         {item.isSentByMe && item.read && (
-  //           <AppText style={styles.readStatus}> · Read</AppText>
-  //         )}
-  //       </View>
-  //     </View>
-  //   </View>
-  // );
 }
 const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   container: {

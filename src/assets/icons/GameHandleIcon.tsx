@@ -2,7 +2,7 @@ import { Spacing } from '@theme';
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { IconWidthHeightProps } from './types';
-const GameHandleIcon = ({ width = Spacing.width19, height = Spacing.width20, color = '#FF1F44' }: IconWidthHeightProps) => {
+const GameHandleIcon = ({ width = Spacing.width19, height = Spacing.width20, color = '#D11030' }: IconWidthHeightProps) => {
   return (
     <Svg width={width} height={height} viewBox="0 0 19 20" fill="none">
       <Path

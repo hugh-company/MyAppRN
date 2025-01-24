@@ -43,13 +43,16 @@ export const useComicScreen = () => {
       const category: any = comics.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
       );
-      // console.log({tabSelect: tabSelect?.name});
       setCategories(category?.items || []);
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
+
+      setLoading(false);
+      setRefresh(false);
     } else {
-      setLoading(true);
+      setLoading(false);
+      setRefresh(false);
     }
   }, [comics]);
   // Call Api
@@ -63,9 +66,9 @@ export const useComicScreen = () => {
         filter: filter,
       };
       const response = await getPostDashboardApi(PostTypeKey.COMIC, params);
+      console.log({response});
+
       dispatch(setComics(response.data?.modules || []));
-      setLoading(false);
-      setRefresh(false);
     } catch (error) {
       setLoading(false);
     }

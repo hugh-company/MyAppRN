@@ -99,7 +99,13 @@ const AppListDashboard = ({
           itemModule={item}
           type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:
-        return <MemoizedSliderList title={item?.label} button={item?.button} data={item?.items as TabInterface[]} type={item?.posttype} />;
+        return <SliderList
+          title={item?.label}
+
+
+          button={item?.button}
+          data={item?.items as TabInterface[]}
+          type={item?.posttype} />;
       case TypeKeyListApi.LIST_HORIZONTAL:
         return <MemoizedHorizontalList
           title={item?.label}

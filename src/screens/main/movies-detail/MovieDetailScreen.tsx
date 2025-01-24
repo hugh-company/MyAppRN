@@ -62,12 +62,12 @@ const MovieDetailScreen = () => {
           episodes={detailMovie?.chapters} style={styles.episodes}
           onSelectChapter={(item) => {
             console.log({ item });
-            navigate(SCREEN_ROUTE.VIDEO, {
-              video: {
-                ...item,
-                name: detailMovie?.title,
-              },
-            });
+            // navigate(SCREEN_ROUTE.VIDEO, {
+            //   video: {
+            //     ...item,
+            //     name: detailMovie?.title,
+            //   },
+            // });
 
           }} />
         }

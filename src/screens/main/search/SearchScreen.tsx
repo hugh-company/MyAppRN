@@ -24,14 +24,16 @@ const SearchScreen = () => {
     }
     if (search?.length > 0 || sort !== '' || typeScreen !== undefined) {
 
-      return <MemoizedSearchList onLoadMore={onLoadMore} data={data} valueSearch={search} />;
+      return <MemoizedSearchList
+        onLoadMore={onLoadMore}
+        data={data} valueSearch={search} />;
     }
-    return <MemoizedDashboardSearch />;
+    return <DashboardSearch />;
   };
   return (
     <View style={styles.container}>
       <View style={[styles.header, { paddingTop: top }]}>
-        <TouchableOpacity style={styles.btnCancel} onPress={goBack}>
+        <TouchableOpacity style={styles.btnCancel} onPress={() => goBack()}>
           <AppText style={styles.txtCancel}>{t('cancel')}</AppText>
         </TouchableOpacity>
         <AppInputSearch
@@ -54,7 +56,7 @@ const SearchScreen = () => {
       </View>
 
       {renderBody()}
-      {isFilterType && <MemoizedModalFilter
+      {/* {isFilterType && <MemoizedModalFilter
         visible={isFilterType}
         onClose={() => setIsFilterType(false)}
         label={`${t('search.type')}:`}
@@ -67,7 +69,7 @@ const SearchScreen = () => {
         label={`${t('search.sort')}:`}
         onSelect={filterBySort}
         data={menuSort}
-      />}
+      />} */}
     </View>
   );
 };
