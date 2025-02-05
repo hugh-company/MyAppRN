@@ -14,6 +14,7 @@ interface HeaderGameProps {
   likes?: number;
   poster?: string;
   children?: React.ReactNode;
+  onPlay?: () => void;
 }
 
 export const HeaderGame = ({
@@ -21,7 +22,8 @@ export const HeaderGame = ({
   likes = 0,
   poster = '',
   logo = '',
-  children }: HeaderGameProps) => {
+  children,
+  onPlay }: HeaderGameProps) => {
   console.log({ logo });
 
   const { themeColors } = useTheme();
@@ -71,6 +73,14 @@ export const HeaderGame = ({
       >
         <Animated.View style={[styles.container]}>
           <AppImage resizeMode={'contain'} uri={poster} style={styles.banner} />
+          <View style={styles.control}>
+            <TouchableOpacity onPress={() => {
+              onPlay?.();
+
+            }} style={styles.btnPlay}>
+              <AppText style={styles.txtPlay}>{t('games.playGame')}</AppText>
+            </TouchableOpacity>
+          </View>
 
           <View style={styles.viewInfo}>
             <LinearGradient
@@ -85,6 +95,7 @@ export const HeaderGame = ({
                 <View style={styles.info}>
                   <View style={styles.viewLogo}>
                     <AppImage uri={logo} style={styles.logo} />
+
                   </View>
                   <View style={styles.viewName}>
                     <AppText numberOfLines={3} style={styles.txtName}>{name}</AppText>
@@ -134,6 +145,16 @@ const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
 
     },
+    control: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      top: 0,
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     btnPlay: {
       backgroundColor: themeColors.primary,
       borderRadius: Spacing.width88,
@@ -145,6 +166,7 @@ const createStyles = (themeColors: ThemeColors) =>
       alignSelf: 'center',
       gap: Spacing.width8,
       paddingHorizontal: Spacing.width32,
+
     },
     txtPlay: {
       fontSize: FontSize.FontSize16,

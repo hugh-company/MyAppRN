@@ -1,9 +1,8 @@
-import { AppInfoContent, AppText, HorizontalList } from '@components';
+import { AppInfoContent, HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
-import { t } from 'i18next';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { useGameDetailScreen } from './GameDetailScreen.hook';
 import { HeaderGame } from './components/HeaderGame';
 
@@ -22,12 +21,9 @@ const GameDetailScreen = () => {
         logo={data?.feature?.path}
         likes={data?.like_count}
         poster={data?.banner?.path}
+        onPlay={() => { navigate(SCREEN_ROUTE.PREVIEW_GAME, { link: data?.iframe_game }); }}
       >
-        <TouchableOpacity onPress={() => {
-          navigate(SCREEN_ROUTE.PREVIEW_GAME, { link: data?.iframe_game });
-        }} style={styles.btnPlay}>
-          <AppText style={styles.txtPlay}>{t('games.playGame')}</AppText>
-        </TouchableOpacity>
+
         <AppInfoContent
           id={data?.id}
           type={PostTypeKey.GAMES}

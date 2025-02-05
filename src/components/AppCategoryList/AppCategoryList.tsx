@@ -2,7 +2,7 @@ import { AppText } from '@components';
 import { useTheme } from '@theme';
 import { TabInterface } from '@types';
 import { goToListView } from '@utils';
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { FlatList, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 
@@ -30,18 +30,15 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // useEffect(() => {
-  //   // nếu categoryId thay đổi thì scroll tới vị trí của categoryId
-  //   if (categoryId) {
-  //     const index = data?.findIndex((item) => item.id === categoryId);
-  //     console.log({ index });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
-  //     if (index !== undefined && index !== -1) {
-  //       flatListRef.current?.scrollToIndex({ index, animated: true });
-  //     }
-  //   }
-  // }, [categoryId, flatListRef.current]);
   const handleCategoryPress = useCallback((item: TabInterface, index: number) => {
 
     if (isTab) {
@@ -49,9 +46,9 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
       flatListRef.current?.scrollToIndex({ index, animated: true });
 
     } else {
-      // goToViewList?.(item);
       goToListView({
         ...item.button,
+        keyCategory: item?.slug,
 
       });
     }
@@ -65,6 +62,10 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
       handleCategoryPress={() => handleCategoryPress(item, index)}
       styles={styles} />
   ), [categoryId, handleCategoryPress, styles]);
+
+  if (!isLoaded) {
+    return <></>;
+  }
 
   return (
     <View style={[styles.container, style]}>

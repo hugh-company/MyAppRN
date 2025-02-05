@@ -59,6 +59,7 @@ export const useSearchScreen = () => {
       value: t('search.likes'),
     },
   ];
+
   const callApiSearch = async (filter?: {
     search?: string;
     typeScreen?: PostTypeKey;
@@ -102,6 +103,7 @@ export const useSearchScreen = () => {
   // filter
   useEffect(() => {
     if (typeScreen !== undefined || sort !== '') {
+      setLoading(true);
       callApiSearch({
         search,
         typeScreen,
@@ -111,14 +113,16 @@ export const useSearchScreen = () => {
   }, [typeScreen, sort]);
   // search use debounce
   const debounceSearch = useCallback(
-    debounce((text: string) => {
-      callApiSearch({
-        search: text,
-        typeScreen,
-        sort,
-      });
-    }, 1000),
-    [],
+    (text: string) => {
+      debounce(() => {
+        callApiSearch({
+          search: text,
+          typeScreen,
+          sort,
+        });
+      }, 1000)();
+    },
+    [typeScreen, sort],
   );
 
   const onSearch = (text: string) => {

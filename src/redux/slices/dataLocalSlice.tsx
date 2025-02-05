@@ -19,7 +19,7 @@ const initialState = {
 };
 
 const dataLocalSlide = createSlice({
-  name: APP_SLICE.ACCOUNT_SLICE,
+  name: APP_SLICE.DATA_LOCAL_SLICE,
   initialState,
   reducers: {
     setHome: (state, action) => {

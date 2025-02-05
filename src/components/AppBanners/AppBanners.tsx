@@ -1,7 +1,8 @@
 import { AppImage, AppText } from '@components';
+import { FlashList, ListRenderItem } from '@shopify/flash-list';
 import { useTheme, WidthScreen } from '@theme';
 import React, { useRef, useState } from 'react';
-import { FlatList, ListRenderItem, View, ViewStyle } from 'react-native';
+import { View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createStyles } from './styles';
 export interface AppBannersProps {
@@ -15,7 +16,7 @@ export interface AppBannersProps {
 const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: AppBannersProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<any>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const onViewRef = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
@@ -47,20 +48,21 @@ const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: 
   return (
     <View style={[styles.container, style]}>
       {label && <AppText style={[styles.title, labelStyle]}>{label}</AppText>}
-      <FlatList
+      <FlashList
         ref={flatListRef}
         data={data}
         horizontal
         pagingEnabled
+        key={'banner'}
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem || renderItemBanner}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => `banner_child_${index}`}
         onViewableItemsChanged={onViewRef.current}
         viewabilityConfig={viewConfigRef.current}
-        getItemLayout={(data, index) => (
-          { length: width || WidthScreen, offset: (width || WidthScreen) * index, index }
-        )}
-      // initialNumToRender={3}
+        estimatedItemSize={width || WidthScreen}
+      // getItemLayout={(data, index) => (
+      //   { length: width || WidthScreen, offset: (width || WidthScreen) * index, index }
+      // )}
       />
       <View style={styles.dotsContainer}>
         {data.map((_, index) => (

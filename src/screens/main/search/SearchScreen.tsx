@@ -1,5 +1,5 @@
 import { FilterIcon, SortIcon } from '@assets';
-import { AppInputSearch, AppText, LoadingSearch, ModalFilter } from '@components';
+import { AppInputSearch, AppText, LoadingList, ModalFilter } from '@components';
 import { goBack } from '@navigation';
 import { t } from 'i18next';
 import React, { memo } from 'react';
@@ -18,9 +18,11 @@ const SearchScreen = () => {
     onSearch, sort, menuType, refSearch, filterByType, filterBySort,
     onLoadMore } = useSearchScreen();
 
+
+
   const renderBody = () => {
     if (loading) {
-      return <LoadingSearch />;
+      return <LoadingList numColumns={2} />;
     }
     if (search?.length > 0 || sort !== '' || typeScreen !== undefined) {
 
@@ -28,7 +30,7 @@ const SearchScreen = () => {
         onLoadMore={onLoadMore}
         data={data} valueSearch={search} />;
     }
-    return <DashboardSearch />;
+    return <MemoizedDashboardSearch />;
   };
   return (
     <View style={styles.container}>
@@ -56,7 +58,7 @@ const SearchScreen = () => {
       </View>
 
       {renderBody()}
-      {/* {isFilterType && <MemoizedModalFilter
+      {isFilterType && <MemoizedModalFilter
         visible={isFilterType}
         onClose={() => setIsFilterType(false)}
         label={`${t('search.type')}:`}
@@ -69,7 +71,7 @@ const SearchScreen = () => {
         label={`${t('search.sort')}:`}
         onSelect={filterBySort}
         data={menuSort}
-      />} */}
+      />}
     </View>
   );
 };

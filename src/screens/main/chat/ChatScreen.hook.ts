@@ -1,6 +1,5 @@
 import {useRoute} from '@react-navigation/native';
 import {getUserInfo} from '@redux';
-import {chatList} from '@services';
 import {useTheme} from '@theme';
 import {ChatInterface, MessageItem, MessageType} from '@types';
 import {useState} from 'react';
@@ -17,7 +16,7 @@ export const useChatScreen = () => {
   const styles = createStyles(themeColors);
   const [repliedMessage, setRepliedMessage] = useState(null);
 
-  const [messages, setMessages] = useState<ChatInterface[]>(chatList);
+  const [messages, setMessages] = useState<ChatInterface[]>([]);
 
   const handleSend = (newMessage: {
     images?: string[];

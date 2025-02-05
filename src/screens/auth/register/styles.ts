@@ -33,4 +33,15 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignSelf: 'center',
       marginTop: Spacing.height16,
     },
+    input: {
+      height: Spacing.height48,
+      borderWidth: 1,
+      borderColor: themeColors.inputBorder,
+      borderRadius: 8,
+      paddingHorizontal: Spacing.width12,
+      fontSize: FontSize.FontSize14,
+      color: themeColors.inputText,
+      backgroundColor: themeColors.inputBackground,
+      marginBottom: Spacing.height16,
+    },
   });

@@ -11,7 +11,10 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       <AppHeader />
-      <KeyboardAwareScrollView style={styles.body}>
+      <KeyboardAwareScrollView
+        keyboardShouldPersistTaps="always"
+        style={styles.body}>
+
         <View style={styles.viewInfo}>
           <AppText style={styles.title}>
             {t('register.title')}
@@ -21,16 +24,39 @@ const RegisterScreen = () => {
           </AppText>
 
         </View>
-        <AppInput name="fullname" placeholder={t('login.fullname')} error={errors.fullname?.message} control={control} />
 
-        <AppInput name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
+        <AppInput
+          key={'fullname'}
+          name="fullname" placeholder={t('login.fullname')} error={errors.fullname?.message} control={control} />
 
-        <AppInput name="email" placeholder={t('register.email')} error={errors.email?.message} control={control} />
-        <AppInput name="password" placeholder={t('register.password')} error={errors.password?.message} control={control} secureTextEntry={true} />
-        <AppInput name="confirmPassword" placeholder={t('register.confirmPassword')} error={errors.confirmPassword?.message} control={control} secureTextEntry={true} />
+
+        <AppInput
+          key={'username'}
+          name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
+
+        <AppInput
+          key={'email'}
+          name="email" placeholder={t('register.email')} error={errors.email?.message} control={control} />
+
+        <AppInput
+          name="password"
+          placeholder={t('register.password')}
+          error={errors.password?.message}
+          control={control}
+          secureTextEntry={true}
+          key={'password'}
+        />
+        <AppInput name="confirmPassword"
+          placeholder={t('register.confirmPassword')}
+          error={errors.confirmPassword?.message}
+          control={control}
+          secureTextEntry={true}
+          key={'confirmPassword'}
+        />
 
         <AppButton onPress={() => onSubmit()} label={t('register.register')} style={styles.btnLogin} />
         <LoginSocial isTopOr={true} />
+
       </KeyboardAwareScrollView>
     </View>
   );

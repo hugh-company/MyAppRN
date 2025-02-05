@@ -3,9 +3,8 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme
 import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
-import React, { memo, useCallback, useMemo } from 'react';
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { AppFlatListAnimated } from '../AppFlatListAnimated';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 interface HorizontalListProps {
@@ -20,30 +19,6 @@ interface HorizontalListProps {
   renderItem?: ({ item }: { item: ItemListProduct }) => JSX.Element;
 }
 
-const GameItem = memo(({ item, styles, itemStyle }) => (
-  <TouchableOpacity onPress={() => { goToDetail({ item, type: PostTypeKey.GAMES }); }} style={[styles.btnGame, itemStyle]}>
-    <AppImage uri={item?.feature?.path} style={styles.image} />
-  </TouchableOpacity>
-));
-
-const OtherItem = memo(({ item, styles, itemStyle, type, themeColors }) => (
-  <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => { goToDetail({ item, type }); }}>
-    <AppImage uri={item?.feature?.path} style={styles.image} />
-    <View style={{ flex: 1, justifyContent: 'space-between' }}>
-      <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
-      <View style={styles.viewOption}>
-        <View style={styles.viewRow}>
-          <LikeActiveIcon size={Spacing.width10} color={themeColors.star} />
-          <AppText style={styles.txtView}>{getPrettyNumberString(item.like_count)}</AppText>
-        </View>
-        <View style={styles.viewRow}>
-          <BrandIcon />
-          <AppText style={styles.txtLike}>{getPrettyNumberString(item.views)} {t('home.viewer')}</AppText>
-        </View>
-      </View>
-    </View>
-  </TouchableOpacity>
-));
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
   title,
@@ -52,25 +27,44 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   titleViewMore = t('home.viewMore'),
   onViewMore, type = PostTypeKey.GAMES,
   itemStyle,
-  button, renderItem,
+  button,
+  renderItem,
 }) => {
-
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const renderItemList = useCallback(({ item }: any) => {
-    switch (type) {
-      case PostTypeKey.GAMES:
-        return <GameItem item={item} styles={styles} itemStyle={itemStyle} />;
-      case PostTypeKey.COMIC:
-      case PostTypeKey.MOVIES:
-      case PostTypeKey.NOVEL:
-        return <OtherItem item={item} styles={styles} itemStyle={itemStyle} type={type} themeColors={themeColors} />;
-      default:
-        return <></>;
-    }
-  }, [type, styles, itemStyle, themeColors]);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
+  const renderItemList = useCallback(({ item }: { item: ItemListProduct }) => {
+    return (
+      <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => { goToDetail({ item, type }); }}>
+        <AppImage uri={item?.feature?.path} style={styles.image} />
+        {item?.posttype !== PostTypeKey.GAMES && <View style={{ flex: 1, justifyContent: 'space-between' }}>
+          <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
+          <View style={styles.viewOption}>
+            <View style={styles.viewRow}>
+              <LikeActiveIcon size={Spacing.width10} color={themeColors.star} />
+              <AppText style={styles.txtView}>{getPrettyNumberString(item.like_count)}</AppText>
+            </View>
+            <View style={styles.viewRow}>
+              <BrandIcon />
+              <AppText style={styles.txtLike}>{getPrettyNumberString(item.views)} {t('home.viewer')}</AppText>
+            </View>
+          </View>
+        </View>}
+      </TouchableOpacity>
+    );
+  }, []);
+
+  if (data?.length === 0 || !isLoaded) {
+    return <></>;
+  }
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
@@ -80,8 +74,6 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         <TouchableOpacity hitSlop={{
           top: 30, bottom: 30, right: 20, left: 20,
         }} onPress={() => {
-          console.log({ button });
-
           onViewMore ? onViewMore?.() : goToListView({
             ...button,
             label: title,
@@ -93,11 +85,15 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
           <RightIcon />
         </TouchableOpacity>
       </View>
-      <AppFlatListAnimated
+      <FlatList
         data={data || []}
         horizontal
-        keyExtractor={(item) => `child_${title}${item?.id?.toString()}`}
-        renderItem={renderItem || renderItemList} />
+        keyExtractor={(item) => `child_horizontal_${item.slug}${item?.id?.toString()}`}
+        renderItem={renderItem || renderItemList}
+        initialNumToRender={5}
+        maxToRenderPerBatch={10}
+        removeClippedSubviews={true}
+      />
 
     </View>
   );

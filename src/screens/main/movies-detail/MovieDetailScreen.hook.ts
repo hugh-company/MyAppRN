@@ -1,7 +1,12 @@
 import {useRoute} from '@react-navigation/native';
 import {getDetailPostApi, viewsPostApi} from '@services';
+import {useQuery} from '@tanstack/react-query';
 import {Spacing, useTheme} from '@theme';
-import {detailPostInterface, PostTypeKey} from '@types';
+import {
+  chapterEpisodeInterface,
+  detailPostInterface,
+  PostTypeKey,
+} from '@types';
 import {useEffect, useState} from 'react';
 import {
   interpolateColor,
@@ -23,69 +28,63 @@ export const useMovieDetailScreen = () => {
     detailPostInterface | undefined
   >(movie);
 
-  const [loading, setLoading] = useState(true);
-  const [chapterSelect, setChapterSelect] = useState(1);
+  const [chapterSelect, setChapterSelect] = useState(0);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const scrollY = useSharedValue(0);
   const [showRating, setShowRating] = useState(false);
-  useEffect(() => {
-    callAllApi();
-    viewMovieApi();
-  }, []);
-  // views
-  const viewMovieApi = async () => {
-    try {
-      await viewsPostApi(movie?.id, PostTypeKey.MOVIES);
-    } catch (error) {
-      console.log({error});
-    }
-  };
   //
-  const callAllApi = async () => {
-    Promise.all([callApi()]).finally(() => {
-      setLoading(false);
-    });
-  };
-  const callApi = async () => {
-    try {
-      const response: any = await getDetailPostApi(
-        PostTypeKey.MOVIES,
-        movie.id,
-      );
-      console.log({response});
-
-      setDetailMovie(response?.data);
-    } catch (error) {
-      console.log({error});
+  const {data, isSuccess, refetch, error, isFetching} = useQuery({
+    queryKey: ['movieDetail', movie.id],
+    queryFn: () => getDetailPostApi(PostTypeKey.MOVIES, movie.id),
+  });
+  const {} = useQuery({
+    queryKey: ['viewMoves', movie.id],
+    queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
+  });
+  useEffect(() => {
+    if (isSuccess && data) {
+      setDetailMovie(data?.data);
     }
-  };
+  }, [isSuccess, data]);
 
-  const onRefresh = () => {
-    callApi();
-  };
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
 
-  const headerBackgroundColorStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      scrollY.value,
-      [0, Spacing.height315],
-      ['transparent', '#B1062E'],
-    ),
-  }));
+  const headerBackgroundColorStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        scrollY.value,
+        [0, Spacing.height315],
+        ['transparent', '#B1062E'],
+      ),
+    };
+  });
+  const goToPlay = () => {
+    if (detailMovie?.chapters?.[0]) {
+      console.log({chapterSelect});
+    }
+  };
+
+  const onSelectedChapter = (chapter: chapterEpisodeInterface) => {
+    console.log({chapter});
+  };
   return {
     themeColors,
     styles,
     detailMovie,
     chapterSelect,
     setChapterSelect,
-    loading,
+
     scrollHandler,
     headerBackgroundColorStyle,
-    onRefresh,
+    onRefresh: refetch,
+    isFetching,
     showRating,
     setShowRating,
+    goToPlay,
+    onSelectedChapter,
+    error,
   };
 };

@@ -1,8 +1,8 @@
 import { RightIcon } from '@assets';
 import { AppFlatListAnimated, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ButtonInterface, ItemListProduct, PostTypeKey } from '@types';
-import React from 'react';
+import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
+import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import ItemGame from './ItemGame';
 export interface ListVerticalProps {
@@ -10,7 +10,7 @@ export interface ListVerticalProps {
   style?: StyleProp<ViewStyle>;
   onViewMore?: () => void;
   type?: PostTypeKey;
-  button?: ButtonInterface
+  button?: ButtonNavigationInterface
   title?: string
 }
 
@@ -18,9 +18,23 @@ export function ListVertical(props: ListVerticalProps) {
   const { style, title, data, onViewMore, type, button } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   const renderItem = ({ item }: { item: ItemListProduct }) => {
     return <ItemGame item={item} />;
   };
+
+  if (!isLoaded) {
+    return <></>;
+  }
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
@@ -32,7 +46,9 @@ export function ListVertical(props: ListVerticalProps) {
       </View>
       <AppFlatListAnimated
         data={data}
-        renderItem={renderItem} />
+        renderItem={renderItem}
+        removeClippedSubviews={true}
+      />
     </View>
   );
 }

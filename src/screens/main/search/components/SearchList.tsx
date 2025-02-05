@@ -15,12 +15,11 @@ const SearchList = ({ data, valueSearch, onLoadMore }: SearchListProps) => {
   const styles = createStyles(themeColors);
   return (
     <View style={styles.container}>
-
       <AppListMovies
         numColumns={2}
         scrollEventThrottle={16}
         data={data}
-
+        keyExtractor={(item, index) => `search_list_${item?.id || index}`}
         onLoadMore={onLoadMore}
       />
     </View>

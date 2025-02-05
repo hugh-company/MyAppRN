@@ -2,14 +2,15 @@ import { AppCategoryList, AppFlatListAnimated, HorizontalList, LoadingDashboardS
 import { BannerMovie } from '@screens';
 import { sizeWidth, useTheme } from '@theme';
 import { ItemListDashboard, ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface, TypeKeyListApi } from '@types';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
-import { BannerHome } from './components/BannerHome';
+import BannerHome from './components/BannerHome';
 import { CategoryListItem } from './components/CategoryListItem';
 import { DatingItem } from './components/DatingItem';
 import { LabelView } from './components/LabelView';
 import { ListVertical } from './components/ListVertical';
 import { createStyles } from './styles';
+
 
 export interface AppListDashboardProps {
   ListHeaderComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined
@@ -23,7 +24,7 @@ export interface AppListDashboardProps {
   keyExtractor?: (item: ModuleItemInterface, index: number) => string;
 }
 
-const AppListDashboard = ({
+const AppListDashboard = React.memo(({
   typeScreen = ItemListDashboard.HOME,
   data = [], onScroll,
   loading, onRefresh,
@@ -50,6 +51,7 @@ const AppListDashboard = ({
 
 
   const renderLoading = useCallback(() => {
+
     switch (typeScreen) {
       case ItemListDashboard.HOME:
         return <LoadingHome />;
@@ -94,15 +96,13 @@ const AppListDashboard = ({
           data={item?.items as TabInterface[]}
           isTab={false}
           goToViewList={() => {
-
+            console.log({ item });
           }}
           itemModule={item}
           type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:
-        return <SliderList
+        return <MemoizedSliderList
           title={item?.label}
-
-
           button={item?.button}
           data={item?.items as TabInterface[]}
           type={item?.posttype} />;
@@ -122,22 +122,31 @@ const AppListDashboard = ({
     }
   }, [categoryId, onSelectedCategory]);
 
+  const memoizedData = useMemo(() => data, [data]);
+  const memoizedKeyExtractor = useCallback((item: ModuleItemInterface, index: number) => {
+    return keyExtractor ? keyExtractor(item, index) : `${index}`;
+  }, [keyExtractor]);
+
   return (
     <View style={styles.container}>
       {loading ? renderLoading() :
         <AppFlatListAnimated
-          data={data}
+          data={memoizedData}
           scrollEventThrottle={16}
           ListHeaderComponent={ListHeaderComponent}
           onScroll={onScroll}
           onRefresh={onRefreshList}
           refreshing={isReset}
-          keyExtractor={keyExtractor}
+          key={typeScreen}
+          keyExtractor={memoizedKeyExtractor}
           renderItem={renderItem}
+        // removeClippedSubviews={true}
 
-        />}
+        />
+
+      }
     </View>
   );
-};
+});
 
-export default React.memo(AppListDashboard);
+export default AppListDashboard;

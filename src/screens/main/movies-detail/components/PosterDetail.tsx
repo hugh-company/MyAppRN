@@ -7,7 +7,6 @@ import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Animated from 'react-native-reanimated';
 
 interface HeaderDetailProps {
   name: string;
@@ -82,7 +81,7 @@ export const PosterDetail = ({
   };
 
   return (
-    <Animated.View style={[styles.container]}>
+    <View style={[styles.container]}>
       <AppImage uri={poster} style={styles.banner} />
       <View style={styles.bottomInfoPost}>
         <LinearGradient
@@ -110,8 +109,7 @@ export const PosterDetail = ({
       <View style={styles.control}>
         {renderNavigation()}
       </View>
-    </Animated.View>
-
+    </View>
   );
 };
 

@@ -1,7 +1,7 @@
 import { SearchIcon } from '@assets';
 import { AppCategoryList, AppHeader, AppInputSearch, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, useTheme } from '@theme';
 import { KeyHomeData, PostTypeKey, TabInterface } from '@types';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -24,12 +24,12 @@ export const HeaderListScreen = ({ title, search, onSearch, categories = [], scr
 
   const heightStyle = useAnimatedStyle(() => {
     return {
-      height: scrollY.value > 50 ? 0 : 50,
+      height: scrollY.value > (HeightScreen / 2) ? 0 : 50,
     };
   });
   const opacityStyle = useAnimatedStyle(() => {
     return {
-      opacity: scrollY.value > 50 ? 0 : 1,
+      opacity: scrollY.value > (HeightScreen / 2) ? 0 : 1,
     };
   });
   const isCategory = categories?.length > 0;

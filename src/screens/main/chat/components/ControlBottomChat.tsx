@@ -7,7 +7,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RepliedMessage } from './RepliedMessage';
 
 export interface ControlBottomChatProps {
@@ -15,14 +14,14 @@ export interface ControlBottomChatProps {
   repliedMessage?: ChatInterface;
   onClearRepliedMessage?: () => void;
   userReceived?: any;
+  userSent?: any;
 }
 
 export function ControlBottomChat(props: ControlBottomChatProps) {
-  const { onUpdateMessage, repliedMessage, userReceived, onClearRepliedMessage } = props;
+  const { onUpdateMessage, repliedMessage, userReceived, userSent, onClearRepliedMessage } = props;
   const [message, setMessage] = useState('');
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const { bottom } = useSafeAreaInsets();
   const [games, setGames] = useState(gameApi);
   const [isShowGame, setIsShowGame] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -32,6 +31,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const translateY = useSharedValue(0);
 
 
+  console.log({ repliedMessage });
 
   useEffect(() => {
     if (isShowGame) { setGameSelected(null); }
@@ -44,6 +44,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     setShowIcons(true);
     setGameSelected(null); // Clear selected game
     setIsShowGame(false);  // Hide game selection
+    onClearRepliedMessage && onClearRepliedMessage();
   };
 
   const handleSelectGame = (game) => setGameSelected(game);
@@ -75,9 +76,9 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   }));
 
   const iconsAnimationStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: isInputFocused ? withTiming(-100, { duration: 200 }) : withTiming(0, { duration: 200 }) }],
-    width: isInputFocused ? withTiming(0, { duration: 200 }) : withTiming(Spacing.width120, { duration: 200 }),
-    opacity: isInputFocused ? withTiming(0, { duration: 200 }) : withTiming(1, { duration: 200 }),
+    transform: [{ translateX: isInputFocused ? withTiming(-100, { duration: 0 }) : withTiming(0, { duration: 0 }) }],
+    width: isInputFocused ? withTiming(0, { duration: 0 }) : withTiming(Spacing.width120, { duration: 0 }),
+    opacity: isInputFocused ? withTiming(0, { duration: 0 }) : withTiming(1, { duration: 0 }),
   }));
 
   const handleSelectImage = async () => {
@@ -125,46 +126,38 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   );
 
   const renderRepliedMessage = () => (
-    <RepliedMessage message={repliedMessage} userReceived={userReceived} onClose={onClearRepliedMessage} />
+    <RepliedMessage
+      message={repliedMessage}
+      userReceived={userReceived}
+      isMe={repliedMessage.userid === userSent.id}
+      onClose={onClearRepliedMessage} />
   );
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ translateY: translateY.value }],
-    };
-  }, [translateY]);
-  // return <TextInput
-  //   ref={inputRef}
-  //   style={[styles.input, isInputFocused && styles.inputFocused]}
-  //   placeholder="Viết tin nhắn ở đây..."
-  //   placeholderTextColor={themeColors.disable}
-  //   value={message}
-  //   onChangeText={setMessage}
-  //   onPressIn={handleInputFocus}
-  //   onSubmitEditing={handleSend}
-  //   onBlur={handleInputBlur}
-  //   textAlignVertical="center" // Vertically center text
-  //   multiline // Enable multiple lines
-  // />;
   return (
-    <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
+    <View style={[styles.container, { paddingBottom: Spacing.width16 }]}>
       {repliedMessage && renderRepliedMessage()}
       {isShowGame && renderGame()}
       <View style={[styles.viewInput]}>
         <Animated.View style={[styles.iconsContainer, iconsAnimationStyle]}>
-          <TouchableOpacity style={styles.iconButton}>
+          <TouchableOpacity
+            disabled={isShowGame}
+            style={styles.iconButton}>
             <GlobalIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSelectImage} style={styles.iconButton}>
+          <TouchableOpacity
+            disabled={isShowGame}
+            onPress={handleSelectImage} style={styles.iconButton}>
             <UploadImageIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
           </TouchableOpacity>
-          {!gameSelected && (
-            <TouchableOpacity hitSlop={
+          {/* {!gameSelected && ( */}
+          <TouchableOpacity
+            disabled={!!gameSelected}
+            hitSlop={
               { top: 10, bottom: 10, left: 10, right: 10 }
-            } onPress={() => setIsShowGame(!isShowGame)} style={styles.iconButton}>
-              <GameHandleIcon width={Spacing.width32} height={Spacing.width32} />
-            </TouchableOpacity>
-          )}
+            } onPress={() => setIsShowGame(!isShowGame)} style={[styles.iconButton]}>
+            <GameHandleIcon width={Spacing.width32} height={Spacing.width32} color={gameSelected ? themeColors.disable : themeColors.colorMain4} />
+          </TouchableOpacity>
+          {/* )} */}
         </Animated.View>
         {!showIcons && (
           <TouchableOpacity onPress={handleShowIcons} style={[styles.iconButton, { width: Spacing.width30 }]}>
@@ -202,7 +195,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderTopWidth: 1,
       borderTopColor: 'rgba(41,41,41,1)',
       gap: Spacing.width16,
-      minHeight: Spacing.height100,
+      minHeight: Spacing.height86,
 
     },
     viewInput: {
@@ -220,8 +213,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       height: Spacing.width30,
       alignItems: 'center',
       justifyContent: 'center',
-
-
     },
     input: {
       flex: 1,

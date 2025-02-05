@@ -52,3 +52,6 @@ export interface ChatInterface {
     time_updated: string;
   };
 }
+// new type
+
+export interface ConversationInterface {}

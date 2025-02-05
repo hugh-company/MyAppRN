@@ -22,16 +22,20 @@ export function MessageSent(props: MessageSentProps) {
   const styles = createStyles(themeColors);
   const { item, user, handleReply } = props;
   const translateX = new Animated.Value(0);
-
   const handleGestureEvent = Animated.event(
     [{ nativeEvent: { translationX: translateX } }],
-    { useNativeDriver: true }
+    {
+      useNativeDriver: true,
+    }
   );
 
   const handleGestureEnd = (event) => {
+    console.log({ event });
+
     if (event.nativeEvent.translationX < -50) {
       handleReply(item);
     }
+
     Animated.spring(translateX, {
       toValue: 0,
       useNativeDriver: true,
@@ -55,6 +59,7 @@ export function MessageSent(props: MessageSentProps) {
       activeOffsetX={[-50, 1000]}
     >
       <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
+
         <View style={styles.containerMessage}>
           {/* <LinearGradient
             colors={['#77051F', '#432617']}
@@ -125,11 +130,9 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   containerMessage: {
     borderRadius: Spacing.width16,
-
-
     marginRight: Spacing.width16,
     backgroundColor: '#77051F',
-    width: '80%',
+    maxWidth: '80%',
   },
 
   images: {
@@ -141,6 +144,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     padding: Spacing.width16,
     gap: Spacing.width24,
     minWidth: Spacing.width100,
+    flex: 1,
 
   },
   txtMessage: {
@@ -172,5 +176,13 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     gap: Spacing.width4,
+  },
+  iconContainer: {
+    position: 'absolute',
+    left: -50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 50,
+    height: '100%',
   },
 });

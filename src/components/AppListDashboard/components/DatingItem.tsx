@@ -2,7 +2,7 @@ import { ImageBackgroundDating } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface DatingHomeProps {
@@ -12,7 +12,18 @@ interface DatingHomeProps {
 export const DatingItem = ({ style }: DatingHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isLoaded) {
+    return <></>;
+  }
 
   return (
     <View style={styles.container}>

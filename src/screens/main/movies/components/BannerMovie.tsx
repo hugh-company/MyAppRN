@@ -4,7 +4,7 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen }
 import { ItemListProduct } from '@types';
 import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -14,18 +14,25 @@ interface BannerMovieProps {
   title?: string;
   isGame?: boolean
 }
-export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieProps) => {
+export const BannerMovie = React.memo(({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const navigateBanner = (item: ItemListProduct) => {
 
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+  const navigateBanner = useCallback((item: ItemListProduct) => {
     goToDetail({
       item,
       type: item?.posttype,
     });
-  };
-  const renderItemBanner = ({ item }: { item: ItemListProduct }) => (
+  }, []);
+  const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
     <TouchableOpacity onPress={() => navigateBanner(item)} style={styles.banner}>
       <AppImage uri={item.banner.path} style={styles.image} />
       <LinearGradient
@@ -44,7 +51,6 @@ export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieP
                   {getPrettyNumberString(item.episode_total ?? 0)}/{getPrettyNumberString(item.episode_total ?? 0)} {t('home.episodes')}
                 </AppText>
               </View>}
-
               <View style={styles.viewRow}>
                 <LikeActiveIcon size={Spacing.width16} color={themeColors.star} />
                 <AppText style={styles.txtLike}>{getPrettyNumberString(item.like_count ?? 0)} {t('home.likes')}</AppText>
@@ -57,16 +63,22 @@ export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieP
         </View>
       </LinearGradient>
     </TouchableOpacity>
-  );
+  ), [navigateBanner, themeColors, isGame]);
+
+  if (!isLoaded) {
+    return <></>;
+  }
+
   return (
     <View style={[styles.container, style]}>
-      <AppBanners width={WidthScreen} label={title}
+      <AppBanners
+        width={WidthScreen} label={title}
         data={data}
         labelStyle={styles.title}
         renderItem={renderItemBanner} />
     </View>
   );
-};
+});
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({

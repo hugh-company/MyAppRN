@@ -6,7 +6,7 @@ import { useViewListScreen } from './ViewListScreen.hook';
 import { HeaderListScreen } from './components/HeaderListScreen';
 
 const ViewListScreen = () => {
-  const { data, type, styles, label, search, onSearch, slugCategory, onSelectedCategory, scrollHandler, scrollY,
+  const { data, refFlatList, styles, label, search, onSearch, slugCategory, onSelectedCategory, scrollHandler, scrollY,
     categoriesList, loading, list,
     onLoadMore,
   } = useViewListScreen();
@@ -24,6 +24,7 @@ const ViewListScreen = () => {
         scrollY={scrollY} />
       {loading ? <LoadingList numColumns={2} /> : <Animated.View style={styles.listContainer}>
         <AppListMovies
+          ref={refFlatList}
           numColumns={2}
           onScroll={scrollHandler}
           scrollEventThrottle={16}

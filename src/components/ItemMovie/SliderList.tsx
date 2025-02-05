@@ -3,7 +3,7 @@ import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ButtonNavigationInterface, PostTypeKey, TabInterface } from '@types';
 import { goToDetail, goToListView } from '@utils';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 import { SliderListProps } from './SliderList.type';
@@ -17,18 +17,19 @@ interface Props extends SliderListProps {
 const widthItem = Spacing.width240;
 const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => {
   const { themeColors } = useTheme();
-  const styles = createStyles(themeColors);
-
-
-
-
-  //
-
+  const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50, minimumViewTime: 300 });
   const scrollX = useSharedValue(0);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
 
   const onScroll = useAnimatedScrollHandler((event) => {
     scrollX.value = data?.length > 1 ? event.contentOffset.x : 0;
@@ -46,38 +47,44 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
     }
   }, []);
 
-  const renderItem = useCallback(({ item, index }: { item: TabInterface, index: number }) => (
-    <View style={styles.itemType}>
-      <FlatList
-        style={styles.listMovie}
-        scrollEnabled={false}
-        numColumns={2}
-        data={item.items}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity onPress={() => {
-            goToDetail({ item, type });
-          }} style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}>
-            <AppImage uri={item.feature.square} style={styles.image} />
-          </TouchableOpacity>
-        )}
-      />
 
-      <TouchableOpacity onPress={() => {
-        goToListView({
-          ...button,
-          keyCategory: item.slug,
-          label: title,
-        });
-      }} style={styles.viewType}>
-        <AppText style={styles.txtType}>{item.name}</AppText>
-        <RightIcon />
-      </TouchableOpacity>
-    </View>
-  ), [styles]);
+  const renderItem = useCallback(({ item }: { item: TabInterface }) => {
+    return (
+      <View style={styles.itemType}>
+        <View style={styles.listMovie}>
+          {item?.items.map((movieItem, index) => (
+            <TouchableOpacity
+              key={movieItem.id.toString()}
+              onPress={() => {
+                goToDetail({ item: movieItem, type });
+              }}
+              style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}
+            >
+              <AppImage uri={movieItem.feature.square} style={styles.image} />
+            </TouchableOpacity>
+          ))}
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            goToListView({
+              ...button,
+              keyCategory: item.slug,
+              label: title,
+            });
+          }}
+          style={styles.viewType}
+        >
+          <AppText style={styles.txtType}>{item.name}</AppText>
+          <RightIcon />
+        </TouchableOpacity>
+      </View>
+    );
+  }, [styles, button, title, type]);
 
 
-  if (!data) { return null; }
+  if (!data || !isLoaded) {
+    return <></>;
+  }
 
   return (
     <View style={[styles.container, style]}>
@@ -94,13 +101,13 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
       </View>
       <Animated.FlatList
         ref={flatListRef}
-        data={data || []}
+        data={data}
         horizontal
-        // pagingEnabled
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ flexGrow: 1 }}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => `list_item_slider_${index}`}
+        // initialNumToRender={3}
         onViewableItemsChanged={onViewRef}
         viewabilityConfig={viewConfigRef.current}
         getItemLayout={(data, index) => ({
@@ -120,7 +127,6 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
               style={[
                 styles.dot,
                 currentIndex === index ? styles.activeDot : styles.inactiveDot,
-                // animatedDotStyles[index],
               ]}
             />
           ))}
@@ -130,7 +136,7 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
   );
 };
 
-export default SliderList;
+export default memo(SliderList);
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
@@ -191,14 +197,12 @@ const createStyles = (themeColors: ThemeColors) =>
       width: widthItem,
       marginLeft: Spacing.width16,
       padding: Spacing.width16,
-
     },
     viewType: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       marginTop: Spacing.width12,
-
     },
     txtType: {
       fontSize: FontSize.FontSize14,
@@ -210,5 +214,9 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     listMovie: {
       // Add any necessary styles here
+
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      flexWrap: 'wrap',
     },
   });

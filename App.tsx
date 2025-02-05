@@ -1,4 +1,4 @@
-import { apiService, setupCachePersister } from '@api';
+import { apiService } from '@api';
 
 import { GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { AppNavigator, NavigationUtils } from '@navigation';
@@ -8,6 +8,7 @@ import { ThemeProvider } from '@theme';
 import { initI18n } from '@translations';
 import FlashMessage from 'react-native-flash-message';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 import { LogBox, Platform, StatusBar, StyleSheet } from 'react-native';
 import { Settings } from 'react-native-fbsdk-next';
@@ -19,11 +20,13 @@ import {
   initialWindowMetrics,
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
-import { enableScreens } from 'react-native-screens';
+import { enableFreeze, enableScreens } from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+
 enableScreens();
+enableFreeze(true);
 // Ask for consent first if necessary
 // Possibly only do this for iOS if no need to handle a GDPR-type flow
 Settings.initializeSDK();
@@ -36,57 +39,44 @@ GoogleSignin.configure({
 // connect apollo client
 
 initI18n();
-const persistorCache = setupCachePersister();
-// const client = setupGraphQlClient();
-// const useGraphQLClient = () => {
-//   React.useEffect(() => {
-//     const loadCache = async () => {
-//       await persistorCache.restore();
-//     };
-
-//     loadCache();
-//   }, []);
-
-//   return client;
-// };
 function App(): React.JSX.Element {
+  const queryClient = new QueryClient();
 
   useEffect(() => {
     // Hide splash screen once app is ready
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
     apiService.setBaseURL();
-
   }, []);
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
+    'Open debug',
   ]);
   return (
     <GestureHandlerRootView style={styles.container}>
       <ThemeProvider >
         <KeyboardProvider>
-          <StatusBar translucent backgroundColor="transparent" hidden={true} />
-          <Provider store={store}>
-            {/* <ApolloProvider client={client}> */}
-            <PersistGate loading={null} persistor={persistor}>
-              <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <QueryClientProvider client={queryClient}>
+            <StatusBar translucent backgroundColor="transparent" hidden={true} />
+            <Provider store={store}>
+              <PersistGate loading={null} persistor={persistor}>
+                <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+                  <AppNavigator
+                    ref={(navigatorRef: any) => {
+                      NavigationUtils.setTopLevelNavigator(navigatorRef);
+                    }}
+                  />
+                  <ModalPortal />
+                  <ModalConfirmation />
+                  <ModalChangeLanguage />
+                  <FlashMessage position="top" />
+                  <GlobalUI ref={GlobalService.globalUIRef} />
+                </SafeAreaProvider>
 
+              </PersistGate>
 
-                <AppNavigator
-                  ref={(navigatorRef: any) => {
-                    NavigationUtils.setTopLevelNavigator(navigatorRef);
-                  }}
-                />
-                <ModalPortal />
-                <ModalConfirmation />
-                <ModalChangeLanguage />
-                <FlashMessage position="top" />
-                <GlobalUI ref={GlobalService.globalUIRef} />
-              </SafeAreaProvider>
-
-            </PersistGate>
-            {/* </ApolloProvider> */}
-          </Provider>
+            </Provider>
+          </QueryClientProvider>
         </KeyboardProvider>
       </ThemeProvider>
 

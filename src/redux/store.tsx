@@ -11,7 +11,7 @@ const newAsyncStorage = {
     key: string,
     value: string | number | boolean | Uint8Array,
   ) => {
-    return AsyncStorage.set(key, value);
+    return AsyncStorage.set(key, value.toString());
   },
   removeItem: async (key: string) => {
     return AsyncStorage.delete(key);
@@ -21,7 +21,7 @@ const newAsyncStorage = {
 const persistConfig = {
   key: 'root',
   storage: newAsyncStorage,
-  // whitelist: ['taskSlice'],
+  whitelist: ['accountSlice'],
   // blacklist: ['taskSlice'],
   // blacklist : là các reducer mà không muốn lưu vào storage
   // whitelist : là các reducer muốn lưu vào storage

@@ -3,18 +3,22 @@ import { navigate, SCREEN_ROUTE } from '@navigation';
 import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import { Animated, View } from 'react-native';
 import { useMovieScreen } from './MovieScreen.hook';
+
+const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextProps) => {
+  return prevProps.data === nextProps.data && prevProps.loading === nextProps.loading;
+});
 
 const MovieScreen = () => {
   const { data,
     styles,
     opacityStyle,
-    tabSelect,
+
     heightStyle,
-    handleCategorySelect,
     scrollHandler,
+    handleCategorySelect,
+    tabSelect,
     onRefresh,
     loading,
     categories,
@@ -32,12 +36,13 @@ const MovieScreen = () => {
         />
       </Animated.View>
       <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />
-      <AppListDashboard
+      <MemoizedAppListDashboard
         data={data}
         onScroll={scrollHandler}
         loading={loading}
+        key={'movie_dashboard'}
         onRefresh={onRefresh}
-
+        keyExtractor={(item, index) => `movie_dashboard_${index}`}
         typeScreen={ItemListDashboard.MOVIES}
       />
     </View>

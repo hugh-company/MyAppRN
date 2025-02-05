@@ -2,7 +2,7 @@ import { AppCategoryList, AppFlatListAnimated, ItemMovie } from '@components';
 import { ThemeColors, useTheme } from '@theme';
 import { ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface } from '@types';
 import { goToDetail } from '@utils';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 export interface CategoryListItemProps {
   data?: TabInterface[] | undefined;
@@ -17,6 +17,15 @@ export function CategoryListItem(props: CategoryListItemProps) {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const [categoryIdSelected, setCategoryIdSelected] = React.useState(data[0]?.id);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   const onSelectedCategory = (category: TabInterface) => {
     setCategoryIdSelected(category.id);
   };
@@ -28,6 +37,10 @@ export function CategoryListItem(props: CategoryListItemProps) {
       <ItemMovie item={item} onPress={() => onClickDetail(item)} />
     );
   };
+
+  if (!isLoaded) {
+    return <></>;
+  }
 
   return <View style={styles.container}>
     <AppCategoryList

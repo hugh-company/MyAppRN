@@ -25,7 +25,13 @@ export const useChapterDetail = () => {
   const scrollY = useSharedValue(0);
   // call api
   useEffect(() => {
+    const controller = new AbortController();
     callAllApi();
+
+    return () => {
+      controller.abort();
+      scrollY.value = 0; // Reset animation value
+    };
   }, []);
   const callAllApi = async () => {
     Promise.all([callApi(), viewMovieApi()]).finally(() => {

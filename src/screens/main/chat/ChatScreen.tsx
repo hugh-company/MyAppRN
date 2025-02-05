@@ -18,13 +18,14 @@ const ChatScreen = () => {
     return (
       <ItemChat
         item={item}
-        userReceived={message.user}
+
         isMe={item.userid === userInfo?.id}
         userSent={{
           name: userInfo?.fullname || '',
           id: userInfo?.id || '',
           avatar: userInfo?.avatar || '',
         }}
+        userReceived={message.user}
         onSwipeToReply={handleSwipeToReply}
       />
     );
@@ -52,6 +53,11 @@ const ChatScreen = () => {
         <ControlBottomChat
           onUpdateMessage={handleSend}
           repliedMessage={repliedMessage}
+          userSent={{
+            name: userInfo?.fullname || '',
+            id: userInfo?.id || '',
+            avatar: userInfo?.avatar || '',
+          }}
           userReceived={message.user}
           onClearRepliedMessage={() => setRepliedMessage(null)}
         />

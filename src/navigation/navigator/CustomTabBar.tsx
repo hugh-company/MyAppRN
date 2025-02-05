@@ -31,35 +31,28 @@ const ButtonTab = ({ tabKey, onPress, name, Icon, styles, isFocused }: ButtonTab
   });
 
   return (
-    <Animated.View style={[styles.btn, animatedStyle]}>
-      <TouchableOpacity
 
-        onPress={onPress}
-        style={styles.btn}
-        activeOpacity={0.7} // Added activeOpacity for click effect
-      >
-        {Icon && <Icon color={isFocused ? Colors.primary : '#EDEDED'} />}
-        <AppText
-          style={[isFocused ? styles.txtActive : styles.txtInActive]}
-        >{name}</AppText>
-      </TouchableOpacity>
-    </Animated.View>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.btn}
+      activeOpacity={1}
+    >
+      {Icon && <Icon color={isFocused ? Colors.primary : '#EDEDED'} />}
+      <AppText
+        style={[isFocused ? styles.txtActive : styles.txtInActive]}
+      >{name}</AppText>
+    </TouchableOpacity>
+
   );
 };
 const ButtonTabGame = ({ tabKey, onPress, styles, isFocused, name, Icon }: ButtonTabProps) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(isFocused ? 1.1 : 1) }],
-    };
-  });
 
   return (
-    <Animated.View style={[styles.btnGame, animatedStyle]}>
+    <Animated.View style={[styles.btnGame]}>
       <TouchableOpacity
-
         onPress={onPress}
         style={styles.btnGame}
-        activeOpacity={1} // Added activeOpacity for click effect
+        activeOpacity={1}
       >
         {Icon && <Icon />}
         <AppText
@@ -69,7 +62,7 @@ const ButtonTabGame = ({ tabKey, onPress, styles, isFocused, name, Icon }: Butto
     </Animated.View>
   );
 };
-const ButtonBottomTab = (keyTab: 'Home' | 'Movies' | 'Games' | 'Comic' | 'Dating', onPress: () => void, styles: any, isFocused: boolean) => {
+const ButtonBottomTab = ({ keyTab, onPress, styles, isFocused }: { keyTab: 'Home' | 'Movies' | 'Games' | 'Comic' | 'Dating', onPress: () => void, styles: any, isFocused: boolean }) => {
   const menu = {
     'Home': { name: t('navigation.home'), key: SCREEN_ROUTE.HOME, Icon: HomeIcon },
     'Movies': { name: t('navigation.movies'), key: SCREEN_ROUTE.MOVIES, Icon: MovieIcon },
@@ -94,7 +87,7 @@ const ButtonBottomTab = (keyTab: 'Home' | 'Movies' | 'Games' | 'Comic' | 'Dating
   }
 };
 
-export function CustomTabBar({ state, descriptors, navigation }: CustomTabBarProps) {
+export function CustomTabBar({ state, navigation }: CustomTabBarProps) {
   const { themeColors } = useTheme(); // Moved inside the function component
   const { bottom } = useSafeAreaInsets();
 
@@ -103,30 +96,18 @@ export function CustomTabBar({ state, descriptors, navigation }: CustomTabBarPro
     <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
       {state.routes.map((route: any, index: number) => {
         const isFocused = state.index === index;
-        const { options } = descriptors[route.key];
-        const label =
-          options.tabBarLabel !== undefined
-            ? options.tabBarLabel
-            : options.title !== undefined
-              ? options.title
-              : route.name;
-
-
-
         const onPress = () => {
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
-            canPreventDefault: true,
+            // canPreventDefault: true,
           });
           if (!isFocused && !event.defaultPrevented) {
             navigation.navigate(route.name);
           }
         };
         return (
-          <View key={route.key}>
-            {ButtonBottomTab(route.name, onPress, styles, isFocused)}
-          </View>
+          <ButtonBottomTab keyTab={route.name} onPress={onPress} styles={styles} isFocused={isFocused} key={index.toString()} />
         );
       })}
     </View>
@@ -140,7 +121,6 @@ const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.background,
       borderTopColor: themeColors.btnSocial,
       borderTopWidth: 1,
-      paddingHorizontal: Spacing.width16,
 
     },
     btn: {
@@ -148,6 +128,7 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       paddingTop: Spacing.width4,
       gap: Spacing.width4,
+
     },
     txtInActive: {
       fontSize: FontSize.FontSize9,

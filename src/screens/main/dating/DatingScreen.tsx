@@ -1,9 +1,10 @@
-import { LocationIcon2 } from '@assets';
+import { LocationIcon2, MessageIcon } from '@assets';
 import { AppButton, AppText, HeaderMain } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { useDatingScreen } from './DatingScreen.hook';
 import AppListDating from './components/AppListDating';
 import { ListHorizontalUser } from './components/ListHorizontalUser';
@@ -27,9 +28,9 @@ const DatingScreen = () => {
         title={t('navigation.dating')}
         isHome={false}
         isSearch={false}
-      // renderIconRight={<TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MESSAGES)} style={styles.btnMessage}>
-      //   <MessageIcon />
-      // </TouchableOpacity>}
+        renderIconRight={<TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MESSAGES)} style={styles.btnMessage}>
+          <MessageIcon />
+        </TouchableOpacity>}
       />
       <ListHorizontalUser
         data={tabNav || []}

@@ -9,19 +9,31 @@ import {
 import {getDataDashboardApi, getPostDashboardApi} from '@services';
 import {ItemListDashboard, PostTypeKey} from '@types';
 import {useDispatch} from 'react-redux';
-
+// props loading ,setLoading,refresh,setRefresh
+interface IUsePostType {
+  loading?: boolean;
+  setLoading?: any;
+  refresh?: boolean;
+  setRefresh?: any;
+}
 export function usePostType() {
   const dispatch = useDispatch();
+
   const callApiHome = async () => {
-    const responseHome: any = await getDataDashboardApi();
-    dispatch(setHome(responseHome?.data?.home || []));
-    dispatch(
-      setDataSetting({
-        notices: responseHome?.data?.notices || [],
-        bottomNavigation: responseHome?.data?.navbar || [],
-        dataDrawer: responseHome?.data?.menus || [],
-      }),
-    );
+    try {
+      const responseHome: any = await getDataDashboardApi();
+      dispatch(setHome(responseHome?.data?.home || []));
+      dispatch(
+        setDataSetting({
+          notices: responseHome?.data?.notices || [],
+          bottomNavigation: responseHome?.data?.navbar || [],
+          dataDrawer: responseHome?.data?.menus || [],
+        }),
+      );
+      return responseHome;
+    } catch (error) {
+      return error;
+    }
   };
   const callApiSearchDashboard = async () => {
     const response = await getPostDashboardApi(ItemListDashboard.SEARCH);
@@ -57,5 +69,8 @@ export function usePostType() {
     callApiSearchDashboard,
     callApiHome,
     callApiApiDashboard,
+    callApiComicDashboard,
+    callApiGameDashboard,
+    callApiMovieDashboard,
   };
 }

@@ -3,7 +3,7 @@ import {getCategoryApi, getListPostApi} from '@services';
 import {useTheme} from '@theme';
 import {ItemListProduct, PostTypeKey, TabInterface, TypeList} from '@types';
 import {navigateViewListProps} from '@utils';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -29,16 +29,23 @@ export const useViewListScreen = () => {
   const [slugCategory, setSlugCategory] = useState<string>(keyCategory || '');
   const scrollY = useSharedValue(0);
   const [isNext, setIsNext] = useState(true);
+  const refFlatList = useRef<any>(null);
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
   const onSelectedCategory = (item: TabInterface) => {
-    console.log({item});
-    setSlugCategory(item.slug);
-    setPage(1);
-    setIsNext(true);
-    setList([]);
-    setLoading(true);
+    if (item.slug === slugCategory) {
+      if (refFlatList.current) {
+        refFlatList.current.scrollToOffset({offset: 0});
+      }
+      return;
+    } else {
+      setSlugCategory(item?.slug);
+      setPage(1);
+      setIsNext(true);
+      setList([]);
+      setLoading(true);
+    }
   };
   // callapi
   useEffect(() => {
@@ -129,5 +136,6 @@ export const useViewListScreen = () => {
     setCategoriesList,
     type,
     loading,
+    refFlatList,
   };
 };

@@ -11,22 +11,28 @@ import { PosterDetail } from './components/PosterDetail';
 
 const MovieDetailScreen = () => {
 
-  const { styles, detailMovie, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors } = useMovieDetailScreen();
+  const { styles, detailMovie, goToPlay, error, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors } = useMovieDetailScreen();
 
   // if (loading) {
   //   return <LoadingDetailMovie />;
   // }
+  if (error) {
+    return null;
+  }
   if (!detailMovie) {
     return null;
   }
 
+
   return (
     <View style={styles.container}>
       <Animated.ScrollView
+        key={detailMovie?.id} // Add key prop here
         // refetch data
         refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={themeColors.text} />}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
+
       >
         <PosterDetail
           name={detailMovie?.title}
@@ -40,17 +46,14 @@ const MovieDetailScreen = () => {
           totalEpisodes={detailMovie?.chapter_total
           }
           onPlay={() => {
-            console.log({ detailMovie: detailMovie?.chapters?.[0] });
-
+            // goToPlay();
             navigate(SCREEN_ROUTE.VIDEO, {
               video: {
                 ...detailMovie?.chapters?.[0],
                 name: detailMovie?.title,
               },
             });
-            // if (data?.chapters?.length) {
-            //   navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[data?.chapters?.length - 1] });
-            // }
+
           }}
           onNewChapter={() => {
             // if (data?.chapters?.length) {
@@ -59,15 +62,17 @@ const MovieDetailScreen = () => {
           }}
         />
         {detailMovie?.movie_type === 'tvseries' && <AppEpisodes
-          episodes={detailMovie?.chapters} style={styles.episodes}
+          episodes={detailMovie?.chapters}
+          style={styles.episodes}
           onSelectChapter={(item) => {
             console.log({ item });
-            // navigate(SCREEN_ROUTE.VIDEO, {
-            //   video: {
-            //     ...item,
-            //     name: detailMovie?.title,
-            //   },
-            // });
+
+            navigate(SCREEN_ROUTE.VIDEO, {
+              video: {
+                ...item,
+                name: detailMovie?.title,
+              },
+            });
 
           }} />
         }

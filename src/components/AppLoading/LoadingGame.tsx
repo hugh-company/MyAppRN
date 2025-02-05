@@ -16,7 +16,7 @@ const LoadingGame = ({ }: LoadingHomeProps) => {
 
           </View>
           {Array.from({ length: 10 }).map((_, index) => (
-            <View style={styles.list}>
+            <View style={styles.list} key={index}>
 
               <View style={styles.imageOne} />
               <View style={styles.itemOne}>

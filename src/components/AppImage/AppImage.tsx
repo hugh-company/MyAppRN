@@ -24,18 +24,20 @@ export const AppImage = React.memo((props: propsImage) => {
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
 
   useEffect(() => {
-    if (uriBase) {
+    if (uriBase && !defaultSource) {
       fetch(uriBase).then(data => {
-        setStatus({ isLoading: false, isError: data.status !== 200 });
+        setStatus({ isLoading: false, isError: false });
       }).catch(() => {
         setStatus({ isLoading: false, isError: true });
       });
     } else {
-      setStatus({ isLoading: false, isError: true });
+      setStatus({ isLoading: false, isError: false });
     }
   }, [uriBase, checkNetworking]);
 
   const source = status.isError ? NoImage : (imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage));
+
+
 
   return (
     <Box justifyContent={'center'} alignItems="center">

@@ -37,6 +37,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   const [isFocus, setIsFocus] = useState(false);
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+
   const togglePasswordVisibility = () => {
     setSecureTextEntry(!isPrivateText);
   };
@@ -47,6 +48,9 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
       <View style={styles.inputContainer}>
         <TextInput
           ref={ref}
+          onPressIn={() => {
+            setIsFocus(true);
+          }}
           onFocus={() => {
             setIsFocus(true);
           }}
@@ -62,6 +66,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
           ]}
           placeholderTextColor={themeColors.placeholder}
           secureTextEntry={isPrivateText}
+          keyboardType={'email-address'}
           {...inputProps}
         />
         {secureTextEntry && (
@@ -82,6 +87,7 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       marginBottom: Spacing.height16,
+      height: Spacing.height48,
     },
     label: {
       fontSize: FontSize.FontSize14,

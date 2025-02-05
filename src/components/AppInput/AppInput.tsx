@@ -22,7 +22,6 @@ interface AppInputProps<T extends FieldValues> extends Omit<TextInputProps, 'val
 const AppInput = forwardRef<TextInput, AppInputProps<any>>((props, ref) => {
   const {
     label,
-
     secureTextEntry,
     control,
     name,

@@ -1,7 +1,7 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ItemListProduct } from '@types';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
@@ -10,12 +10,19 @@ interface BannerHomeProps {
   data?: ItemListProduct[];
   style?: StyleProp<ViewStyle>
 }
-export const BannerHome = ({ data = [], style }: BannerHomeProps) => {
+const BannerHome = ({ data = [], style }: BannerHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, []);
   const onViewRef = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
@@ -23,7 +30,9 @@ export const BannerHome = ({ data = [], style }: BannerHomeProps) => {
   });
 
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
-
+  if (!isLoaded) {
+    return <></>;
+  }
   return (
     <Animated.View style={[styles.container, style]}>
       <FlatList
@@ -77,6 +86,7 @@ export const BannerHome = ({ data = [], style }: BannerHomeProps) => {
     </Animated.View>
   );
 };
+export default BannerHome;
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({

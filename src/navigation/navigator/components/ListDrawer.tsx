@@ -112,8 +112,6 @@ export function ListDrawer(props: ListDrawerProps) {
         gotoScreen(SCREEN_ROUTE.CREATE_PROFILE);
         break;
       case 'languages':
-
-
         showModalLanguage(true);
         break;
       case 'savedMovies':

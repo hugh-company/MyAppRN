@@ -5,6 +5,8 @@ import React from 'react';
 import { View } from 'react-native';
 import { useGameScreen } from './GameScreen.hook';
 
+const MemoizedAppListDashboard = React.memo(AppListDashboard);
+
 const GameScreen = () => {
   const { games,
     themeColors,
@@ -18,7 +20,7 @@ const GameScreen = () => {
     <View style={styles.container}>
       <HeaderMain title={t('games.title')} isHome={false} />
 
-      <AppListDashboard
+      <MemoizedAppListDashboard
         data={games}
         loading={loading}
         onRefresh={onRefresh}

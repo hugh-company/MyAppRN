@@ -13,7 +13,6 @@ const HomeScreen = () => {
     loading,
   } = useHomeScreen();
 
-
   return (
     <View style={[styles.container]}>
       <MemoizedAppListDashboard
@@ -21,6 +20,7 @@ const HomeScreen = () => {
         onScroll={scrollHandler}
         loading={loading}
         onRefresh={onRefresh}
+        key={'home_dashboard'}
         typeScreen={ItemListDashboard.HOME}
         keyExtractor={(item, index) => `home_dashboard_${index}`}
       />

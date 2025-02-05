@@ -18,7 +18,6 @@ const ChapterDetail = () => {
   if (!detail) {
     return null;
   }
-
   return (
     <View style={styles.container}>
       <Animated.ScrollView

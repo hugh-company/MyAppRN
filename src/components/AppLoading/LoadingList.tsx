@@ -35,15 +35,17 @@ const LoadingList = ({ numColumns }: LoadingHomeProps) => {
     );
   };
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
+    <View style={styles.container}>
       <SkeletonPlaceholder>
-        <ScrollView >
+        <ScrollView showsVerticalScrollIndicator={false}>
           {Array.from({ length: 10 }).map((_, index) => (
-            numColumns === 2 ? renderItemTwo() : renderOne()
+            <View key={index}>
+              {numColumns === 2 ? renderItemTwo() : renderOne()}
+            </View>
           ))}
         </ScrollView>
       </SkeletonPlaceholder>
-    </ScrollView>
+    </View>
   );
 };
 const styles = StyleSheet.create({
@@ -51,11 +53,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingHorizontal: Spacing.width16,
+    overflow: 'hidden',
   },
   list: {
     gap: Spacing.width16,
     marginBottom: Spacing.width16,
     flexDirection: 'row',
+
   },
   item: {
     height: Spacing.height236,

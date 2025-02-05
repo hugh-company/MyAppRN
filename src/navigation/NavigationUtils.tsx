@@ -91,5 +91,6 @@ export const NavigationUtils = {
   setTopLevelNavigator,
   goBack,
   pop,
-  reset, navigateToStack,
+  reset,
+  navigateToStack,
 };

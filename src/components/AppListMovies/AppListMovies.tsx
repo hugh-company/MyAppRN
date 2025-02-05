@@ -4,8 +4,8 @@ import { Spacing, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
-import React from 'react';
-import { NativeScrollEvent, NativeSyntheticEvent, TouchableOpacity, View } from 'react-native';
+import React, { forwardRef } from 'react';
+import { FlatList, NativeScrollEvent, NativeSyntheticEvent, TouchableOpacity, View } from 'react-native';
 import { createStyles } from './styles';
 export interface AppListMoviesProps {
   data: any[];
@@ -18,7 +18,8 @@ export interface AppListMoviesProps {
   keyExtractor?: ((item: any, index: number) => string) | undefined
 }
 
-const AppListMovies = ({ data, scrollEventThrottle, type, keyExtractor, numColumns = 2, onScroll, onLoadMore }: AppListMoviesProps) => {
+const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.ForwardedRef<FlatList<any>> | undefined) => {
+  const { data, scrollEventThrottle, type, keyExtractor, numColumns = 2, onScroll, onLoadMore } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
@@ -51,20 +52,19 @@ const AppListMovies = ({ data, scrollEventThrottle, type, keyExtractor, numColum
   const keyExtractorList = (item: any, index: number) => item?.id || index.toString();
   return (
     <AppFlatListAnimated
+      ref={ref}
       onScroll={onScroll}
       scrollEventThrottle={scrollEventThrottle}
       data={data}
       horizontal={numColumns === 1}
       contentContainerStyle={styles.container}
       keyExtractor={keyExtractor || keyExtractorList}
-
       numColumns={numColumns}
       renderItem={renderItem}
       onLoadMore={onLoadMore}
       columnWrapperStyle={numColumns !== 1 ? styles.columnWrapper : undefined}
     />
-
   );
-};
+});
 
 export default AppListMovies;
