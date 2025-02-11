@@ -282,6 +282,14 @@
     "repliedMe": "Đang trả lời chính bạn",
     "repliedOther": "Đang trả lời USER",
     "Read": "Đã đọc",
-    "Unread": "Chưa đọc"
+    "Unread": "Chưa đọc",
+    "send": "Gửi",
+    "sending": "Đang gửi...",
+    "repliedGame": "Đang trả lời trò chơi",
+    "repliedImage": "Đang trả lời ảnh",
+    "meSendImage": "Bạn đã gửi ảnh",
+    "userSendImage": "USER đã gửi ảnh",
+    "meSendGame": "Bạn đã gửi trò chơi",
+    "userSendGame": "USER đã gửi trò chơi"
   }
 }

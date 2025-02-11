@@ -1,38 +1,53 @@
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
+import { getUserInfo } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { MessageItem } from '@types';
+import { ConversationInterface, MessageStatus } from '@types';
 import { checkMessageTime } from '@utils';
+import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 export interface ItemMessageProps {
-  item: MessageItem;
+  item: ConversationInterface;
 }
 
 export function ItemMessage(props: ItemMessageProps) {
   const { item } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const userInfo = useSelector(getUserInfo);
+  const renderTextMessage = () => {
+    switch (item?.last_message?.content?.type) {
+      case 'text':
+        return item?.last_message?.content?.data?.text;
+      case 'image':
+        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendImage') : t('message.userSendImage').replace('USER', item?.other_user?.fullname);
+      case 'game':
+        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendGame') : t('message.userSendGame').replace('USER', item?.other_user?.fullname);
+      default:
+        return '';
+    }
+  };
   return (
     <TouchableOpacity style={styles.container} onPress={() => {
       navigate(SCREEN_ROUTE.CHAT, { message: item });
     }}>
       <View>
-        <AppImage uri={item.recipient_avatar} style={styles.avatar} />
-        {item?.user?.status && <View style={styles.status} />}
+        <AppImage uri={item.other_user?.avatar} style={styles.avatar} />
+        {item?.other_user?.online && <View style={styles.status} />}
       </View>
 
       <View style={{ flex: 1, gap: Spacing.width8 }}>
         <View style={styles.viewInfo}>
-          <AppText style={styles.txtName} numberOfLines={1}>{item.recipient_fullname}</AppText>
-          <AppText style={styles.txtDate}>{checkMessageTime(item.last_message?.content?.time_send)}</AppText>
+          <AppText style={styles.txtName} numberOfLines={1}>{item.other_user?.fullname}</AppText>
+          <AppText style={styles.txtDate}>{checkMessageTime(item.last_message?.content?.created_at)}</AppText>
         </View>
 
         <View style={styles.infoMessage}>
-          <AppText style={styles.txtMessage}>{item?.last_message?.content?.data}</AppText>
-          {item?.unread_count > 0 && <View style={styles.ViewCount}>
-            <AppText style={styles.txtCount} numberOfLines={3}>{item?.unread_count > 9 ? '9+' : item?.unread_count}</AppText>
-          </View>}
+          <AppText style={styles.txtMessage}>{renderTextMessage()}</AppText>
+          {/* {item?.isread && <View style={[styles.ViewCount, { backgroundColor: 'green' }]} />} */}
+          {item?.last_message?.recipient_id === userInfo?.id && item?.last_message?.content?.status !== MessageStatus.READ && <View style={styles.ViewCount} />}
         </View>
       </View>
     </TouchableOpacity>
@@ -67,7 +82,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Spacing.width8,
-    // flex: 1,
+
 
   },
   txtName: {
@@ -88,8 +103,8 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     ...FontWithFamily.FontWithFamily_400,
   },
   ViewCount: {
-    width: Spacing.width22,
-    height: Spacing.width22,
+    width: Spacing.width12,
+    height: Spacing.width12,
     borderRadius: Spacing.width12,
     backgroundColor: themeColors.primary,
     justifyContent: 'center',

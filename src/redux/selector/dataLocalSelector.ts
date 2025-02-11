@@ -17,3 +17,6 @@ export const getDatingModuleLocal = (state: RootState) =>
 
 export const getSearchModuleLocal = (state: RootState) =>
   state.dataLocalSlide.search;
+
+export const getGameTrendingLocal = (state: RootState) =>
+  state.dataLocalSlide.games_trending;

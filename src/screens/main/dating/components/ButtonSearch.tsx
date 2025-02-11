@@ -12,10 +12,10 @@ export interface ButtonSearchProps {
 }
 
 export function ButtonSearch(props: ButtonSearchProps) {
-  const { style, label } = props;
+  const { style, label, onPress } = props;
   // ...existing code...
   return (
-    <TouchableOpacity style={[styles.container, style]}>
+    <TouchableOpacity onPress={onPress} style={[styles.container, style]}>
       <LinearGradient
         colors={['#D11030', '#C1088C']}
         style={styles.gradient}

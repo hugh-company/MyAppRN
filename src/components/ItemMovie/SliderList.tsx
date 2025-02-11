@@ -12,24 +12,26 @@ interface Props extends SliderListProps {
   style?: StyleProp<ViewStyle>;
   onViewMore?: () => void;
   type: PostTypeKey;
-  button?: ButtonNavigationInterface
+  button?: ButtonNavigationInterface;
 }
+
 const widthItem = Spacing.width240;
 const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50, minimumViewTime: 300 });
   const scrollX = useSharedValue(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
+
 
   const onScroll = useAnimatedScrollHandler((event) => {
     scrollX.value = data?.length > 1 ? event.contentOffset.x : 0;
@@ -80,11 +82,10 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
       </View>
     );
   }, [styles, button, title, type]);
-
-
-  if (!data || !isLoaded) {
-    return <></>;
+  if (!isLoaded) {
+    return null;
   }
+
 
   return (
     <View style={[styles.container, style]}>

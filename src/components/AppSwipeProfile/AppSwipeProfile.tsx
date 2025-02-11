@@ -96,6 +96,7 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
   const likeOpacity = useAnimatedStyle(() => {
     return {
       opacity: translateX.value > 50 ? 1 : 0,
+      transform: [{ translateX: translateX.value > 50 ? 50 : 0 }],
     };
   });
 
@@ -110,6 +111,7 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
   const dislikeOpacity = useAnimatedStyle(() => {
     return {
       opacity: translateX.value < -50 ? 1 : 0,
+      transform: [{ translateX: translateX.value < -50 ? -50 : 0 }],
     };
   });
 

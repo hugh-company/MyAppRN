@@ -12,7 +12,7 @@ interface BannerMovieProps {
   data: ItemListProduct[];
   style?: StyleProp<ViewStyle>;
   title?: string;
-  isGame?: boolean
+  isGame?: boolean;
 }
 export const BannerMovie = React.memo(({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
@@ -23,15 +23,18 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
+
   const navigateBanner = useCallback((item: ItemListProduct) => {
     goToDetail({
       item,
       type: item?.posttype,
     });
   }, []);
+  console.log('BannerMovie');
+
   const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
     <TouchableOpacity onPress={() => navigateBanner(item)} style={styles.banner}>
       <AppImage uri={item.banner.path} style={styles.image} />
@@ -66,9 +69,8 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
   ), [navigateBanner, themeColors, isGame]);
 
   if (!isLoaded) {
-    return <></>;
+    return null;
   }
-
   return (
     <View style={[styles.container, style]}>
       <AppBanners

@@ -1,12 +1,6 @@
-import {getMoviesModuleLocal, setMovies} from '@redux';
-import {getPostDashboardApi} from '@services';
+import {fetchMoviesData, RootState} from '@redux';
 import {Spacing, useTheme} from '@theme';
-import {
-  ModuleItemInterface,
-  PostTypeKey,
-  TabInterface,
-  TypeKeyListApi,
-} from '@types';
+import {ModuleItemInterface, TabInterface, TypeKeyListApi} from '@types';
 import {useCallback, useEffect, useState} from 'react';
 import {
   Extrapolate,
@@ -21,10 +15,7 @@ import {createStyles} from './styles';
 export const useMovieScreen = () => {
   const [data, setData] = useState<ModuleItemInterface[]>([]);
   const [categories, setCategories] = useState<TabInterface[]>([]);
-  const [refresh, setRefresh] = useState(false);
-  const movies = useSelector(getMoviesModuleLocal);
-  const [search, setSearch] = useState('');
-  const [loading, setLoading] = useState(false);
+  const movies = useSelector((state: RootState) => state.dataLocalSlide.movies);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
@@ -32,6 +23,8 @@ export const useMovieScreen = () => {
     name: '',
     type: '',
   });
+  const [loading, setLoading] = useState(false);
+
   const scrollY = useSharedValue(0);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -39,51 +32,31 @@ export const useMovieScreen = () => {
       setData(
         movies?.filter(elm => elm.type !== TypeKeyListApi.TYPE_TABS) || [],
       );
-
       const category: any = movies.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
       );
-      // console.log({tabSelect: tabSelect?.name});
       setCategories(category?.items || []);
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
       setLoading(false);
-      setRefresh(false);
     } else {
       setLoading(true);
     }
   }, [movies]);
   // Call Api
   useEffect(() => {
-    callApi();
+    dispatch(fetchMoviesData());
   }, []);
 
-  const callApi = async (filter?: string) => {
-    try {
-      const params = {
-        filter: filter,
-      };
-      const response = await getPostDashboardApi(PostTypeKey.MOVIES, params);
-      console.log({response});
-      dispatch(setMovies(response.data?.modules || []));
-    } catch (error) {
-      console.log({error});
-      setLoading(false);
-      setRefresh(false);
-    } finally {
-    }
-  };
-
   const onRefresh = () => {
-    setRefresh(true);
-  };
-
-  useEffect(() => {
-    if (refresh) {
-      callApi();
+    // setRefresh(true);
+    let textFilter = '';
+    if (tabSelect) {
+      textFilter = `${tabSelect.type}__${tabSelect.id}`;
     }
-  }, [refresh]);
+    dispatch(fetchMoviesData({filter: textFilter}));
+  };
 
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
@@ -109,7 +82,9 @@ export const useMovieScreen = () => {
     setTabSelect(item);
     setLoading(true);
     const textFilter = `${item.type}__${item.id}`;
-    callApi(textFilter);
+    console.log({textFilter});
+
+    dispatch(fetchMoviesData({filter: textFilter}));
   }, []);
 
   interface HandleCategorySelect {
@@ -126,7 +101,7 @@ export const useMovieScreen = () => {
   return {
     data,
     styles,
-    search,
+
     tabSelect,
     heightStyle,
     handleCategorySelect,

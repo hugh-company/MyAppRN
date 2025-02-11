@@ -29,18 +29,17 @@ const DetailUser = () => {
         renderItem={() => (
           <>
             <View>
-              <BannerUser
-
-                data={data.galleries} />
+              {data.galleries?.length > 0 && <BannerUser
+                data={data.galleries} />}
               <View style={styles.info}>
                 <AppText style={styles.name}>{[data?.fullname, getAge(data?.birthday)].join(', ')}</AppText>
                 {data?.job && <AppText style={styles.profession}>{data?.job}</AppText>}
               </View>
               {/* location */}
-              <View style={styles.viewLocation}>
+              {data?.location && <View style={styles.viewLocation}>
                 <LocationIcon />
                 <AppText style={styles.txtLocation}>{getDistanceLocation(data?.location)}</AppText>
-              </View>
+              </View>}
 
 
             </View>

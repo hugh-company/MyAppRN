@@ -2,60 +2,21 @@ import { CloseBigIcon, FilterIcon, HeadIcon, NoSearchImage, StarActiveIcon } fro
 import { AppHeader, AppImage, AppSwipeProfile, AppText } from '@components';
 import { Spacing } from '@theme';
 import { t } from 'i18next';
-import React, { useEffect, useRef, useState } from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useFilterDating } from './FilterDating.hook';
-import MatchScreen from './components/MatchScreen';
 import { ModalFilterDating } from './components/ModalFilterDating';
 
-const FilterDating = () => {
-  const { data, themeColors, styles, isFilter, setIsFilter, filter, onFilterApi } = useFilterDating();
+const FilterDating: React.FC = () => {
+  const { data, themeColors, styles, isFilter, setIsFilter, filter, onFilterApi,
+
+    swipeRef, handleSwipe, handleSwipeAction, matchUser, setMatchUser,
+  } = useFilterDating();
   const { bottom } = useSafeAreaInsets();
-  const [matchUser, setMatchUser] = useState(null);
-  const swipeRef = useRef<{ triggerSwipe: (action: string) => void }>(null);
 
-  const handleSwipe = (direction, user) => {
-    console.log(`Swiped ${direction}`, user);
-    if (direction === 'like') {
-      handleLike(user);
-    } else if (direction === 'dislike') {
-      handleDislike(user);
-    } else if (direction === 'superlike') {
-      handleSuperLike(user);
-    }
-  };
 
-  const handleSwipeAction = (action) => {
-    if (swipeRef.current) {
-      swipeRef.current.triggerSwipe(action);
-    }
-  };
-
-  const handleLike = (user) => {
-    setMatchUser(user);
-  };
-
-  const handleDislike = (user) => {
-    console.log('Disliked');
-    // Add your dislike logic here
-  };
-
-  const handleSuperLike = (user) => {
-    console.log('Super Liked');
-    // Add your super like logic here
-  };
-
-  useEffect(() => {
-    if (Platform.OS === 'android' && matchUser) {
-      const timer = setTimeout(() => {
-        setMatchUser(null);
-      }, 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [matchUser]);
-
-  const renderList = () => {
+  const renderList = (): JSX.Element => {
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.list}>
@@ -77,7 +38,7 @@ const FilterDating = () => {
       </View>
     );
   };
-  const renderEmpty = () => {
+  const renderEmpty = (): JSX.Element => {
     return (
       <View style={styles.viewEmpty}>
         <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />
@@ -99,13 +60,13 @@ const FilterDating = () => {
           onFilterApi(value);
         }} />}
 
-      {matchUser && (
+      {/* {matchUser && (
         <MatchScreen
           visible={!!matchUser}
           userMatch={matchUser}
           onClose={() => setMatchUser(null)}
         />
-      )}
+      )} */}
     </View>
   );
 };

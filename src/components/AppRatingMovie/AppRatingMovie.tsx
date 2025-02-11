@@ -5,29 +5,43 @@ import { Spacing, useTheme } from '@theme';
 import { KeyHomeData, PostTypeKey } from '@types';
 import { showNotificationError, showNotificationSuccess } from '@utils';
 import { t } from 'i18next';
-import React from 'react';
-import { Animated, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Animated, DeviceEventEmitter, TouchableOpacity, View } from 'react-native';
 import { createStyles } from './styles';
 export interface AppRatingMovieProps {
-  type?: PostTypeKey;
-  visible: boolean;
-  onClose: () => void;
-  id: number;
+  // type?: PostTypeKey;
+  // visible: boolean;
+  // onClose: () => void;
+  // id: number;
 }
 
-const AppRatingMovie = ({ type = PostTypeKey.MOVIES, visible, onClose, id }: AppRatingMovieProps) => {
+const AppRatingMovie = ({ }: AppRatingMovieProps) => {
+  const [visible, setVisible] = React.useState(false);
+  const [id, setId] = React.useState(0);
+  const [type, setType] = React.useState<PostTypeKey | KeyHomeData>(KeyHomeData.MOVIES);
   const { themeColors } = useTheme();
   const [txt, setTxt] = React.useState<string>('');
   const styles = createStyles(themeColors);
   const [rating, setRating] = React.useState(0);
   const [scaleAnim] = React.useState(new Animated.Value(1));
-
+  useEffect(() => {
+    DeviceEventEmitter.addListener('showRatingMovie', (data) => {
+      const { id, type } = data;
+      setId(id);
+      setType(type);
+      setVisible(true);
+    }
+    );
+    return () => {
+      DeviceEventEmitter.removeAllListeners('showRatingMovie');
+    };
+  }, []);
   const onSendRating = async () => {
     try {
       await ratingPostApi(id, type, { rating, content: txt });
 
       showNotificationSuccess(t('ratings.success'), t('ratings.successMessage'));
-      onClose?.();
+      setVisible(false);
       setTxt('');
       setRating(0);
     } catch (error) {
@@ -67,10 +81,9 @@ const AppRatingMovie = ({ type = PostTypeKey.MOVIES, visible, onClose, id }: App
   };
   return (
     <AppBottomModal
-      height={0.94}
-      modalStyle={{ backgroundColor: themeColors.background }}
+      height={0.90}
       visible={visible}
-      onClose={() => onClose?.()} >
+      onClose={() => setVisible(false)} >
       <View style={styles.modalContainer}>
         <AppImage defaultSource={renderIcon(type)} style={styles.image} />
         <AppText style={styles.title}>{t('ratings.title')}</AppText>

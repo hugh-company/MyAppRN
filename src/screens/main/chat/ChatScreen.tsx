@@ -1,8 +1,9 @@
 import { BackgroundChat, ProfileIcon } from '@assets';
 import { AppHeader } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
-import { ChatInterface } from '@types';
-import React from 'react';
+import { MessageItemInterface } from '@types';
+import React, { useState } from 'react';
 import { FlatList, ImageBackground, TouchableOpacity, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,24 +12,26 @@ import { ControlBottomChat } from './components/ControlBottomChat';
 import { ItemChat } from './components/ItemChat';
 // KeyboardController.setInputMode(1);
 const ChatScreen = () => {
-  const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, message, styles, handleSend, userInfo } = useChatScreen();
+  const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, themeColors, flatListRef, message, styles, handleSend, userInfo, scrollToRepliedMessage } = useChatScreen();
   const { bottom } = useSafeAreaInsets();
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const renderMessage = ({ item }: { item: ChatInterface }) => {
+  const renderMessage = ({ item }: { item: MessageItemInterface }) => {
     return (
       <ItemChat
         item={item}
-
-        isMe={item.userid === userInfo?.id}
-        userSent={{
-          name: userInfo?.fullname || '',
-          id: userInfo?.id || '',
-          avatar: userInfo?.avatar || '',
-        }}
-        userReceived={message.user}
+        isMe={item.recipient_id !== userInfo?.id}
+        userSent={userInfo}
+        onGoToRepliedMessage={(vale) => scrollToRepliedMessage(vale)}
+        userReceived={message.other_user}
         onSwipeToReply={handleSwipeToReply}
       />
     );
+  };
+
+  const handleScroll = (event: any) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    setIsScrolled(offsetY > 0);
   };
 
   return (
@@ -42,27 +45,40 @@ const ChatScreen = () => {
       >
         <FlatList
           data={messages}
+          ref={flatListRef}
           keyExtractor={(item) => item.id?.toString()}
           renderItem={renderMessage}
           style={styles.list}
           contentContainerStyle={styles.chatContainer}
           inverted
+          ListFooterComponent={() => <View style={{ height: Spacing.height100 }} />}
           ItemSeparatorComponent={() => <View style={{ height: Spacing.width16 }} />} // Add spacing between items
+          initialNumToRender={10}
+          maxToRenderPerBatch={5}
+          windowSize={5}
+          removeClippedSubviews={true}
+          updateCellsBatchingPeriod={100}
+          onEndReachedThreshold={0.5}
+          onScroll={handleScroll}
         />
 
         <ControlBottomChat
           onUpdateMessage={handleSend}
-          repliedMessage={repliedMessage}
+          repliedMessage={repliedMessage || undefined}
           userSent={{
             name: userInfo?.fullname || '',
             id: userInfo?.id || '',
             avatar: userInfo?.avatar || '',
           }}
-          userReceived={message.user}
+          userReceived={message.other_user}
           onClearRepliedMessage={() => setRepliedMessage(null)}
         />
       </KeyboardAvoidingView>
-      <AppHeader style={styles.header} rightComponent={<TouchableOpacity>
+      <AppHeader style={[styles.header, { backgroundColor: themeColors.primary }]} rightComponent={<TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER, {
+        user: {
+          ...message?.other_user,
+        },
+      })} style={styles.iconProfile}>
         <ProfileIcon />
       </TouchableOpacity>} />
 

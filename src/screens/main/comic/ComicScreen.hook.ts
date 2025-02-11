@@ -1,12 +1,6 @@
-import {getComicsModuleLocal, setComics} from '@redux';
-import {getPostDashboardApi} from '@services';
+import {fetchComicsData, RootState} from '@redux';
 import {Spacing, useTheme} from '@theme';
-import {
-  ModuleItemInterface,
-  PostTypeKey,
-  TabInterface,
-  TypeKeyListApi,
-} from '@types';
+import {ModuleItemInterface, TabInterface, TypeKeyListApi} from '@types';
 import {useCallback, useEffect, useState} from 'react';
 import {
   Extrapolate,
@@ -22,13 +16,12 @@ export const useComicScreen = () => {
   const [categories, setCategories] = useState<TabInterface[]>([]);
 
   const [loading, setLoading] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
   const dispatch = useDispatch();
-  const comics = useSelector(getComicsModuleLocal);
+  const comics = useSelector((state: RootState) => state.dataLocalSlide.comics);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
     id: 0,
     name: '',
@@ -47,42 +40,25 @@ export const useComicScreen = () => {
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
-
       setLoading(false);
-      setRefresh(false);
     } else {
-      setLoading(false);
-      setRefresh(false);
+      setLoading(true);
     }
   }, [comics]);
   // Call Api
   useEffect(() => {
-    callApi();
+    dispatch(fetchComicsData());
   }, []);
 
-  const callApi = async (filter?: string) => {
-    try {
-      const params = {
-        filter: filter,
-      };
-      const response = await getPostDashboardApi(PostTypeKey.COMIC, params);
-      console.log({response});
-
-      dispatch(setComics(response.data?.modules || []));
-    } catch (error) {
-      setLoading(false);
-    }
-  };
   //
   const onRefresh = () => {
-    setRefresh(true);
-  };
-  useEffect(() => {
-    if (refresh) {
-      callApi();
+    let textFilter = '';
+    if (tabSelect) {
+      textFilter = `${tabSelect.type}__${tabSelect.id}`;
     }
-  }, [refresh]);
-  //
+    dispatch(fetchComicsData({filter: textFilter}));
+  };
+
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
@@ -111,7 +87,9 @@ export const useComicScreen = () => {
     setTabSelect(item);
     setLoading(true);
     const textFilter = `${item.type}__${item.id}`;
-    callApi(textFilter);
+    console.log({textFilter});
+
+    dispatch(fetchComicsData({filter: textFilter}));
   }, []);
   const handleSearchChange = useCallback(
     (text: string) => {

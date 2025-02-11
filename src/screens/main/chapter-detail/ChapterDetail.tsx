@@ -8,7 +8,7 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, loading, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors, type } = useChapterDetail();
+  const { styles, detail, readChapter, scrollHandler, onSelectChapter, headerBackgroundColorStyle, onRefresh, themeColors, type } = useChapterDetail();
 
   // if (loading) {
   //   return <LoadingDetailMovie />;
@@ -36,10 +36,8 @@ const ChapterDetail = () => {
           poster={detail?.feature?.path}
           totalEpisodes={detail?.chapters?.length || 0}
           onPlay={() => {
-            console.log('aaa:', detail?.chapters?.length - 1);
-
             if (detail?.chapters?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[0], chapters: detail?.chapters, type });
+              readChapter();
             }
           }}
           onNewChapter={() => {
@@ -54,8 +52,8 @@ const ChapterDetail = () => {
           style={styles.episodes}
           onSelectChapter={(item) => {
             console.log({ item });
-            navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: item, type, chapters: detail?.chapters });
-
+            onSelectChapter(item);
+            //
           }} />
 
         <AppInfoContent

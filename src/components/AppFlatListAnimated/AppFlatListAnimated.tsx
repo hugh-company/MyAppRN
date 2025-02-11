@@ -133,9 +133,9 @@ export const AppFlatListAnimated = forwardRef((props: AppFlatListAnimatedProps, 
       nestedScrollEnabled={nestedScrollEnabled}
       initialNumToRender={5}
       maxToRenderPerBatch={10} // Reduce the number of items to render per batch
-      // windowSize={10}
+      windowSize={10}
       removeClippedSubviews={removeClippedSubviews}
-      windowSize={5}
+
       keyExtractor={keyExtractor || ((item, index) => index.toString())}
     />
   );

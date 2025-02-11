@@ -18,6 +18,7 @@ export interface ButtonProps extends TouchableOpacityProps {
   disabled?: boolean;
   Icon?: any;
   onPress?: () => void;
+  onPressIn?: () => void;
   style?: StyleProp<ViewStyle>;
   labelStyle?: TextStyle | TextStyle[];
   numberOfLines?: number;
@@ -56,11 +57,16 @@ export function AppButton(props: ButtonProps) {
     isWrap,
     hideDelay = false,
     backgroundColor,
+    onPressIn = () => { },
   } = props;
 
   const { themeColors } = useTheme();
 
   const handler = debounce(onPress, 300, {
+    leading: true,
+    trailing: false,
+  });
+  const handlerOnPressIn = debounce(onPressIn, 300, {
     leading: true,
     trailing: false,
   });
@@ -85,6 +91,15 @@ export function AppButton(props: ButtonProps) {
             onPress?.();
           } else {
             handler();
+          }
+        }}
+        onPressIn={() => {
+
+
+          if (hideDelay) {
+            onPressIn?.();
+          } else {
+            handlerOnPressIn();
           }
         }}
       >

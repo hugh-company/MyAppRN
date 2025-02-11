@@ -6,12 +6,12 @@ import React, { useEffect, useState } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import ItemGame from './ItemGame';
 export interface ListVerticalProps {
-  data: ItemListProduct[]
+  data: ItemListProduct[];
   style?: StyleProp<ViewStyle>;
   onViewMore?: () => void;
   type?: PostTypeKey;
-  button?: ButtonNavigationInterface
-  title?: string
+  button?: ButtonNavigationInterface;
+  title?: string;
 }
 
 export function ListVertical(props: ListVerticalProps) {
@@ -23,18 +23,18 @@ export function ListVertical(props: ListVerticalProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
+
+
 
   const renderItem = ({ item }: { item: ItemListProduct }) => {
     return <ItemGame item={item} />;
   };
-
   if (!isLoaded) {
-    return <></>;
+    return null;
   }
-
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>

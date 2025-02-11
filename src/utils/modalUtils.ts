@@ -1,3 +1,4 @@
+import {PostTypeKey} from '@types';
 import {DeviceEventEmitter} from 'react-native';
 
 // modal confirmation
@@ -31,5 +32,18 @@ export const showModalConfirmation = ({
 export const showModalLanguage = (visible: boolean) => {
   DeviceEventEmitter.emit('showModalChangeLanguage', {
     visible,
+  });
+};
+
+// modal rating
+export const showModalRating = (
+  visible: boolean,
+  id: number,
+  type: PostTypeKey,
+) => {
+  DeviceEventEmitter.emit('showRatingMovie', {
+    visible,
+    id,
+    type,
   });
 };

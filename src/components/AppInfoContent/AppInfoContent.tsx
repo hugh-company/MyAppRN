@@ -1,10 +1,10 @@
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
-import { AppLessMore, AppRatingMovie, AppText } from '@components';
+import { AppLessMore, AppText } from '@components';
 import { getToken } from '@redux';
 import { likePostApi, savedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { PersonInterface, PostTypeKey, TabInterface } from '@types';
-import { onShareInfo } from '@utils';
+import { onShareInfo, showModalRating } from '@utils';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -39,7 +39,6 @@ const AppInfoContent = ({
 }: AppInfoContentProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [showRating, setShowRating] = useState(false);
   const [like, setLike] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const token = useSelector(getToken);
@@ -88,7 +87,9 @@ const AppInfoContent = ({
         return (
           <View style={[styles.viewOption, !token && { justifyContent: 'center', gap: Spacing.width32 }]} >
             {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
-            {token && renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => setShowRating(true))}
+            {token && renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => {
+              showModalRating(true, id, type);
+            })}
             {token && renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t('saveMovie'), () => {
               if (!isFavorite) {
                 callApiFavorite();
@@ -101,7 +102,7 @@ const AppInfoContent = ({
         return (
           <View style={[styles.viewOption, { justifyContent: 'center', gap: Spacing.width32 }]} >
             {renderItem(<SendIcon />, t('share'), () => onShare())}
-            {renderItem(<LikeIcon />, t(isLiked ? 'liked' : 'like'))}
+            {renderItem(<LikeIcon />, t(isLiked ? 'liked' : 'like'), () => callApiLike())}
           </View>
         );
     }
@@ -156,22 +157,14 @@ const AppInfoContent = ({
         );
     }
   };
-
-
   return (
     <View style={[styles.container, style]}>
       {renderOption()}
       {renderInfo()}
-
       <View style={styles.viewContent}>
         <AppText style={styles.titleContent}>{t('movie.content')}</AppText>
         <AppLessMore text={description} />
       </View>
-
-      <AppRatingMovie
-        id={id}
-        visible={showRating}
-        onClose={() => setShowRating(false)} />
     </View>
   );
 };

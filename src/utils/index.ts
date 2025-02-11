@@ -1,6 +1,7 @@
 export * from './dateUtils';
 export * from './errorFormUtils';
 export * from './handleLoadMoreData';
+export * from './imagesUtils';
 export * from './listKeysUtils';
 export * from './modalUtils';
 export * from './phoneUtils';

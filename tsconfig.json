@@ -24,7 +24,8 @@
       "@notifications": ["src/notifications"],
       "@api": ["src/api"],
       "@translations": ["src/translations"],
-      "@theme": ["src/theme"]
+      "@theme": ["src/theme"],
+      "@sagas": ["src/sagas"]
     },
     "typeRoots": ["./src/types", "./node_modules/@types"]
   },

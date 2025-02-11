@@ -20,7 +20,7 @@ const BannerHome = ({ data = [], style }: BannerHomeProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
   const onViewRef = useRef(({ viewableItems }: any) => {

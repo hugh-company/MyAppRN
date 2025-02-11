@@ -1,10 +1,9 @@
 import { AppListDashboard, AppText } from '@components';
-import { getSearchModuleLocal, setSearch } from '@redux';
-import { getPostDashboardApi } from '@services';
+import { getSearchModuleLocal } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -18,24 +17,9 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
   const styles = createStyles(themeColors);
   const dispatch = useDispatch();
   const dataSearch = useSelector(getSearchModuleLocal);
-  useEffect(() => {
-    const controller = new AbortController();
-    callApiDashboard();
-    return () => {
-      controller.abort();
-    };
-  }, []);
-  const callApiDashboard = async () => {
-    try {
-      const response = await getPostDashboardApi(ItemListDashboard.SEARCH);
-      console.log({ response });
-      dispatch(setSearch(response?.data?.modules || []));
-    } catch (error) {
-      // console.log({error});
-    } finally {
 
-    }
-  };
+
+
 
   return (
     <View style={styles.container}>
@@ -44,6 +28,7 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
         ListHeaderComponent={<AppText style={styles.title}>{t('search.searchVariety')}</AppText>}
         typeScreen={ItemListDashboard.SEARCH}
         key={'search_dashboard'}
+        loading={false}
         keyExtractor={(item, index) => `search_dashboard_${index}`}
       />
     </View>

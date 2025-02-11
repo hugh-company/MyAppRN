@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
+import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SearchMessages, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -93,6 +93,13 @@ const MainStackComponent = memo(() => {
           gestureEnabled: true,
           detachPreviousScreen: false,
         }} />
+
+        <MainStack.Screen name={SCREEN_ROUTE.SEARCH_MESSAGE} component={SearchMessages}
+          options={{
+            animationTypeForReplace: 'push',
+            gestureEnabled: true,
+            detachPreviousScreen: false,
+          }} />
         <MainStack.Screen name={SCREEN_ROUTE.DETAIL_USER} component={DetailUser} options={{
           animationTypeForReplace: 'push',
           gestureEnabled: true,

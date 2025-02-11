@@ -1,9 +1,8 @@
-import { AppText } from '@components';
+import { AppBottomModal, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, useTheme, WidthScreen } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { BottomModal, ModalContent } from 'react-native-modals';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface ModalSpeedProps {
@@ -29,16 +28,14 @@ export const ModalSpeed = ({ visible, onClose, currentSpeed, onSelectSpeed }: Mo
   ];
 
   return (
-    <BottomModal
+    <AppBottomModal
       visible={!!visible} // Ensure isVisible is a boolean
-      onTouchOutside={onClose}
+      onClose={onClose}
       onSwipeOut={onClose}
-
       height={0.7}
       modalStyle={{ width: WidthScreen }}
-
     >
-      <ModalContent style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
+      <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
         <View style={styles.body}>
           <AppText style={styles.title}>{t('movie.speed')}</AppText>
           <View style={styles.list}>
@@ -52,8 +49,8 @@ export const ModalSpeed = ({ visible, onClose, currentSpeed, onSelectSpeed }: Mo
           </View>
 
         </View>
-      </ModalContent>
-    </BottomModal>
+      </View>
+    </AppBottomModal>
   );
 };
 const createStyles = (themeColors: any) => StyleSheet.create({

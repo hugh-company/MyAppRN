@@ -1,26 +1,27 @@
+import { CheckRead, IconReadMessage } from '@assets';
 import { AppImage, AppText } from '@components';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
-import { ChatInterface, MessageStatus } from '@types';
+import { MessageItemInterface, MessageStatus, MessageType, OtherUser } from '@types';
 import { checkMessageTime } from '@utils';
-import { t } from 'i18next';
 import React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Animated, StyleSheet, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
+import { MessageGame } from './MessageGame';
+import { MessageImages } from './MessageImages';
+import { MessageRelied } from './MessageReplied';
 
 export interface MessageSentProps {
-  item: ChatInterface;
-  user: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  },
-  handleReply: (item: ChatInterface) => void;
+  item: MessageItemInterface;
+  userSent: OtherUser,
+  userReceived: OtherUser,
+  handleReply: (item: MessageItemInterface) => void;
+  onGoToRepliedMessage?: (item: MessageItemInterface) => void;
 }
 
 export function MessageSent(props: MessageSentProps) {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const { item, user, handleReply } = props;
+  const { item, userSent, handleReply, userReceived, onGoToRepliedMessage } = props;
   const translateX = new Animated.Value(0);
   const handleGestureEvent = Animated.event(
     [{ nativeEvent: { translationX: translateX } }],
@@ -41,14 +42,19 @@ export function MessageSent(props: MessageSentProps) {
       useNativeDriver: true,
     }).start();
   };
-  const renderImages = () => {
 
-    if (item.content.images[0].startsWith('file://')) {
-      return <AppImage defaultSource={{
-        uri: item.content.images[0],
-      }} style={styles.images} />;
-    } else {
-      return <AppImage uri={item.content.images[0]} style={styles.images} />;
+
+  const renderStatusMessage = () => {
+    switch (item.content.status) {
+      case MessageStatus.SENDING:
+        return <ActivityIndicator size="small" color={themeColors.whiteColor} />;
+      case MessageStatus.RECEIVED:
+      case MessageStatus.SEEN:
+        return <CheckRead />;
+      case MessageStatus.READ:
+        return <IconReadMessage />;
+      default:
+        return <IconReadMessage />;
     }
   };
 
@@ -66,27 +72,31 @@ export function MessageSent(props: MessageSentProps) {
 
           > */}
           <View style={styles.message}>
-            {item.reply && (
-              <View style={styles.viewRelied}>
-                <AppText style={styles.titleRelied}>{item.reply.text}</AppText>
-                <AppText style={styles.repliedText}>{item.reply.text}</AppText>
-              </View>
+            {item.content?.replyto && (
+              <MessageRelied
+                repliedMessage={item.content.replyto}
+                onPress={() => onGoToRepliedMessage?.(item.content?.replyto)}
+                userReceived={userReceived}
+                userSent={userSent} />
             )}
-            {item?.content?.images?.length > 0 && renderImages()}
-            {item?.content?.game?.length > 0 && <AppText>Game: {item.content.game}</AppText>}
-            {item?.content?.text && <AppText style={styles.txtMessage}>{item?.content?.text}</AppText>}
+            {item?.content?.type === MessageType.IMAGE && <MessageImages image={{
+              images: item.content.data.images as string[],
+              images_count: item.content.data.images_count,
+            }}
+              thread_id={item.thread_id} id={item.id} />}
+            {item?.content?.type === MessageType.GAME && item?.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
+            {item?.content?.data?.text && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
             <View style={styles.viewRead}>
-              <AppText style={styles.timestamp}>{checkMessageTime(item.content?.time_created)}</AppText>
+              <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>
 
-              <AppText style={styles.timestamp}>{item?.content?.status === MessageStatus.RECEIVED ? t('message.Read') : t('message.Unread')}</AppText>
+              {renderStatusMessage()}
 
             </View>
           </View>
           {/* </LinearGradient> */}
         </View>
-
         <View>
-          <AppImage style={styles.avatar} uri={user?.avatar} />
+          <AppImage style={styles.avatar} uri={userSent?.avatar} />
           <View style={styles.status} />
         </View>
       </Animated.View>

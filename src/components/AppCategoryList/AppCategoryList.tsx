@@ -35,7 +35,7 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 

@@ -43,3 +43,12 @@ export const getSavedApi = async (type: PostTypeKey, param: paramFavorite) => {
   const uri = `${API_ENDPOINTS.LIST}${type}/save/`;
   return apiService.get(uri, param);
 };
+
+export const getListGamesTrendingApi = async () => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const uri = `${API_ENDPOINTS.GAME_TRENDING}`;
+  return apiService.get(uri, {
+    // ?sortby=views_day__DESC
+    sortby: 'views_day__DESC',
+  });
+};

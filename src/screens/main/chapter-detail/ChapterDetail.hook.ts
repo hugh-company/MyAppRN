@@ -1,7 +1,12 @@
+import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {getDetailPostApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {detailPostInterface, PostTypeKey} from '@types';
+import {
+  chapterEpisodeInterface,
+  detailPostInterface,
+  PostTypeKey,
+} from '@types';
 import {useEffect, useState} from 'react';
 import {
   interpolateColor,
@@ -74,6 +79,32 @@ export const useChapterDetail = () => {
       ['transparent', '#B1062E'],
     ),
   }));
+
+  const onSelectChapter = (chapter: chapterEpisodeInterface) => {
+    setDetail(prev => ({
+      ...prev,
+      index: chapter.index,
+
+      feature: chapter.feature,
+    }));
+  };
+  const readChapter = () => {
+    const index = detail?.index;
+    if (index) {
+      navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
+        chapter: detail?.chapters?.[index - 1],
+
+        chapters: detail?.chapters,
+        type,
+      });
+    } else {
+      navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
+        chapter: detail?.chapters?.[0],
+        chapters: detail?.chapters,
+        type,
+      });
+    }
+  };
   //
   return {
     styles,
@@ -82,8 +113,9 @@ export const useChapterDetail = () => {
     scrollHandler,
     headerBackgroundColorStyle,
     onRefresh,
-
+    readChapter,
     themeColors,
     type,
+    onSelectChapter,
   };
 };

@@ -1,14 +1,20 @@
-import {getGamesModuleLocal, setGames} from '@redux';
-import {getPostDashboardApi} from '@services';
-import {useTheme} from '@theme';
-import {PostTypeKey, TabInterface, TypeKeyListApi} from '@types';
+import {fetchGamesData, RootState} from '@redux';
+import {Spacing, useTheme} from '@theme';
+import {ModuleItemInterface, TabInterface, TypeKeyListApi} from '@types';
 import {useEffect, useState} from 'react';
+import {
+  Extrapolate,
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useGameScreen = () => {
   const {themeColors} = useTheme();
-  const games = useSelector(getGamesModuleLocal);
+  const games = useSelector((state: RootState) => state.dataLocalSlide.games);
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const styles = createStyles(themeColors);
@@ -17,51 +23,72 @@ export const useGameScreen = () => {
     name: '',
     type: '',
   });
-  useEffect(() => {
-    if (games?.length === 0) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [games]);
-  // Call Api
-  useEffect(() => {
-    callApi();
-  }, []);
-  const callApi = async (filter?: string) => {
-    try {
-      const params = {
-        filter: filter,
-      };
-      const response = await getPostDashboardApi(PostTypeKey.GAMES, params);
+  const [data, setData] = useState<ModuleItemInterface[]>([]);
+  const [categories, setCategories] = useState<TabInterface[]>([]);
+  const scrollY = useSharedValue(0);
 
-      dispatch(setGames(response.data?.modules || []));
-
-      const category: any = response.data?.modules.find(
+  useEffect(() => {
+    if (games?.length > 0) {
+      setData(
+        games?.filter(elm => elm.type !== TypeKeyListApi.TYPE_TABS) || [],
+      );
+      const category: any = games.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
       );
-      // console.log({tabSelect: tabSelect?.name});
-
+      setCategories(category?.items || []);
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
-    } catch (error) {
       setLoading(false);
+    } else {
+      setLoading(true);
     }
-  };
+  }, [games]);
+
+  useEffect(() => {
+    dispatch(fetchGamesData());
+  }, []);
+
   const onRefresh = () => {
-    callApi();
+    dispatch(fetchGamesData());
   };
   const handleCategorySelect = (item: TabInterface) => {
     setTabSelect(item);
+    const textFilter = `${item.type}__${item.id}`;
+    dispatch(fetchGamesData({filter: textFilter}));
   };
+
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+  const heightStyle = useAnimatedStyle(() => ({
+    height: interpolate(
+      scrollY.value,
+      [0, Spacing.height50],
+      [Spacing.height44, 0],
+      Extrapolate.CLAMP,
+    ),
+  }));
+  const opacityStyle = useAnimatedStyle(() => ({
+    opacity: interpolate(
+      scrollY.value,
+      [0, Spacing.height50],
+      [1, 0],
+      Extrapolate.CLAMP,
+    ),
+  }));
+
   return {
     games,
-    themeColors,
     styles,
-    loading,
-    onRefresh,
     tabSelect,
+    heightStyle,
     handleCategorySelect,
+    scrollHandler,
+    onRefresh,
+    categories,
+    scrollY,
+    opacityStyle,
+    loading,
   };
 };

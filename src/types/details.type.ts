@@ -41,6 +41,7 @@ export interface chapterEpisodeInterface {
   seo_desc: string;
   content: Content | any[];
   thumbnail: string;
+  index?: number;
   author: number;
   rating_count: number;
   rating_total: number;
@@ -51,6 +52,7 @@ export interface chapterEpisodeInterface {
   suburl: string;
   index_number: number;
   name?: string;
+  feature: MediaInterface;
 }
 export interface PersonInterface {
   id: number;
@@ -102,6 +104,7 @@ export interface detailPostInterface {
   updated_at: string;
   seo_title: string;
   seo_desc: string;
+  index?: number;
   content: {
     time: number;
     blocks: Array<{

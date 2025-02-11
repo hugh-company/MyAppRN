@@ -1,3 +1,4 @@
+import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {getDetailPostApi, viewsPostApi} from '@services';
 import {useQuery} from '@tanstack/react-query';
@@ -28,7 +29,6 @@ export const useMovieDetailScreen = () => {
     detailPostInterface | undefined
   >(movie);
 
-  const [chapterSelect, setChapterSelect] = useState(0);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const scrollY = useSharedValue(0);
@@ -62,20 +62,56 @@ export const useMovieDetailScreen = () => {
     };
   });
   const goToPlay = () => {
-    if (detailMovie?.chapters?.[0]) {
-      console.log({chapterSelect});
+    const index = detailMovie?.index;
+    if (index) {
+      console.log(detailMovie?.chapters?.[index]);
+
+      navigate(SCREEN_ROUTE.VIDEO, {
+        video: {
+          ...detailMovie?.chapters?.[index - 1],
+
+          name: [
+            detailMovie?.title,
+            `(${
+              detailMovie?.chapters?.[(detailMovie?.index || 1) - 1]?.title
+            })`,
+          ].join(' '),
+        },
+      });
+    } else {
+      navigate(SCREEN_ROUTE.VIDEO, {
+        video: {
+          ...detailMovie?.chapters?.[0],
+          name: detailMovie?.title,
+        },
+      });
     }
+    // navigate(SCREEN_ROUTE.VIDEO, {
+    //   video: {
+    //     ...detailMovie?.chapters?.[0],
+    //     name: detailMovie?.title,
+    //   },
+    // });
   };
 
   const onSelectedChapter = (chapter: chapterEpisodeInterface) => {
     console.log({chapter});
+    setDetailMovie(prev => {
+      if (!prev) {
+        return prev;
+      }
+      return {
+        ...prev,
+        index: chapter.index,
+        // title: [prev.title, `(${chapter.title})`].join(' '),
+        feature: chapter.feature,
+      };
+    });
   };
   return {
     themeColors,
     styles,
     detailMovie,
-    chapterSelect,
-    setChapterSelect,
 
     scrollHandler,
     headerBackgroundColorStyle,

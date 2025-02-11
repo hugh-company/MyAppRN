@@ -11,6 +11,14 @@ export const createStyles = (themeColors: ThemeColors) =>
       position: 'absolute',
       top: 0,
     },
+    iconProfile: {
+      width: Spacing.width35,
+      height: Spacing.width35,
+      borderRadius: Spacing.height24,
+      backgroundColor: themeColors.btnSocial,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
     background: {
       flex: 1,
       width: '100%',

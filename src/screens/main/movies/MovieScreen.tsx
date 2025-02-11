@@ -14,14 +14,12 @@ const MovieScreen = () => {
   const { data,
     styles,
     opacityStyle,
-
     heightStyle,
     scrollHandler,
     handleCategorySelect,
     tabSelect,
     onRefresh,
-    loading,
-    categories,
+    categories, loading,
   } = useMovieScreen();
 
   return (
@@ -39,8 +37,8 @@ const MovieScreen = () => {
       <MemoizedAppListDashboard
         data={data}
         onScroll={scrollHandler}
-        loading={loading}
         key={'movie_dashboard'}
+        loading={loading}
         onRefresh={onRefresh}
         keyExtractor={(item, index) => `movie_dashboard_${index}`}
         typeScreen={ItemListDashboard.MOVIES}

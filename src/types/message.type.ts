@@ -1,21 +1,5 @@
-export interface MessageItem {
-  conversation_id: number;
-  sender_id: number;
-  recipient_avatar: string;
-  recipient_fullname: string;
-  last_message: {
-    id: number;
-    sender_id: number;
-    recipient_id: number;
-    content: {
-      type: MessageType;
-      data: string;
-      status: MessageStatus;
-      time_send: string;
-    };
-  };
-  unread_count: number;
-}
+import {ItemListProduct} from './post.type';
+
 export enum MessageType {
   TEXT = 'text',
   IMAGE = 'image',
@@ -24,8 +8,27 @@ export enum MessageType {
 }
 export enum MessageStatus {
   SENT = 'sent',
+  //
   RECEIVED = 'received',
+  //
   SEEN = 'seen',
+  READ = 'read',
+  SENDING = 'sending',
+
+  ERROR = 'error',
+}
+export enum MessageAction {
+  GET_THREAD = 'get_threads',
+  GET_MESSAGES = 'get_messages',
+  NEW_MESSAGE = 'new_message',
+  SEND_MESSAGE = 'send_message',
+  GET_USER_STATUS = 'get_user_status',
+  SET_STATUS = 'set_status',
+  SET_JOIN_THREAD = 'set_join_thread',
+  SEND_NOTICE_READ = 'send_notice_read',
+  SET_NOTICE_TYPING = 'set_notice_typing',
+  SEND_MATCH_ACTION = 'send_match_action',
+  MESSAGE_SENT = 'message_sent',
 }
 export interface ChatInterface {
   id: number;
@@ -53,5 +56,41 @@ export interface ChatInterface {
   };
 }
 // new type
+export interface MessageItemInterface {
+  id: string;
+  sender_id: number;
+  recipient_id: number;
+  content: Content;
+  thread_id: number | string;
+}
 
-export interface ConversationInterface {}
+export interface Content {
+  type: string;
+  data: Data;
+  replyto: MessageItemInterface;
+  status: MessageStatus;
+  created_at: string;
+}
+
+export interface Data {
+  text: string;
+  games: ItemListProduct[];
+  images?: string[];
+  images_count: number;
+}
+
+export interface OtherUser {
+  id: number;
+  fullname: string;
+  avatar: string;
+  online: boolean;
+}
+export interface ConversationInterface {
+  id: number;
+  thread_id: number;
+  isread: boolean;
+  updated_at: string;
+  created_at: string;
+  last_message: MessageItemInterface;
+  other_user: OtherUser;
+}

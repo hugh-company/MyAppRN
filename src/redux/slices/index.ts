@@ -1,5 +1,5 @@
 export * from './accountSlice';
+export * from './chatSlice';
 export * from './dataLocalSlice';
-export * from './messageSlice';
 export * from './settingSlice';
 export * from './socketSlice';

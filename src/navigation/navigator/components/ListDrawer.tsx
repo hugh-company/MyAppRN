@@ -133,6 +133,7 @@ export function ListDrawer(props: ListDrawerProps) {
           onConfirm: () => {
             dispatch(logout());
           },
+          onCancel: () => { },
 
         });
         break;

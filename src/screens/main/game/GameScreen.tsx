@@ -9,7 +9,7 @@ const MemoizedAppListDashboard = React.memo(AppListDashboard);
 
 const GameScreen = () => {
   const { games,
-    themeColors,
+
     styles,
     loading,
     onRefresh,

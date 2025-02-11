@@ -39,15 +39,15 @@ const AppListDashboard = React.memo(({
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = React.useState(false);
 
-  const MemoizedBannerHome = React.memo(BannerHome);
-  const MemoizedBannerMovie = React.memo(BannerMovie);
-  const MemoizedAppCategoryList = React.memo(AppCategoryList);
-  const MemoizedDatingItem = React.memo(DatingItem);
-  const MemoizedLabelView = React.memo(LabelView);
-  const MemoizedCategoryListItem = React.memo(CategoryListItem);
-  const MemoizedSliderList = React.memo(SliderList);
-  const MemoizedHorizontalList = React.memo(HorizontalList);
-  const MemoizedListVertical = React.memo(ListVertical);
+  const MemoizedBannerHome = useMemo(() => React.memo(BannerHome), [data]);
+  const MemoizedBannerMovie = useMemo(() => React.memo(BannerMovie), [data]);
+  const MemoizedAppCategoryList = useMemo(() => React.memo(AppCategoryList), [data]);
+  const MemoizedDatingItem = useMemo(() => React.memo(DatingItem), [data]);
+  const MemoizedLabelView = useMemo(() => React.memo(LabelView), [data]);
+  const MemoizedCategoryListItem = useMemo(() => React.memo(CategoryListItem), [data]);
+  const MemoizedSliderList = useMemo(() => React.memo(SliderList), [data]);
+  const MemoizedHorizontalList = useMemo(() => React.memo(HorizontalList), [data]);
+  const MemoizedListVertical = useMemo(() => React.memo(ListVertical), [data]);
 
 
   const renderLoading = useCallback(() => {
@@ -74,9 +74,13 @@ const AppListDashboard = React.memo(({
       onRefresh();
       setTimeout(() => {
         setIsReset(false);
-      }, 1000);
+      }
+        , 1000);
     }
   }, [onRefresh]);
+
+
+  console.log('aaaa', loading);
 
   const renderItem = useCallback(({ item }: { item: ModuleItemInterface }) => {
 
@@ -111,8 +115,7 @@ const AppListDashboard = React.memo(({
           title={item?.label}
           type={item?.posttype}
           data={item?.items as ItemListProduct[]}
-          button={item?.button}
-        />;
+          button={item?.button} />;
       case TypeKeyListApi.LIST_VERTICAL:
         return <MemoizedListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       case TypeKeyListApi.SPACE:
@@ -140,7 +143,7 @@ const AppListDashboard = React.memo(({
           key={typeScreen}
           keyExtractor={memoizedKeyExtractor}
           renderItem={renderItem}
-        // removeClippedSubviews={true}
+          removeClippedSubviews={true}
 
         />
 

@@ -1,13 +1,13 @@
 import { CloseIcon } from '@assets';
 import { AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ChatInterface } from '@types';
+import { MessageItemInterface } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export interface RepliedMessageProps {
-  message: ChatInterface;
-  onClose: () => void;
+  message: MessageItemInterface | null;
+  onClose?: () => void;
   isMe?: boolean;
   userReceived?: any
 }
@@ -18,13 +18,27 @@ export function RepliedMessage(props: RepliedMessageProps) {
   const {
     message,
     onClose,
-    isMe, userReceived,
+    isMe,
+    userReceived,
   } = props;
-
+  if (!message) { return <></>; }
+  const renderText = () => {
+    switch (message.content.type) {
+      case 'text':
+        return message.content.data?.text;
+      case 'image':
+        return t('message.repliedGame');
+      case 'game':
+        return t('message.repliedImage');
+      default:
+        return '';
+    }
+  };
   return <View style={styles.container} >
-    <AppText style={styles.title}>{t(isMe ? 'message.repliedMe' : 'message.repliedOther').replace('USER', userReceived?.name)}</AppText>
-    <AppText style={styles.txt}>{message.content.text}</AppText>
-    <TouchableOpacity onPress={() => onClose()} style={styles.btnClose}>
+    <AppText style={styles.title}>{isMe ? t('message.repliedMe') : t('message.repliedOther').replace('USER', userReceived?.fullname)}</AppText>
+    <AppText style={styles.txt}>{renderText()}</AppText>
+
+    <TouchableOpacity onPress={() => onClose?.()} style={styles.btnClose}>
       <CloseIcon size={Spacing.width16} color="white" />
     </TouchableOpacity>
   </View>;

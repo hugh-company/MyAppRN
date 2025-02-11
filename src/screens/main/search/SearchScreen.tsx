@@ -13,6 +13,7 @@ const MemoizedDashboardSearch = memo(DashboardSearch);
 const MemoizedSearchList = memo(SearchList);
 
 const SearchScreen = () => {
+
   const { data, loading, styles, typeScreen, isFilterSort, menuSort,
     setIsFilterSort, isFilterType, setIsFilterType, top, search,
     onSearch, sort, menuType, refSearch, filterByType, filterBySort,

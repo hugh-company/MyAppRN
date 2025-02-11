@@ -21,8 +21,12 @@ export const useDatingScreen = () => {
   const [tab, setTab] = useState<TypeTabDatingApi>(TypeTabDatingApi.NEAR_YOU);
   const [tabNav, setTabNav] = useState<navHorizontalInterface[]>([]);
   const token = useSelector(getToken);
-  const {checkPermissionLocation, isPermissionLocation, goToSettingLocation} =
-    useLocation();
+  const {
+    checkPermissionLocation,
+    isPermissionLocation,
+    goToSettingLocation,
+    getLocationDevice,
+  } = useLocation();
   useEffect(() => {
     setLoading(true);
     callApi(tab);
@@ -35,6 +39,10 @@ export const useDatingScreen = () => {
   const checkLocation = async () => {
     const check = await checkPermissionLocation();
     console.log({check});
+    if (check) {
+      const location = await getLocationDevice();
+      console.log({location});
+    }
   };
   const callApi = async (type: TypeTabDatingApi) => {
     try {

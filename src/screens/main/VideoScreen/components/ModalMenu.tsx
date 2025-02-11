@@ -1,10 +1,9 @@
 import { CheckIcon, FlagEnglish, FlagVietNam } from '@assets';
-import { AppText } from '@components';
+import { AppBottomModal, AppText } from '@components'; // Update import
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { BottomModal } from 'react-native-modals';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface ModalMenuVideoProps {
@@ -33,9 +32,9 @@ export const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuV
     },
   ];
   return (
-    <BottomModal
+    <AppBottomModal
       visible={!!visible} // Ensure isVisible is a boolean
-      onTouchOutside={onClose}
+      onClose={onClose}
       onSwipeOut={onClose}
     >
       <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
@@ -59,7 +58,7 @@ export const ModalMenuVideo = ({ visible, onClose, currentLanguage }: ModalMenuV
           </View>
         </View>
       </View>
-    </BottomModal>
+    </AppBottomModal>
   );
 };
 const createStyles = (themeColors: any) => StyleSheet.create({

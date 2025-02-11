@@ -1,4 +1,5 @@
 import { AppFlatListAnimated, AppLoadingDating } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing, ThemeColors, useTheme } from '@theme';
 import { ModuleDating, ModuleItemInterface, TabInterface, TypeDatingInterface } from '@types';
 import React, { useCallback } from 'react';
@@ -46,7 +47,9 @@ const AppListDating = ({
       case TypeDatingInterface.TOP_NAV:
         return <ListHorizontalUser data={item.items || []} onPress={() => { }} />;
       case TypeDatingInterface.BUTTON:
-        return <ButtonSearch label={item.label} style={styles.search} />;
+        return <ButtonSearch label={item.label} style={styles.search} onPress={() => {
+          navigate(SCREEN_ROUTE.FILTER_DATING);
+        }} />;
       case TypeDatingInterface.USERS_LIST:
         return <ListDatingItem data={item?.items?.data || []} label={item?.label} total={item?.total} />;
       default:

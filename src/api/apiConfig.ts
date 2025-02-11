@@ -76,4 +76,9 @@ export const API_ENDPOINTS = {
   // chat
   CHAT: '/chat/index/',
   CHAT_DETAIL: '/chat/detail/',
+  // game trending
+  GAME_TRENDING: '/posts/lists/game/',
+  //
+  SEARCH_MESSAGE: '/chat/search/',
+  GET_IMAGE_CHAT: '/uploads/chats',
 };

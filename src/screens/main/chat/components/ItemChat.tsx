@@ -1,36 +1,34 @@
-import { Spacing, ThemeColors, useTheme } from '@theme';
-import { ChatInterface } from '@types';
+import { Spacing, ThemeColors } from '@theme';
+import { MessageItemInterface, OtherUser } from '@types';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { MessageReceived } from './MessageReceived';
 import { MessageSent } from './MessageSent';
 export interface ItemChatProps {
-  item: ChatInterface;
-  userSent: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  },
-  userReceived: {
-    id: string | number;
-    name: string;
-    avatar: string;
-  };
-  onSwipeToReply: (item: ChatInterface) => void;
+  item: MessageItemInterface;
+  userSent: OtherUser,
+  userReceived: OtherUser
+  onSwipeToReply: (item: MessageItemInterface) => void;
   isMe?: boolean;
+  onGoToRepliedMessage?: (item: MessageItemInterface) => void;
 }
 
 export function ItemChat(props: ItemChatProps) {
   const { item, onSwipeToReply, isMe } = props;
-  const { themeColors } = useTheme();
   const userSent = props.userSent;
   const userReceived = props.userReceived;
 
-
   if (isMe) {
-    return <MessageSent user={userSent} item={item} handleReply={onSwipeToReply} />;
+    return <MessageSent
+      onGoToRepliedMessage={props.onGoToRepliedMessage}
+      userSent={userSent}
+      userReceived={userReceived}
+      item={item}
+      handleReply={onSwipeToReply} />;
   } else {
-    return <MessageReceived user={userReceived} item={item} handleReply={onSwipeToReply} />;
+    return <MessageReceived
+      onGoToRepliedMessage={props.onGoToRepliedMessage}
+      userSent={userSent} userReceived={userReceived} item={item} handleReply={onSwipeToReply} />;
   }
 }
 const createStyles = (themeColors: ThemeColors) => StyleSheet.create({

@@ -19,7 +19,6 @@ interface HorizontalListProps {
   renderItem?: ({ item }: { item: ItemListProduct }) => JSX.Element;
 }
 
-
 export const HorizontalList: React.FC<HorizontalListProps> = ({
   title,
   data,
@@ -37,7 +36,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -62,8 +61,8 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
     );
   }, []);
 
-  if (data?.length === 0 || !isLoaded) {
-    return <></>;
+  if (!isLoaded) {
+    return null;
   }
   return (
     <View style={[styles.container, style]}>
@@ -90,9 +89,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         horizontal
         keyExtractor={(item) => `child_horizontal_${item.slug}${item?.id?.toString()}`}
         renderItem={renderItem || renderItemList}
-        initialNumToRender={5}
-        maxToRenderPerBatch={10}
-        removeClippedSubviews={true}
+
       />
 
     </View>

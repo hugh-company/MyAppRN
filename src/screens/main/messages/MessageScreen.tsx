@@ -1,19 +1,16 @@
 import { AppFlatListAnimated, AppHeader, AppInputSearch } from '@components';
-import { MessageItem } from '@types';
+import { ConversationInterface } from '@types';
 import React from 'react';
 import { View } from 'react-native';
 import { useMessageScreen } from './MessageScreen.hook';
 import { ItemMessage } from './components/ItemMessage';
 
 const MessageScreen = () => {
-  const { data,
-    loading, onRefresh,
-    handleLoadMore, styles, title } = useMessageScreen();
+  const { conversations, onRefresh,
+    handleLoadMore, styles, title,
+  } = useMessageScreen();
 
-
-
-
-  const renderItem = ({ item }: { item: MessageItem }) => {
+  const renderItem = ({ item }: { item: ConversationInterface }) => {
     return <ItemMessage item={item} />;
   };
   return (
@@ -21,11 +18,11 @@ const MessageScreen = () => {
       <AppHeader title={title || ''} />
       <AppInputSearch value={''} editable={false} style={styles.inputSearch} />
       <AppFlatListAnimated
-        data={data || []}
+        data={conversations || []}
         scrollEventThrottle={16}
         onRefresh={onRefresh}
-        refreshing={loading}
-        keyExtractor={(item) => item?.conversation_id?.toString()}
+        // refreshing={loading}
+        keyExtractor={(item) => item?.thread_id?.toString()}
         renderItem={renderItem}
         onLoadMore={handleLoadMore}
         onEndReachedThreshold={0.5}

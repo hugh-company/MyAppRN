@@ -42,6 +42,7 @@ export const AppImage = React.memo((props: propsImage) => {
   return (
     <Box justifyContent={'center'} alignItems="center">
       <FastImage
+        key={uriBase}
         source={source}
         style={[styles.image, style]}
         resizeMode={resizeMode}

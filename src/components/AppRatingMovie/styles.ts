@@ -14,7 +14,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.background,
     },
     modalContainer: {
-      flex: 1,
       backgroundColor: themeColors.background,
       padding: Spacing.width16,
       marginTop: Spacing.height32,

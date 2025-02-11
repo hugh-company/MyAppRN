@@ -45,6 +45,7 @@ export {default as BriefcaseIcon} from './BriefcaseIcon';
 export {default as CalenderIcon} from './CalenderIcon';
 export {default as CameraIcon} from './CameraIcon';
 export {default as ChatIcon} from './ChatIcon';
+export {default as CheckRead} from './CheckRead';
 export {default as CloseBigIcon} from './CloseBigIcon';
 export {default as CookingIcon} from './CookingIcon';
 export {default as DrinkIcon} from './DrinkIcon';
@@ -53,12 +54,10 @@ export {default as ExitFullScreenIcon} from './ExitFullScreenIcon';
 export {default as FlagIcon} from './FlagIcon';
 export {default as ForgotMessageIcon} from './ForgotMessage';
 export {default as FullScreenIcon} from './FullScreenIcon';
-export {
-  default as GameHandleIcon,
-  default as GameHandleIcon,
-} from './GameHandleIcon';
+export {default as GameHandleIcon} from './GameHandleIcon';
 export {default as GlobalIcon} from './GlobalIcon';
 export {default as HeadIcon} from './HeadIcon';
+export {default as IconReadMessage} from './IconReadMessage';
 export {default as InstagramIcon} from './InstagramIcon';
 export {default as LocationIcon} from './LocationIcon';
 export {default as LocationIcon2} from './LocationIcon2';

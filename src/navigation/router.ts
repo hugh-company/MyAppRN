@@ -49,4 +49,7 @@ export enum SCREEN_ROUTE {
   CHAT = 'Chat',
   MESSAGES = 'Messages',
   DETAIL_USER = 'DetailUser',
+  SEARCH_MESSAGE = 'SearchMessage',
+  // modal image
+  IMAGE_MODAL = 'ImageModal',
 }

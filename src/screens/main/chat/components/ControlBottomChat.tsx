@@ -1,17 +1,18 @@
 import { CloseIcon, GameHandleIcon, GlobalIcon, RightIcon, SendMessageIcon, UploadImageIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { gameApi } from '@services';
+import { getGameTrendingLocal } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ChatInterface } from '@types';
+import { MessageItemInterface } from '@types';
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
+import { useSelector } from 'react-redux';
 import { RepliedMessage } from './RepliedMessage';
 
 export interface ControlBottomChatProps {
   onUpdateMessage: (data: { images?: string[]; message?: string; games?: any[] }) => void;
-  repliedMessage?: ChatInterface;
+  repliedMessage?: MessageItemInterface;
   onClearRepliedMessage?: () => void;
   userReceived?: any;
   userSent?: any;
@@ -22,17 +23,12 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const [message, setMessage] = useState('');
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [games, setGames] = useState(gameApi);
+  const games = useSelector(getGameTrendingLocal);
   const [isShowGame, setIsShowGame] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [gameSelected, setGameSelected] = useState(null);
   const [showIcons, setShowIcons] = useState(true);
   const inputRef = useRef<TextInput>(null);
-  const translateY = useSharedValue(0);
-
-
-  console.log({ repliedMessage });
-
   useEffect(() => {
     if (isShowGame) { setGameSelected(null); }
   }, [isShowGame]);
@@ -47,7 +43,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     onClearRepliedMessage && onClearRepliedMessage();
   };
 
-  const handleSelectGame = (game) => setGameSelected(game);
+  const handleSelectGame = (game: any) => setGameSelected(game);
 
   const handleShowIcons = () => {
     setShowIcons(true);
@@ -127,9 +123,9 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
 
   const renderRepliedMessage = () => (
     <RepliedMessage
-      message={repliedMessage}
+      message={repliedMessage || null}
       userReceived={userReceived}
-      isMe={repliedMessage.userid === userSent.id}
+      isMe={repliedMessage?.recipient_id !== userSent.id}
       onClose={onClearRepliedMessage} />
   );
 

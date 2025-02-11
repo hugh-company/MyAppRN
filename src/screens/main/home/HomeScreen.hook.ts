@@ -1,4 +1,10 @@
-import {usePostType} from '@hooks';
+import {
+  fetchGamesTrending,
+  fetchHomeData,
+  fetchSearchData,
+  RootState,
+  setLoadingDashboard,
+} from '@redux';
 import {Spacing, useTheme} from '@theme';
 import {ModuleItemInterface} from '@types';
 import {useEffect, useState} from 'react';
@@ -11,6 +17,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useHomeScreen = () => {
@@ -20,37 +27,44 @@ export const useHomeScreen = () => {
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
   const [isReset, setIsReset] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
-  const {callApiApiDashboard, callApiHome} = usePostType();
+  const loading = useSelector(
+    (state: RootState) => state.dataLocalSlide.loading,
+  );
+  const homeData = useSelector((state: RootState) => state.dataLocalSlide.home);
+  // useEffect(() => {
+  //   dispatch(setLoadingDashboard(false));
+  // }, [loading]);
   useEffect(() => {
-    setLoading(true);
-    callApi();
-    callApiApiDashboard();
+    dispatch(setLoadingDashboard(true));
+    dispatch(fetchHomeData());
+    dispatch(fetchGamesTrending());
+    // dispatch(fetchMoviesData());
+    // dispatch(fetchComicsData());
+    // dispatch(fetchGamesData());
+    dispatch(fetchSearchData());
   }, []);
 
-  const callApi = async () => {
-    try {
-      const response = await callApiHome();
-      const dataHome = response?.data?.modules || [];
-      setData(dataHome);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
+  useEffect(() => {
+    if (homeData?.length > 0) {
+      setData(homeData);
     }
-  };
+  }, [homeData]);
 
   const onRefresh = () => {
     setIsReset(true);
   };
+
   useEffect(() => {
     if (isReset) {
-      callApi();
-      callApiApiDashboard();
+      dispatch(fetchHomeData());
+      setIsReset(false);
     }
   }, [isReset]);
+
   const bannerHeightStyle = useAnimatedStyle(() => ({
     height: interpolate(
       scrollY.value,

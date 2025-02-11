@@ -19,3 +19,9 @@ export const searchApi = async (params: paramSearchInterface) => {
   return apiService.get<responseSearch>(uri, params);
 
 };
+//
+export const searchMessageApi = async (params: paramSearchInterface) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const uri = `${API_ENDPOINTS.SEARCH_MESSAGE}`;
+  return apiService.get<responseSearch>(uri, params);
+};

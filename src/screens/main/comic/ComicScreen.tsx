@@ -28,7 +28,7 @@ const ComicScreen = () => {
 
       <MemoizedAppListDashboard
         data={data}
-        // onScroll={scrollHandler}
+        onScroll={scrollHandler}
         loading={loading}
         onRefresh={onRefresh}
         categoryId={tabSelect?.id}

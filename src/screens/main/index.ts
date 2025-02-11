@@ -18,6 +18,8 @@ export * from './preview-chapter';
 export * from './preview-game';
 export * from './search';
 export * from './setting-favorite';
-export * from './story';
+
+export * from './preview-images';
+export * from './search-message';
 export * from './VideoScreen';
 export * from './view_list';

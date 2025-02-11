@@ -3,6 +3,7 @@ import {useRoute} from '@react-navigation/native';
 import {useTheme} from '@theme';
 import {chapterEpisodeInterface} from '@types';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {StatusBar} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {useSharedValue, withTiming} from 'react-native-reanimated';
 import {createStyles} from './styles';
@@ -137,9 +138,11 @@ export const useVideoScreen = () => {
       Orientation.unlockAllOrientations();
       Orientation.lockToPortrait(); // Ensure it locks to portrait mode
       rotation.value = withTiming(0, {duration: 300});
+      StatusBar.setHidden(true);
     } else {
       Orientation.lockToLandscape();
       rotation.value = withTiming(90, {duration: 300});
+      StatusBar.setHidden(true);
     }
     setIsFullScreenVisible(prev => !prev);
   }, [isFullScreenVisible, rotation]);

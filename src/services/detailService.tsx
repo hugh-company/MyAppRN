@@ -27,6 +27,7 @@ export const ratingPostApi = async (id: number, type: PostTypeKey, params: ratin
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(uri, formData, {
     'Content-Type': 'multipart/form-data',
+
     // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
   });
 };

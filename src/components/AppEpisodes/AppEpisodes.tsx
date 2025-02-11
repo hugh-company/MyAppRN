@@ -30,7 +30,6 @@ const AppEpisodes = ({
 
   const handleLoadMore = () => {
     setShowModal(true);
-
   };
   return (
     <>
@@ -39,11 +38,12 @@ const AppEpisodes = ({
         <View style={styles.listChapter}>
           {episodes?.slice(0, 50).map((item, index) => {
             return (
-              <TouchableOpacity key={`list_episodes_${index}`} onPress={() => {
-                setSelectEpisodes(item.id);
-                onSelectChapter?.(item);
-              }} style={[styles.btnChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
-                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.title}</AppText>
+              <TouchableOpacity key={`list_episodes_${index}`}
+                onPress={() => {
+                  setSelectEpisodes(item.id);
+                  onSelectChapter?.(item);
+                }} style={[styles.btnChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
+                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]} numberOfLines={1}>{item?.title}</AppText>
               </TouchableOpacity>
             );
           })}

@@ -71,3 +71,6 @@ export const checkMessageTime = (date: Date | string): string => {
   }
   return messageDate.format('DD/MM');
 };
+export const getNewDateWithFormat = (format: string): string => {
+  return dayjs().format(format);
+};

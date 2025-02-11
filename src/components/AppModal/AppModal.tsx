@@ -1,16 +1,17 @@
-
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
 import {
   KeyboardAvoidingView,
+  Modal,
+  ModalProps,
   Platform,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native';
-import { Modal, ModalProps } from 'react-native-modals';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 interface AppPopupProps extends ModalProps {
   visible: boolean;
   onClose: () => void;
@@ -19,17 +20,14 @@ interface AppPopupProps extends ModalProps {
   styleContainer?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   headerStyle?: StyleProp<ViewStyle>;
-
 }
+
 export const AppModal = ({
   visible,
   onClose,
   children,
-
   styleContainer,
   style,
-
-
   ...props
 }: AppPopupProps) => {
   const { themeColors } = useTheme();
@@ -39,11 +37,13 @@ export const AppModal = ({
   return (
     <Modal
       visible={visible}
-      onTouchOutside={onClose}
-      style={styles.modal}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={onClose}
       {...props}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.centeredView}>
         <View
           style={[
             styles.container,
@@ -59,22 +59,37 @@ export const AppModal = ({
 
 const getStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
     modal: {
       margin: 0,
     },
     container: {
       backgroundColor: themeColors.background,
+      borderRadius: 20,
+      padding: 20,
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4,
+      elevation: 5,
     },
     header: {
       backgroundColor: themeColors.background,
-
       flexDirection: 'row',
       alignItems: 'center',
       paddingVertical: Spacing.width16,
     },
     closeIcon: {
       padding: Spacing.width12,
-
       position: 'absolute',
       left: 0,
       top: 0,

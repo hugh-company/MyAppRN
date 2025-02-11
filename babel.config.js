@@ -21,6 +21,7 @@ module.exports = {
           '@redux': './src/redux',
           '@theme': './src/theme',
           '@types': './src/types',
+          '@sagas': './src/sagas',
         },
       },
     ],

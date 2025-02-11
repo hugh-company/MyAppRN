@@ -1,12 +1,12 @@
 import { AppCategoryList, AppFlatListAnimated, ItemMovie } from '@components';
-import { ThemeColors, useTheme } from '@theme';
+import { Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface } from '@types';
 import { goToDetail } from '@utils';
 import React, { useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 export interface CategoryListItemProps {
   data?: TabInterface[] | undefined;
-  type?: PostTypeKey
+  type?: PostTypeKey;
   itemModule?: ModuleItemInterface;
   goToViewList?: () => void;
   isTab?: boolean;
@@ -22,7 +22,7 @@ export function CategoryListItem(props: CategoryListItemProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoaded(true);
-    }, 300);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
@@ -37,9 +37,8 @@ export function CategoryListItem(props: CategoryListItemProps) {
       <ItemMovie item={item} onPress={() => onClickDetail(item)} />
     );
   };
-
   if (!isLoaded) {
-    return <></>;
+    return null;
   }
 
   return <View style={styles.container}>
@@ -48,6 +47,7 @@ export function CategoryListItem(props: CategoryListItemProps) {
       categoryId={categoryIdSelected}
       goToViewList={goToViewList}
       isTab={isTab}
+      listStyle={{ paddingLeft: Spacing.width16 }}
       onSelectedCategory={onSelectedCategory} />
     <AppFlatListAnimated
       data={data.find((item) => item.id === categoryIdSelected)?.items || []}

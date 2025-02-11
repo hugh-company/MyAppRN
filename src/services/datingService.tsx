@@ -153,7 +153,8 @@ export const findUserApi = async (params: UserFindInterface) => {
       gender: params.gender,
     };
   }
-  return apiService.get(API_ENDPOINTS.FIND_DATING, params);
+
+  return apiService.get(API_ENDPOINTS.FIND_DATING, newParams);
 };
 export const getDatingDashboardApi = async (type: TypeTabDatingApi, params?: any) => {
   apiService.setBaseURL(ApiConfigs.baseURL);

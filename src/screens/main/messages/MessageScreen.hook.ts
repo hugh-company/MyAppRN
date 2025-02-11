@@ -1,20 +1,14 @@
 import {useRoute} from '@react-navigation/native';
 import {
-  loadMoreMessages,
-  loadMoreMessagesFailure,
-  loadMoreMessagesSuccess,
-  refreshMessages,
-  refreshMessagesFailure,
-  refreshMessagesSuccess,
-  selectIsNext,
-  selectLoading,
-  selectMessages,
+  fetchConversationsSaga,
+  getConversation,
+  loadMoreConversationsSaga,
+  refreshConversationsSaga,
+  setConversationLoadMore,
+  setConversationRefreshing,
 } from '@redux';
-import {getListConversationApi} from '@services';
 import {useTheme} from '@theme';
-import {MessageItem} from '@types';
 import {t} from 'i18next';
-import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
@@ -29,53 +23,32 @@ export const useMessageScreen = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const dispatch = useDispatch();
-  const data: MessageItem[] = useSelector(selectMessages) || [];
-  const loading = useSelector(selectLoading);
-  const isNext = useSelector(selectIsNext);
+  const {is_next, conversations, cursor_time, isLoadMore, isRefreshing} =
+    useSelector(getConversation);
 
-  useEffect(() => {
-    fetchMessages(1);
-  }, [dispatch]);
-
-  const fetchMessages = async (page: number) => {
-    try {
-      const response: any = await getListConversationApi({paged: page});
-      const {data: newData, is_next} = response.data;
-      console.log({response});
-
-      if (page === 1) {
-        dispatch(refreshMessagesSuccess(newData));
-      } else {
-        dispatch(loadMoreMessagesSuccess({messages: newData, isNext: is_next}));
-      }
-    } catch (error) {
-      if (page === 1) {
-        dispatch(refreshMessagesFailure(error.toString()));
-      } else {
-        dispatch(loadMoreMessagesFailure(error.toString()));
-      }
-    }
+  const fetchConversations = async (page: number) => {
+    dispatch(fetchConversationsSaga());
   };
 
   const handleLoadMore = () => {
-    if (isNext && !loading) {
-      const nextPage = Math.floor(data.length / 10) + 1;
-      dispatch(loadMoreMessages());
-      fetchMessages(nextPage);
+    if (is_next && !isLoadMore) {
+      dispatch(setConversationLoadMore());
+      dispatch(loadMoreConversationsSaga({cursor_time}));
     }
   };
 
   const onRefresh = () => {
-    dispatch(refreshMessages());
-    fetchMessages(1);
+    if (!isRefreshing) {
+      dispatch(setConversationRefreshing());
+      dispatch(refreshConversationsSaga());
+    }
   };
 
   return {
     themeColors,
     styles,
     title: title || t('message.title'),
-    data,
-    loading,
+    conversations,
     handleLoadMore,
     onRefresh,
   };

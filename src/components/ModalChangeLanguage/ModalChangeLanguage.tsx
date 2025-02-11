@@ -4,8 +4,8 @@ import { Spacing, useTheme } from '@theme';
 import i18next, { t } from 'i18next';
 import React, { useEffect, useState } from 'react';
 import { DeviceEventEmitter, View } from 'react-native';
-import { BottomModal } from 'react-native-modals';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AppBottomModal from '../AppBottomModal/AppBottomModal';
 import { AppText } from '../AppText';
 import { createStyles } from './styles';
 
@@ -15,6 +15,7 @@ const ModalChangeLanguage = ({ }: ModalChangeLanguageProps) => {
   const [currentLanguage, setCurrentLanguage] = useState(i18next.language);
   const { changeLanguage } = useLanguage();
   const { bottom } = useSafeAreaInsets();
+
   useEffect(() => {
     DeviceEventEmitter.addListener('showModalChangeLanguage', (status) => {
       setIsVisible(status);
@@ -31,6 +32,7 @@ const ModalChangeLanguage = ({ }: ModalChangeLanguageProps) => {
       i18next.off('languageChanged', handleLanguageChanged);
     };
   }, []);
+
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const onCancel = () => {
@@ -40,7 +42,6 @@ const ModalChangeLanguage = ({ }: ModalChangeLanguageProps) => {
   const handleLanguageChange = (lng: string) => {
     changeLanguage(lng);
     setIsVisible(false);
-
   };
 
   const dataLanguage = [
@@ -55,33 +56,30 @@ const ModalChangeLanguage = ({ }: ModalChangeLanguageProps) => {
       code: 'vi',
     },
   ];
+
   return (
-    <BottomModal
-      visible={!!isVisible} // Ensure isVisible is a boolean
-      onTouchOutside={onCancel}
+    <AppBottomModal
+      visible={isVisible}
+      onClose={onCancel}
       onSwipeOut={onCancel}
     >
       <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
-        <View style={styles.viewLine} />
         <View style={styles.body}>
           <AppText style={styles.title}>{t('drawer.selectLanguage')}</AppText>
           <View style={styles.list}>
-            {
-              dataLanguage.map((item, index) => (
-                <View key={index} style={[styles.item, currentLanguage === item.code ? styles.btnActive : null]} onTouchEnd={() => handleLanguageChange(item.code)}>
-                  <View style={styles.flag}>
-                    {item.icon}
-                    <AppText style={styles.textItem}>{item.name}</AppText>
-                  </View>
-                  {currentLanguage === item.code && <CheckIcon />}
+            {dataLanguage.map((item, index) => (
+              <View key={index} style={[styles.item, currentLanguage === item.code ? styles.btnActive : null]} onTouchEnd={() => handleLanguageChange(item.code)}>
+                <View style={styles.flag}>
+                  {item.icon}
+                  <AppText style={styles.textItem}>{item.name}</AppText>
                 </View>
-              ))
-            }
-
+                {currentLanguage === item.code && <CheckIcon />}
+              </View>
+            ))}
           </View>
         </View>
       </View>
-    </BottomModal>
+    </AppBottomModal>
   );
 };
 

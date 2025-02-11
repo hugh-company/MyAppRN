@@ -1,11 +1,4 @@
-import {
-  getToken,
-  joinConversation,
-  readConversation,
-  setConversations,
-  setMessages,
-  setSocket,
-} from '@redux';
+import {getToken, joinConversation, setSocket} from '@redux';
 import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import io from 'socket.io-client';
@@ -33,17 +26,17 @@ const useSocket = () => {
       console.log('Disconnected from socket');
     });
 
-    socket.on('conversationList', data => {
-      dispatch(setConversations(data));
-    });
+    // socket.on('conversationList', data => {
+    //   dispatch(setConversations(data));
+    // });
 
-    socket.on('messageList', data => {
-      dispatch(setMessages(data));
-    });
+    // socket.on('messageList', data => {
+    //   dispatch(setMessages(data));
+    // });
 
-    socket.on('readMessage', messageId => {
-      dispatch(readConversation({id: messageId, read: true}));
-    });
+    // socket.on('readMessage', messageId => {
+    //   dispatch(readConversation({id: messageId, read: true}));
+    // });
 
     socket.on('joinConversation', conversation => {
       dispatch(joinConversation(conversation));
