@@ -9,9 +9,9 @@ import { useFilterDating } from './FilterDating.hook';
 import { ModalFilterDating } from './components/ModalFilterDating';
 
 const FilterDating: React.FC = () => {
-  const { data, themeColors, styles, isFilter, setIsFilter, filter, onFilterApi,
+  const { data, styles, isFilter, setIsFilter, filter, onFilterApi,
 
-    swipeRef, handleSwipe, handleSwipeAction, matchUser, setMatchUser,
+    swipeRef, handleSwipe, handleSwipeAction,
   } = useFilterDating();
   const { bottom } = useSafeAreaInsets();
 

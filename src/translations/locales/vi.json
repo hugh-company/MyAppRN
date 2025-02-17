@@ -229,6 +229,7 @@
   "liked": "Đã thích",
   "rating": "Đánh giá",
   "saveMovie": "Lưu lại",
+  "saved": "Đã lưu",
   "share": "Chia sẻ",
   "back": "Trở lại",
   "type": "Thể loại",
@@ -290,6 +291,7 @@
     "meSendImage": "Bạn đã gửi ảnh",
     "userSendImage": "USER đã gửi ảnh",
     "meSendGame": "Bạn đã gửi trò chơi",
-    "userSendGame": "USER đã gửi trò chơi"
+    "userSendGame": "USER đã gửi trò chơi",
+    "searchMessage": "Tìm kiếm tin nhắn"
   }
 }

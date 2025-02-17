@@ -1,6 +1,6 @@
 import { API_ENDPOINTS, ApiConfigs, apiService } from '@api';
 import { KeyTypeWithCategory, PostTypeKey } from '@types';
-import { csrfTokenApi, transformData } from './loginService';
+import { csrfTokenApi } from './loginService';
 
 export const getDetailPostApi = (type: PostTypeKey, id: number) => {
   const uri = `${API_ENDPOINTS.DETAIL}${type}/${id}`;
@@ -45,13 +45,13 @@ export const likePostApi = async (
 ) => {
   const responseToken: any = await csrfTokenApi();
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const formUrlEncoded = transformData({
-    ...params,
-    csrf_token: responseToken.data.csrf_token,
-  });
+  const newData = new FormData();
+  newData.append('like', params.like.toString());
+  newData.append('csrf_token', responseToken.data.csrf_token);
+
   return apiService.postNormal(
     `${API_ENDPOINTS.LIKE}${type}/${id}`,
-    formUrlEncoded,
+    newData,
     {
       'Content-Type': 'multipart/form-data',
     },
@@ -66,9 +66,7 @@ export interface paramFavoriteMovie {
 export const favoriteMovieApi = async (id: number, type: PostTypeKey) => {
   const responseToken: any = await csrfTokenApi();
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const formUrlEncoded = transformData({
-    csrf_token: responseToken.data.csrf_token,
-  });
+
   const formData = new FormData();
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(`${API_ENDPOINTS.FAVORITE}${type}/${id}`, formData, {
@@ -79,9 +77,7 @@ export const favoriteMovieApi = async (id: number, type: PostTypeKey) => {
 export const savedPostApi = async (id: number, type: PostTypeKey) => {
   const responseToken: any = await csrfTokenApi();
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const formUrlEncoded = transformData({
-    csrf_token: responseToken.data.csrf_token,
-  });
+
   const formData = new FormData();
   formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(`${API_ENDPOINTS.SAVED}${type}/${id}`, formData, {
@@ -92,12 +88,11 @@ export const savedPostApi = async (id: number, type: PostTypeKey) => {
 export const viewsPostApi = async (id: number, type: PostTypeKey) => {
   const responseToken: any = await csrfTokenApi();
   apiService.setBaseURL(ApiConfigs.baseURL);
-  const formUrlEncoded = transformData({
-    csrf_token: responseToken.data.csrf_token,
-  });
+  const formData = new FormData();
+  formData.append('csrf_token', responseToken.data.csrf_token);
   return apiService.postNormal(
     `${API_ENDPOINTS.VIEW}${type}/${id}`,
-    formUrlEncoded,
+    formData,
     {
       'Content-Type': 'multipart/form-data',
     },

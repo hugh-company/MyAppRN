@@ -102,8 +102,6 @@ export const PosterDetail = ({
               </View>
             </View>
           </View>
-
-
         </LinearGradient>
       </View>
       <View style={styles.control}>

@@ -16,7 +16,7 @@ interface Content {
   version: string;
 }
 
-interface Source {
+export interface SourceVideoInterface {
   server: string;
   link: string;
 }
@@ -48,7 +48,7 @@ export interface chapterEpisodeInterface {
   views_day: number;
   views_week: number;
   views: number;
-  source: Source[];
+  source: SourceVideoInterface[];
   suburl: string;
   index_number: number;
   name?: string;

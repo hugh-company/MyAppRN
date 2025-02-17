@@ -48,6 +48,12 @@ export const useFilterDating = () => {
 
   const handleSwipe = (direction: string, user: UserFindInterface): void => {
     console.log(`Swiped ${direction}`, user);
+    dispatch(
+      sendMatchSaga({
+        recipient_id: user.id,
+        relation_type: direction,
+      }),
+    );
     if (direction === 'like') {
       handleLike(user);
     } else if (direction === 'dislike') {
@@ -64,7 +70,8 @@ export const useFilterDating = () => {
   };
 
   const handleLike = (user: UserFindInterface): void => {
-    setMatchUser(user);
+    console.log('Liked');
+    // setMatchUser(user);
   };
 
   const handleDislike = (user: UserFindInterface): void => {
@@ -77,17 +84,6 @@ export const useFilterDating = () => {
     // Add your super like logic here
   };
 
-  const callApiActionMatch = async (
-    user: UserFindInterface,
-    type: ActionType,
-  ) => {
-    try {
-      // like, dislike, super_like
-      dispatch(sendMatchSaga({user_id: user.id}));
-    } catch (e) {
-      console.log(e);
-    }
-  };
   return {
     data,
     themeColors,

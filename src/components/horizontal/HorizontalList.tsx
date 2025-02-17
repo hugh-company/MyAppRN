@@ -17,6 +17,7 @@ interface HorizontalListProps {
   itemStyle?: StyleProp<ViewStyle>;
   button?: ButtonNavigationInterface;
   renderItem?: ({ item }: { item: ItemListProduct }) => JSX.Element;
+  onDetail?: (item: ItemListProduct) => void;
 }
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
@@ -27,7 +28,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   onViewMore, type = PostTypeKey.GAMES,
   itemStyle,
   button,
-  renderItem,
+  renderItem, onDetail,
 }) => {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
@@ -42,7 +43,15 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
 
   const renderItemList = useCallback(({ item }: { item: ItemListProduct }) => {
     return (
-      <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => { goToDetail({ item, type }); }}>
+      <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => {
+        if (onDetail) {
+          console.log({ item });
+
+          onDetail(item);
+        } else {
+          goToDetail({ item, type });
+        }
+      }}>
         <AppImage uri={item?.feature?.path} style={styles.image} />
         {item?.posttype !== PostTypeKey.GAMES && <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>

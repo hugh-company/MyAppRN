@@ -1,71 +1,56 @@
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
-import { getToken } from '@redux';
-import { likePostApi, savedPostApi } from '@services';
+import { getToken, isComicSaved, isMovieSaved, isNovelSaved, RootState, toggleItemSaved } from '@redux';
+import { likePostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
-import { PersonInterface, PostTypeKey, TabInterface } from '@types';
+import { detailPostInterface, PostTypeKey } from '@types';
 import { onShareInfo, showModalRating } from '@utils';
 import { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createStyles } from './styles';
+
+
 export interface AppInfoContentProps {
   type: PostTypeKey;
   isLiked?: boolean;
-  isSave?: boolean;
-  releaseDate?: string;
-  tags?: TabInterface[];
-  main_actors?: PersonInterface[];
-  description?: any;
-  director?: PersonInterface[];
   style?: StyleProp<ViewStyle>;
   typeGame?: string;
-  id: number;
-  name?: string;
-
+  onRefresh?: () => void;
+  detail: detailPostInterface
 
 }
 const AppInfoContent = ({
   type,
   isLiked,
-  id,
-  releaseDate,
   typeGame,
-  tags,
-  main_actors,
-  description,
-  director, style, name,
+  style, onRefresh, detail,
 }: AppInfoContentProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [like, setLike] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
   const token = useSelector(getToken);
+  const dispatch = useDispatch();
+  const isFavorite = useSelector((state: RootState) =>
+    type === PostTypeKey.MOVIES ? isMovieSaved(state, detail?.id) : type === PostTypeKey.COMIC ? isComicSaved(state, detail?.id) : isNovelSaved(state, detail?.id)
+  );
   // call api
   const callApiLike = async () => {
     try {
-      const response = await likePostApi(id, type, { like: 1 });
+      const response = await likePostApi(detail?.id, type, { like: 1 });
       console.log({ response });
+      onRefresh && onRefresh();
       setLike(true);
     } catch (error) {
       setLike(false);
     }
   };
   const onShare = async () => {
-    console.log('share', name);
-
-    onShareInfo(name || '', name);
+    onShareInfo(detail?.seo_title || '', detail?.seo_title);
   };
-  const callApiFavorite = async () => {
-    try {
-
-      const response = await savedPostApi(id, type);
-      console.log({ response });
-      setIsFavorite(true);
-    } catch (error) {
-      console.log({ error });
-    }
+  const updateSavedPost = async () => {
+    dispatch(toggleItemSaved({ type: type === PostTypeKey.MOVIES ? 'movie' : type === PostTypeKey.COMIC ? 'comic' : 'novel', item: detail }));
   };
   //
   const renderItem = (icon: any, title: string, onPress?: () => void) => {
@@ -83,17 +68,16 @@ const AppInfoContent = ({
   const renderOption = () => {
     switch (type) {
       case PostTypeKey.COMIC:
+      case PostTypeKey.NOVEL:
       case PostTypeKey.MOVIES:
         return (
           <View style={[styles.viewOption, !token && { justifyContent: 'center', gap: Spacing.width32 }]} >
             {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
             {token && renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => {
-              showModalRating(true, id, type);
+              showModalRating(true, detail?.id, type);
             })}
-            {token && renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t('saveMovie'), () => {
-              if (!isFavorite) {
-                callApiFavorite();
-              }
+            {token && renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t(isFavorite ? 'saved' : 'saveMovie'), () => {
+              updateSavedPost();
             })}
             {renderItem(<SendIcon />, t('share'), () => onShare())}
           </View>
@@ -108,17 +92,16 @@ const AppInfoContent = ({
     }
   };
   const renderInfo = () => {
-    const infoTags = tags?.map((elm) => elm.name)?.join(', ');
+    const infoTags = detail?.tags?.map((elm) => elm.name)?.join(', ');
     switch (type) {
       case PostTypeKey.COMIC:
       case PostTypeKey.MOVIES:
         return (
           <>
-
             <View style={styles.infoRow} >
               <View style={styles.info1}>
                 <AppText style={styles.titleInfo}>{t('movie.release_date')}</AppText>
-                <AppText style={styles.valueInfo}>{releaseDate}</AppText>
+                <AppText style={styles.valueInfo}>{detail?.release_date}</AppText>
               </View>
               <View style={styles.info2}>
                 <AppText style={styles.titleInfo}>{t('movie.tags')}</AppText>
@@ -128,13 +111,13 @@ const AppInfoContent = ({
             <View style={styles.infoRow}>
               <View style={styles.info1}>
                 <AppText style={styles.titleInfo}>{t('movie.director')}</AppText>
-                <AppText style={styles.valueInfo}>{director?.map((elm) => elm.title)?.join(', ')}</AppText>
+                <AppText style={styles.valueInfo}>{detail?.directors?.map((elm) => elm.title)?.join(', ')}</AppText>
               </View>
               {
-                main_actors && (
+                detail?.actors && (
                   <View style={styles.info2}>
                     <AppText style={styles.titleInfo}>{t('movie.main_actors')}</AppText>
-                    <AppText style={styles.valueInfo}>{main_actors?.map((elm) => elm.title)?.join(', ')}</AppText>
+                    <AppText style={styles.valueInfo}>{detail?.actors?.map((elm) => elm.title)?.join(', ')}</AppText>
                   </View>
                 )
               }
@@ -163,7 +146,7 @@ const AppInfoContent = ({
       {renderInfo()}
       <View style={styles.viewContent}>
         <AppText style={styles.titleContent}>{t('movie.content')}</AppText>
-        <AppLessMore text={description} />
+        <AppLessMore text={detail?.description} />
       </View>
     </View>
   );

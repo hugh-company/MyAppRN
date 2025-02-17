@@ -3,7 +3,7 @@ import { useTheme } from '@theme';
 import { t } from 'i18next';
 import React, { forwardRef } from 'react';
 import { ActivityIndicator, FlatList, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, RefreshControlProps, StyleProp, View, ViewStyle } from 'react-native';
-import Animated from 'react-native-reanimated';
+import Animated, { SharedValue } from 'react-native-reanimated';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 import { createStyles } from './styles';
@@ -49,12 +49,13 @@ export interface AppFlatListAnimatedProps {
   keyExtractor?: ((item: any, index: number) => string) | undefined;
   refreshControlProps?: Partial<RefreshControlProps>;
   nestedScrollEnabled?: boolean;
-
-
+  onMomentumScrollEnd?: ((event: NativeSyntheticEvent<NativeScrollEvent>) => void) | SharedValue<((event: NativeSyntheticEvent<NativeScrollEvent>) => void) | undefined> | undefined
+  onTouchStart?: ((event: NativeSyntheticEvent<any>) => void) | undefined;
+  onStartShouldSetResponder?: ((event: NativeSyntheticEvent<any>) => boolean) | undefined;
 }
 export const AppFlatListAnimated = forwardRef((props: AppFlatListAnimatedProps, ref: React.ForwardedRef<FlatList<any>> | undefined) => {
   const {
-    data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading, keyExtractor,
+    data, style, onScroll, scrollEventThrottle, renderItem, numColumns = 0, columnWrapperStyle, isLoading, keyExtractor, onStartShouldSetResponder,
     horizontal, ListFooterComponent, ListHeaderComponent,
     contentContainerStyle,
     onLoadMore,
@@ -66,7 +67,7 @@ export const AppFlatListAnimated = forwardRef((props: AppFlatListAnimatedProps, 
     perPage = 14,
     ListEmptyComponent,
     refreshControlProps, refreshing = false,
-    nestedScrollEnabled = true,
+    nestedScrollEnabled = true, onTouchStart,
   } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
@@ -115,6 +116,7 @@ export const AppFlatListAnimated = forwardRef((props: AppFlatListAnimatedProps, 
         { length: 200, offset: 200 * index, index }
       )}
       onEndReachedThreshold={onEndReachedThreshold}
+      onMomentumScrollEnd={props.onMomentumScrollEnd}
       onEndReached={onLoadMore}
       ListFooterComponent={
         ListFooterComponent ? (
@@ -127,15 +129,16 @@ export const AppFlatListAnimated = forwardRef((props: AppFlatListAnimatedProps, 
       }
       ListEmptyComponent={ListEmptyComponent || ListEmptyComponentBase}
       showsHorizontalScrollIndicator={false}
+      onTouchStart={onTouchStart}
       showsVerticalScrollIndicator={false}
       pagingEnabled={pagingEnabled}
       initialScrollIndex={initialScrollIndex}
       nestedScrollEnabled={nestedScrollEnabled}
-      initialNumToRender={5}
-      maxToRenderPerBatch={10} // Reduce the number of items to render per batch
-      windowSize={10}
+      // initialNumToRender={5}
+      // maxToRenderPerBatch={10} // Reduce the number of items to render per batch
+      // windowSize={10}
       removeClippedSubviews={removeClippedSubviews}
-
+      onStartShouldSetResponder={onStartShouldSetResponder}
       keyExtractor={keyExtractor || ((item, index) => index.toString())}
     />
   );

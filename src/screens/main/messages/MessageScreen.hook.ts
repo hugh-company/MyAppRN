@@ -25,8 +25,12 @@ export const useMessageScreen = () => {
   const dispatch = useDispatch();
   const {is_next, conversations, cursor_time, isLoadMore, isRefreshing} =
     useSelector(getConversation);
+  // useEffect(() => {
+  //   fetchConversations();
+  // }, []);
+  console.log({conversations});
 
-  const fetchConversations = async (page: number) => {
+  const fetchConversations = async () => {
     dispatch(fetchConversationsSaga());
   };
 

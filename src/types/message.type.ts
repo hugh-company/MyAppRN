@@ -20,6 +20,7 @@ export enum MessageStatus {
 export enum MessageAction {
   GET_THREAD = 'get_threads',
   GET_MESSAGES = 'get_messages',
+  NEW_THREAD = 'new_thread',
   NEW_MESSAGE = 'new_message',
   SEND_MESSAGE = 'send_message',
   GET_USER_STATUS = 'get_user_status',
@@ -29,6 +30,7 @@ export enum MessageAction {
   SET_NOTICE_TYPING = 'set_notice_typing',
   SEND_MATCH_ACTION = 'send_match_action',
   MESSAGE_SENT = 'message_sent',
+  SEARCH_MESSAGE = 'search_threads',
 }
 export interface ChatInterface {
   id: number;

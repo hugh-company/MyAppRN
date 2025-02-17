@@ -4,6 +4,7 @@ import {
   StackActionType,
 } from '@react-navigation/native';
 import { DeviceEventEmitter } from 'react-native';
+import Orientation from 'react-native-orientation-locker';
 
 type typeNavigation = {
   dispatch: (arg0: CommonActions.Action | StackActionType) => void;
@@ -68,7 +69,9 @@ export function navigateToStack(
 }
 
 export function goBack() {
+
   if (_navigator?.canGoBack()) {
+    Orientation.lockToPortrait();
     _navigator.dispatch(CommonActions.goBack());
   }
 }

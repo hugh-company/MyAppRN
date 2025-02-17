@@ -8,7 +8,7 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, readChapter, scrollHandler, onSelectChapter, headerBackgroundColorStyle, onRefresh, themeColors, type } = useChapterDetail();
+  const { styles, detail, readChapter, scrollHandler, onSelectChapter, onNavigateDetail, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
 
   // if (loading) {
   //   return <LoadingDetailMovie />;
@@ -22,6 +22,7 @@ const ChapterDetail = () => {
     <View style={styles.container}>
       <Animated.ScrollView
         // refetch data
+        ref={refList}
         refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={themeColors.text} />}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
@@ -42,7 +43,12 @@ const ChapterDetail = () => {
           }}
           onNewChapter={() => {
             if (detail?.chapters?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: detail?.chapters?.[detail?.chapters?.length - 1], chapters: detail?.chapters, type });
+              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
+                chapter: {
+                  ...detail?.chapters?.[detail?.chapters?.length - 1],
+                  name: detail.title,
+                }, chapters: detail?.chapters, type,
+              });
 
             }
           }}
@@ -58,18 +64,13 @@ const ChapterDetail = () => {
 
         <AppInfoContent
           type={type}
-          // isLiked={data?.isLiked}
-          id={detail?.id}
-          name={detail?.seo_title}
+          // isLiked={data?.isLiked
+
           style={styles.infoRow}
-          isSave={false}
-          releaseDate={detail?.release_date}
-          tags={detail?.categories}
-          main_actors={detail?.actors}
-          description={detail?.description}
-          director={detail?.creators}
+          detail={detail}
         />
         <HorizontalList
+          onDetail={(post) => onNavigateDetail(post)}
           data={detail.related_post?.items}
           button={detail.related_post?.button}
           type={type}

@@ -27,7 +27,10 @@ const VideoScreen = () => {
     setSpeedVisible,
     isLoading, setIsLoading,
     onMenuPress, toggleControlsVisibility,
-    updateProgress, controlsVisible, showAds, ad, skipAd, setPlaybackRate, toggleFullScreen, isFullScreenVisible,
+    updateProgress,
+    controlsVisible, showAds, ad,
+    skipAd, setPlaybackRate,
+    toggleFullScreen, isFullScreenVisible,
     setError, video,
   } = useVideoScreen();
 
@@ -50,7 +53,6 @@ const VideoScreen = () => {
             resizeMode="contain"
             onError={(e) => {
               console.log({ e });
-
               setError(true);
             }}
             onProgress={(data) => runOnJS(updateProgress)(data.currentTime)}

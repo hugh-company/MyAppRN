@@ -135,6 +135,8 @@ const chatSlice = createSlice({
       const indexConversation = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.message.thread_id,
       );
+      console.log({indexConversation});
+
       if (indexConversation >= 0) {
         state.conversation.conversations[indexConversation].last_message =
           action.payload?.message;
@@ -147,6 +149,8 @@ const chatSlice = createSlice({
           indexConversation,
           1,
         )[0];
+        console.log({updatedConversation});
+
         state.conversation.conversations.unshift(updatedConversation);
       }
 
@@ -162,16 +166,25 @@ const chatSlice = createSlice({
         );
       }
     },
-    updateMessageSent(state, action) {
-      console.log('updateMessageSent', action.payload, action.payload.temp_id);
+    addNewConversation(state, action) {
+      console.log('addNewConversation', action.payload);
 
+      state.conversation.conversations = [
+        action.payload,
+        ...state.conversation.conversations,
+      ];
+    },
+    updateMessageSent(state, action) {
       const index = state.message.messages.findIndex(
         item => item.id === action.payload?.message.temp_id,
       );
+
       // update conversation
       const indexConversation = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.message.thread_id,
       );
+      console.log({index}, action.payload.message, action.payload.temp_id);
+
       if (index >= 0) {
         state.message.messages[index] = {
           ...state.message.messages[index],
@@ -184,7 +197,15 @@ const chatSlice = createSlice({
           },
         };
       }
-
+      console.log(
+        'updateMessageSent',
+        action.payload,
+        action.payload.temp_id,
+        indexConversation,
+        {
+          index,
+        },
+      );
       if (indexConversation >= 0 && index >= 0) {
         state.conversation.conversations[indexConversation].last_message = {
           ...state.message.messages[index],
@@ -194,8 +215,14 @@ const chatSlice = createSlice({
         state.conversation.conversations[
           indexConversation
         ].last_message.content.created_at = action.payload.message.created_at;
-      }
 
+        // Move the conversation to the top
+        const updatedConversation = state.conversation.conversations.splice(
+          indexConversation,
+          1,
+        )[0];
+        state.conversation.conversations.unshift(updatedConversation);
+      }
       if (!action.payload?.message.created_at) {
         action.payload.message.created_at = dayjs().format(
           'YYYY-MM-DD HH:mm:ss',
@@ -234,6 +261,7 @@ export const {
   updateNewMessage,
   readAllMessages,
   updateMessageSent,
+  addNewConversation,
   // ...other actions...
 } = chatSlice.actions;
 

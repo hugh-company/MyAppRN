@@ -12,8 +12,6 @@ const HomeScreen = () => {
     headerBackgroundColorStyle,
     loading,
   } = useHomeScreen();
-  console.log({ loading }, data);
-
   return (
     <View style={[styles.container]}>
       <MemoizedAppListDashboard

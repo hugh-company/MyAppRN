@@ -1,1 +1,1 @@
-export { default as CreateProfileScreen } from './CreateProfileScreen';
+export * from './CreateProfileScreen';

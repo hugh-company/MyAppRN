@@ -32,8 +32,6 @@ export const ModalSpeed = ({ visible, onClose, currentSpeed, onSelectSpeed }: Mo
       visible={!!visible} // Ensure isVisible is a boolean
       onClose={onClose}
       onSwipeOut={onClose}
-
-
     >
       <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
         <View style={styles.body}>

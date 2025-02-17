@@ -21,6 +21,7 @@ const MovieScreen = () => {
     onRefresh,
     categories, loading,
   } = useMovieScreen();
+  console.log({ data });
 
   return (
     <View style={styles.container}>

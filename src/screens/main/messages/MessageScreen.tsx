@@ -1,4 +1,5 @@
 import { AppFlatListAnimated, AppHeader, AppInputSearch } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { ConversationInterface } from '@types';
 import React from 'react';
 import { View } from 'react-native';
@@ -16,7 +17,7 @@ const MessageScreen = () => {
   return (
     <View style={styles.container}>
       <AppHeader title={title || ''} />
-      <AppInputSearch value={''} editable={false} style={styles.inputSearch} />
+      <AppInputSearch value={''} editable={false} style={styles.inputSearch} onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_MESSAGE)} />
       <AppFlatListAnimated
         data={conversations || []}
         scrollEventThrottle={16}

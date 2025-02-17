@@ -109,19 +109,19 @@ export function ListDrawer(props: ListDrawerProps) {
         gotoScreen(SCREEN_ROUTE.GAMES);
         break;
       case 'chat':
-        gotoScreen(SCREEN_ROUTE.CREATE_PROFILE);
+        gotoScreen(SCREEN_ROUTE.DATING);
         break;
       case 'languages':
         showModalLanguage(true);
         break;
       case 'savedMovies':
-        gotoScreen(SCREEN_ROUTE.FAVORITE, { type: PostTypeKey.MOVIES });
+        gotoScreen(SCREEN_ROUTE.SAVED_POST, { type: PostTypeKey.MOVIES });
         break;
       case 'savedGames':
-        gotoScreen(SCREEN_ROUTE.FAVORITE, { type: PostTypeKey.GAMES });
+        gotoScreen(SCREEN_ROUTE.SAVED_POST, { type: PostTypeKey.GAMES });
         break;
       case 'savedComics':
-        gotoScreen(SCREEN_ROUTE.FAVORITE, { type: PostTypeKey.COMIC });
+        gotoScreen(SCREEN_ROUTE.SAVED_POST, { type: PostTypeKey.COMIC });
         break;
 
       case 'logout':

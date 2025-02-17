@@ -2,19 +2,13 @@ import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {getDetailPostApi, viewsPostApi} from '@services';
 import {useQuery} from '@tanstack/react-query';
-import {Spacing, useTheme} from '@theme';
+import {useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
   detailPostInterface,
   PostTypeKey,
 } from '@types';
 import {useEffect, useState} from 'react';
-import {
-  interpolateColor,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
 import {createStyles} from './styles';
 interface MovieDetailScreenProps {
   movie: detailPostInterface;
@@ -24,19 +18,21 @@ export const useMovieDetailScreen = () => {
   const {movie} = (router?.params as unknown as MovieDetailScreenProps) || {
     type: undefined,
   };
+  const [isFullScreenVisible, setIsFullScreenVisible] = useState(false);
 
   const [detailMovie, setDetailMovie] = useState<
     detailPostInterface | undefined
   >(movie);
+  const [movieId, setMovieId] = useState(movie.id);
 
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-  const scrollY = useSharedValue(0);
   const [showRating, setShowRating] = useState(false);
+
   //
-  const {data, isSuccess, refetch, error, isFetching} = useQuery({
-    queryKey: ['movieDetail', movie.id],
-    queryFn: () => getDetailPostApi(PostTypeKey.MOVIES, movie.id),
+  const {data, isSuccess, refetch, error} = useQuery({
+    queryKey: ['movieDetail', movieId],
+    queryFn: () => getDetailPostApi(PostTypeKey.MOVIES, movieId),
   });
   const {} = useQuery({
     queryKey: ['viewMoves', movie.id],
@@ -46,21 +42,12 @@ export const useMovieDetailScreen = () => {
     if (isSuccess && data) {
       setDetailMovie(data?.data);
     }
+    return () => {
+      setDetailMovie(undefined);
+      setIsFullScreenVisible(false);
+    };
   }, [isSuccess, data]);
 
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    scrollY.value = event.contentOffset.y;
-  });
-
-  const headerBackgroundColorStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: interpolateColor(
-        scrollY.value,
-        [0, Spacing.height315],
-        ['transparent', '#B1062E'],
-      ),
-    };
-  });
   const goToPlay = () => {
     const index = detailMovie?.index;
     if (index) {
@@ -103,24 +90,30 @@ export const useMovieDetailScreen = () => {
       return {
         ...prev,
         index: chapter.index,
-        // title: [prev.title, `(${chapter.title})`].join(' '),
         feature: chapter.feature,
       };
     });
+  };
+  const onNavigateDetail = (post: detailPostInterface) => {
+    setMovieId(post.id);
+    setDetailMovie(post);
+    refetch();
   };
   return {
     themeColors,
     styles,
     detailMovie,
 
-    scrollHandler,
-    headerBackgroundColorStyle,
     onRefresh: refetch,
-    isFetching,
+
     showRating,
     setShowRating,
     goToPlay,
     onSelectedChapter,
     error,
+    isFullScreenVisible,
+    setIsFullScreenVisible,
+    refetch,
+    onNavigateDetail,
   };
 };

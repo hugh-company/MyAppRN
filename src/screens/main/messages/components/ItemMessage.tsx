@@ -17,14 +17,17 @@ export function ItemMessage(props: ItemMessageProps) {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const userInfo = useSelector(getUserInfo);
+  const sanitizeFullname = (fullname: string) => {
+    return fullname?.replace(/[^a-zA-Z0-9 ]/g, '');
+  };
   const renderTextMessage = () => {
     switch (item?.last_message?.content?.type) {
       case 'text':
         return item?.last_message?.content?.data?.text;
       case 'image':
-        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendImage') : t('message.userSendImage').replace('USER', item?.other_user?.fullname);
+        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendImage') : t('message.userSendImage')?.replace('USER', sanitizeFullname(item?.other_user?.fullname));
       case 'game':
-        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendGame') : t('message.userSendGame').replace('USER', item?.other_user?.fullname);
+        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendGame') : t('message.userSendGame')?.replace('USER', sanitizeFullname(item?.other_user?.fullname));
       default:
         return '';
     }
@@ -40,13 +43,12 @@ export function ItemMessage(props: ItemMessageProps) {
 
       <View style={{ flex: 1, gap: Spacing.width8 }}>
         <View style={styles.viewInfo}>
-          <AppText style={styles.txtName} numberOfLines={1}>{item.other_user?.fullname}</AppText>
+          <AppText style={styles.txtName} numberOfLines={1}>{sanitizeFullname(item.other_user?.fullname)}</AppText>
           <AppText style={styles.txtDate}>{checkMessageTime(item.last_message?.content?.created_at)}</AppText>
         </View>
 
         <View style={styles.infoMessage}>
           <AppText style={styles.txtMessage}>{renderTextMessage()}</AppText>
-          {/* {item?.isread && <View style={[styles.ViewCount, { backgroundColor: 'green' }]} />} */}
           {item?.last_message?.recipient_id === userInfo?.id && item?.last_message?.content?.status !== MessageStatus.READ && <View style={styles.ViewCount} />}
         </View>
       </View>

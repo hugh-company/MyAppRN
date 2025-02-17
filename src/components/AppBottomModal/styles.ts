@@ -5,7 +5,7 @@ export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      // backgroundColor: themeColors.background,
+      backgroundColor: themeColors.background,
     },
     overlay: {
       position: 'absolute',
@@ -30,7 +30,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.background,
       borderTopLeftRadius: 20,
       borderTopRightRadius: 20,
-      overflow: 'hidden',
     },
     line: {
       height: 5,

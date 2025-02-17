@@ -98,9 +98,9 @@ const AppRatingMovie = ({ }: AppRatingMovieProps) => {
                 }}
                 key={index}
               >
-                <Animated.View style={{ transform: [{ scale: rating > index ? scaleAnim : 1 }] }}>
-                  <RatingIcon size={Spacing.width28} active={rating > index} />
-                </Animated.View>
+                {/* <Animated.View style={{ transform: [{ scale: rating > index ? scaleAnim : 1 }] }}> */}
+                <RatingIcon size={Spacing.width28} active={rating > index} />
+                {/* </Animated.View> */}
               </TouchableOpacity>
             );
           })}

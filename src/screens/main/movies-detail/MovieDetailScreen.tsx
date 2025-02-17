@@ -1,104 +1,74 @@
-import { DotsIcon } from '@assets';
-import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList } from '@components';
+import { AppEpisodes, AppInfoContent, HorizontalList } from '@components';
 import { PostTypeKey } from '@types';
-import React from 'react';
-import { RefreshControl, SafeAreaView, StatusBar, TouchableOpacity, View } from 'react-native';
-import Animated from 'react-native-reanimated';
+import React, { useEffect } from 'react';
+import { FlatList, StatusBar, View } from 'react-native';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovieDetailScreen } from './MovieDetailScreen.hook';
-import { PosterDetail } from './components/PosterDetail';
+import { InfoMovie } from './components/InfoMovie';
+import { VideoPlayer } from './components/VideoPlayer';
 
 
 const MovieDetailScreen = () => {
+  const { styles, error, isFullScreenVisible, setIsFullScreenVisible, detailMovie, onSelectedChapter, onNavigateDetail } = useMovieDetailScreen();
+  const { top } = useSafeAreaInsets();
+  const opacity = useSharedValue(1);
 
-  const { styles, detailMovie, goToPlay, error, scrollHandler, headerBackgroundColorStyle, onRefresh, themeColors, onSelectedChapter } = useMovieDetailScreen();
+  useEffect(() => {
+    opacity.value = withTiming(isFullScreenVisible ? 0 : 1, { duration: 300 });
+    return () => {
+      opacity.value = withTiming(1, { duration: 300 });
+    };
+  }, [isFullScreenVisible, opacity]);
 
-  // if (loading) {
-  //   return <LoadingDetailMovie />;
-  // }
   if (error) {
     return null;
   }
-  if (!detailMovie) {
-    return null;
-  }
-
-
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <StatusBar translucent backgroundColor="transparent" hidden={true} />
-
-        <Animated.ScrollView
-          key={detailMovie?.id} // Add key prop here
-          // refetch data
-          refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={themeColors.text} />}
-          showsVerticalScrollIndicator={false}
-          onScroll={scrollHandler}
-
-        >
-          <PosterDetail
-            name={detailMovie?.title}
-            rating={detailMovie?.rating_count}
-            typeData={'series'}
-            type={PostTypeKey.MOVIES}
-            duration={detailMovie?.duration}
-            views={detailMovie?.views}
-            likes={detailMovie?.like_count}
-            poster={detailMovie?.feature?.path || ''}
-            totalEpisodes={detailMovie?.chapter_total}
-            onPlay={() => {
-              goToPlay();
-            }}
-            onNewChapter={() => {
-              // if (data?.chapters?.length) {
-              //   navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, { chapter: data?.chapters?.[0] });
-              // }
-            }}
-          />
-          {detailMovie?.movie_type === 'tvseries' &&
-            <AppEpisodes
-              episodes={detailMovie?.chapters}
-              style={styles.episodes}
-              onSelectChapter={(item) => {
-                onSelectedChapter(item);
-                // navigate(SCREEN_ROUTE.VIDEO, {
-                //   video: {
-                //     ...item,
-                //     name: detailMovie?.title,
-                //   },
-                // });
-              }} />
-          }
-          <AppInfoContent
-            type={PostTypeKey.MOVIES}
-            name={detailMovie?.seo_title}
-            id={detailMovie?.id}
-            style={styles.infoRow}
-            isSave={false}
-            releaseDate={detailMovie?.release_date}
-            tags={detailMovie?.categories}
-            main_actors={detailMovie?.actors}
-            description={detailMovie?.description}
-            director={detailMovie?.directors}
-          />
-          <HorizontalList
-            data={detailMovie.related_post?.items}
-            type={PostTypeKey.MOVIES}
-            button={detailMovie.related_post?.button}
-            title={detailMovie.related_post?.label}
-            itemStyle={styles.itemImage}
-
-          />
-          <View style={styles.paddingBottom} />
-        </Animated.ScrollView>
-        <AppHeader
-          style={[styles.header, headerBackgroundColorStyle]}
-          rightComponent={<TouchableOpacity
-            // onPress={() => setShowRating(true)}
-            style={styles.btnDots}><DotsIcon /></TouchableOpacity>} />
-
-      </View >
-    </SafeAreaView>
+    <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
+      <StatusBar translucent backgroundColor="transparent" hidden={true} />
+      <VideoPlayer
+        urlVideos={detailMovie?.chapters?.[detailMovie?.index || 0]?.source}
+        image={detailMovie?.feature?.path}
+        setIsFullScreenVisible={setIsFullScreenVisible}
+        isFullScreenVisible={isFullScreenVisible}
+        autoPlay={!!detailMovie?.index} // Add autoPlay prop
+      />
+      <FlatList
+        key={detailMovie?.id}
+        showsVerticalScrollIndicator={false}
+        data={[detailMovie]}
+        renderItem={({ item }: any) => (
+          <>
+            <InfoMovie movie={item} />
+            {item?.movie_type === 'tvseries' && (
+              <AppEpisodes
+                episodes={item?.chapters}
+                style={styles.episodes}
+                onSelectChapter={onSelectedChapter}
+              />
+            )}
+            <AppInfoContent
+              type={PostTypeKey.MOVIES}
+              style={styles.infoRow}
+              detail={item}
+              onRefresh={() => {
+                onNavigateDetail(item);
+              }}
+            />
+            <HorizontalList
+              onDetail={(post) => onNavigateDetail(post)}
+              data={item?.related_post?.items}
+              type={PostTypeKey.MOVIES}
+              button={item?.related_post?.button}
+              title={item?.related_post?.label}
+              itemStyle={styles.itemImage}
+            />
+            <View style={styles.paddingBottom} />
+          </>
+        )}
+      />
+    </View>
   );
 };
 

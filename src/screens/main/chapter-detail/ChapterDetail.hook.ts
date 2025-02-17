@@ -1,13 +1,14 @@
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {getDetailPostApi, viewsPostApi} from '@services';
+import {useQuery} from '@tanstack/react-query';
 import {Spacing, useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
   detailPostInterface,
   PostTypeKey,
 } from '@types';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   interpolateColor,
   useAnimatedScrollHandler,
@@ -24,49 +25,27 @@ export const useChapterDetail = () => {
   const {chapter, type = PostTypeKey.COMIC} =
     router.params as ChapterDetailInterface;
   const [detail, setDetail] = useState<detailPostInterface>(chapter);
-  const [loading, setLoading] = useState(true);
+  const [idPost, setIdPost] = useState(chapter.id);
+  const refList = React.useRef<any>(null);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const scrollY = useSharedValue(0);
   // call api
+  const {data, isSuccess, refetch, error, isFetching} = useQuery({
+    queryKey: ['chapterDetail', idPost],
+    queryFn: () => getDetailPostApi(type, idPost),
+  });
+  useQuery({
+    queryKey: ['viewChapter', idPost],
+    queryFn: () => viewsPostApi(chapter?.id, type),
+  });
   useEffect(() => {
-    const controller = new AbortController();
-    callAllApi();
-
-    return () => {
-      controller.abort();
-      scrollY.value = 0; // Reset animation value
-    };
-  }, []);
-  const callAllApi = async () => {
-    Promise.all([callApi(), viewMovieApi()]).finally(() => {
-      setLoading(false);
-    });
-  };
-  // views
-  const viewMovieApi = async () => {
-    try {
-      await viewsPostApi(chapter?.id, type);
-    } catch (error) {
-      console.log({error});
+    if (isSuccess && data) {
+      setDetail(data?.data);
     }
-  };
-  //
-  const callApi = async () => {
-    try {
-      const response: any = await getDetailPostApi(type, chapter.id);
-      console.log({response});
-
-      setDetail(response?.data);
-      setLoading(false);
-    } catch (error) {
-      console.log({error});
-      setLoading(false);
-    }
-  };
-
+  }, [isSuccess, data]);
   const onRefresh = () => {
-    callApi();
+    refetch();
   };
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
@@ -83,6 +62,7 @@ export const useChapterDetail = () => {
   const onSelectChapter = (chapter: chapterEpisodeInterface) => {
     setDetail(prev => ({
       ...prev,
+
       index: chapter.index,
 
       feature: chapter.feature,
@@ -92,24 +72,40 @@ export const useChapterDetail = () => {
     const index = detail?.index;
     if (index) {
       navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-        chapter: detail?.chapters?.[index - 1],
+        chapter: {
+          ...detail?.chapters?.[index - 1],
+          name: detail.title,
+        },
 
         chapters: detail?.chapters,
         type,
       });
     } else {
       navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-        chapter: detail?.chapters?.[0],
+        chapter: {
+          ...detail?.chapters?.[0],
+          name: detail.title,
+        },
         chapters: detail?.chapters,
         type,
       });
     }
   };
   //
+  const onNavigateDetail = (post: detailPostInterface) => {
+    setIdPost(post.id);
+    setDetail(post);
+    refetch();
+    // scroll to top
+    if (refList.current) {
+      refList.current.scrollTo({y: 0});
+    }
+  };
   return {
     styles,
+    onNavigateDetail,
     detail,
-    loading,
+    loading: isFetching,
     scrollHandler,
     headerBackgroundColorStyle,
     onRefresh,
@@ -117,5 +113,6 @@ export const useChapterDetail = () => {
     themeColors,
     type,
     onSelectChapter,
+    refList,
   };
 };

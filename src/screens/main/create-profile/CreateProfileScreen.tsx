@@ -6,9 +6,10 @@ import { Controller } from 'react-hook-form';
 import { View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useCreateProfileScreen } from './CreateProfileScreen.hook';
+import { styles } from './styles';
 
-const CreateProfileScreen = () => {
-  const { data, themeColors, styles, control, errors, onSubmit, jobs } = useCreateProfileScreen();
+export const CreateProfileScreen = () => {
+  const { control, errors, onSubmit, jobs } = useCreateProfileScreen();
   const gender = [
     {
       label: t('male'),
@@ -99,5 +100,3 @@ const CreateProfileScreen = () => {
     </View>
   );
 };
-
-export default CreateProfileScreen;

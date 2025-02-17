@@ -45,6 +45,7 @@ export enum SCREEN_ROUTE {
 
   // Favorite
   FAVORITE = 'Favorite',
+  SAVED_POST = 'Save_post',
   // Chat
   CHAT = 'Chat',
   MESSAGES = 'Messages',

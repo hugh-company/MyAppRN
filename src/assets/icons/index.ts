@@ -84,3 +84,5 @@ export {default as UploadImageIcon} from './UploadImageIcon';
 export {default as VipIcon} from './VipIcon';
 export {default as VoteIcon} from './VoteIcon';
 export {default as YogaIcon} from './YogaIcon';
+export { default as ArrowDropLeft } from './ArrowDropLeft';
+export { default as ArrowDropRight } from './ArrowDropRight';

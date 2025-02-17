@@ -15,6 +15,7 @@ export interface ModalEpisodesProps {
   showModal: boolean;
   setSelectEpisodes?: any;
   episodes?: chapterEpisodeInterface[];
+  height?: number;
 }
 
 export function ModalEpisodes(props: ModalEpisodesProps) {
@@ -23,7 +24,7 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
     setShowModal,
     onSelectChapter,
     showModal,
-    setSelectEpisodes, episodes,
+    setSelectEpisodes, episodes, height,
   } = props;
   const { themeColors } = useTheme();
   const [search, setSearch] = useState('');
@@ -56,36 +57,37 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
       </TouchableOpacity>
     );
   };
-  return <AppBottomModal
-    width={1}
-    height={Platform.OS === 'ios' ? 0.93 : 1}
-    visible={showModal}
-    onClose={() => setShowModal(false)}>
-    <View style={styles.modalContainer}>
-      <View style={styles.headerModal}>
-        <View style={styles.viewTitle}>
-          <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
-          <TouchableOpacity hitSlop={{
-            top: 10,
-            bottom: 10,
-            left: 10,
-            right: 10,
-          }} style={styles.btnBack} onPress={() => setShowModal(false)}>
-            <AppText style={styles.txtBack}>{t('back')}</AppText>
-          </TouchableOpacity>
+  return (
+    <AppBottomModal
+      width={1}
+      height={height || (Platform.OS === 'ios' ? 0.93 : 1)}
+      visible={showModal}
+      onClose={() => setShowModal(false)}>
+      <View style={styles.modalContainer}>
+        <View style={styles.headerModal}>
+          <View style={styles.viewTitle}>
+            <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
+            <TouchableOpacity hitSlop={{
+              top: 10,
+              bottom: 10,
+              left: 10,
+              right: 10,
+            }} style={styles.btnBack} onPress={() => setShowModal(false)}>
+              <AppText style={styles.txtBack}>{t('back')}</AppText>
+            </TouchableOpacity>
+          </View>
+          <AppInputSearch
+            style={styles.viewSearch}
+            inputStyle={styles.inputSearch}
+            value={search}
+            onChangeText={handleSearch}
+          />
         </View>
-        <AppInputSearch
-          style={styles.viewSearch}
-          inputStyle={styles.inputSearch}
-          value={search}
-          onChangeText={handleSearch}
+        <AppFlatListAnimated
+          data={filteredEpisodes}
+          renderItem={renderItem}
         />
-      </View>
-      <AppFlatListAnimated
-        data={filteredEpisodes}
-        renderItem={renderItem}
-      />
 
-    </View>
-  </AppBottomModal>;
+      </View>
+    </AppBottomModal>);
 }

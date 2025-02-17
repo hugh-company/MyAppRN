@@ -6,9 +6,10 @@ import { Dimensions, Image, StyleSheet } from 'react-native';
 
 interface ImageChapterProps {
   uri: string;
+  onPress?: () => void;
 }
 
-const ImageChapter = ({ uri }: ImageChapterProps) => {
+const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
   const [heightImage, setHeightImage] = useState<number>(0);
 
   useEffect(() => {
@@ -27,7 +28,9 @@ const ImageChapter = ({ uri }: ImageChapterProps) => {
   }, [uri]);
 
   return (
+
     <AppImage uri={uri} style={{ width: WidthScreen, height: heightImage }} />
+
   );
 };
 const styles = StyleSheet.create({

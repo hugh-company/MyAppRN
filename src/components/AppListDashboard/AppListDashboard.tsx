@@ -143,7 +143,7 @@ const AppListDashboard = React.memo(({
           key={typeScreen}
           keyExtractor={memoizedKeyExtractor}
           renderItem={renderItem}
-          removeClippedSubviews={true}
+        // removeClippedSubviews={true}
 
         />
 

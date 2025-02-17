@@ -1,4 +1,10 @@
-import {FontSize, Spacing, ThemeColors, WidthScreen} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -38,6 +44,10 @@ export const createStyles = (themeColors: ThemeColors) =>
       right: 0,
       zIndex: 1,
     },
+    headerTitle: {
+      backgroundColor: themeColors.background,
+      paddingHorizontal: Spacing.width16,
+    },
     headerText: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -56,7 +66,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       bottom: 0,
       left: 0,
       right: 0,
-      zIndex: 1,
+      // zIndex: 1,
     },
     txtChapter: {
       fontSize: FontSize.FontSize14,
@@ -64,5 +74,10 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     bottom: {
       height: Spacing.height50,
+    },
+    titleChapter: {
+      fontSize: FontSize.FontSize20,
+      color: themeColors.text,
+      ...FontWithFamily.FontWithFamily_600,
     },
   });

@@ -25,16 +25,10 @@ const GameDetailScreen = () => {
       >
 
         <AppInfoContent
-          id={data?.id}
           type={PostTypeKey.GAMES}
-          name={data?.seo_title}
           style={styles.infoRow}
-          isSave={false}
-
-          tags={data?.tags}
           typeGame={data?.categories?.map(elm => elm.name).join(', ')}
-          description={data?.description}
-
+          detail={data}
         />
         <HorizontalList
           data={data.related_post?.items}

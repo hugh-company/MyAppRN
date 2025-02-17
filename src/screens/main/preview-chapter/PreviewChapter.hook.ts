@@ -21,6 +21,8 @@ export const usePreviewChapter = () => {
   const {chapters, chapter, type} = router.params as PreviewChapterProps;
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [showModalFilter, setShowModalFilter] = useState(false);
+
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const scrollY = useSharedValue(0);
@@ -85,8 +87,6 @@ export const usePreviewChapter = () => {
               return {url: item.path};
             })
           : [];
-        console.log({images}, {chapter});
-
         setData(images);
       } else {
         let arrayText: {text: string}[] = [];
@@ -104,7 +104,14 @@ export const usePreviewChapter = () => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex < chapters.length - 1) {
       const nextChapter = chapters[currentIndex + 1];
-      navigate('PreviewChapter', {chapter: nextChapter, chapters, type});
+      navigate('PreviewChapter', {
+        chapter: {
+          ...nextChapter,
+          name: chapter.name,
+        },
+        chapters,
+        type,
+      });
     }
   }, [chapters, chapter, navigation, type]);
 
@@ -112,7 +119,14 @@ export const usePreviewChapter = () => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex > 0) {
       const prevChapter = chapters[currentIndex - 1];
-      navigate('PreviewChapter', {chapter: prevChapter, chapters, type});
+      navigate('PreviewChapter', {
+        chapter: {
+          ...prevChapter,
+          name: chapter.name,
+        },
+        chapters,
+        type,
+      });
     }
   }, [chapters, chapter, navigation, type]);
 
@@ -129,6 +143,26 @@ export const usePreviewChapter = () => {
       background: item.background,
     });
   }, []);
+  const onClickScreen = useCallback(() => {
+    // console.log('onClickScreen');
+
+    if (scrollY.value === 0) {
+      scrollY.value = 1;
+    } else {
+      scrollY.value = 0;
+    }
+  }, []);
+  const onSelectChapter = useCallback((item: chapterEpisodeInterface) => {
+    navigate('PreviewChapter', {
+      chapter: {
+        ...item,
+        name: chapter.name,
+      },
+      chapters,
+      type,
+    });
+  }, []);
+
   return {
     data,
     themeColors,
@@ -145,5 +179,9 @@ export const usePreviewChapter = () => {
     setShowModal,
     onApplyFilter,
     filterText,
+    onClickScreen,
+    showModalFilter,
+    setShowModalFilter,
+    onSelectChapter,
   };
 };

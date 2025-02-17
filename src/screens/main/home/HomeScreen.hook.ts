@@ -19,6 +19,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
+import {StatusBar} from 'react-native';
 
 export const useHomeScreen = () => {
   const [data, setData] = useState<ModuleItemInterface[]>([]);
@@ -35,9 +36,9 @@ export const useHomeScreen = () => {
     (state: RootState) => state.dataLocalSlide.loading,
   );
   const homeData = useSelector((state: RootState) => state.dataLocalSlide.home);
-  // useEffect(() => {
-  //   dispatch(setLoadingDashboard(false));
-  // }, [loading]);
+  useEffect(() => {
+    StatusBar.setHidden(true); // Ẩn status bar trên cả Android & iOS
+  }, []);
   useEffect(() => {
     dispatch(setLoadingDashboard(true));
     dispatch(fetchHomeData());

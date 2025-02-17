@@ -41,13 +41,20 @@ export const useChatScreen = () => {
   useEffect(() => {
     dispatch(
       fetchMessagesSaga({
-        thread_id: message.thread_id,
+        thread_id: message?.thread_id,
+        recipient_id: message.other_user?.id,
       }),
     );
-    dispatch(joinConversationSaga({thread_id: message.thread_id}));
-    if (!message.isread) {
-      dispatch(markMessageAsReadSaga({message_id: message.last_message.id}));
+    dispatch(
+      joinConversationSaga({
+        thread_id: message?.thread_id,
+        recipient_id: message?.other_user?.id,
+      }),
+    );
+    if (!message?.isread && message?.thread_id) {
+      dispatch(markMessageAsReadSaga({message_id: message?.last_message.id}));
     }
+
     return () => {
       dispatch(joinConversationSaga({thread_id: '0'}));
     };
@@ -67,7 +74,7 @@ export const useChatScreen = () => {
       action: 'send_message',
       id: `temp_${new Date().getTime()}`,
       token: token,
-      thread_id: message.thread_id,
+
       recipient_id: message.other_user?.id,
       temp_id: `temp_${new Date().getTime()}`,
       content: {
@@ -82,6 +89,9 @@ export const useChatScreen = () => {
         created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       },
     };
+    if (message.thread_id) {
+      params.thread_id = message.thread_id;
+    }
     if (repliedMessage) {
       params.content.replyto = repliedMessage;
     }

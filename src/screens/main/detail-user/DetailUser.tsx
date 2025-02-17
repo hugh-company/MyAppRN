@@ -1,5 +1,6 @@
 import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, FlagIcon, HeadIcon, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { formatDate, getAge } from '@utils';
 import { t } from 'i18next';
@@ -72,7 +73,15 @@ const DetailUser = () => {
 
                 </View>
 
-                <TouchableOpacity style={styles.btnChat}>
+                <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CHAT, {
+                  message: {
+                    other_user: {
+                      id: data?.id,
+                      fullname: data?.fullname,
+                      avatar: data?.avatar,
+                    },
+                  },
+                })} style={styles.btnChat}>
                   <AppText style={styles.txtChat}>{t('chatWith')} {data?.fullname}</AppText>
                   <ChatIcon />
                 </TouchableOpacity>

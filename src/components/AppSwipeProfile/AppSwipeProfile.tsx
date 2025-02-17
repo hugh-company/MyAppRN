@@ -14,7 +14,7 @@ import { createStyles } from './styles';
 const width = WidthScreen;
 export interface AppSwipeProfileProps {
   item: UserFindInterface
-  onSwipe: (type: 'like' | 'dislike') => void;
+  onSwipe: (type: 'like' | 'dislike' | 'superlike') => void;
 
 }
 const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref) => {
@@ -39,7 +39,7 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
 
-  const handleSwipe = (type: 'like' | 'dislike') => {
+  const handleSwipe = (type: 'like' | 'dislike' | 'superlike') => {
     runOnJS(onSwipe)(type);
     runOnJS(setItems)((prevItems) => {
       const newItems = prevItems.filter((_, index) => index !== currentIndex);
@@ -54,11 +54,12 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
   useImperativeHandle(ref, () => ({
     triggerSwipe: (action) => {
       if (action === 'like') {
-        translateX.value = withSpring(width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('like'));
+        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('like'));
       } else if (action === 'dislike') {
-        translateX.value = withSpring(-width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('dislike'));
+        translateX.value = withSpring(-width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('dislike'));
       } else if (action === 'superlike') {
         // Add your super like logic here
+        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('superlike'));
       }
     },
   }));
@@ -73,11 +74,11 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
     onEnd: () => {
       const threshold = width / 3;
       if (translateX.value > threshold) {
-        translateX.value = withSpring(width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
+        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
       } else if (translateX.value < -threshold) {
-        translateX.value = withSpring(-width, { damping: 20, stiffness: 90 }, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
+        translateX.value = withSpring(-width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
       } else {
-        translateX.value = withSpring(0, { damping: 20, stiffness: 90 });
+        translateX.value = withSpring(0, { damping: 15, stiffness: 80 });
       }
     },
   });
@@ -90,6 +91,9 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
         { translateX: translateX.value },
         { rotateZ: rotateZ.value },
       ],
+      borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
+      borderWidth: translateX.value > 50 ? 2 : 0,
+      elevation: translateX.value > 50 ? 10 : 0,
     };
   });
 
@@ -100,13 +104,6 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
     };
   });
 
-  const shadowImage = useAnimatedStyle(() => {
-    return {
-      borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
-      borderWidth: translateX.value > 50 ? 2 : 0,
-      elevation: translateX.value > 50 ? 10 : 0,
-    };
-  });
 
   const dislikeOpacity = useAnimatedStyle(() => {
     return {
@@ -126,7 +123,7 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
 
   return (
     <PanGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View style={[styles.card, shadowImage, animatedStyle, { height: heightBanner, display: isVisible.value ? 'flex' : 'none' }]}>
+      <Animated.View style={[styles.card, animatedStyle, { height: heightBanner, display: isVisible.value ? 'flex' : 'none' }]}>
         <FlatList
           ref={flatListRef}
           data={items}

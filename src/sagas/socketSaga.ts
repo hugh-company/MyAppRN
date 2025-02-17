@@ -1,9 +1,12 @@
 import {
+  addNewConversation,
   loadMoreConversations,
   loadMoreMessages,
+  loadMoreSearchConversationsSuccess,
   readAllMessages,
   refreshConversations,
   refreshMessages,
+  searchThreadsSuccess,
   setConversation,
   setInfoUser,
   setMessage,
@@ -33,6 +36,7 @@ interface SocketEventPayload {
   thread_id: string;
   data?: ConversationInterface[];
   message?: any;
+  thread?: any;
 }
 
 function* handleSocketOpen(socket: WebSocket, token: string) {
@@ -143,8 +147,31 @@ function* handleDataMessage(data: SocketEventPayload) {
   if (data?.action === MessageAction.NEW_MESSAGE) {
     yield put(updateNewMessage(data));
   }
+  if (data?.action === MessageAction.NEW_THREAD) {
+    yield put(addNewConversation(data?.thread));
+  }
   if (data?.action === MessageAction.MESSAGE_SENT) {
     yield put(updateMessageSent({message: data}));
+  }
+  if (data?.action === MessageAction.SEARCH_MESSAGE) {
+    const {isLoadMore} = yield select((state: any) => state.searchMessageSlice);
+    if (isLoadMore) {
+      yield put(
+        loadMoreSearchConversationsSuccess({
+          conversations: data.data,
+          cursor_time: data.cursor_time,
+          is_next: data.is_next,
+        }),
+      );
+    } else {
+      yield put(
+        searchThreadsSuccess({
+          conversations: data.data,
+          cursor_time: data.cursor_time,
+          is_next: data.is_next,
+        }),
+      );
+    }
   }
 }
 
@@ -171,7 +198,7 @@ function* watchSetSocket() {
     console.log({action});
 
     let attempts = 0;
-    const maxAttempts = 5;
+    const maxAttempts = 2;
     const retryDelay = 2000; // 2 seconds
 
     while (attempts < maxAttempts) {
@@ -208,7 +235,7 @@ function* fetchConversationsSaga(
   const params = {
     token: token,
     action: 'get_threads',
-    cursor_time: cursor_time,
+    cursor_time: '',
   };
   console.log('fetchConversationsSaga', {params});
   socket.send(JSON.stringify(params));
@@ -230,19 +257,28 @@ function* reSendConnect(socket: WebSocket, token: string) {
 
 // message
 function* fetchMessagesSaga(
-  action: PayloadAction<{thread_id: string}>,
+  action: PayloadAction<{thread_id?: string; recipient_id?: string}>,
 ): Generator<any, void, any> {
-  const {thread_id} = action.payload;
+  console.log('fetchMessagesSaga');
+
+  const {thread_id, recipient_id} = action.payload;
   const socket = yield select(state => state.socketSlice.socket);
   const token = yield select(state => state.socketSlice.infoUser.token);
-  console.log({thread_id});
-  socket.send(
-    JSON.stringify({
-      token: token,
-      action: MessageAction.GET_MESSAGES,
-      thread_id: thread_id,
-    }),
-  );
+  const params: any = {
+    token: token,
+    action: MessageAction.GET_MESSAGES,
+  };
+  console.log({thread_id, recipient_id});
+
+  if (thread_id) {
+    params.thread_id = thread_id;
+  }
+  if (recipient_id) {
+    params.recipient_id = recipient_id;
+  }
+  console.log('fetchMessagesSaga', {params});
+
+  socket.send(JSON.stringify(params));
 }
 // send message to socket
 function* sendMessageSaga(action: any): Generator<any, void, any> {
@@ -321,6 +357,14 @@ function* sendMatchActionSaga(
   const {recipient_id, relation_type} = action.payload;
   const socket = yield select(state => state.socketSlice.socket);
   const token = yield select(state => state.socketSlice.infoUser.token);
+
+  console.log({
+    action: 'send_match_action',
+    token: token,
+    recipient_id: recipient_id,
+    relation_type: relation_type,
+  });
+
   socket.send(
     JSON.stringify({
       action: 'send_match_action',
@@ -333,20 +377,25 @@ function* sendMatchActionSaga(
 
 // join conversation
 function* joinConversationSaga(
-  action: PayloadAction<{thread_id: string}>,
+  action: PayloadAction<{thread_id?: string; recipient_id?: number}>,
 ): Generator<any, void, any> {
-  const {thread_id} = action.payload;
+  const {thread_id, recipient_id} = action.payload;
   const socket = yield select(state => state.socketSlice.socket);
   const token = yield select(state => state.socketSlice.infoUser.token);
   console.log('joinConversationSaga', {thread_id});
+  const params: any = {
+    action: 'set_join_thread',
+    token: token,
+  };
+  if (thread_id) {
+    params.thread_id = thread_id;
+  }
+  if (recipient_id) {
+    params.recipient_id = recipient_id;
+  }
+  console.log({params});
 
-  socket.send(
-    JSON.stringify({
-      action: 'set_join_thread',
-      token: token,
-      thread_id: thread_id,
-    }),
-  );
+  socket.send(JSON.stringify(params));
 }
 
 // load more conversations
@@ -392,6 +441,36 @@ function* refreshConversationsSaga(): Generator<any, void, any> {
 
   socket.send(JSON.stringify(params));
 }
+// search threads
+function* searchThreadsSaga(
+  action: PayloadAction<{key: string; cursor: string}>,
+): Generator<any, void, any> {
+  const {key, cursor} = action.payload;
+  const token = yield select(state => state.socketSlice.infoUser.token);
+  const socket = yield select(state => state.socketSlice.socket);
+  const params = {
+    token: token,
+    action: 'search_threads',
+    key: key,
+    cursor: cursor,
+  };
+  console.log({params});
+
+  socket.send(JSON.stringify(params));
+}
+function* loadMoreSearchConversationsSaga(
+  action: PayloadAction<{cursor_time: string}>,
+): Generator<any, void, any> {
+  const {cursor_time} = action.payload;
+  const token = yield select(state => state.socketSlice.infoUser.token);
+  const socket = yield select(state => state.socketSlice.socket);
+  const params = {
+    token: token,
+    action: 'search_threads',
+    cursor_time: cursor_time,
+  };
+  socket.send(JSON.stringify(params));
+}
 
 function* watchConversationActions() {
   yield takeEvery('FETCH_CONVERSATION_DATA', fetchConversationsSaga);
@@ -410,6 +489,11 @@ function* watchConversationActions() {
 
   // action to send match action
   yield takeEvery('SEND_MATCH_ACTION', sendMatchActionSaga);
+  yield takeEvery('FETCH_SEARCH_THREADS', searchThreadsSaga);
+  yield takeEvery(
+    'FETCH_LOAD_MORE_SEARCH_CONVERSATIONS',
+    loadMoreSearchConversationsSaga,
+  );
 }
 
 export default function* socketSaga() {

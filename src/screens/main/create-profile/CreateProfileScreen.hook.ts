@@ -20,12 +20,11 @@ import {
 } from '@utils';
 import {createProfileFormData, createProfileSchema} from '@validations';
 import {t} from 'i18next';
-import {useEffect, useState} from 'react';
+import {useEffect, useLayoutEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
-import {createStyles} from './styles';
 
 const defaultForm = {
   avatar: '',
@@ -41,10 +40,8 @@ const defaultForm = {
   job: '',
 };
 export const useCreateProfileScreen = () => {
-  const [data, setData] = useState([]);
   const [jobs, setJobs] = useState<{id: string; name: string}[]>([]);
   const {themeColors} = useTheme();
-  const styles = createStyles(themeColors);
   const userInfo = useSelector(getUserInfo);
   const dispatch = useDispatch();
   const {
@@ -58,11 +55,15 @@ export const useCreateProfileScreen = () => {
     resolver: zodResolver(createProfileSchema),
   });
   useEffect(() => {
+    console.log('useEffect');
+
     checkInfoUserWithForm();
     callApiJobs();
     requestLocationPermission();
   }, []);
-
+  useLayoutEffect(() => {
+    console.log('useLayoutEffect');
+  }, []);
   const callApiJobs = async () => {
     const response: any = await getListJobsApi();
     console.log({response});
@@ -200,5 +201,5 @@ export const useCreateProfileScreen = () => {
     }
   };
 
-  return {data, themeColors, styles, control, errors, onSubmit, jobs};
+  return {control, errors, onSubmit, jobs};
 };
