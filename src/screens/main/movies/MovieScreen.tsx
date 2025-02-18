@@ -3,7 +3,7 @@ import { navigate, SCREEN_ROUTE } from '@navigation';
 import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { View } from 'react-native';
 import { useMovieScreen } from './MovieScreen.hook';
 
 const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextProps) => {
@@ -13,28 +13,30 @@ const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextPr
 const MovieScreen = () => {
   const { data,
     styles,
-    opacityStyle,
-    heightStyle,
+
     scrollHandler,
     handleCategorySelect,
     tabSelect,
     onRefresh,
     categories, loading,
   } = useMovieScreen();
-  console.log({ data });
+
 
   return (
     <View style={styles.container}>
       <HeaderMain title={t('movies.movieGood')} type={PostTypeKey.MOVIES} />
-      <Animated.View style={[styles.header, heightStyle, opacityStyle]}>
-        <AppInputSearch
-          value={''}
-          onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: ItemListDashboard.MOVIES })}
-          editable={false}
-          style={styles.inputSearch}
-        />
-      </Animated.View>
-      <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />
+
+      <AppInputSearch
+        onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: ItemListDashboard.MOVIES })}
+        editable={false}
+        style={styles.inputSearch}
+      />
+
+      <AppCategoryList
+        contentContainerStyle={styles.category}
+        data={categories}
+        categoryId={tabSelect?.id}
+        onSelectedCategory={handleCategorySelect} />
       <MemoizedAppListDashboard
         data={data}
         onScroll={scrollHandler}

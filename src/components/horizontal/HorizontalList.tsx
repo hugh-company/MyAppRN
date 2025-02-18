@@ -45,8 +45,6 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
     return (
       <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => {
         if (onDetail) {
-          console.log({ item });
-
           onDetail(item);
         } else {
           goToDetail({ item, type });
@@ -96,9 +94,10 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
       <FlatList
         data={data || []}
         horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.containerStyle}
         keyExtractor={(item) => `child_horizontal_${item.slug}${item?.id?.toString()}`}
         renderItem={renderItem || renderItemList}
-
       />
 
     </View>
@@ -108,18 +107,18 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-
       marginTop: Spacing.width24,
-
     },
-
+    containerStyle: {
+      paddingHorizontal: Spacing.width16,
+      gap: Spacing.width16,
+    },
     header: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
       marginBottom: Spacing.width16,
       marginHorizontal: Spacing.width16,
-
     },
     title: {
       fontSize: FontSize.FontSize16,
@@ -153,7 +152,7 @@ const createStyles = (themeColors: ThemeColors) =>
 
       borderRadius: Spacing.width4,
       overflow: 'hidden',
-      marginLeft: Spacing.width16,
+
       justifyContent: 'space-between',
     },
     viewOption: {

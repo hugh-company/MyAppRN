@@ -11,7 +11,7 @@ import { usePreviewImages } from './PreviewImages.hook';
 import { createStyles } from './styles';
 
 const PreviewImages = (props: any) => {
-  const { data } = usePreviewImages(props);
+  const { data } = usePreviewImages();
   const { top } = useSafeAreaInsets();
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);

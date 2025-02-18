@@ -19,66 +19,9 @@ class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this)
     super.onCreate(savedInstanceState)
-    // Hide status bar
-    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-      window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-    } else {
-      WindowCompat.setDecorFitsSystemWindows(window, false)
-      val controller = WindowInsetsControllerCompat(window, window.decorView)
-      controller.hide(WindowInsetsCompat.Type.statusBars())
-      controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    }
 
-    // Set full screen mode
-    hideSystemUI()
 
-    val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-    // Configure the behavior of the hidden system bars.
-    windowInsetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-
-    // Add a listener to update the behavior of the toggle fullscreen button when
-    // the system bars are hidden or revealed.
-    ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { view, windowInsets ->
-        // You can hide the caption bar even when the other system bars are visible.
-        // To account for this, explicitly check the visibility of navigationBars()
-        // and statusBars() rather than checking the visibility of systemBars().
-        if (windowInsets.isVisible(WindowInsetsCompat.Type.navigationBars())
-            || windowInsets.isVisible(WindowInsetsCompat.Type.statusBars())) {
-            // Hide both the status bar and the navigation bar.
-            windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-        } else {
-            // Show both the status bar and the navigation bar.
-            windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
-        }
-        ViewCompat.onApplyWindowInsets(view, windowInsets)
-    }
   }
-
-  override fun onWindowFocusChanged(hasFocus: Boolean) {
-    super.onWindowFocusChanged(hasFocus)
-    if (hasFocus) {
-      hideSystemUI()
-    }
-  }
-
-  private fun hideSystemUI() {
-    window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_IMMERSIVE
-            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            // Hide the nav bar and status bar
-            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_FULLSCREEN)
-  }
-
-  private fun showSystemUI() {
-    window.decorView.systemUiVisibility = (
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-  }
-
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.

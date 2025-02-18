@@ -52,7 +52,6 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       borderRadius: Spacing.width4,
-      marginLeft: Spacing.width16,
       width: Spacing.width240,
       gap: Spacing.width8,
       justifyContent: 'space-between',

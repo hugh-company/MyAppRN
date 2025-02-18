@@ -4,7 +4,9 @@ import {StyleSheet} from 'react-native';
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {},
-
+    contentContainer: {
+      paddingHorizontal: Spacing.width16,
+    },
     viewCategory: {
       marginVertical: Spacing.width16,
     },

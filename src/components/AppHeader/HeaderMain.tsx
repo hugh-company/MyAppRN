@@ -3,7 +3,7 @@ import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
 import React, { useMemo } from 'react';
-import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../AppText';
 
@@ -30,7 +30,7 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
-    <View style={[styles.container, style, { marginTop: top || Spacing.width16 }]}>
+    <View style={[styles.container, style, { paddingTop: (Platform.OS === 'ios' ? top : top + Spacing.width16) || Spacing.width16 }]}>
       <View style={styles.flex1}>
         {isHome && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.HOME)} style={styles.btnHome}>
           <HomeIcon />
@@ -56,7 +56,8 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       flexDirection: 'row',
       gap: Spacing.width16,
-      paddingBottom: Spacing.width16,
+      paddingBottom: Spacing.width8,
+
     },
 
     title: {

@@ -11,9 +11,10 @@ export const createStyles = (themeColors: ThemeColors) =>
     header: {},
     inputSearch: {
       paddingHorizontal: Spacing.width16,
+      marginTop: Spacing.width16,
     },
     category: {
-      // paddingLeft: Spacing.width16,
+      paddingHorizontal: Spacing.width16,
     },
     listCategory: {
       paddingLeft: Spacing.width16,

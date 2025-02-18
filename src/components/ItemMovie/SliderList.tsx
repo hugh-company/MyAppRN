@@ -105,7 +105,7 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
         data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={styles.containerStyle}
         renderItem={renderItem}
         keyExtractor={(item, index) => `list_item_slider_${index}`}
         // initialNumToRender={3}
@@ -150,6 +150,11 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       marginBottom: Spacing.width24,
       marginHorizontal: Spacing.width16,
+    },
+    containerStyle: {
+      flexGrow: 1,
+      gap: Spacing.width16,
+      paddingHorizontal: Spacing.width16,
     },
     title: {
       fontSize: FontSize.FontSize16,
@@ -196,7 +201,7 @@ const createStyles = (themeColors: ThemeColors) =>
       borderWidth: 1,
       borderColor: themeColors.btnSocial,
       width: widthItem,
-      marginLeft: Spacing.width16,
+
       padding: Spacing.width16,
     },
     viewType: {

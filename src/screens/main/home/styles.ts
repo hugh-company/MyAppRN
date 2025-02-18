@@ -1,5 +1,5 @@
-import { ThemeColors } from '@theme';
-import { StyleSheet } from 'react-native';
+import {ThemeColors} from '@theme';
+import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({

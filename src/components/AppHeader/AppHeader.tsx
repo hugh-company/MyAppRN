@@ -2,7 +2,7 @@ import { LeftIcon } from '@assets';
 import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
-import { Platform, StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppText } from '../AppText';
@@ -50,7 +50,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      height: Platform.OS === 'android' ? Spacing.height64 : undefined,
+      // height: Platform.OS === 'android' ? Spacing.height64 : undefined,
       paddingHorizontal: Spacing.width16,
       backgroundColor: 'transparent',
       alignItems: 'center',

@@ -12,7 +12,7 @@ export interface AppCategoryListProps {
   onSelectedCategory: (item: TabInterface) => void;
   style?: StyleProp<ViewStyle>;
   listStyle?: StyleProp<ViewStyle>;
-
+  contentContainerStyle?: StyleProp<ViewStyle>;
   title?: string;
   isTab?: boolean;
   goToViewList?: (item: TabInterface) => void;
@@ -26,7 +26,7 @@ const CategoryItem = memo(({ item, index, categoryId, handleCategoryPress, style
   </TouchableOpacity>
 ));
 
-const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, style, listStyle, goToViewList }: AppCategoryListProps) => {
+const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, style, listStyle, goToViewList, contentContainerStyle }: AppCategoryListProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
@@ -72,6 +72,7 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
       <FlatList
         ref={flatListRef}
         style={[styles.viewCategory, listStyle]}
+        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
         data={data}
         horizontal
         keyExtractor={(item) => item.id.toString()}

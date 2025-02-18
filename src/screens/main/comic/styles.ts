@@ -10,6 +10,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     list: {},
     inputSearch: {
       paddingHorizontal: Spacing.width16,
+      paddingTop: Spacing.width16,
     },
     category: {
       // paddingLeft: Spacing.width16,

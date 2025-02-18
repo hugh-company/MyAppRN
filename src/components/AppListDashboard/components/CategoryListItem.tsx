@@ -41,23 +41,34 @@ export function CategoryListItem(props: CategoryListItemProps) {
     return null;
   }
 
-  return <View style={styles.container}>
-    <AppCategoryList
-      data={data}
-      categoryId={categoryIdSelected}
-      goToViewList={goToViewList}
-      isTab={isTab}
-      listStyle={{ paddingLeft: Spacing.width16 }}
-      onSelectedCategory={onSelectedCategory} />
-    <AppFlatListAnimated
-      data={data.find((item) => item.id === categoryIdSelected)?.items || []}
-      horizontal keyExtractor={(item) => `item_movie_${item.id}`}
-      renderItem={renderItem} />
-  </View>;
+  return (
+    <View style={styles.container}>
+      <AppCategoryList
+        data={data}
+        categoryId={categoryIdSelected}
+        goToViewList={goToViewList}
+        isTab={isTab}
+
+        onSelectedCategory={onSelectedCategory} />
+      <AppFlatListAnimated
+        data={data.find((item) => item.id === categoryIdSelected)?.items || []}
+        horizontal keyExtractor={(item) => `item_movie_${item.id}`}
+        contentContainerStyle={styles.contentContainerStyle}
+        renderItem={renderItem} />
+    </View>
+  );
 }
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
 
     },
+    contentContainerStyle: {
+      paddingHorizontal: Spacing.width16,
+      gap: Spacing.width16,
+    },
+    columnWrapperStyle: {
+
+    },
+
   });
