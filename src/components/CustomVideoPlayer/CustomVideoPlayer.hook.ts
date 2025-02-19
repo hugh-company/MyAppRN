@@ -5,12 +5,12 @@ import Orientation from 'react-native-orientation-locker';
 import {CustomVideoPlayerProps} from './CustomVideoPlayer';
 
 export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
-  const {isFullScreenVisible, setIsFullScreenVisible} = props;
+  const {isFullScreenVisible, setIsFullScreenVisible, uri} = props;
   const videoRef = useRef<any>(null);
   const [error, setError] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [paused, setPaused] = useState(false);
-  const currentTimeRef = useRef(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [playbackRate, setPlaybackRate] = useState(1.0);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,27 +37,27 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   }, [setIsFullScreenVisible]);
 
   const fastForward = useCallback(() => {
-    const newTime = currentTimeRef.current + 10;
+    const newTime = currentTime + 10;
     videoRef.current.seek(newTime);
-    currentTimeRef.current = newTime;
+    setCurrentTime(newTime);
     setPaused(false);
-  }, []);
+  }, [currentTime]);
 
   const rewind = useCallback(() => {
-    const newTime = currentTimeRef.current - 10;
+    const newTime = currentTime - 10;
     videoRef.current.seek(newTime);
-    currentTimeRef.current = newTime;
+    setCurrentTime(newTime);
     setPaused(false);
-  }, []);
+  }, [currentTime]);
 
   const toggleFullScreen = useCallback(() => {
     setControlsVisible(false);
+    StatusBar.setHidden(true);
+    if (Platform.OS === 'android') {
+      StatusBar.setBackgroundColor('transparent');
+      StatusBar.setTranslucent(true);
+    }
     if (isFullScreenVisible) {
-      StatusBar.setHidden(true);
-      if (Platform.OS === 'android') {
-        StatusBar.setBackgroundColor('transparent');
-        StatusBar.setTranslucent(true);
-      }
       Orientation.unlockAllOrientations();
       Orientation.lockToPortrait();
     } else {
@@ -84,14 +84,21 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     toggleFullScreen();
   }, [toggleFullScreen]);
   const updateProgress = useCallback(time => {
-    currentTimeRef.current = time;
+    setCurrentTime(time);
   }, []);
+
+  useEffect(() => {
+    setCurrentTime(0);
+    setPlaybackRate(1.0);
+    setError(false);
+  }, [uri]);
+
   return useMemo(
     () => ({
       setCurrentTime: time => {
-        currentTimeRef.current = time;
+        setCurrentTime(time);
       },
-      currentTime: currentTimeRef.current,
+      currentTime,
       playbackRate,
       handlePress,
       fastForward,
@@ -146,6 +153,7 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       handleDoubleClick,
       handlePress,
       setControlsVisible,
+      currentTime,
     ],
   );
 };

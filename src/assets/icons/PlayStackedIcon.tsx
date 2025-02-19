@@ -1,9 +1,9 @@
 import React from 'react';
 import Svg, { G, Path } from 'react-native-svg';
 
-const PlayStackedIcon = ({ width = 25, height = 24, color = '#6B87F9' }: { width?: number, height?: number, color?: string }) => {
+const PlayStackedIcon = ({ width = 24, height = 24, color = '#6B87F9' }: { width?: number, height?: number, color?: string }) => {
   return (
-    <Svg width={width} height={height} viewBox="0 0 25 24" fill="none">
+    <Svg width={width} height={height} viewBox="0 0 24 24" fill="none">
       <G opacity={0.89}>
         <Path
           d="M5.123 6.909a1 1 0 01.846-1.134l7.916-1.152a1 1 0 011.134.846l.18 1.243h2.022l-.367-2.52A2 2 0 0014.587 2.5L4.691 3.94A2 2 0 003 6.207l1.44 9.896a2 2 0 001.979 1.712v-1.928c0-.048-.003-.096-.01-.144L5.123 6.91z"

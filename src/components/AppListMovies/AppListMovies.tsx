@@ -1,4 +1,4 @@
-import { BrandIcon, LikeActiveIcon } from '@assets';
+import { BrandIcon, LikeActiveIcon, NoSearchImage } from '@assets';
 import { AppFlatListAnimated, AppImage, AppText, ItemSearchMovie } from '@components';
 import { Spacing, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
@@ -15,11 +15,13 @@ export interface AppListMoviesProps {
   numColumns?: number;
   type?: PostTypeKey;
   onLoadMore?: () => void;
-  keyExtractor?: ((item: any, index: number) => string) | undefined
+  keyExtractor?: ((item: any, index: number) => string) | undefined;
+  isLoadMore?: boolean;
+  isLoading?: boolean;
 }
 
 const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.ForwardedRef<FlatList<any>> | undefined) => {
-  const { data, scrollEventThrottle, type, keyExtractor, numColumns = 2, onScroll, onLoadMore } = props;
+  const { data, scrollEventThrottle, isLoading, type, keyExtractor, numColumns = 2, onScroll, onLoadMore } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
@@ -50,6 +52,17 @@ const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.Forwarde
     }
   };
   const keyExtractorList = (item: any, index: number) => item?.id || index.toString();
+  const ListEmptyComponentBase = React.useCallback(() => {
+    if (!isLoading) {
+      return (
+        <View style={styles.viewEmpty}>
+          <AppImage defaultSource={NoSearchImage} style={styles.imageNotFound} />
+          <AppText style={styles.txtNotFound}>{t('notFound')}</AppText>
+        </View>
+      );
+    }
+    return null;
+  }, [isLoading]);
   return (
     <AppFlatListAnimated
       ref={ref}
@@ -61,7 +74,9 @@ const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.Forwarde
       keyExtractor={keyExtractor || keyExtractorList}
       numColumns={numColumns}
       renderItem={renderItem}
+      ListEmptyComponent={ListEmptyComponentBase}
       onLoadMore={onLoadMore}
+      isLoading={props.isLoadMore}
       columnWrapperStyle={numColumns !== 1 ? styles.columnWrapper : undefined}
     />
   );

@@ -1,9 +1,9 @@
-import { AppCategoryList, AppInputSearch, AppListDashboard, HeaderMain } from '@components';
+import { AppInputSearch, AppListDashboard, HeaderMain } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { View } from 'react-native';
+import { InteractionManager, View } from 'react-native';
 import { useMovieScreen } from './MovieScreen.hook';
 
 const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextProps) => {
@@ -21,6 +21,15 @@ const MovieScreen = () => {
     categories, loading,
   } = useMovieScreen();
 
+  const [shouldRenderList, setShouldRenderList] = React.useState(false);
+
+  React.useEffect(() => {
+    const interactionHandle = InteractionManager.runAfterInteractions(() => {
+      setShouldRenderList(true);
+    });
+
+    return () => interactionHandle.cancel();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -31,21 +40,24 @@ const MovieScreen = () => {
         editable={false}
         style={styles.inputSearch}
       />
-
+      {/*
       <AppCategoryList
         contentContainerStyle={styles.category}
         data={categories}
         categoryId={tabSelect?.id}
         onSelectedCategory={handleCategorySelect} />
-      <MemoizedAppListDashboard
-        data={data}
-        onScroll={scrollHandler}
-        key={'movie_dashboard'}
-        loading={loading}
-        onRefresh={onRefresh}
-        keyExtractor={(item, index) => `movie_dashboard_${index}`}
-        typeScreen={ItemListDashboard.MOVIES}
-      />
+      */}
+      {shouldRenderList && (
+        <MemoizedAppListDashboard
+          data={data}
+          onScroll={scrollHandler}
+          key={'movie_dashboard'}
+          loading={loading}
+          onRefresh={onRefresh}
+          keyExtractor={(item, index) => `movie_dashboard_${index}`}
+          typeScreen={ItemListDashboard.MOVIES}
+        />
+      )}
     </View>
   );
 };

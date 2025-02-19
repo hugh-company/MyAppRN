@@ -12,15 +12,11 @@ const DrawerNavigation = React.memo(() => {
   return (
     <Drawer.Navigator
       drawerContent={DrawerContent}
-
       screenOptions={{
         headerShown: false,
         drawerType: 'front',
         swipeEnabled: true, // Enable/disable swipe gestures
         overlayColor: 'rgba(0,0,0,0.5)', // Drawer overlay color
-        lazy: true, // Chỉ load màn hình khi cần thiết
-
-
       }}
     >
       <Drawer.Screen name={SCREEN_ROUTE.BOTTOM_NAVIGATION} component={TabBarNavigation} />

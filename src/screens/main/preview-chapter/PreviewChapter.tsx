@@ -2,7 +2,7 @@ import { AppFlatListAnimated, AppText } from '@components';
 import { normalize, Spacing } from '@theme';
 import { PostTypeKey } from '@types';
 import React, { useCallback } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalEpisodes } from '../../../components/AppEpisodes/ModalEpisodes';
@@ -15,27 +15,28 @@ import { ModalFilterChapter } from './components/ModalFilterChapter';
 const PreviewChapter = () => {
   const { data, chapter, chapters, styles, type, headerStyle,
     scrollHandler, bottomStyle, goToNextChapter, goToPrevChapter,
-    showModal, setShowModal, onApplyFilter, filterText, onClickScreen, showModalFilter, setShowModalFilter, onSelectChapter } = usePreviewChapter();
+    showModalEpisodes, setShowModalEpisodes, onApplyFilter,
+    filterText, onClickScreen, showModalFilter,
+    setShowModalFilter, onSelectChapter } = usePreviewChapter();
   const { top, bottom } = useSafeAreaInsets();
 
   const currentIndex = chapters?.findIndex((item) => item.id === chapter.id) || 0;
   const canGoToNextChapter = currentIndex < chapters.length - 1;
   const canGoToPrevChapter = currentIndex > 0;
-  console.log({ canGoToNextChapter, canGoToPrevChapter });
 
   const renderItem = useCallback(({ item }) => {
     if (type === PostTypeKey.COMIC) {
       return <ImageChapter uri={item.url} onPress={onClickScreen} />;
     } else {
       return (
-        <TouchableOpacity onPress={onClickScreen} >
-          <AppText style={[styles.txtChapter, {
-            fontSize: normalize(filterText.size[0]),
-            color: filterText.color,
-            backgroundColor: filterText.background,
-            fontFamily: filterText.styleText || 'Roboto',
-          }]}>{item.text}</AppText>
-        </TouchableOpacity>
+
+        <AppText style={[styles.txtChapter, {
+          fontSize: normalize(filterText.size[0]),
+          color: filterText.color,
+          backgroundColor: filterText.background,
+          fontFamily: filterText.styleText || 'Roboto',
+        }]}>{item.text}</AppText>
+
 
       );
     }
@@ -70,7 +71,9 @@ const PreviewChapter = () => {
           onPrevStep={canGoToPrevChapter ? goToPrevChapter : undefined}
           isNext={canGoToNextChapter}
           isPrev={canGoToPrevChapter}
-          onShowModal={() => setShowModalFilter(true)}
+          isFilter={type === PostTypeKey.NOVEL}
+          onShowModal={() => setShowModalEpisodes(true)}
+          onFilter={() => setShowModalFilter(true)}
         />
       </Animated.View>
       <Animated.View style={[styles.header, styles.positionHeader, { paddingTop: top || Spacing.width16 }, { ...headerStyle }]}>
@@ -81,15 +84,15 @@ const PreviewChapter = () => {
       </Animated.View>
 
       <ModalFilterChapter
-        visible={showModal}
-        onClose={() => setShowModal(false)}
+        visible={showModalFilter}
+        onClose={() => setShowModalFilter(false)}
         onFilter={onApplyFilter}
       />
       <ModalEpisodes
-        showModal={showModalFilter}
+        showModal={showModalEpisodes}
         episodes={chapters}
         height={0.7}
-        setShowModal={setShowModalFilter}
+        setShowModal={setShowModalEpisodes}
         onSelectChapter={onSelectChapter}
         selectEpisodes={chapter.id} />
     </View>

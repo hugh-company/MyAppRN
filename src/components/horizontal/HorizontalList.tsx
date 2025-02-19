@@ -3,7 +3,7 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme
 import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
@@ -32,14 +32,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
 }) => {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const renderItemList = useCallback(({ item }: { item: ItemListProduct }) => {
     return (
@@ -68,9 +61,6 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
     );
   }, []);
 
-  if (!isLoaded) {
-    return null;
-  }
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>

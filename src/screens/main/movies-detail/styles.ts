@@ -36,6 +36,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     episodes: {
       marginHorizontal: Spacing.width16,
+      marginTop: Spacing.width16,
     },
     infoRow: {
       marginHorizontal: Spacing.width16,

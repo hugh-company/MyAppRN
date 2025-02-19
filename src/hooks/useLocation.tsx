@@ -82,8 +82,6 @@ export function useLocation() {
     }
   };
   const getDistanceLocation = (location: { latitude: number, longitude: number }) => {
-    console.log(locationUser, location);
-
     if (!locationUser) { return '0 m'; }
     const userLocation = {
       latitude: locationUser?.latitude,

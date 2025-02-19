@@ -86,3 +86,4 @@ export {default as VoteIcon} from './VoteIcon';
 export {default as YogaIcon} from './YogaIcon';
 export { default as ArrowDropLeft } from './ArrowDropLeft';
 export { default as ArrowDropRight } from './ArrowDropRight';
+export { default as IconNumberedList } from './IconNumberedList';

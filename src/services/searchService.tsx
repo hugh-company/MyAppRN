@@ -4,7 +4,7 @@ export interface paramSearchInterface {
   paged?: number;
   q?: string;
   sortby?: 'views__desc' | 'likes__desc' | '';
-  filter?: 'posttype__movie' | 'posttype__game' | 'posttype__comic' | 'posttype__novel';
+  filter?: 'posttype__movie' | 'posttype__game' | 'posttype__comic' | 'posttype__novel' | '' | undefined;
 }
 interface responseSearch {
   status?: string;

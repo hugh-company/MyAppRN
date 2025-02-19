@@ -17,14 +17,19 @@ export function setTopLevelNavigator(navigatorRef: typeNavigation) {
   _navigator = navigatorRef;
 }
 
-let lastNavigateTime = 0;
-const DEBOUNCE_TIME = 0; // Reduced debounce time
+const DEBOUNCE_TIME = 500; // Increased debounce time to 500ms
+
+let navigationPromise: Promise<void> | null = null;
 
 function debounceNavigation(action: () => void) {
-  const currentTime = Date.now();
-  if (currentTime - lastNavigateTime > DEBOUNCE_TIME) {
-    action();
-    lastNavigateTime = currentTime;
+  if (!navigationPromise) {
+    navigationPromise = new Promise((resolve) => {
+      action();
+      setTimeout(() => {
+        navigationPromise = null;
+        resolve();
+      }, DEBOUNCE_TIME);
+    });
   }
 }
 

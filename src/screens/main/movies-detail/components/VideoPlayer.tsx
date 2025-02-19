@@ -2,15 +2,15 @@ import { LeftIcon, PlayIcon } from '@assets';
 import { AppImage, AppText, CustomVideoPlayer } from '@components';
 import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
-import { SourceVideoInterface } from '@types';
 import { t } from 'i18next';
 import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import Orientation from 'react-native-orientation-locker';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 export interface VideoPlayerProps {
   image?: string;
-  urlVideos?: SourceVideoInterface[];
+  urlVideo?: string;
   setIsFullScreenVisible: (visible: boolean) => void;
   isFullScreenVisible: boolean;
   autoPlay?: boolean; // Add autoPlay prop
@@ -27,41 +27,54 @@ export const BannerDetail = React.memo(({ imageUri, setIsPlaying, styles }: any)
           <AppText style={styles.txtPlay}>{t('play')}</AppText>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.btnBack} onPress={() => goBack()}>
+      <TouchableOpacity
+        style={styles.btnBack}
+        onPress={() => {
+          Orientation.lockToPortrait();
+          goBack();
+        }}
+      >
         <LeftIcon />
       </TouchableOpacity>
     </View>
   );
 }, (prevProps, nextProps) => prevProps.imageUri === nextProps.imageUri);
 
-const VideoComponent = ({ urlVideos, isFullScreenVisible, setIsFullScreenVisible, styles }: any) => {
+const VideoComponent = ({ urlVideo, isFullScreenVisible, setIsFullScreenVisible, styles }: any) => {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const videoHeight = useSharedValue((WidthScreen * 9) / 16);
+  const videoWidth = useSharedValue(WidthScreen);
 
   useEffect(() => {
     const handleOrientationChange = () => {
       const { width, height } = Dimensions.get('window');
       const isLandscape = width > height;
-      console.log({ isLandscape }, { width }, { height }, { windowHeight }, { windowWidth });
-      if (isLandscape) {
-        videoHeight.value = withTiming(windowWidth);
+      if (isFullScreenVisible) {
+        videoHeight.value = withTiming(isLandscape ? height : windowHeight);
+        videoWidth.value = withTiming(isLandscape ? width : windowWidth);
       } else {
-        videoHeight.value = withTiming(isFullScreenVisible ? windowWidth : (WidthScreen * 9) / 16);
+        videoHeight.value = withTiming((WidthScreen * 9) / 16);
+        videoWidth.value = withTiming(WidthScreen);
       }
     };
 
     Dimensions.addEventListener('change', handleOrientationChange);
     handleOrientationChange();
 
-  }, [isFullScreenVisible, videoHeight]);
+    return () => {
+      // Dimensions.removeEventListener('change', handleOrientationChange);
+    };
+  }, [isFullScreenVisible, videoHeight, videoWidth, windowHeight, windowWidth]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     height: videoHeight.value,
+    width: videoWidth.value,
   }));
+
   return (
     <Animated.View style={[styles.video, animatedStyle]}>
       <CustomVideoPlayer
-        uri={urlVideos?.[0]?.link || ''}
+        uri={urlVideo || ''}
         style={styles.banner}
         styleVideo={styles.banner}
         isFullScreenVisible={isFullScreenVisible}
@@ -71,7 +84,7 @@ const VideoComponent = ({ urlVideos, isFullScreenVisible, setIsFullScreenVisible
   );
 };
 
-export function VideoPlayer({ image, urlVideos, setIsFullScreenVisible, isFullScreenVisible, autoPlay }: VideoPlayerProps) {
+export function VideoPlayer({ image, urlVideo, setIsFullScreenVisible, isFullScreenVisible, autoPlay }: VideoPlayerProps) {
   const [isPlaying, setIsPlaying] = React.useState(autoPlay || false); // Use autoPlay prop
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), []);
@@ -80,7 +93,7 @@ export function VideoPlayer({ image, urlVideos, setIsFullScreenVisible, isFullSc
     <View style={styles.container}>
       {isPlaying ? (
         <VideoComponent
-          urlVideos={urlVideos}
+          urlVideo={urlVideo}
           isFullScreenVisible={isFullScreenVisible}
           setIsFullScreenVisible={setIsFullScreenVisible}
           styles={styles}

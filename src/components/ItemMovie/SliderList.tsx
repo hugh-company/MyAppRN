@@ -3,7 +3,7 @@ import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ButtonNavigationInterface, PostTypeKey, TabInterface } from '@types';
 import { goToDetail, goToListView } from '@utils';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated';
 import { SliderListProps } from './SliderList.type';
@@ -23,15 +23,6 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
   const [currentIndex, setCurrentIndex] = useState(0);
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50, minimumViewTime: 300 });
   const scrollX = useSharedValue(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
 
   const onScroll = useAnimatedScrollHandler((event) => {
     scrollX.value = data?.length > 1 ? event.contentOffset.x : 0;
@@ -82,10 +73,6 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
       </View>
     );
   }, [styles, button, title, type]);
-  if (!isLoaded) {
-    return null;
-  }
-
 
   return (
     <View style={[styles.container, style]}>

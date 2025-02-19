@@ -13,13 +13,12 @@ export const createStyles = (themeColors: ThemeColors) =>
       // backgroundColor: 'green',
     },
     errorContainer: {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: [{translateX: -50}, {translateY: -50}],
+      ...StyleSheet.absoluteFillObject,
       backgroundColor: 'rgba(0, 0, 0, 0.7)',
       padding: 10,
       borderRadius: 5,
+      alignItems: 'center',
+      justifyContent: 'center',
     },
     errorText: {
       color: themeColors.error,

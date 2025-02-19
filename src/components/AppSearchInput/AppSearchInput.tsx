@@ -11,12 +11,13 @@ export interface AppSearchInputProps {
   onSearch: (text: string) => void;
   placeholder?: string;
   onClear?: () => void;
+  searchText?: string; // New prop
 }
-const AppSearchInput = ({ onSearch, placeholder, onClear }: AppSearchInputProps) => {
+const AppSearchInput = ({ onSearch, placeholder, onClear, searchText }: AppSearchInputProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const refSearch = useRef<TextInput>(null);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState(searchText || ''); // Initialize with searchText if provided
   const { top } = useSafeAreaInsets();
   const debounceSearch = useRef(
     debounce((text: string) => {
@@ -33,6 +34,13 @@ const AppSearchInput = ({ onSearch, placeholder, onClear }: AppSearchInputProps)
       onClear && onClear();
     }
   }, [search]);
+
+  useEffect(() => {
+    if (searchText !== undefined) {
+      setSearch(searchText);
+    }
+  }, [searchText]); // Update search state when searchText prop changes
+
   return (
     <View style={[styles.container, { paddingTop: top }]}>
       <TouchableOpacity style={styles.btnCancel} onPress={() => goBack()}>

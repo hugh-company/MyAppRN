@@ -45,9 +45,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     }, [token]);
     const connectSocket = async (tokenData: string) => {
       try {
-
         const device_id = await DeviceInfo.getUniqueId();
-
         dispatch(setInfoUser({ token: tokenData, device_id }));
       } catch (error) {
         console.log({ error });
@@ -58,7 +56,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     return (
       <NavigationContainer theme={DarkTheme} ref={ref}>
         <Stack.Navigator screenOptions={{
-          detachPreviousScreen: true,
+          // detachPreviousScreen: true,
           freezeOnBlur: true,
           animation: 'fade', // Giảm độ phức tạp của animation
           headerShown: false,

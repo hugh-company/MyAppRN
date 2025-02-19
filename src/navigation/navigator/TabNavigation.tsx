@@ -14,9 +14,7 @@ const TabBarNavigation = React.memo(() => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarHideOnKeyboard: true,
-        lazy: false, // Preload all screens
-        // unmountOnBlur: true, // Unmount screens when they are not focused
+        lazy: false, // Add this line to load all screens at once
       }}
       tabBar={CustomTabBarComponent}
     >

@@ -4,7 +4,7 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen }
 import { ItemListProduct } from '@types';
 import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -18,22 +18,13 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
   const navigateBanner = useCallback((item: ItemListProduct) => {
     goToDetail({
       item,
       type: item?.posttype,
     });
   }, []);
-  console.log('BannerMovie');
+
 
   const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
     <TouchableOpacity onPress={() => navigateBanner(item)} style={styles.banner}>
@@ -68,9 +59,7 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
     </TouchableOpacity>
   ), [navigateBanner, themeColors, isGame]);
 
-  if (!isLoaded) {
-    return null;
-  }
+
   return (
     <View style={[styles.container, style]}>
       <AppBanners

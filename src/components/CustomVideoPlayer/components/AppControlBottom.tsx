@@ -16,6 +16,7 @@ interface AppControlBottomProps {
   toggleFullScreen: () => void; // Add this prop
   isFullScreenVisible: boolean; // Add this prop
   isError: boolean; // Add this prop
+  seekTime: number; // Add this prop
 }
 
 const SliderComponent = memo(Slider, (prevProps, nextProps) => {
@@ -27,25 +28,23 @@ const SliderComponent = memo(Slider, (prevProps, nextProps) => {
     prevProps.thumbTintColor === nextProps.thumbTintColor;
 });
 
-export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0, setCurrentTime, toggleFullScreen, isFullScreenVisible }: AppControlBottomProps) => {
+export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0, setCurrentTime, toggleFullScreen, isFullScreenVisible, seekTime }: AppControlBottomProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [seekTime, setSeekTime] = useState(currentTime);
+  const [seekTimeState, setSeekTimeState] = useState(currentTime);
   const [sliderWidth, setSliderWidth] = useState(0); // Add this line
 
   useEffect(() => {
-    setSeekTime(currentTime);
-  }, [currentTime]);
+    setSeekTimeState(seekTime);
+  }, [seekTime]);
 
   const handleSlidingComplete = (value) => {
     setCurrentTime(value);
     videoRef.current.seek(value);
-
   };
 
   const handleValueChange = (value) => {
-    setSeekTime(value);
-
+    setSeekTimeState(value);
   };
 
   const handleSliderLayout = (event) => { // Add this function
@@ -58,6 +57,7 @@ export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0,
     const value = (locationX / sliderWidth) * duration;
     handleSlidingComplete(value);
   };
+
   if (isError) {
     return null;
   }
@@ -74,27 +74,23 @@ export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0,
           </View>
         </View>
         <ButtonAction Icon={isFullScreenVisible ? ExitFullScreenIcon : FullScreenIcon} onPress={toggleFullScreen} />
-
       </View>
       <View style={styles.viewBottom}>
         {/* {loading && <ActivityIndicator size="small" color={themeColors.primary} />} */}
-
         <SliderComponent
           style={[styles.slider, { width: WidthScreen }]}
           minimumValue={0}
           maximumValue={duration}
-          value={currentTime}
+          value={seekTime}
           onValueChange={handleValueChange}
           onSlidingComplete={handleSlidingComplete}
           minimumTrackTintColor={themeColors.primary}
           maximumTrackTintColor={'rgba(255, 255, 255, 0.5)'}
-
           thumbTintColor="transparent"
           onLayout={handleSliderLayout} // Add this line
           onTouchEnd={handleTouchEnd} // Add this line
         />
       </View>
-
     </View>
   );
 };
@@ -102,8 +98,6 @@ export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0,
 const createStyles = (themeColors: any) =>
   StyleSheet.create({
     container: {
-
-
     },
     viewHeader: {
       flexDirection: 'row',
@@ -117,14 +111,11 @@ const createStyles = (themeColors: any) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       gap: Spacing.width8,
-
-
     },
     viewOption: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-
     },
     video: {
       width: '100%',
@@ -148,7 +139,6 @@ const createStyles = (themeColors: any) =>
       backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     viewTime: {
-
       alignItems: 'center',
     },
     txtTime: {

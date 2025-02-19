@@ -1,5 +1,5 @@
 import { AppButton, AppText } from '@components';
-import { useTheme } from '@theme';
+import { Spacing, useTheme } from '@theme';
 import { FilterKey, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { memo } from 'react';
@@ -16,8 +16,8 @@ export interface ModalFilterProps {
     value: string,
   }[]
   onSelect?: (item: {
-    key: PostTypeKey | FilterKey,
-    value: string,
+    key?: PostTypeKey | FilterKey,
+    value?: string,
   }) => void
 }
 const ModalFilter = memo(({ visible, onClose, styleContainer, data, label, onSelect }: ModalFilterProps) => {
@@ -32,7 +32,7 @@ const ModalFilter = memo(({ visible, onClose, styleContainer, data, label, onSel
       onRequestClose={onClose}
     >
       <TouchableOpacity activeOpacity={1} onPress={onClose} style={styles.container}>
-        <View style={[styles.content, styleContainer, { paddingBottom: bottom }]}>
+        <View style={[styles.content, styleContainer, { paddingBottom: bottom + Spacing.width16 }]}>
           <View style={styles.list}>
             <View style={styles.item}>
               <AppText style={styles.title}>{label}</AppText>
@@ -54,40 +54,7 @@ const ModalFilter = memo(({ visible, onClose, styleContainer, data, label, onSel
       </TouchableOpacity>
     </Modal>
   );
-  // return (
-  //   <Modal
-  //     visible={visible}
-  //     onTouchOutside={onClose}
-  //     style={styles.container}
-  //     modalStyle={styles.modal}
-  //     width={1}
-  //     modalAnimation={new SlideAnimation({
-  //       slideFrom: 'bottom',
-  //     })}
-  //   >
-  //     <ModalContent style={[styles.content, styleContainer, { paddingBottom: bottom }]}>
-  //       <View >
-  //         <View style={styles.list}>
-  //           <View style={styles.item}>
-  //             <AppText style={styles.title}>{label}</AppText>
-  //           </View>
-  //           {data?.map(elm => (
-  //             <TouchableOpacity key={elm.key} onPress={() => {
-  //               onClose?.();
-  //               onSelect?.(elm);
-  //             }} style={styles.item}>
-  //               <AppText style={styles.txtItem}>{elm.value}</AppText>
-  //             </TouchableOpacity>
-  //           ))}
-  //         </View>
-  //         <AppButton label={t('cancel')} labelStyle={styles.txtCancel} style={styles.cancel} onPress={() => {
-  //           onClose?.();
 
-  //         }} />
-  //       </View>
-  //     </ModalContent>
-  //   </Modal>
-  // );
 });
 
 export default ModalFilter;

@@ -44,7 +44,7 @@ export const ControlCenter = ({ isLoading, isError, onPlayPause, onSkipBackward,
         onPress={onSkipBackward}
       // disabled={!currentTime || currentTime <= 0}
       >
-        <SkipBackwardIcon />
+        <SkipBackwardIcon style={{ backgroundColor: 'red' }} />
       </TouchableOpacity>
       <TouchableWithoutFeedback onPress={handlePlayPausePress}>
         <Animated.View style={[styles.controlButton, animatedStyle, { width: 50, height: 50 }]}>
@@ -73,7 +73,7 @@ const createStyles = (themeColors: any) =>
       gap: Spacing.width24,
     },
     controlButton: {
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: 'rgba(0, 0, 0, 0.3)',
 
       borderRadius: Spacing.width70,
       alignItems: 'center',

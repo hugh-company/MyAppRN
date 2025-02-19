@@ -14,7 +14,7 @@ const HomeScreen = () => {
   } = useHomeScreen();
   return (
     <View style={[styles.container]}>
-      <MemoizedAppListDashboard
+      <AppListDashboard
         data={data}
         onScroll={scrollHandler}
         loading={loading}

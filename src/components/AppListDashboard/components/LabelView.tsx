@@ -1,7 +1,7 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 export interface LabelViewProps {
@@ -14,19 +14,9 @@ export interface LabelViewProps {
 export function LabelView(props: LabelViewProps) {
   const { title, type, style, uri } = props;
   const { themeColors } = useTheme();
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
-  if (!isLoaded) {
-    return null;
-  }
 
   return <View style={[styles.container]}>
     <AppText style={styles.title}>

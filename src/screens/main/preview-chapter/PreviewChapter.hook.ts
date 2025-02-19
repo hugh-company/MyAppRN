@@ -20,7 +20,7 @@ export const usePreviewChapter = () => {
   const navigation = useNavigation();
   const {chapters, chapter, type} = router.params as PreviewChapterProps;
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showModalEpisodes, setShowModalEpisodes] = useState(false);
   const [showModalFilter, setShowModalFilter] = useState(false);
 
   const {themeColors} = useTheme();
@@ -175,8 +175,8 @@ export const usePreviewChapter = () => {
     chapters,
     goToNextChapter,
     goToPrevChapter,
-    showModal,
-    setShowModal,
+    showModalEpisodes,
+    setShowModalEpisodes,
     onApplyFilter,
     filterText,
     onClickScreen,

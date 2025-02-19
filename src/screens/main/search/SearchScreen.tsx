@@ -1,6 +1,5 @@
 import { FilterIcon, SortIcon } from '@assets';
-import { AppInputSearch, AppText, LoadingList, ModalFilter } from '@components';
-import { goBack } from '@navigation';
+import { AppSearchInput, AppText, ModalFilter } from '@components';
 import { t } from 'i18next';
 import React, { memo } from 'react';
 import { TouchableOpacity, View } from 'react-native';
@@ -10,43 +9,39 @@ import SearchList from './components/SearchList';
 
 const MemoizedModalFilter = memo(ModalFilter);
 const MemoizedDashboardSearch = memo(DashboardSearch);
-const MemoizedSearchList = memo(SearchList);
+
 
 const SearchScreen = () => {
 
-  const { data, loading, styles, typeScreen, isFilterSort, menuSort,
-    setIsFilterSort, isFilterType, setIsFilterType, top, search,
-    onSearch, sort, menuType, refSearch, filterByType, filterBySort,
-    onLoadMore } = useSearchScreen();
+  const { styles, typeScreen, isFilterSort, menuSort,
+    setIsFilterSort, isFilterType, setIsFilterType, search,
+    onSearch, sort, menuType, filterByType, filterBySort,
 
-
+    //new
+    onClear,
+  } = useSearchScreen();
 
   const renderBody = () => {
-    if (loading) {
-      return <LoadingList numColumns={2} />;
-    }
     if (search?.length > 0 || sort !== '' || typeScreen !== undefined) {
-
-      return <MemoizedSearchList
-        onLoadMore={onLoadMore}
-        data={data} valueSearch={search} />;
+      return (
+        <SearchList
+          typeScreen={typeScreen}
+          sort={sort}
+          valueSearch={search} />
+      );
     }
     return <MemoizedDashboardSearch />;
   };
   return (
     <View style={styles.container}>
-      <View style={[styles.header, { paddingTop: top }]}>
-        <TouchableOpacity style={styles.btnCancel} onPress={() => goBack()}>
-          <AppText style={styles.txtCancel}>{t('cancel')}</AppText>
-        </TouchableOpacity>
-        <AppInputSearch
-          value={search}
-          ref={refSearch}
-          style={styles.containerInput}
-          placeholder={t('search.search')}
-          onChangeText={onSearch}
-        />
-      </View>
+      <AppSearchInput
+        placeholder={t('message.searchMessage')}
+        onSearch={onSearch}
+        searchText={search}
+        onClear={() => {
+          onClear();
+        }} />
+
       <View style={styles.filter}>
         <TouchableOpacity onPress={() => setIsFilterType(true)} style={[styles.btnType, typeScreen && styles.btnActive]}>
           <FilterIcon />

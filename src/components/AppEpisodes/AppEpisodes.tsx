@@ -43,7 +43,7 @@ const AppEpisodes = ({
                   setSelectEpisodes(item.id);
                   onSelectChapter?.(item);
                 }} style={[styles.btnChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
-                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]} numberOfLines={1}>{item?.title}</AppText>
+                <AppText style={[styles.txtChapter, selectEpisodes === item.id && styles.txtChapterActive]} numberOfLines={1}>{index + 1}</AppText>
               </TouchableOpacity>
             );
           })}

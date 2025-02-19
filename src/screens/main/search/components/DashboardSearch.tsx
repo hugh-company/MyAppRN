@@ -4,7 +4,7 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme
 import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { InteractionManager, StyleSheet, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface DashboardSearchProps {
@@ -17,9 +17,18 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
   const styles = createStyles(themeColors);
   const dispatch = useDispatch();
   const dataSearch = useSelector(getSearchModuleLocal);
+  const [shouldRender, setShouldRender] = React.useState(false);
 
+  React.useEffect(() => {
+    const interactionHandle = InteractionManager.runAfterInteractions(() => {
+      setShouldRender(true);
+    });
+    return () => interactionHandle.cancel();
+  }, []);
 
-
+  if (!shouldRender) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>

@@ -13,7 +13,7 @@ const MainStackComponent = memo(() => {
     <MainStack.Navigator
       screenOptions={{
         headerShown: false,
-        gestureEnabled: false, // Ensure gesture is disabled globally
+
       }}
       initialRouteName={SCREEN_ROUTE.DRAWER_NAVIGATION}>
       <MainStack.Screen name={SCREEN_ROUTE.DRAWER_NAVIGATION} component={DrawerNavigation} />
@@ -29,6 +29,8 @@ const MainStackComponent = memo(() => {
 
       }} />
       <MainStack.Screen name={SCREEN_ROUTE.MOVIE_DETAIL} component={MovieDetailScreen} options={{
+
+
 
       }} />
       <MainStack.Screen name={SCREEN_ROUTE.VIDEO} component={VideoScreen} options={{

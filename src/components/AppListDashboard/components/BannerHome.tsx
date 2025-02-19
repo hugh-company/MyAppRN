@@ -1,7 +1,7 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ItemListProduct } from '@types';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
@@ -15,14 +15,7 @@ const BannerHome = ({ data = [], style }: BannerHomeProps) => {
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
   const onViewRef = useRef(({ viewableItems }: any) => {
     if (viewableItems.length > 0) {
       setCurrentIndex(viewableItems[0].index);
@@ -30,9 +23,7 @@ const BannerHome = ({ data = [], style }: BannerHomeProps) => {
   });
 
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
-  if (!isLoaded) {
-    return <></>;
-  }
+
   return (
     <Animated.View style={[styles.container, style]}>
       <FlatList

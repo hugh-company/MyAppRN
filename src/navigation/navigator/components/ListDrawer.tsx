@@ -160,7 +160,8 @@ export function ListDrawer(props: ListDrawerProps) {
     }
   }, [clickTypeMenu, renderBlockMenu, styles]);
   const dataSettings = useMemo(() => {
-    return token ? dataMenus.filter((_) => _.isLogin === true || !_.hasOwnProperty('isLogin')) : dataMenus.filter((_) => _.isLogin === false || !_.hasOwnProperty('isLogin'));
+    return token ? dataMenus.filter((_) => _.isLogin === true || !_.hasOwnProperty('isLogin')) :
+      dataMenus.filter((_) => _.isLogin === false || !_.hasOwnProperty('isLogin')).filter((_) => _.name !== 'chat');
   }, [token, dataMenus]);
 
   return <LinearGradient

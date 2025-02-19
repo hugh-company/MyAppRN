@@ -13,6 +13,22 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexGrow: 1,
       padding: Spacing.width16,
     },
+    viewEmpty: {
+      flex: 1,
+
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txtNotFound: {
+      ...FontWithFamily.FontWithFamily_500,
+      marginTop: Spacing.width16,
+      width: '80%',
+      textAlign: 'center',
+    },
+    imageNotFound: {
+      width: Spacing.width200,
+      height: Spacing.width100,
+    },
     list: {},
     item: {
       flex: 1,

@@ -2,6 +2,7 @@ import { CloseIcon, LeftIcon, MuteIcon, SpeedIcon, UnmuteIcon } from '@assets';
 import { Spacing, useTheme } from '@theme';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ButtonAction } from './ButtonAction';
 
 interface HeaderControlProps {
@@ -16,9 +17,10 @@ interface HeaderControlProps {
 export const HeaderControl = ({ goBackScreen, isFullScreenVisible, isMuted, toggleMute, setSpeedVisible }: HeaderControlProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  const { top, bottom } = useSafeAreaInsets();
   return (
     <>
-      <View style={[styles.container]}>
+      <View style={[styles.container, { paddingTop: top }]}>
         <TouchableOpacity style={styles.btnBack} onPress={goBackScreen}>
           {isFullScreenVisible ? <CloseIcon color="white" /> : <LeftIcon />}
         </TouchableOpacity>

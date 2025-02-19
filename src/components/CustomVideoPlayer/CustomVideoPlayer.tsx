@@ -53,9 +53,6 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   } = useCustomVideoPlayer(props);
   const { top, bottom } = useSafeAreaInsets();
 
-
-
-
   return (
     <TouchableWithoutFeedback onPress={handlePress}>
       <View style={[styles.container, style, isFullScreenVisible && { ...styles.fullScreen }]}>
@@ -64,16 +61,14 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
           style={[styleVideo, styles.video, isFullScreenVisible && { paddingTop: Platform.OS === 'ios' ? top + Spacing.width16 : 0, paddingBottom: bottom + Spacing.width16 }]}
           controls={false}
           ref={videoRef}
-          resizeMode={'stretch'}
+          resizeMode={'contain'}
           onError={(e) => {
-
             setError(true);
           }}
           onProgress={(data) => {
             runOnJS(updateProgress)(data.currentTime);
           }}
           onLoad={({ duration }) => setDuration(duration)}
-
           muted={isMuted}
           paused={paused}
           rate={playbackRate}
@@ -108,25 +103,31 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
             toggleMute={toggleMute}
             setSpeedVisible={setSpeedVisible}
           />
-          <ControlCenter
-            isError={error}
-            isLoading={isLoading}
-            currentTime={currentTime}
-            onPlayPause={togglePlayPause}
-            onSkipBackward={rewind}
-            onSkipForward={fastForward}
-            paused={paused}
-          />
-          <AppControlBottom
-            isFullScreenVisible={isFullScreenVisible}
-            isError={error}
-            setCurrentTime={setCurrentTime}
-            videoRef={videoRef}
-            duration={duration}
-            currentTime={currentTime}
-            loading={isLoading}
-            toggleFullScreen={toggleFullScreen}
-          />
+          {
+            !error && <>
+
+              <ControlCenter
+                isError={error}
+                isLoading={isLoading}
+                currentTime={currentTime}
+                onPlayPause={togglePlayPause}
+                onSkipBackward={rewind}
+                onSkipForward={fastForward}
+                paused={paused}
+              />
+              <MemoizedAppControlBottom
+                isFullScreenVisible={isFullScreenVisible}
+                isError={error}
+                setCurrentTime={setCurrentTime}
+                videoRef={videoRef}
+                duration={duration}
+                currentTime={currentTime}
+                loading={isLoading}
+                toggleFullScreen={toggleFullScreen}
+                seekTime={currentTime} // Add this line
+              />
+            </>
+          }
         </Animated.View>}
         <MemoizedModalSpeed
           visible={isSpeedVisible}

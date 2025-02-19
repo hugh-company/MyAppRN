@@ -2,7 +2,7 @@ import { AppText } from '@components';
 import { useTheme } from '@theme';
 import { TabInterface } from '@types';
 import { goToListView } from '@utils';
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { memo, useCallback, useRef } from 'react';
 import { FlatList, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 
@@ -30,14 +30,6 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<FlatList>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleCategoryPress = useCallback((item: TabInterface, index: number) => {
 
@@ -62,10 +54,6 @@ const AppCategoryList = ({ data, categoryId, onSelectedCategory, isTab = true, s
       handleCategoryPress={() => handleCategoryPress(item, index)}
       styles={styles} />
   ), [categoryId, handleCategoryPress, styles]);
-
-  if (!isLoaded) {
-    return <></>;
-  }
 
   return (
     <View style={[styles.container, style]}>

@@ -41,13 +41,6 @@ function App(): React.JSX.Element {
   const queryClient = new QueryClient();
 
   useEffect(() => {
-    // Hide splash screen once app is ready
-    // StatusBar.setHidden(true);
-    // if (Platform.OS === 'android') {
-    //   StatusBar.setBackgroundColor('transparent');
-    //   StatusBar.setTranslucent(true);
-    // }
-
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
     apiService.setBaseURL();

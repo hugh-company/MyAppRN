@@ -1,4 +1,4 @@
-import { ArrowDropLeft, ArrowDropRight, FilterIcon } from '@assets';
+import { ArrowDropLeft, ArrowDropRight, IconNumberedList, PlayStackedIcon } from '@assets';
 import { Spacing, useTheme } from '@theme';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -9,10 +9,12 @@ export interface ControlBottomProps {
   isNext?: boolean;
   isPrev?: boolean;
   onShowModal?: () => void;
+  isFilter?: boolean;
+  onFilter?: () => void;
 }
 
 export function ControlBottom(props: ControlBottomProps) {
-  const { onNextStep, onPrevStep, isNext, isPrev, onShowModal } = props;
+  const { onNextStep, onPrevStep, isNext, isPrev, onFilter, onShowModal, isFilter } = props;
   const { themeColors } = useTheme();
   const { bottom } = useSafeAreaInsets();
   return (
@@ -23,9 +25,14 @@ export function ControlBottom(props: ControlBottomProps) {
       <TouchableOpacity style={[styles.btn, !isPrev && styles.disabledBtn]} onPress={onPrevStep} disabled={!isPrev}>
         <ArrowDropLeft width={Spacing.width30} height={Spacing.width30} />
       </TouchableOpacity>
-      <TouchableOpacity onPress={onShowModal} style={styles.btn} >
-        <FilterIcon size={Spacing.width30} />
+      {isFilter && <TouchableOpacity onPress={onFilter} style={styles.btn} >
+        <PlayStackedIcon width={Spacing.width28} height={Spacing.width28} color="#EDEDED" />
       </TouchableOpacity>
+      }
+      <TouchableOpacity onPress={onShowModal} style={styles.btn} >
+        <IconNumberedList />
+      </TouchableOpacity>
+
       <TouchableOpacity style={[styles.btn, !isNext && styles.disabledBtn]} onPress={onNextStep} disabled={!isNext}>
         <ArrowDropRight width={Spacing.width30} height={Spacing.width30} />
       </TouchableOpacity>

@@ -2,7 +2,7 @@ import { RightIcon } from '@assets';
 import { AppFlatListAnimated, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import ItemGame from './ItemGame';
 export interface ListVerticalProps {
@@ -18,23 +18,13 @@ export function ListVertical(props: ListVerticalProps) {
   const { style, title, data, onViewMore, type, button } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoaded(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
 
 
 
   const renderItem = ({ item }: { item: ItemListProduct }) => {
     return <ItemGame item={item} />;
   };
-  if (!isLoaded) {
-    return null;
-  }
+
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>

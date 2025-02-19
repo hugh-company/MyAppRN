@@ -26,6 +26,7 @@ export * from './AppLoading';
 export * from './AppRatingMovie';
 export * from './AppSearchInput';
 export * from './AppSelectColor';
+export * from './AppServerList';
 export * from './AppSwipeProfile';
 export * from './Containers';
 export * from './CustomVideoPlayer';

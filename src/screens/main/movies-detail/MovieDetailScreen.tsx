@@ -1,7 +1,8 @@
-import { AppEpisodes, AppInfoContent, HorizontalList } from '@components';
+import { AppEpisodes, AppInfoContent, AppServerList, HorizontalList } from '@components';
 import { PostTypeKey } from '@types';
+import { t } from 'i18next';
 import React, { useEffect } from 'react';
-import { FlatList, StatusBar, View } from 'react-native';
+import { FlatList, View } from 'react-native';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovieDetailScreen } from './MovieDetailScreen.hook';
@@ -10,7 +11,9 @@ import { VideoPlayer } from './components/VideoPlayer';
 
 
 const MovieDetailScreen = () => {
-  const { styles, error, isFullScreenVisible, setIsFullScreenVisible, detailMovie, onSelectedChapter, onNavigateDetail } = useMovieDetailScreen();
+  const { styles, error, isFullScreenVisible, setIsFullScreenVisible,
+    detailMovie, onSelectedChapter, onNavigateDetail, serverMovie,
+    onSelectServer } = useMovieDetailScreen();
   const { top } = useSafeAreaInsets();
   const opacity = useSharedValue(1);
 
@@ -21,14 +24,11 @@ const MovieDetailScreen = () => {
     };
   }, [isFullScreenVisible, opacity]);
 
-  if (error) {
-    return null;
-  }
+
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
-      <StatusBar translucent backgroundColor="transparent" hidden={true} />
       <VideoPlayer
-        urlVideos={detailMovie?.chapters?.[detailMovie?.index || 0]?.source}
+        urlVideo={serverMovie?.link}
         image={detailMovie?.feature?.path}
         setIsFullScreenVisible={setIsFullScreenVisible}
         isFullScreenVisible={isFullScreenVisible}
@@ -41,10 +41,13 @@ const MovieDetailScreen = () => {
         renderItem={({ item }: any) => (
           <>
             <InfoMovie movie={item} />
-            {item?.movie_type === 'tvseries' && (
+            {serverMovie && <AppServerList list={detailMovie?.chapters?.[detailMovie?.index || 0].source || []} value={serverMovie?.link} onSelectServer={onSelectServer} />}
+            {item?.movie_type === 'tvseries' && item?.chapters?.length > 0 && (
               <AppEpisodes
                 episodes={item?.chapters}
                 style={styles.episodes}
+
+                title={t('movie.list_chapters')}
                 onSelectChapter={onSelectedChapter}
               />
             )}

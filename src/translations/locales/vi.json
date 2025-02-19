@@ -149,7 +149,8 @@
     "speed": "Tốc độ",
     "error": "Video không thể phát",
     "mute": "Tắt tiếng",
-    "unmute": "Bật tiếng"
+    "unmute": "Bật tiếng",
+    "main_actors": "Diễn viên chính"
   },
   "chapter": {
     "title": "Truyện tranh",
