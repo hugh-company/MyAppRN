@@ -25,6 +25,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@invertase/react-native-apple-authentication": "^2.4.0",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
+    "@react-native-community/blur": "^4.4.1",
     "@react-native-community/netinfo": "^11.4.1",
     "@react-native-community/slider": "^4.5.5",
     "@react-native-firebase/app": "^21.7.1",

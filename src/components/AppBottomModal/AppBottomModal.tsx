@@ -7,7 +7,7 @@ import { createStyles } from './styles';
 
 export interface AppBottomModalProps {
   visible: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children?: React.ReactNode;
   height?: number;
   width?: number;

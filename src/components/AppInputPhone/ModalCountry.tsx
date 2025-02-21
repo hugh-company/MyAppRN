@@ -3,9 +3,8 @@ import { Spacing, ThemeColors, useTheme } from '@theme';
 import { t } from 'i18next';
 import { debounce } from 'lodash';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareFlatList } from 'react-native-keyboard-aware-scroll-view';
-import Modal from 'react-native-modals';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { AppImage } from '../AppImage';
@@ -75,30 +74,31 @@ export const ModalCountry = ({ visible, onClose, value, onSelectCountry }: Modal
 
   return (
     <Modal
-      height={1}
-      modalStyle={{ backgroundColor: themeColors.background }}
+      transparent={true}
+      animationType="slide"
       visible={visible}
-      width={1}
-      onTouchOutside={() => onClose?.()} >
-      <Animated.View style={[styles.modalContainer, animatedStyle]}>
-        <View style={[styles.header, { paddingTop: top || Spacing.width16 }]} >
-          <TouchableOpacity onPress={() => onClose?.()} >
-            <CloseIcon color="white" />
-          </TouchableOpacity>
-          <AppInputSearch
-            value={search}
-            style={styles.containerInput}
-            placeholder={t('search.searchCountry')}
-            onChangeText={(text) => onSearch(text)}
+      onRequestClose={() => onClose?.()}>
+      <View style={styles.modalOverlay}>
+        <Animated.View style={[styles.modalContainer, animatedStyle]}>
+          <View style={[styles.header, { paddingTop: top || Spacing.width16 }]}>
+            <TouchableOpacity onPress={() => onClose?.()}>
+              <CloseIcon color="white" />
+            </TouchableOpacity>
+            <AppInputSearch
+              value={search}
+              style={styles.containerInput}
+              placeholder={t('search.searchCountry')}
+              onChangeText={(text) => onSearch(text)}
+            />
+          </View>
+          {/* list */}
+          <KeyboardAwareFlatList
+            data={data}
+            renderItem={({ item }) => <RenderItem item={item} styles={styles} valueSelect={value} onPress={() => handleSelectCountry(item)} />}
+            keyExtractor={(item) => item.cca2}
           />
-        </View>
-        {/* list */}
-        <KeyboardAwareFlatList
-          data={data}
-          renderItem={({ item }) => <RenderItem item={item} styles={styles} valueSelect={value} onPress={() => handleSelectCountry(item)} />}
-          keyExtractor={(item) => item.cca2}
-        />
-      </Animated.View>
+        </Animated.View>
+      </View>
     </Modal>
   );
 };
@@ -114,9 +114,16 @@ const RenderItem = React.memo(({ item, styles, valueSelect, onPress }: { item: c
   );
 });
 const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
-  modalContainer: {
+  modalOverlay: {
     flex: 1,
+
     backgroundColor: themeColors.background,
+  },
+  modalContainer: {
+
+    backgroundColor: themeColors.background,
+    borderRadius: 10,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',

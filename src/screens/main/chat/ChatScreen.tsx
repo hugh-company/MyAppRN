@@ -3,7 +3,7 @@ import { AppHeader } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { MessageItemInterface } from '@types';
-import React, { useState } from 'react';
+import React from 'react';
 import { FlatList, ImageBackground, TouchableOpacity, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -14,7 +14,6 @@ import { ItemChat } from './components/ItemChat';
 const ChatScreen = () => {
   const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, themeColors, flatListRef, message, styles, handleSend, userInfo, scrollToRepliedMessage } = useChatScreen();
   const { bottom } = useSafeAreaInsets();
-  const [isScrolled, setIsScrolled] = useState(false);
 
   const renderMessage = ({ item }: { item: MessageItemInterface }) => {
     return (
@@ -29,16 +28,11 @@ const ChatScreen = () => {
     );
   };
 
-  const handleScroll = (event: any) => {
-    const offsetY = event.nativeEvent.contentOffset.y;
-    setIsScrolled(offsetY > 0);
-  };
+
 
   return (
     <View style={styles.container}>
-
       <ImageBackground source={BackgroundChat} style={styles.background} />
-
       <KeyboardAvoidingView
         behavior={'padding'}
         style={styles.containerList}
@@ -59,7 +53,7 @@ const ChatScreen = () => {
           removeClippedSubviews={true}
           updateCellsBatchingPeriod={100}
           onEndReachedThreshold={0.5}
-          onScroll={handleScroll}
+
         />
 
         <ControlBottomChat
@@ -74,13 +68,18 @@ const ChatScreen = () => {
           onClearRepliedMessage={() => setRepliedMessage(null)}
         />
       </KeyboardAvoidingView>
-      <AppHeader style={[styles.header, { backgroundColor: themeColors.primary }]} rightComponent={<TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER, {
-        user: {
-          ...message?.other_user,
-        },
-      })} style={styles.iconProfile}>
-        <ProfileIcon />
-      </TouchableOpacity>} />
+      <AppHeader
+        style={[styles.header, { backgroundColor: themeColors.primary }]}
+        rightComponent={
+          <TouchableOpacity
+            onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER, {
+              user: {
+                ...message?.other_user,
+              },
+            })} style={styles.iconProfile}>
+            <ProfileIcon />
+          </TouchableOpacity>}
+      />
 
     </View>
   );
