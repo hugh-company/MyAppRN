@@ -20,7 +20,7 @@ export const HeaderControl = ({ goBackScreen, isFullScreenVisible, isMuted, togg
   const { top, bottom } = useSafeAreaInsets();
   return (
     <>
-      <View style={[styles.container, { paddingTop: top }]}>
+      <View style={[styles.container, isFullScreenVisible && { paddingTop: top }]}>
         <TouchableOpacity style={styles.btnBack} onPress={goBackScreen}>
           {isFullScreenVisible ? <CloseIcon color="white" /> : <LeftIcon />}
         </TouchableOpacity>

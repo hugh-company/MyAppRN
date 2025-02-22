@@ -1,8 +1,10 @@
+import NetInfo from '@react-native-community/netinfo'; // Import NetInfo
 import {store} from '@redux';
 import axios, {AxiosResponse, CancelTokenSource} from 'axios';
 import i18next from 'i18next';
 import {ApiConfigs} from './apiConfig';
 import {handleResponse} from './responseHandler';
+
 class AxiosClass {
   static instance: AxiosClass;
 
@@ -17,6 +19,7 @@ class AxiosClass {
   incrementRequestId = 0;
   token = '';
   storeKey = '';
+  pendingRequests: any[] = []; // Store pending requests
 
   constructor() {
     this.api = axios.create({
@@ -33,6 +36,8 @@ class AxiosClass {
       },
     );
     this.api.interceptors.request.use(this.interceptorRequests);
+
+    this.listenToNetworkChanges(); // Add network change listener
   }
 
   interceptorRequests = async (config: any): Promise<any> => {
@@ -116,20 +121,24 @@ class AxiosClass {
       ...newHeader,
     });
 
-    return this.api.get(url, {
-      ...newHeader,
-    });
+    return this.api
+      .get(url, {
+        ...newHeader,
+      })
+      .catch(this.handleRequestError);
   }
 
   del<T>(url: string): Promise<T> {
     console.log('DEL ------->>', url);
 
-    return this.api.delete(url, {
-      headers: {
-        _id: this.incrementRequestId,
-        ...this.api.defaults.headers,
-      },
-    });
+    return this.api
+      .delete(url, {
+        headers: {
+          _id: this.incrementRequestId,
+          ...this.api.defaults.headers,
+        },
+      })
+      .catch(this.handleRequestError);
   }
 
   postNormal<T>(url: string, body?: any, header: any = {}): Promise<T> {
@@ -138,64 +147,99 @@ class AxiosClass {
         ...header,
       },
     });
-    return this.api.post(url, body, {
-      headers: {
-        ...header,
-        'Content-Type': 'multipart/form-data',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Access-Encoding': 'gzip, deflate, br',
+    return this.api
+      .post(url, body, {
+        headers: {
+          ...header,
+          'Content-Type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest',
+          'Access-Encoding': 'gzip, deflate, br',
 
-        Accept: 'application/json',
-        timeout: 60000,
-      },
-    });
+          Accept: 'application/json',
+          timeout: 60000,
+        },
+      })
+      .catch(this.handleRequestError);
   }
 
   put<T>(url: string, body: any, header: any = {}): Promise<T> {
-    return this.api.put(url, body, {
-      headers: {
-        // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
-        ...header,
-      },
-    });
+    return this.api
+      .put(url, body, {
+        headers: {
+          // 'Content-Type': ' 'Content-Type': 'multipart/form-data'',
+          ...header,
+        },
+      })
+      .catch(this.handleRequestError);
   }
 
   delete<T>(url: string, body: any): Promise<T> {
     console.log('detlete NORMAL ------->>', url, body, this.token);
-    return this.api.delete(url, {
-      data: body,
-      headers: {
-        _id: this.incrementRequestId,
-        lang: i18next.language.toLowerCase(),
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    });
+    return this.api
+      .delete(url, {
+        data: body,
+        headers: {
+          _id: this.incrementRequestId,
+          lang: i18next.language.toLowerCase(),
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+      })
+      .catch(this.handleRequestError);
   }
   post<T>(url: string, body: any): Promise<T> {
     console.log('POST ------->>', url, body, this.token);
-    return this.api.post(url, body, {
-      headers: {
-        _id: this.incrementRequestId,
-        lang: i18next.language.toLowerCase(),
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-    });
+    return this.api
+      .post(url, body, {
+        headers: {
+          _id: this.incrementRequestId,
+          lang: i18next.language.toLowerCase(),
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',
+        },
+      })
+      .catch(this.handleRequestError);
   }
   uploadFile<T>(url: string, body: FormData, header: any = {}): Promise<T> {
     let newBody = body ? {...body} : {};
     console.log('POSTNORMAL ------->>', url, newBody, this.token);
-    return this.api.post(url, body, {
-      headers: {
-        lang: i18next.language.toLowerCase(),
-        _id: this.incrementRequestId,
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'multipart/form-data',
-        ...header,
-      },
-    });
+    return this.api
+      .post(url, body, {
+        headers: {
+          lang: i18next.language.toLowerCase(),
+          _id: this.incrementRequestId,
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'multipart/form-data',
+          ...header,
+        },
+      })
+      .catch(this.handleRequestError);
   }
+
+  listenToNetworkChanges = () => {
+    NetInfo.addEventListener(state => {
+      if (state.isConnected) {
+        console.log('Network reconnected');
+        this.retryPendingRequests(); // Retry pending requests
+      }
+    });
+  };
+
+  retryPendingRequests = () => {
+    this.pendingRequests.forEach(request => {
+      this.api(request.config).then(request.resolve).catch(request.reject);
+    });
+    this.pendingRequests = [];
+  };
+
+  handleRequestError = (error: any) => {
+    if (!error.response && error.message === 'Network Error') {
+      return new Promise((resolve, reject) => {
+        this.pendingRequests.push({config: error.config, resolve, reject});
+      });
+    }
+    return Promise.reject(error);
+  };
 }
 
 export const apiService = AxiosClass.default();

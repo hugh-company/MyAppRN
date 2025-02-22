@@ -84,7 +84,7 @@ export function MessageReceived(props: MessageReceivedProps) {
 
             <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>
 
-            {renderStatusMessage()}
+            {/* {renderStatusMessage()} */}
           </View>
         </View>
       </Animated.View>

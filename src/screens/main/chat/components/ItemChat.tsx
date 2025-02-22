@@ -6,7 +6,7 @@ import { MessageReceived } from './MessageReceived';
 import { MessageSent } from './MessageSent';
 export interface ItemChatProps {
   item: MessageItemInterface;
-  userSent: OtherUser,
+  userSent: any,
   userReceived: OtherUser
   onSwipeToReply: (item: MessageItemInterface) => void;
   isMe?: boolean;

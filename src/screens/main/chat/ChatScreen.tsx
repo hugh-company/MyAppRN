@@ -6,15 +6,12 @@ import { MessageItemInterface } from '@types';
 import React from 'react';
 import { FlatList, ImageBackground, TouchableOpacity, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useChatScreen } from './ChatScreen.hook';
 import { ControlBottomChat } from './components/ControlBottomChat';
 import { ItemChat } from './components/ItemChat';
 // KeyboardController.setInputMode(1);
-const ChatScreen = () => {
+const ChatScreen = React.memo(() => {
   const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, themeColors, flatListRef, message, styles, handleSend, userInfo, scrollToRepliedMessage } = useChatScreen();
-  const { bottom } = useSafeAreaInsets();
-
   const renderMessage = ({ item }: { item: MessageItemInterface }) => {
     return (
       <ItemChat
@@ -83,6 +80,6 @@ const ChatScreen = () => {
 
     </View>
   );
-};
+});
 
 export default ChatScreen;

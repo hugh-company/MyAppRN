@@ -27,6 +27,7 @@ interface chatState {
     isLoadMore?: boolean;
   };
   joinedConversation: number;
+  unsentMessages: any[];
 }
 
 const initialState: chatState = {
@@ -47,6 +48,7 @@ const initialState: chatState = {
     error: null,
   },
   joinedConversation: 0,
+  unsentMessages: [],
 };
 
 const chatSlice = createSlice({
@@ -136,7 +138,8 @@ const chatSlice = createSlice({
         item => item.thread_id === action.payload?.message.thread_id,
       );
       console.log({indexConversation});
-
+      // add to unsent message
+      state.unsentMessages.push(action.payload.message);
       if (indexConversation >= 0) {
         state.conversation.conversations[indexConversation].last_message =
           action.payload?.message;
@@ -168,7 +171,6 @@ const chatSlice = createSlice({
     },
     addNewConversation(state, action) {
       console.log('addNewConversation', action.payload);
-
       state.conversation.conversations = [
         action.payload,
         ...state.conversation.conversations,
@@ -178,7 +180,15 @@ const chatSlice = createSlice({
       const index = state.message.messages.findIndex(
         item => item.id === action.payload?.message.temp_id,
       );
+      // check if the message is unsent
 
+      const unsentIndex = state.unsentMessages.findIndex(
+        message => message.id === action.payload.message.temp_id,
+      );
+      console.log({unsentIndex});
+      if (unsentIndex >= 0) {
+        state.unsentMessages.splice(unsentIndex, 1);
+      }
       // update conversation
       const indexConversation = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.message.thread_id,
@@ -231,6 +241,7 @@ const chatSlice = createSlice({
     },
     // read all messages in conversation
     readAllMessages(state, action) {
+      state.joinedConversation = action.payload?.thread_id;
       const index = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.thread_id,
       );
@@ -240,11 +251,23 @@ const chatSlice = createSlice({
       }
     },
     // ...other reducers...
+    setJoinedConversation(state, action) {
+      state.joinedConversation = action.payload;
+    },
+    addUnsentMessage(state, action) {
+      state.unsentMessages.push(action.payload);
+    },
+    removeUnsentMessage(state, action) {
+      state.unsentMessages = state.unsentMessages.filter(
+        message => message.id !== action.payload.id,
+      );
+    },
   },
 });
 
 export const {
   setConversation,
+  setJoinedConversation,
   setConversationLoading,
   setConversationRefreshing,
   setConversationLoadMore,
@@ -262,6 +285,8 @@ export const {
   readAllMessages,
   updateMessageSent,
   addNewConversation,
+  addUnsentMessage,
+  removeUnsentMessage,
   // ...other actions...
 } = chatSlice.actions;
 

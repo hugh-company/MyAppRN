@@ -11,7 +11,6 @@ interface SocketState {
 
 const initialState: SocketState = {
   socket: null,
-
   infoUser: null,
 };
 
@@ -27,6 +26,8 @@ const socketSlice = createSlice({
         device_id: string;
       }>,
     ) {
+      console.log(action);
+
       state.infoUser = action.payload;
     },
     setSocket(

@@ -1,6 +1,7 @@
 import {useRoute} from '@react-navigation/native';
 import {
   fetchMessagesSaga,
+  getJoinedConversation,
   getMessage,
   getToken,
   getUserInfo,
@@ -37,7 +38,7 @@ export const useChatScreen = () => {
   const dispatch = useDispatch();
   const {is_next, cursor_id, messages} = useSelector(getMessage);
   const flatListRef = useRef<FlatList>(null);
-
+  const joinThread = useSelector(getJoinedConversation);
   useEffect(() => {
     dispatch(
       fetchMessagesSaga({
@@ -154,13 +155,13 @@ export const useChatScreen = () => {
       flatListRef.current.scrollToIndex({index});
     }
   };
-  console.log({messages});
+  console.log({joinThread});
   //
   const uploadImagesApi = async (images: any): Promise<any> => {
     try {
       const responseImage = await uploadImages({
         images,
-        path: `chats/${message.thread_id}`,
+        path: `chats/${message.thread_id || joinThread}`,
         token,
       });
       console.log({responseImage: responseImage});

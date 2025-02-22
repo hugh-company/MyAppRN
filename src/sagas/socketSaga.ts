@@ -39,10 +39,20 @@ interface SocketEventPayload {
   thread?: any;
 }
 
-function* handleSocketOpen(socket: WebSocket, token: string) {
+function* handleSocketOpen(
+  socket: WebSocket,
+  token: string,
+): Generator<any, void, any> {
   console.log('WebSocket connected - handleSocketOpen');
   yield fork(reSendConnect, socket, token); // Use fork to run reSendConnect in the background
   yield put({type: 'FETCH_CONVERSATION_DATA', payload: {cursor_time: ''}}); // Dispatch an action to fetch conversations
+  // Resend unsent messages
+  const unsentMessages = yield select(state => state.chatSlice.unsentMessages);
+  console.log({unsentMessages});
+
+  for (const message of unsentMessages || []) {
+    socket.send(JSON.stringify(message));
+  }
 }
 
 function createSocketChannel(
@@ -57,6 +67,7 @@ function createSocketChannel(
 
     socket.onclose = function (event) {
       console.log('WebSocket disconnected', event);
+      emit({type: 'SOCKET_CLOSED'});
     };
 
     socket.onerror = function (error) {
@@ -175,6 +186,14 @@ function* handleDataMessage(data: SocketEventPayload) {
   }
 }
 
+function* handleCloseSocket(): Generator<any, void, any> {
+  const unsentMessages = yield select(state => state.chatSlice.unsentMessages);
+  for (const message of unsentMessages) {
+    // yield put(
+    //   updateMessageStatus({id: message.id, status: MessageStatus.ERROR}),
+    // );
+  }
+}
 function* handleSocketEvents(
   socket: WebSocket,
   token: string,
@@ -183,6 +202,9 @@ function* handleSocketEvents(
   yield takeEvery(socketChannel, function* (action: any) {
     if (action.type === 'SOCKET_OPEN') {
       yield call(handleSocketOpen, action.socket, action.token);
+    }
+    if (action.type === 'SOCKET_CLOSED') {
+      yield call(handleCloseSocket);
     }
     if (action.type === 'SOCKET_ON_MESSAGE') {
       yield call(handleDataMessage, action.data);
@@ -194,6 +216,8 @@ function* handleSocketEvents(
 
 function* watchSetSocket() {
   yield takeEvery(setInfoUser.type, function* (action) {
+    console.log('test');
+
     const {token, device_id} = action.payload;
     console.log({action});
 
@@ -286,7 +310,11 @@ function* sendMessageSaga(action: any): Generator<any, void, any> {
   console.log({message});
 
   const socket = yield select(state => state.socketSlice.socket);
-  socket.send(JSON.stringify(message));
+  try {
+    socket.send(JSON.stringify(message));
+  } catch (error) {
+    console.error('Message sending failed', error);
+  }
 }
 
 // check user online status
@@ -472,6 +500,16 @@ function* loadMoreSearchConversationsSaga(
   socket.send(JSON.stringify(params));
 }
 
+function* reconnectSocketSaga(): Generator<any, void, any> {
+  const token = yield select(state => state.socketSlice.infoUser.token);
+  const device_id = yield select(state => state.socketSlice.infoUser.device_id);
+  console.log('reconnectSocketSaga', {token, device_id});
+
+  if (token && device_id) {
+    yield put(setInfoUser({token, device_id}));
+  }
+}
+
 function* watchConversationActions() {
   yield takeEvery('FETCH_CONVERSATION_DATA', fetchConversationsSaga);
   yield takeEvery('SEND_MESSAGE', sendMessageSaga);
@@ -494,6 +532,7 @@ function* watchConversationActions() {
     'FETCH_LOAD_MORE_SEARCH_CONVERSATIONS',
     loadMoreSearchConversationsSaga,
   );
+  yield takeEvery('RECONNECT_SOCKET', reconnectSocketSaga);
 }
 
 export default function* socketSaga() {
