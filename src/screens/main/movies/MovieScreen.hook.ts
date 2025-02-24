@@ -16,6 +16,9 @@ export const useMovieScreen = () => {
   const [data, setData] = useState<ModuleItemInterface[]>([]);
   const [categories, setCategories] = useState<TabInterface[]>([]);
   const movies = useSelector((state: RootState) => state.dataLocalSlide.movies);
+  const loadingDashboard = useSelector(
+    (state: RootState) => state.dataLocalSlide.loading,
+  );
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
@@ -41,7 +44,8 @@ export const useMovieScreen = () => {
       }
       setLoading(false);
     } else {
-      setLoading(true);
+      // setLoading(true);
+      dispatch(fetchMoviesData());
     }
   }, [movies]);
   // Call Api
@@ -49,6 +53,11 @@ export const useMovieScreen = () => {
     dispatch(fetchMoviesData());
   }, []);
 
+  useEffect(() => {
+    if (!loadingDashboard) {
+      setLoading(false);
+    }
+  }, [loadingDashboard]);
   const onRefresh = () => {
     // setRefresh(true);
     let textFilter = '';

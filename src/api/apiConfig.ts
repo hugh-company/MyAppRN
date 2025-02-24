@@ -16,6 +16,9 @@ export const ApiConfigs = {
     'Content-Type': 'multipart/form-data',
     Accept: 'application/json',
     timeout: 60000,
+    'Cache-Control': 'no-cache',
+    Pragma: 'no-cache',
+    Expires: '0',
   },
   timeout: 60000,
 };

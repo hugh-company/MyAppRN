@@ -20,6 +20,7 @@ export * from './AppInputDropdown';
 export * from './AppInputPhone';
 export * from './AppInputSearch';
 export * from './AppLessMore';
+export * from './AppListChat';
 export * from './AppListDashboard';
 export * from './AppListMovies';
 export * from './AppLoading';

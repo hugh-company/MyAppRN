@@ -42,6 +42,7 @@ export const useGameScreen = () => {
       setLoading(false);
     } else {
       setLoading(true);
+      dispatch(fetchGamesData());
     }
   }, [games]);
 

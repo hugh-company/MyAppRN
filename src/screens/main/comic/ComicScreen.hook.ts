@@ -43,6 +43,7 @@ export const useComicScreen = () => {
       setLoading(false);
     } else {
       setLoading(true);
+      dispatch(fetchComicsData());
     }
   }, [comics]);
   // Call Api

@@ -76,6 +76,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
         };
       }
     }, [token]);
+
     return (
       <NavigationContainer theme={DarkTheme} ref={ref}>
         <Stack.Navigator screenOptions={{

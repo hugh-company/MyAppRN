@@ -1,6 +1,5 @@
 import { apiService } from '@api';
 
-import { persistor, store } from '@redux';
 import { ThemeProvider } from '@theme';
 import { initI18n } from '@translations';
 
@@ -22,6 +21,7 @@ import { enableFreeze, enableScreens } from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { persistor, store } from './src/redux/store';
 
 enableScreens();
 enableFreeze(true);

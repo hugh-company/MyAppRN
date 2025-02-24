@@ -25,8 +25,6 @@ const ChatScreen = React.memo(() => {
     );
   };
 
-
-
   return (
     <View style={styles.container}>
       <ImageBackground source={BackgroundChat} style={styles.background} />

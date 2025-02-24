@@ -31,7 +31,7 @@ function* fetchHomeData(): Generator<any, void, any> {
     );
   } catch (error) {
     yield put(setLoadingDashboard(false));
-    console.error('Error fetching home data', error);
+    console.log('Error fetching home data', error);
   }
 }
 function* fetchGamesTrendingSaga(): Generator<any, void, any> {
