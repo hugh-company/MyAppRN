@@ -22,6 +22,7 @@ export interface AppListDashboardProps {
   categoryId?: number;
   onSelectedCategory?: (item: TabInterface) => void;
   keyExtractor?: (item: ModuleItemInterface, index: number) => string;
+  isRefetching?: boolean;
 }
 
 const AppListDashboard = React.memo(({
@@ -31,14 +32,12 @@ const AppListDashboard = React.memo(({
   onSelectedCategory = () => { },
   ListHeaderComponent,
   categoryId,
-  keyExtractor,
+  keyExtractor, isRefetching,
 }: AppListDashboardProps) => {
 
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [isReset, setIsReset] = React.useState(false);
-
   const MemoizedBannerHome = useMemo(() => React.memo(BannerHome), [data]);
   const MemoizedBannerMovie = useMemo(() => React.memo(BannerMovie), [data]);
   const MemoizedAppCategoryList = useMemo(() => React.memo(AppCategoryList), [data]);
@@ -68,19 +67,8 @@ const AppListDashboard = React.memo(({
     }
   }, [typeScreen]);
 
-  const onRefreshList = useCallback(() => {
-    if (onRefresh) {
-      setIsReset(true);
-      onRefresh();
-      setTimeout(() => {
-        setIsReset(false);
-      }
-        , 1000);
-    }
-  }, [onRefresh]);
 
 
-  console.log('aaaa', loading);
 
   const renderItem = useCallback(({ item }: { item: ModuleItemInterface }) => {
 
@@ -138,8 +126,8 @@ const AppListDashboard = React.memo(({
           scrollEventThrottle={16}
           ListHeaderComponent={ListHeaderComponent}
           onScroll={onScroll}
-          onRefresh={onRefreshList}
-          refreshing={isReset}
+          onRefresh={onRefresh}
+          refreshing={isRefetching}
           key={typeScreen}
           keyExtractor={memoizedKeyExtractor}
           renderItem={renderItem}

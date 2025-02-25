@@ -11,6 +11,7 @@ import { KeyboardProvider } from 'react-native-keyboard-controller';
 import Orientation from 'react-native-orientation-locker';
 // Removed Host import from 'react-native-portalize'
 import { AppRatingMovie, GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import FlashMessage from 'react-native-flash-message';
 import {
@@ -37,50 +38,65 @@ enableFreeze(true);
 // connect apollo client
 
 initI18n();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // Dữ liệu được coi là fresh trong 5 phút, sau đó sẽ dùng dữ liệu cache (stale)
+      staleTime: 5 * 60 * 1000,
+      // Cache sẽ được giữ trong 30 phút (nếu không có hoạt động)
+      // cacheTime: 30 * 60 * 1000,
+      // Không tự động refetch khi chuyển sang background (tuỳ chỉnh theo nhu cầu)
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
 function App(): React.JSX.Element {
-  const queryClient = new QueryClient();
+
 
   useEffect(() => {
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
     apiService.setBaseURL();
+    // getAllApiStartApp(); // Prefetch all dashboard data
   }, []);
-
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
     'Open debug',
   ]);
   return (
     <GestureHandlerRootView style={styles.containerApp}>
-      <ThemeProvider >
-        <KeyboardProvider>
-          <QueryClientProvider client={queryClient}>
+      <BottomSheetModalProvider>
+        <ThemeProvider >
+          <KeyboardProvider>
+            <QueryClientProvider client={queryClient}>
 
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-                  <View style={styles.container} >
-                    <StatusBar translucent backgroundColor="transparent" />
-                    <AppNavigator
-                      ref={(navigatorRef: any) => {
-                        NavigationUtils.setTopLevelNavigator(navigatorRef);
-                      }}
-                    />
+              <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+                    <View style={styles.container} >
+                      <StatusBar translucent backgroundColor="transparent" />
+                      <AppNavigator
+                        ref={(navigatorRef: any) => {
+                          NavigationUtils.setTopLevelNavigator(navigatorRef);
+                        }}
+                      />
 
-                    <ModalConfirmation />
-                    <ModalChangeLanguage />
-                    <AppRatingMovie />
-                    <FlashMessage position="top" />
-                    <GlobalUI ref={GlobalService.globalUIRef} />
+                      <ModalConfirmation />
+                      <ModalChangeLanguage />
+                      <AppRatingMovie />
+                      <FlashMessage position="top" />
+                      <GlobalUI ref={GlobalService.globalUIRef} />
 
-                  </View>
+                    </View>
 
-                </SafeAreaProvider>
-              </PersistGate>
-            </Provider>
-          </QueryClientProvider>
-        </KeyboardProvider>
-      </ThemeProvider>
+                  </SafeAreaProvider>
+                </PersistGate>
+              </Provider>
+            </QueryClientProvider>
+          </KeyboardProvider>
+        </ThemeProvider>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 }

@@ -115,6 +115,7 @@ export const ColorsApp = {
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
   active: '#13E398',
+  skeleton: '#292929',
 };
 export type ThemeColors = typeof lightColors;
 

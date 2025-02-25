@@ -1,13 +1,7 @@
-import {
-  fetchGamesTrending,
-  fetchHomeData,
-  fetchSearchData,
-  RootState,
-  setLoadingDashboard,
-} from '@redux';
+import {setBaseURLApi} from '@api';
+import {useDashboardHome, useSearchDashboard} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {ModuleItemInterface} from '@types';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import {
   Extrapolate,
   interpolate,
@@ -17,51 +11,33 @@ import {
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useHomeScreen = () => {
-  const [data, setData] = useState<ModuleItemInterface[]>([]);
   const {themeColors} = useTheme();
   const {top} = useSafeAreaInsets();
   const scrollY = useSharedValue(0);
   const styles = createStyles(themeColors);
-  const [isReset, setIsReset] = useState(false);
   const dispatch = useDispatch();
   const scrollHandler = useAnimatedScrollHandler(event => {
     scrollY.value = event.contentOffset.y;
   });
-  const loading = useSelector(
-    (state: RootState) => state.dataLocalSlide.loading,
-  );
-  const homeData = useSelector((state: RootState) => state.dataLocalSlide.home);
 
+  const {data, isSuccess, isLoading, isRefetching, refetch} =
+    useDashboardHome();
+  const {} = useSearchDashboard();
   useEffect(() => {
-    dispatch(setLoadingDashboard(true));
-    dispatch(fetchHomeData());
-    dispatch(fetchGamesTrending());
-    // dispatch(fetchMoviesData());
-    // dispatch(fetchComicsData());
-    // dispatch(fetchGamesData());
-    dispatch(fetchSearchData());
-  }, []);
-
-  useEffect(() => {
-    if (homeData?.length > 0) {
-      setData(homeData);
+    if (data && isSuccess) {
+      console.log('Data', data);
+      setBaseURLApi();
+      // dispatch()
     }
-  }, [homeData]);
+  }, [data, isSuccess]);
 
   const onRefresh = () => {
-    setIsReset(true);
+    refetch();
   };
-
-  useEffect(() => {
-    if (isReset) {
-      dispatch(fetchHomeData());
-      setIsReset(false);
-    }
-  }, [isReset]);
 
   const bannerHeightStyle = useAnimatedStyle(() => ({
     height: interpolate(
@@ -85,10 +61,9 @@ export const useHomeScreen = () => {
     styles,
     scrollHandler,
     bannerHeightStyle,
-
+    isRefetching,
     headerBackgroundColorStyle,
     onRefresh,
-    loading,
-    isReset,
+    isLoading,
   };
 };

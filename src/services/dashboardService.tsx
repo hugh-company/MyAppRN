@@ -1,4 +1,5 @@
-import { ApiConfigs, apiService } from '@api';
+import { ApiConfigs, apiService, KeyQueryApi, setBaseURLApi } from '@api';
+import { useApiQuery, useApiQueryHome } from '@hooks';
 import { ItemListDashboard, PostTypeKey, ResponseDataDashboard } from '@types';
 
 interface responseDashboard {
@@ -26,3 +27,47 @@ export const getPostDashboardApi = (type: PostTypeKey | ItemListDashboard, param
   }
   );
 };
+// queryKey: [queryKey],
+
+// export const useDashboardService
+export const useDashboardHome = () => {
+  return useApiQueryHome<responseDashboard>(
+    KeyQueryApi.DASHBOARD_HOME,
+    '',
+  );
+};
+
+export const useMoviesDashboard = (
+  params?: paramsGetListInterface,
+) => {
+  return useApiQuery<responseDashboard>(
+    KeyQueryApi.DASHBOARD_MOVIES,
+    '/home/movie/',
+    params,
+  );
+};
+
+export const useComicsDashboard = (params?: paramsGetListInterface,) => {
+  setBaseURLApi(ApiConfigs.baseURL);
+  return useApiQuery<responseDashboard>(
+    KeyQueryApi.DASHBOARD_COMIC,
+    '/home/comic',
+    params
+  );
+};
+export const useGamesDashboard = () => {
+  setBaseURLApi(ApiConfigs.baseURL);
+  return useApiQuery(
+    KeyQueryApi.DASHBOARD_GAME,
+    '/home/game',
+  );
+};
+
+export const useSearchDashboard = () => {
+
+  return useApiQuery<responseDashboard>(
+    KeyQueryApi.DASHBOARD_SEARCH,
+    '/home/search',
+  );
+};
+

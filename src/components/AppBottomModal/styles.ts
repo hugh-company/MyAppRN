@@ -1,8 +1,27 @@
-import {Spacing, ThemeColors} from '@theme';
-import {StyleSheet} from 'react-native';
+import { Spacing, ThemeColors } from '@theme';
+import { StyleSheet } from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
+
+    centeredView: {
+      flex: 1,
+
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent:'flex-end',
+
+    },
+    modalView: {
+      backgroundColor: themeColors.background,
+      borderTopLeftRadius: 20,
+      borderTopRightRadius: 20,
+
+    },
+    modalText: {
+      marginBottom: 15,
+      textAlign: 'center',
+    },
+    //
     container: {
       flex: 1,
       backgroundColor: themeColors.background,
@@ -39,5 +58,13 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignSelf: 'center',
       position: 'absolute',
       top: 4,
+    },
+    handle: {
+      width: 40,
+      height: 6,
+      borderRadius: 3,
+      backgroundColor: themeColors.border,
+      alignSelf: 'center',
+      marginVertical: 10,
     },
   });

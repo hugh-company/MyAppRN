@@ -1,4 +1,4 @@
-import { AppInputSearch, AppListDashboard, HeaderMain } from '@components';
+import { AppCategoryList, AppInputSearch, AppListDashboard, HeaderMain } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
@@ -40,13 +40,13 @@ const MovieScreen = () => {
         editable={false}
         style={styles.inputSearch}
       />
-      {/*
+
       <AppCategoryList
         contentContainerStyle={styles.category}
         data={categories}
         categoryId={tabSelect?.id}
         onSelectedCategory={handleCategorySelect} />
-      */}
+
       {shouldRenderList && (
         <MemoizedAppListDashboard
           data={data}

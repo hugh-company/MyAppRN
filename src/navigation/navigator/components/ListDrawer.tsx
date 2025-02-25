@@ -1,7 +1,8 @@
 import { VipIcon } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
 import { navigate, navigateToStack, SCREEN_ROUTE } from '@navigation';
-import { drawerSettingSelector, getToken, logout } from '@redux';
+import { getToken, logout } from '@redux';
+import { useDashboardHome } from '@services';
 import { FontSize, FontWithFamily, sizeWidth, Spacing, ThemeColors, useTheme } from '@theme';
 import { menuNavigationInterface, PostTypeKey } from '@types';
 import { showModalConfirmation, showModalLanguage } from '@utils';
@@ -21,9 +22,10 @@ export function ListDrawer(props: ListDrawerProps) {
   const { bottom, top } = useSafeAreaInsets();
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
-
+  const { data, isSuccess, isLoading, isRefetching, refetch } =
+    useDashboardHome();
   const styles = createStyles(themeColors);
-  const dataMenus = useSelector(drawerSettingSelector);
+  const dataMenus = isSuccess ? data?.data?.menus : [];
   const colors = ['#B1062E', '#1E1111'];
   const dispatch = useDispatch();
   const gotoScreen = useCallback((screen: string, params?: any) => {
@@ -172,14 +174,14 @@ export function ListDrawer(props: ListDrawerProps) {
     useAngle={true} // Added this line
     angle={45} // Added this line
   >
-    <FlatList
+    {isSuccess && <FlatList
       data={dataSettings}
       showsVerticalScrollIndicator={false}
       ListHeaderComponent={<HeaderDrawer />}
       style={{ marginTop: top, marginBottom: bottom, marginHorizontal: Spacing.width16 }}
       keyExtractor={(item, index) => `drawer_${index}`}
       renderItem={renderItem}
-    />
+    />}
   </LinearGradient>;
 }
 

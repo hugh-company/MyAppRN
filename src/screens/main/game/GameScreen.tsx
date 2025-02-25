@@ -1,5 +1,5 @@
 import { AppListDashboard, HeaderMain } from '@components';
-import { ItemListDashboard } from '@types';
+import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { InteractionManager, View } from 'react-native';
@@ -27,7 +27,7 @@ const GameScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderMain title={t('games.title')} isHome={false} />
+      <HeaderMain title={t('games.title')} type={PostTypeKey.GAMES} isHome={false} />
 
       {shouldRenderList && (
         <MemoizedAppListDashboard

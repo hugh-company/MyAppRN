@@ -1,8 +1,8 @@
-import { BASE_IMAGE_URL } from '@api';
-import { AppImage } from '@components';
-import { WidthScreen } from '@theme';
+import { NoImage } from '@assets';
+import { ColorsApp, WidthScreen } from '@theme';
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, StyleSheet } from 'react-native';
+import { ActivityIndicator, Dimensions, Image, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 interface ImageChapterProps {
   uri: string;
@@ -11,32 +11,69 @@ interface ImageChapterProps {
 
 const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
   const [heightImage, setHeightImage] = useState<number>(0);
+  const [status, setStatus] = useState({ isLoading: true, isError: false });
 
   useEffect(() => {
+    let isMounted = true;
     Image.getSize(
-      `${BASE_IMAGE_URL}${uri}`,
+      uri,
       (width, height) => {
-        const screenWidth = Dimensions.get('window').width;
-        const scaleFactor = screenWidth / width;
-        const imageHeight = height * scaleFactor;
-        setHeightImage(imageHeight);
+        if (isMounted) {
+          const screenWidth = Dimensions.get('window').width;
+          const scaleFactor = screenWidth / width;
+          const imageHeight = height * scaleFactor;
+          setHeightImage(imageHeight);
+          setStatus({ isLoading: false, isError: false });
+        }
       },
       error => {
-        console.error('Error fetching image size:', error);
+        if (isMounted) {
+          console.error('Error fetching image size:', error);
+          setStatus({ isLoading: false, isError: true });
+        }
       },
     );
+    return () => {
+      isMounted = false;
+    };
   }, [uri]);
 
+  if (status.isLoading) {
+    return <ActivityIndicator style={styles.imageLoading} size="large" color="#0000ff" />;
+  }
+
+  if (status.isError) {
+    return (
+      <FastImage
+        source={NoImage}
+        style={[styles.image, { height: heightImage }]}
+        resizeMode="contain"
+      />
+    );
+  }
+
   return (
-
-    <AppImage uri={uri} style={{ width: WidthScreen, height: heightImage }} />
-
+    <FastImage
+      source={{ uri }}
+      style={[styles.image, { height: heightImage }]}
+      resizeMode="contain"
+      onLoadStart={() => setStatus({ isLoading: true, isError: false })}
+      onLoadEnd={() => setStatus({ isLoading: false, isError: false })}
+      onError={() => setStatus({ isLoading: false, isError: true })}
+    />
   );
 };
+
 const styles = StyleSheet.create({
   image: {
     width: WidthScreen,
     height: 300,
   },
+  imageLoading: {
+    width: WidthScreen,
+    height: 300,
+    backgroundColor: ColorsApp.skeleton,
+  },
 });
+
 export default React.memo(ImageChapter);

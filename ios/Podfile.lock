@@ -1614,7 +1614,7 @@ PODS:
     - Yoga
   - react-native-splash-screen (3.3.0):
     - React-Core
-  - react-native-video (6.10.1):
+  - react-native-video (6.10.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1627,7 +1627,7 @@ PODS:
     - React-featureflags
     - React-graphics
     - React-ImageManager
-    - react-native-video/Video (= 6.10.1)
+    - react-native-video/Video (= 6.10.2)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-rendererdebug
@@ -1636,7 +1636,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Fabric (6.10.1):
+  - react-native-video/Fabric (6.10.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1657,7 +1657,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-video/Video (6.10.1):
+  - react-native-video/Video (6.10.2):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1991,27 +1991,6 @@ PODS:
     - React-utils (= 0.77.0)
   - RNAppleAuthentication (2.4.0):
     - React-Core
-  - RNCMaskedView (0.3.2):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - RNDeviceInfo (14.0.4):
     - React-Core
   - RNFastImage (8.6.3):
@@ -2367,7 +2346,6 @@ DEPENDENCIES:
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNAppleAuthentication (from `../node_modules/@invertase/react-native-apple-authentication`)"
-  - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -2578,8 +2556,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNAppleAuthentication:
     :path: "../node_modules/@invertase/react-native-apple-authentication"
-  RNCMaskedView:
-    :path: "../node_modules/@react-native-masked-view/masked-view"
   RNDeviceInfo:
     :path: "../node_modules/react-native-device-info"
   RNFastImage:
@@ -2680,7 +2656,7 @@ SPEC CHECKSUMS:
   react-native-safe-area-context: 7e513d737b0b5c1d10bbe0e5fcc9f925a7be144c
   react-native-slider: 54e7f67e9e4c92c0edac77bbf58abfaf1f60055f
   react-native-splash-screen: 95994222cc95c236bd3cdc59fe45ed5f27969594
-  react-native-video: b0fc63469ac8cab3bae8e0e7368ba940e425f8a4
+  react-native-video: 80b56ba42f736957ee5865b60a34486c24931fa2
   react-native-webview: 449c3f27cdb926086a5eff7993421fd096cc5ae3
   React-nativeconfig: cd0fbb40987a9658c24dab5812c14e5522a64929
   React-NativeModulesApple: 4a9c304aa4fb086af32e8758ba892386d895b4d3
@@ -2712,7 +2688,6 @@ SPEC CHECKSUMS:
   ReactCodegen: c08a5113d9c9c895fe10f3c296f74c6b705a60a9
   ReactCommon: 1bd2dc684d7992acbf0dfee887b89a57a1ead86d
   RNAppleAuthentication: 8d313d93fe2238d6b7ff0a39c67ebcf298d96653
-  RNCMaskedView: 308c763227e237d4d260bd8841870e099572bb3e
   RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
   RNFastImage: 462a183c4b0b6b26fdfd639e1ed6ba37536c3b87
   RNFBApp: c0e35c80b0da1c93767dcb0060491735518dbebb
@@ -2729,6 +2704,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 78d74e245ed67bb94275a1316cdc170b9b7fe884
 
-PODFILE CHECKSUM: 402a4f82162922ee5666d58733063485520ac004
+PODFILE CHECKSUM: d6e3e9634addf0a24fc259351dcdd0bb17ddf06f
 
 COCOAPODS: 1.16.2

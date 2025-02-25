@@ -1,9 +1,9 @@
 import NetInfo from '@react-native-community/netinfo'; // Import NetInfo
-import {store} from '@redux';
-import axios, {AxiosResponse, CancelTokenSource} from 'axios';
+import { store } from '@redux';
+import axios, { AxiosResponse, CancelTokenSource } from 'axios';
 import i18next from 'i18next';
-import {ApiConfigs} from './apiConfig';
-import {handleResponse} from './responseHandler';
+import { ApiConfigs } from './apiConfig';
+import { handleResponse } from './responseHandler';
 
 class AxiosClass {
   static instance: AxiosClass;
@@ -29,8 +29,6 @@ class AxiosClass {
     this.api.interceptors.response.use(
       this.interceptorResponses,
       (err: any) => {
-        console.log({err});
-
         if (err.code === 'ECONNABORTED') {
           console.error('Request timeout');
         }
@@ -51,8 +49,6 @@ class AxiosClass {
   };
 
   interceptorResponses = (response: AxiosResponse): Promise<any> => {
-    console.log({response});
-
     const {data} = response;
     if (data?.status === 'error') {
       return Promise.reject(data);

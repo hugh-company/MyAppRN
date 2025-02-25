@@ -1,4 +1,5 @@
 import { AppText } from '@components';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Spacing, useTheme } from '@theme';
 import { chapterEpisodeInterface, PostTypeKey } from '@types';
 import { t } from 'i18next';
@@ -12,6 +13,7 @@ export interface AppEpisodesProps {
   title?: string;
   style?: StyleProp<ViewStyle>;
   onSelectChapter?: (item: chapterEpisodeInterface) => void;
+
 }
 const AppEpisodes = ({
   style,
@@ -22,14 +24,13 @@ const AppEpisodes = ({
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [selectEpisodes, setSelectEpisodes] = useState(0);
-  const [showModal, setShowModal] = useState(false);
 
   const lineHeight = Spacing.height32;
-
+  const bottomModal = React.useRef<BottomSheetModal>(null);
 
 
   const handleLoadMore = () => {
-    setShowModal(true);
+    bottomModal.current?.present();
   };
   return (
     <>
@@ -54,12 +55,14 @@ const AppEpisodes = ({
           </TouchableOpacity>
         )}
       </View>
-      {showModal && <ModalEpisodes
-        showModal={showModal}
+
+      <ModalEpisodes
+        refModal={bottomModal}
         episodes={episodes}
-        setShowModal={setShowModal}
+        minHeight={1}
+        height={1}
         onSelectChapter={onSelectChapter}
-        selectEpisodes={selectEpisodes} />}
+        selectEpisodes={selectEpisodes} />
     </>
   );
 };

@@ -15,9 +15,9 @@ import { ModalFilterChapter } from './components/ModalFilterChapter';
 const PreviewChapter = () => {
   const { data, chapter, chapters, styles, type, headerStyle,
     scrollHandler, bottomStyle, goToNextChapter, goToPrevChapter,
-    showModalEpisodes, setShowModalEpisodes, onApplyFilter,
+    refModal, onApplyFilter,
     filterText, onClickScreen, showModalFilter,
-    setShowModalFilter, onSelectChapter } = usePreviewChapter();
+    setShowModalFilter, onSelectChapter, scrollRef } = usePreviewChapter();
   const { top, bottom } = useSafeAreaInsets();
 
   const currentIndex = chapters?.findIndex((item) => item.id === chapter.id) || 0;
@@ -49,6 +49,7 @@ const PreviewChapter = () => {
       <AppFlatListAnimated
         data={data}
         renderItem={renderItem}
+        ref={scrollRef}
         ListHeaderComponent={<View style={[styles.headerTitle, { height: Spacing.height50 + top, paddingTop: top }]} >
           <AppText style={styles.titleChapter}>{chapter.title}</AppText>
         </View>}
@@ -72,11 +73,11 @@ const PreviewChapter = () => {
           isNext={canGoToNextChapter}
           isPrev={canGoToPrevChapter}
           isFilter={type === PostTypeKey.NOVEL}
-          onShowModal={() => setShowModalEpisodes(true)}
+          onShowModal={() => refModal.current?.present()}
           onFilter={() => setShowModalFilter(true)}
         />
       </Animated.View>
-      <Animated.View style={[styles.header, styles.positionHeader, { paddingTop: top || Spacing.width16 }, { ...headerStyle }]}>
+      <Animated.View style={[styles.header, styles.positionHeader, { ...headerStyle }]}>
         <ControlHeader
           name={chapter.name || ''}
           nameChapter={chapter.title || ''}
@@ -89,10 +90,10 @@ const PreviewChapter = () => {
         onFilter={onApplyFilter}
       />
       <ModalEpisodes
-        showModal={showModalEpisodes}
+        refModal={refModal}
         episodes={chapters}
         height={0.7}
-        setShowModal={setShowModalEpisodes}
+        minHeight={0.7}
         onSelectChapter={onSelectChapter}
         selectEpisodes={chapter.id} />
     </View>

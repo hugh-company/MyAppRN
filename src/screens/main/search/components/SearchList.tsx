@@ -102,7 +102,6 @@ const SearchList = ({ valueSearch, typeScreen, sort }: SearchListProps) => {
 
     }
   };
-
   if (loading) {
     return (
       <LoadingList numColumns={2} />

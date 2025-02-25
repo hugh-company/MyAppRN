@@ -1,4 +1,5 @@
 import {fetchComicsData, RootState} from '@redux';
+import {useComicsDashboard} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {ModuleItemInterface, TabInterface, TypeKeyListApi} from '@types';
 import {useCallback, useEffect, useState} from 'react';
@@ -50,6 +51,10 @@ export const useComicScreen = () => {
   useEffect(() => {
     dispatch(fetchComicsData());
   }, []);
+
+  //
+  const {data: newData} = useComicsDashboard();
+  console.log({newData});
 
   //
   const onRefresh = () => {

@@ -17,7 +17,7 @@ export function ControlHeader(props: ControlHeaderProps) {
   return (
     <View style={[styles.container, {
       backgroundColor: themeColors.background,
-      paddingTop: top,
+      paddingTop: top + Spacing.width8,
     }]} >
       <TouchableOpacity style={styles.btn} onPress={() => goBack()}>
         <LeftIcon />

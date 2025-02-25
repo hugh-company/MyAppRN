@@ -5,7 +5,7 @@ import {
   ThemeColors,
   WidthScreen,
 } from '@theme';
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
@@ -55,7 +55,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     // modal
     modalContainer: {
       flex: 1,
-      // backgroundColor: themeColors.background,
+      backgroundColor: themeColors.background,
     },
     headerModal: {
       padding: Spacing.width16,
@@ -101,6 +101,8 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     inputSearch: {
       backgroundColor: '#7878803D',
+      color: themeColors.text,
+      ...FontWithFamily.FontWithFamily_400,
     },
     itemChapter: {
       padding: Spacing.width16,
@@ -113,4 +115,19 @@ export const createStyles = (themeColors: ThemeColors) =>
       fontStyle: 'italic',
       ...FontWithFamily.FontWithFamily_400,
     },
+    listModal:{
+      backgroundColor: themeColors.background,
+      height: Spacing.height200,
+    },
+    emptyList: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    emptyText:{
+      color: themeColors.text,
+      ...FontWithFamily.FontWithFamily_400,
+      textAlign: 'center',
+    },
+
   });

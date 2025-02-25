@@ -1,5 +1,6 @@
 import { AppListDashboard, AppText } from '@components';
 import { getSearchModuleLocal } from '@redux';
+import { useSearchDashboard } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
@@ -18,6 +19,7 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
   const dispatch = useDispatch();
   const dataSearch = useSelector(getSearchModuleLocal);
   const [shouldRender, setShouldRender] = React.useState(false);
+  const { data, isLoading } = useSearchDashboard();
 
   React.useEffect(() => {
     const interactionHandle = InteractionManager.runAfterInteractions(() => {
@@ -33,11 +35,11 @@ const DashboardSearch = ({ }: DashboardSearchProps) => {
   return (
     <View style={styles.container}>
       <MemoizedAppListDashboard
-        data={dataSearch}
+        data={data?.data?.modules || []}
         ListHeaderComponent={<AppText style={styles.title}>{t('search.searchVariety')}</AppText>}
         typeScreen={ItemListDashboard.SEARCH}
         key={'search_dashboard'}
-        loading={false}
+        loading={isLoading}
         keyExtractor={(item, index) => `search_dashboard_${index}`}
       />
     </View>

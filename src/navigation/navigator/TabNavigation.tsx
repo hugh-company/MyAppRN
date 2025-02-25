@@ -14,7 +14,7 @@ const TabBarNavigation = React.memo(() => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        lazy: false, // Add this line to load all screens at once
+        // lazy: false, // Add this line to load all screens at once
       }}
       tabBar={CustomTabBarComponent}
     >

@@ -150,7 +150,8 @@
     "error": "Video không thể phát",
     "mute": "Tắt tiếng",
     "unmute": "Bật tiếng",
-    "main_actors": "Diễn viên chính"
+    "main_actors": "Diễn viên chính",
+    "no_chapters":"Không có tập nào",
   },
   "chapter": {
     "title": "Truyện tranh",

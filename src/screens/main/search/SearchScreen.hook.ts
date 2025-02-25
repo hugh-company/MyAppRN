@@ -1,11 +1,11 @@
-import {useRoute} from '@react-navigation/native';
-import {useTheme} from '@theme';
-import {FilterKey, PostTypeKey} from '@types';
-import {t} from 'i18next';
-import {useRef, useState} from 'react';
-import {TextInput} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {createStyles} from './styles';
+import { useRoute } from '@react-navigation/native';
+import { useTheme } from '@theme';
+import { FilterKey, PostTypeKey } from '@types';
+import { t } from 'i18next';
+import { useEffect, useRef, useState } from 'react';
+import { TextInput } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { createStyles } from './styles';
 interface SearchInterface {
   type: PostTypeKey;
 }
@@ -26,6 +26,12 @@ export const useSearchScreen = () => {
   const {top} = useSafeAreaInsets();
   const [isFilterSort, setIsFilterSort] = useState(false);
   const [isFilterType, setIsFilterType] = useState(false);
+  console.log({typeScreen});
+  useEffect(()=>{
+    if(type){
+      setTypeScreen(type);
+    }
+  },[type]);
   const menuType = [
     {
       key: PostTypeKey.MOVIES,

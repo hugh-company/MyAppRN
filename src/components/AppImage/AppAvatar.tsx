@@ -4,8 +4,7 @@ import FastImage, { ResizeMode } from 'react-native-fast-image';
 
 import { BASE_IMAGE_URL } from '@api';
 import { NoAvatarImage, NoImage } from '@assets';
-import { Box, useTheme } from '@theme';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { Box, ColorsApp } from '@theme';
 interface propsImage {
   uri?: string | null;
   style?: StyleProp<ImageStyle> | any;
@@ -17,9 +16,6 @@ export const AppAvatar = React.memo((props: propsImage) => {
   const [isLoading, setLoading] = useState(true);
   const [isError, setError] = useState(false);
   const uriBase = `${BASE_IMAGE_URL}${uri}`;
-
-  const { themeColors } = useTheme();
-
 
   useEffect(() => {
     setLoading(true);
@@ -40,11 +36,6 @@ export const AppAvatar = React.memo((props: propsImage) => {
     }
   }, [uriBase]);
 
-
-
-  const onGetImageWithDevice = () => {
-
-  };
   const source = isError ? NoImage : uri ? { uri: uriBase } : NoAvatarImage;
 
   return (
@@ -59,9 +50,9 @@ export const AppAvatar = React.memo((props: propsImage) => {
         onError={() => setLoading(false)}
       />
       {isLoading && (
-        <SkeletonPlaceholder>
-          <View style={[styles.image, style]} />
-        </SkeletonPlaceholder>
+
+        <View style={[styles.image, style]} />
+
       )}
     </Box>
   );
@@ -71,5 +62,10 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
 
+  },
+  imageLoading: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: ColorsApp.skeleton,
   },
 });

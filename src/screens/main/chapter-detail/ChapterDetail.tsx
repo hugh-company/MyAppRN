@@ -10,11 +10,6 @@ import { useChapterDetail } from './ChapterDetail.hook';
 const ChapterDetail = () => {
   const { styles, detail, readChapter, scrollHandler, onSelectChapter, onNavigateDetail, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
 
-  // if (loading) {
-  //   return <LoadingDetailMovie />;
-  // }
-  console.log({ detail });
-
   if (!detail) {
     return null;
   }
@@ -56,6 +51,7 @@ const ChapterDetail = () => {
         <AppEpisodes
           episodes={detail?.chapters}
           style={styles.episodes}
+
           onSelectChapter={(item) => {
             console.log({ item });
             onSelectChapter(item);

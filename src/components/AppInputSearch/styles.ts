@@ -17,7 +17,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     input: {
       fontSize: FontSize.FontSize14,
-      color: themeColors.inputText,
+      color: themeColors.text,
 
       flex: 1,
       height: '100%',

@@ -1,7 +1,6 @@
-import { Spacing } from '@theme';
+import { ColorsApp, Spacing } from '@theme';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { StyleSheet, View } from 'react-native';
 export interface LoadingHomeProps {
   numColumns?: number
 }
@@ -36,15 +35,13 @@ const LoadingList = ({ numColumns }: LoadingHomeProps) => {
   };
   return (
     <View style={styles.container}>
-      <SkeletonPlaceholder>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <View key={index}>
-              {numColumns === 2 ? renderItemTwo() : renderOne()}
-            </View>
-          ))}
-        </ScrollView>
-      </SkeletonPlaceholder>
+
+      {Array.from({ length: 10 }).map((_, index) => (
+        <View key={index}>
+          {numColumns === 2 ? renderItemTwo() : renderOne()}
+        </View>
+      ))}
+
     </View>
   );
 };
@@ -64,6 +61,7 @@ const styles = StyleSheet.create({
   item: {
     height: Spacing.height236,
     flex: 1,
+    backgroundColor: ColorsApp.skeleton,
   },
   imageOne: {
     width: Spacing.width92,

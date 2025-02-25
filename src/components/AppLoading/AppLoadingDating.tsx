@@ -1,53 +1,35 @@
-import { Spacing, useTheme } from '@theme';
+import { ColorsApp, Spacing } from '@theme';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 export interface LoadingHomeProps { }
 const AppLoadingDating = ({ }: LoadingHomeProps) => {
-  const { themeColors } = useTheme();
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      <SkeletonPlaceholder>
+      <View>
+        <View style={styles.librarySection}>
 
-        <View>
-          {/* Thư viện phim hay */}
-          <View style={styles.librarySection}>
-
-            {/* <View style={styles.categorySection}>
-              {Array(14)
-                .fill(0)
-                .map((_, i) => (
-                  <View>
-                    <View key={i} style={styles.itemCategory} />
-                    <View style={styles.txtCategory} />
-
-                  </View>
-                ))}
-            </View> */}
-
-            <View style={styles.btnSearch} />
-            {/*  */}
-            <View style={styles.libraryTitle} />
-            <View style={{ flexDirection: 'row' }}>
-              {Array(2)
-                .fill(0)
-                .map((_, i) => (
-                  <View key={i} style={styles.movieItem} />
-                ))}
-            </View>
-            <View style={{ flexDirection: 'row', marginTop: Spacing.width16 }}>
-              {Array(2)
-                .fill(0)
-                .map((_, i) => (
-                  <View key={i} style={styles.movieItem} />
-                ))}
-            </View>
+          <View style={styles.btnSearch} />
+          {/*  */}
+          <View style={styles.libraryTitle} />
+          <View style={{ flexDirection: 'row' }}>
+            {Array(2)
+              .fill(0)
+              .map((_, i) => (
+                <View key={i} style={styles.movieItem} />
+              ))}
           </View>
-
-
+          <View style={{ flexDirection: 'row', marginTop: Spacing.width16 }}>
+            {Array(2)
+              .fill(0)
+              .map((_, i) => (
+                <View key={i} style={styles.movieItem} />
+              ))}
+          </View>
         </View>
-      </SkeletonPlaceholder>
+
+
+      </View>
     </ScrollView>
   );
 };
@@ -67,14 +49,14 @@ const styles = StyleSheet.create({
     width: '60%',
     height: Spacing.height32,
     marginBottom: 8,
-    backgroundColor: '#E1E9EE',
+    backgroundColor: ColorsApp.skeleton,
   },
   movieItem: {
     flex: 1,
     height: Spacing.width230,
     borderRadius: 8,
     marginRight: 16,
-    backgroundColor: '#E1E9EE',
+    backgroundColor: ColorsApp.skeleton,
   },
   categorySection: {
     flexDirection: 'row',
@@ -95,6 +77,7 @@ const styles = StyleSheet.create({
     height: Spacing.width56,
     borderRadius: Spacing.width50,
     marginVertical: Spacing.width24,
+    backgroundColor: ColorsApp.skeleton,
   },
 });
 export default AppLoadingDating;

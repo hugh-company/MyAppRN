@@ -1,30 +1,32 @@
-import { useTheme } from '@theme';
+import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { HeightScreen, useTheme } from '@theme';
 import { chapterEpisodeInterface } from '@types';
 import { t } from 'i18next';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { Platform, TouchableOpacity, View } from 'react-native';
-import { AppBottomModal } from '../AppBottomModal';
-import { AppFlatListAnimated } from '../AppFlatListAnimated';
+import { TouchableOpacity, View } from 'react-native';
 import { AppInputSearch } from '../AppInputSearch';
 import { AppText } from '../AppText';
 import { createStyles } from './styles';
+
 export interface ModalEpisodesProps {
-  setShowModal?: any;
+  refModal: React.RefObject<BottomSheetModal>;
   onSelectChapter?: any;
   selectEpisodes?: any;
-  showModal: boolean;
+
   setSelectEpisodes?: any;
   episodes?: chapterEpisodeInterface[];
   height?: number;
+  minHeight?: number;
 }
 
 export function ModalEpisodes(props: ModalEpisodesProps) {
   const {
     selectEpisodes,
-    setShowModal,
+
     onSelectChapter,
-    showModal,
-    setSelectEpisodes, episodes, height,
+    refModal,
+    setSelectEpisodes, episodes, height = 0.5, minHeight = 0.5,
   } = props;
   const { themeColors } = useTheme();
   const [search, setSearch] = useState('');
@@ -33,9 +35,8 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
   useEffect(() => {
     setFilteredEpisodes(episodes);
   }, [episodes]);
-  const list = filteredEpisodes?.slice(0, 50);
-  const handleSearch = (text: string) => {
-    setSearch(text);
+  const handleSearch = debounce((text: string) => {
+
     if (text === '') {
       setFilteredEpisodes(episodes);
     } else {
@@ -44,12 +45,12 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
       );
       setFilteredEpisodes(filtered);
     }
-  };
+  }, 300); // Debounce with 300ms delay
+
   const renderItem = ({ item }: { item: chapterEpisodeInterface }) => {
     return (
       <TouchableOpacity onPress={() => {
-        setShowModal(false);
-
+        refModal?.current?.dismiss();
         setSelectEpisodes?.(item.id);
         onSelectChapter?.(item);
       }} style={[styles.itemChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
@@ -57,37 +58,51 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
       </TouchableOpacity>
     );
   };
-  return (
-    <AppBottomModal
-      width={1}
-      height={height || (Platform.OS === 'ios' ? 0.93 : 1)}
-      visible={showModal}
-      onClose={() => setShowModal(false)}>
-      <View style={styles.modalContainer}>
-        <View style={styles.headerModal}>
-          <View style={styles.viewTitle}>
-            <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
-            <TouchableOpacity hitSlop={{
-              top: 10,
-              bottom: 10,
-              left: 10,
-              right: 10,
-            }} style={styles.btnBack} onPress={() => setShowModal(false)}>
-              <AppText style={styles.txtBack}>{t('back')}</AppText>
-            </TouchableOpacity>
-          </View>
-          <AppInputSearch
-            style={styles.viewSearch}
-            inputStyle={styles.inputSearch}
-            value={search}
-            onChangeText={handleSearch}
-          />
-        </View>
-        <AppFlatListAnimated
-          data={filteredEpisodes}
-          renderItem={renderItem}
-        />
 
+  return (
+    <BottomSheetModal
+      ref={refModal}
+      backgroundStyle={styles.modalContainer}
+      snapPoints={[minHeight * HeightScreen, height * HeightScreen]}
+      onAnimate={(fromIndex, toIndex) => {
+        if (toIndex === -1) {
+          setTimeout(() => refModal?.current?.dismiss(), 0);
+        }
+      }}
+    >
+      <View style={styles.headerModal}>
+        <View style={styles.viewTitle}>
+          <AppText style={styles.titleModal}>{t('movie.list_chapters')}</AppText>
+          <TouchableOpacity hitSlop={{
+            top: 10,
+            bottom: 10,
+            left: 10,
+            right: 10,
+          }} style={styles.btnBack} onPress={() => refModal?.current?.dismiss()}>
+            <AppText style={styles.txtBack}>{t('back')}</AppText>
+          </TouchableOpacity>
+        </View>
+        <AppInputSearch
+          style={styles.viewSearch}
+          inputStyle={styles.inputSearch}
+          value={search}
+          onChangeText={
+            (text) => {
+              setSearch(text);
+              handleSearch(text);
+            }
+          }
+        />
       </View>
-    </AppBottomModal>);
+      <BottomSheetFlashList
+        data={filteredEpisodes}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        removeClippedSubviews
+        style={styles.listModal}
+        ListEmptyComponent={<AppText style={styles.emptyText}>{t('movie.no_chapters')}</AppText>}
+      />
+    </BottomSheetModal>
+  );
+
 }

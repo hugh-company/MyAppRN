@@ -8,9 +8,7 @@ import { HeaderGame } from './components/HeaderGame';
 
 const GameDetailScreen = () => {
   const { data, themeColors, styles, loading } = useGameDetailScreen();
-  // if (loading) {
-  //   return <LoadingDetailMovie />;
-  // }
+
   if (!data) {
     return null;
   }

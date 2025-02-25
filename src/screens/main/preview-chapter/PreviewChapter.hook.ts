@@ -1,15 +1,17 @@
-import {navigate} from '@navigation';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {Spacing, useTheme} from '@theme';
-import {chapterEpisodeInterface, PostTypeKey} from '@types';
-import {useCallback, useEffect, useState} from 'react';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { navigate } from '@navigation';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Spacing, useTheme } from '@theme';
+import { chapterEpisodeInterface, PostTypeKey } from '@types';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { FlatList } from 'react-native';
 import {
   interpolate,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {createStyles} from './styles';
+import { createStyles } from './styles';
 interface PreviewChapterProps {
   chapters: chapterEpisodeInterface[];
   chapter: chapterEpisodeInterface;
@@ -19,9 +21,12 @@ export const usePreviewChapter = () => {
   const router = useRoute();
   const navigation = useNavigation();
   const {chapters, chapter, type} = router.params as PreviewChapterProps;
+  console.log({chapters, chapter, type});
+
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
-  const [showModalEpisodes, setShowModalEpisodes] = useState(false);
+  const refModal = useRef<BottomSheetModal>(null);
   const [showModalFilter, setShowModalFilter] = useState(false);
+   const scrollRef = useRef<FlatList>(null);
 
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -33,6 +38,13 @@ export const usePreviewChapter = () => {
     color: '#FFFFFF',
     background: '#000000',
   });
+
+  useEffect(() => {
+    if (scrollRef?.current && scrollRef.current.scrollToIndex && data.length > 0) {
+      scrollRef.current.scrollToIndex({ animated: false, index: 0 });
+    }
+  }, [scrollRef, data]);
+
   const scrollHandler = useAnimatedScrollHandler({
     onScroll: event => {
       const currentY = event.contentOffset.y;
@@ -84,7 +96,7 @@ export const usePreviewChapter = () => {
       if (type === PostTypeKey.COMIC) {
         const images: {url: string}[] = Array.isArray(chapter.content)
           ? chapter.content.map(item => {
-              return {url: item.path};
+              return {url: item};
             })
           : [];
         setData(images);
@@ -103,6 +115,7 @@ export const usePreviewChapter = () => {
   const goToNextChapter = useCallback(() => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex < chapters.length - 1) {
+
       const nextChapter = chapters[currentIndex + 1];
       navigate('PreviewChapter', {
         chapter: {
@@ -112,12 +125,15 @@ export const usePreviewChapter = () => {
         chapters,
         type,
       });
+      scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+
     }
   }, [chapters, chapter, navigation, type]);
 
   const goToPrevChapter = useCallback(() => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex > 0) {
+
       const prevChapter = chapters[currentIndex - 1];
       navigate('PreviewChapter', {
         chapter: {
@@ -127,6 +143,8 @@ export const usePreviewChapter = () => {
         chapters,
         type,
       });
+      scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
+
     }
   }, [chapters, chapter, navigation, type]);
 
@@ -135,7 +153,7 @@ export const usePreviewChapter = () => {
   }, [fetchData]);
 
   const onApplyFilter = useCallback(item => {
-    console.log({item});
+
     setFilterText({
       styleText: item.styleText,
       size: item.size,
@@ -144,8 +162,6 @@ export const usePreviewChapter = () => {
     });
   }, []);
   const onClickScreen = useCallback(() => {
-    // console.log('onClickScreen');
-
     if (scrollY.value === 0) {
       scrollY.value = 1;
     } else {
@@ -175,13 +191,14 @@ export const usePreviewChapter = () => {
     chapters,
     goToNextChapter,
     goToPrevChapter,
-    showModalEpisodes,
-    setShowModalEpisodes,
+    refModal,
     onApplyFilter,
     filterText,
     onClickScreen,
     showModalFilter,
     setShowModalFilter,
     onSelectChapter,
+
+    scrollRef,
   };
 };

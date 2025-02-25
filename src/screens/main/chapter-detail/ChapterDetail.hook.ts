@@ -1,21 +1,21 @@
-import {navigate, SCREEN_ROUTE} from '@navigation';
-import {useRoute} from '@react-navigation/native';
-import {getDetailPostApi, viewsPostApi} from '@services';
-import {useQuery} from '@tanstack/react-query';
-import {Spacing, useTheme} from '@theme';
+import { navigate, SCREEN_ROUTE } from '@navigation';
+import { useRoute } from '@react-navigation/native';
+import { getDetailPostApi, viewsPostApi } from '@services';
+import { useQuery } from '@tanstack/react-query';
+import { Spacing, useTheme } from '@theme';
 import {
   chapterEpisodeInterface,
   detailPostInterface,
   PostTypeKey,
 } from '@types';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import {createStyles} from './styles';
+import { createStyles } from './styles';
 interface ChapterDetailInterface {
   chapter: detailPostInterface;
   type: PostTypeKey;
@@ -35,6 +35,8 @@ export const useChapterDetail = () => {
     queryKey: ['chapterDetail', idPost],
     queryFn: () => getDetailPostApi(type, idPost),
   });
+  console.log({data},error);
+
   useQuery({
     queryKey: ['viewChapter', idPost],
     queryFn: () => viewsPostApi(chapter?.id, type),
@@ -60,13 +62,15 @@ export const useChapterDetail = () => {
   }));
 
   const onSelectChapter = (chapter: chapterEpisodeInterface) => {
-    setDetail(prev => ({
-      ...prev,
+    navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
+      chapter: {
+        ...chapter,
+        name: detail.title,
+      },
 
-      index: chapter.index,
-
-      feature: chapter.feature,
-    }));
+      chapters: detail?.chapters,
+      type,
+    });
   };
   const readChapter = () => {
     const index = detail?.index;

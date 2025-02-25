@@ -5,8 +5,7 @@ import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-pick
 
 import { BASE_IMAGE_URL } from '@api';
 import { CameraIcon, NoAvatarImage, NoImage } from '@assets';
-import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { ColorsApp, FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import { AppText } from '../AppText';
 interface propsImage {
   uri?: string | null;
@@ -120,9 +119,9 @@ export const UploadImage = React.memo((props: propsImage) => {
         </View>
 
         {isLoading && (
-          <SkeletonPlaceholder>
-            <View style={[styles.image, style]} />
-          </SkeletonPlaceholder>
+
+          <View style={[styles.imageLoading, style]} />
+
         )}
       </>
     );
@@ -144,6 +143,11 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     height: '100%',
     width: '100%',
 
+  },
+  imageLoading: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: ColorsApp.skeleton,
   },
   container: {
     alignItems: 'center',

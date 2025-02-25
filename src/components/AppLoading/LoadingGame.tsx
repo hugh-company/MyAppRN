@@ -1,41 +1,33 @@
-import { Spacing } from '@theme';
+import { ColorsApp, Spacing } from '@theme';
 import React from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import { StyleSheet, View } from 'react-native';
 export interface LoadingHomeProps { }
 const LoadingGame = ({ }: LoadingHomeProps) => {
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={styles.container}>
-      <SkeletonPlaceholder>
-        <View>
-          <View style={styles.librarySection}>
-            {/* <View style={styles.search} /> */}
 
-            <View style={styles.banner} />
+    <View>
+      <View style={styles.banner} />
+      {Array.from({ length: 10 }).map((_, index) => (
+        <View style={styles.list} key={index}>
 
-          </View>
-          {Array.from({ length: 10 }).map((_, index) => (
-            <View style={styles.list} key={index}>
+          <View style={styles.imageOne} />
+          <View style={styles.itemOne}>
+            <View style={{ gap: 6 }}>
+              <View style={styles.name} />
 
-              <View style={styles.imageOne} />
-              <View style={styles.itemOne}>
-                <View style={{ gap: 6 }}>
-                  <View style={styles.name} />
-
-                </View>
-
-                <View style={{ gap: 6 }}>
-                  <View style={styles.name3} />
-                  <View style={styles.name2} />
-                </View>
-              </View>
             </View>
-          ))}
 
+            <View style={{ gap: 6 }}>
+              <View style={styles.name3} />
+              <View style={styles.name2} />
+            </View>
+          </View>
         </View>
-      </SkeletonPlaceholder>
-    </ScrollView>
+      ))}
+
+    </View>
+
   );
 };
 const styles = StyleSheet.create({
@@ -49,6 +41,8 @@ const styles = StyleSheet.create({
     height: Spacing.height250,
     borderRadius: Spacing.width16,
     marginHorizontal: Spacing.width16,
+    backgroundColor: ColorsApp.skeleton,
+    marginBottom: Spacing.width16,
   },
 
   list: {
@@ -72,23 +66,27 @@ const styles = StyleSheet.create({
   imageOne: {
     width: Spacing.width96,
     height: Spacing.width96,
+    backgroundColor: ColorsApp.skeleton,
   },
   itemOne: {
     alignItems: 'baseline',
     justifyContent: 'space-between',
+
   },
   name: {
-
+    backgroundColor: ColorsApp.skeleton,
     width: Spacing.width140,
     height: Spacing.width20,
   },
   name2: {
     width: Spacing.width100,
     height: Spacing.width15,
+    backgroundColor: ColorsApp.skeleton,
   },
   name3: {
     width: Spacing.width80,
     height: Spacing.width15,
+    backgroundColor: ColorsApp.skeleton,
   },
 });
 export default LoadingGame;
