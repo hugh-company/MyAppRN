@@ -84,6 +84,8 @@ export const API_ENDPOINTS = {
   //
   SEARCH_MESSAGE: '/chat/search/',
   GET_IMAGE_CHAT: '/uploads/chats',
+  //
+  GET_STICKER: '/sticker/index',
 };
 // Key Query
 export const KeyQueryApi = {

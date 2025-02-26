@@ -1,5 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {menuNavigationInterface, NotificationInterface} from '@types';
+import {
+  ItemListProduct,
+  menuNavigationInterface,
+  NotificationInterface,
+  StickerInterface,
+} from '@types';
 import {APP_SLICE} from '../type';
 
 const initialState = {
@@ -8,6 +13,9 @@ const initialState = {
   bottomNavigation: [],
   dataDrawer: [],
   isDashboardDating: false,
+  // new
+  stickers: [],
+  games_trending: [],
 } as {
   isCloseNotice: boolean;
   notices: NotificationInterface[];
@@ -15,6 +23,10 @@ const initialState = {
   dataDrawer: menuNavigationInterface[];
 
   isDashboardDating: boolean;
+  // new
+  stickers: StickerInterface[];
+
+  games_trending: ItemListProduct[];
 };
 
 const settingSlice = createSlice({
@@ -38,6 +50,14 @@ const settingSlice = createSlice({
     setIsDashboardDating: (state, action) => {
       state.isDashboardDating = action.payload;
     },
+    //
+    setStickers: (state, action) => {
+      state.stickers = action.payload;
+    },
+    //game trending
+    setGamesTrending(state, action) {
+      state.games_trending = action.payload;
+    },
   },
 });
 
@@ -47,5 +67,7 @@ export const {
   setDataDrawer,
   setDataSetting,
   setIsDashboardDating,
+  setStickers,
+  setGamesTrending,
 } = settingSlice.actions;
 export default settingSlice.reducer;

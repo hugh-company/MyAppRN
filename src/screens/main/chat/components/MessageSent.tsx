@@ -66,12 +66,13 @@ export function MessageSent(props: MessageSentProps) {
     >
       <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
 
-        <View style={styles.containerMessage}>
+        <View style={[styles.containerMessage, item?.content?.data?.sticker && { backgroundColor: 'transparent' }]}>
           {/* <LinearGradient
             colors={['#77051F', '#432617']}
 
           > */}
-          <View style={styles.message}>
+          <View style={[styles.message]}>
+
             {item.content?.replyto && (
               <MessageRelied
                 repliedMessage={item.content.replyto}
@@ -86,6 +87,7 @@ export function MessageSent(props: MessageSentProps) {
               thread_id={item.thread_id} id={item.id} />}
             {item?.content?.type === MessageType.GAME && item?.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
             {item?.content?.data?.text && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
+            {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
             <View style={styles.viewRead}>
               <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>
 
@@ -149,6 +151,11 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     width: Spacing.width150,
     height: Spacing.width150,
     borderRadius: Spacing.width16,
+  },
+  sticker: {
+    width: Spacing.width100,
+    height: Spacing.width100,
+
   },
   message: {
     padding: Spacing.width16,

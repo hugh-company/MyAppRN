@@ -20,7 +20,7 @@ import {
 } from '@utils';
 import {createProfileFormData, createProfileSchema} from '@validations';
 import {t} from 'i18next';
-import {useEffect, useLayoutEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -55,19 +55,19 @@ export const useCreateProfileScreen = () => {
     resolver: zodResolver(createProfileSchema),
   });
   useEffect(() => {
-    console.log('useEffect');
-
     checkInfoUserWithForm();
     callApiJobs();
     requestLocationPermission();
   }, []);
-  useLayoutEffect(() => {
-    console.log('useLayoutEffect');
-  }, []);
+
   const callApiJobs = async () => {
-    const response: any = await getListJobsApi();
-    console.log({response});
-    setJobs(response?.data || []);
+    try {
+      const response: any = await getListJobsApi();
+      console.log({response});
+      setJobs(response?.data || []);
+    } catch (error) {
+      console.log({error});
+    }
     // setData(response.data);
   };
   const checkInfoUserWithForm = async () => {

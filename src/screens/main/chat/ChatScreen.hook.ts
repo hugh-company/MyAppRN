@@ -65,12 +65,16 @@ export const useChatScreen = () => {
     images?: string[];
     message?: string;
     games?: any[];
+    sticker?: string;
   }) => {
     const typeMessage = newMessage.images?.length
       ? 'image'
       : newMessage.games?.length
       ? 'game'
+      : newMessage.sticker?.length
+      ? 'sticker'
       : 'text';
+
     const params: any = {
       action: 'send_message',
       id: `temp_${new Date().getTime()}`,
@@ -85,6 +89,7 @@ export const useChatScreen = () => {
           text: newMessage.message,
           images: newMessage.images,
           games: newMessage.games,
+          sticker: newMessage.sticker,
           // icon: '',
         },
         created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),

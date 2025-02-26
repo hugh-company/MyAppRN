@@ -64,7 +64,7 @@ export function MessageReceived(props: MessageReceivedProps) {
           <AppImage style={styles.avatar} uri={userReceived?.avatar} />
           <View style={styles.status} />
         </View>
-        <View style={styles.message}>
+        <View style={[styles.message, item?.content?.data?.sticker && { backgroundColor: 'transparent' }]}>
           {item.content?.replyto && (
             <MessageRelied
               repliedMessage={item.content.replyto}
@@ -78,6 +78,7 @@ export function MessageReceived(props: MessageReceivedProps) {
           }}
             thread_id={item.thread_id} id={item.id} />}
           {item?.content?.type === MessageType.GAME && item.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
+          {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
 
           {item?.content?.data?.text && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
           <View style={styles.viewRead}>
@@ -124,6 +125,11 @@ const createStyles = (themeColors: ThemeColors) => {
       borderTopLeftRadius: Spacing.width16,
       borderBottomRightRadius: Spacing.width16,
       borderTopRightRadius: Spacing.width16,
+    },
+    sticker: {
+      width: Spacing.width100,
+      height: Spacing.width100,
+
     },
     txtMessage: {
       color: themeColors.onSurface,

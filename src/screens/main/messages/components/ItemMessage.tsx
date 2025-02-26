@@ -28,6 +28,8 @@ export function ItemMessage(props: ItemMessageProps) {
         return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendImage') : t('message.userSendImage')?.replace('USER', sanitizeFullname(item?.other_user?.fullname));
       case 'game':
         return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendGame') : t('message.userSendGame')?.replace('USER', sanitizeFullname(item?.other_user?.fullname));
+      case 'sticker':
+        return userInfo?.id === item?.last_message?.sender_id ? t('message.meSendSticker') : t('message.userSendSticker')?.replace('USER', sanitizeFullname(item?.other_user?.fullname));
       default:
         return '';
     }

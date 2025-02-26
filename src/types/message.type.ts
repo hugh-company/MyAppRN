@@ -79,6 +79,7 @@ export interface Data {
   games: ItemListProduct[];
   images?: string[];
   images_count: number;
+  sticker: string;
 }
 
 export interface OtherUser {

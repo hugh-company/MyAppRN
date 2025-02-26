@@ -4,14 +4,20 @@ import { getGameTrendingLocal } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { MessageItemInterface } from '@types';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
 import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
+import { ListStickers } from './ListStickers';
 import { RepliedMessage } from './RepliedMessage';
-
+interface paramSendMessage {
+  images?: string[];
+  message?: string;
+  games?: any[];
+  sticker?: string;
+}
 export interface ControlBottomChatProps {
-  onUpdateMessage: (data: { images?: string[]; message?: string; games?: any[] }) => void;
+  onUpdateMessage: (data: paramSendMessage) => void;
   repliedMessage?: MessageItemInterface;
   onClearRepliedMessage?: () => void;
   userReceived?: any;
@@ -28,13 +34,16 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [gameSelected, setGameSelected] = useState(null);
   const [showIcons, setShowIcons] = useState(true);
+  const [isShowStickers, setIsShowStickers] = useState(false);
   const inputRef = useRef<TextInput>(null);
   useEffect(() => {
     if (isShowGame) { setGameSelected(null); }
   }, [isShowGame]);
 
-  const handleSend = () => {
-    onUpdateMessage({ images: [], message, games: gameSelected ? [gameSelected] : [] });
+  const handleSend = (
+    params?: paramSendMessage
+  ) => {
+    onUpdateMessage({ images: [], message, games: gameSelected ? [gameSelected] : [], sticker: params?.sticker });
     setMessage('');
     setIsInputFocused(false);
     setShowIcons(true);
@@ -46,6 +55,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const handleSelectGame = (game: any) => setGameSelected(game);
 
   const handleShowIcons = () => {
+
     setShowIcons(true);
     setIsInputFocused(false);
   };
@@ -54,15 +64,19 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     if (!isInputFocused) {
       setIsInputFocused(true);
       setShowIcons(false);
-      // inputRef.current?.focus();
-
+      setIsShowStickers(false); // Hide sticker list
     }
   };
 
   const handleInputBlur = () => {
     setIsInputFocused(false);
     setShowIcons(true);
+  };
 
+  const handleShowStickers = () => {
+    Keyboard.dismiss();
+    setIsShowStickers(!isShowStickers);
+    setIsInputFocused(false);
   };
 
   const animatedSendStyle = useAnimatedStyle(() => ({
@@ -130,13 +144,14 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   );
 
   return (
-    <View style={[styles.container, { paddingBottom: Spacing.width16 }]}>
+    <View style={[styles.container, !isShowStickers && { paddingBottom: Spacing.width16 }]}>
       {repliedMessage && renderRepliedMessage()}
       {isShowGame && renderGame()}
       <View style={[styles.viewInput]}>
         <Animated.View style={[styles.iconsContainer, iconsAnimationStyle]}>
           <TouchableOpacity
             disabled={isShowGame}
+            onPress={handleShowStickers}
             style={styles.iconButton}>
             <GlobalIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
           </TouchableOpacity>
@@ -168,17 +183,19 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
           value={message}
           onChangeText={setMessage}
           onPressIn={handleInputFocus}
-          onSubmitEditing={handleSend}
+          onSubmitEditing={() => handleSend()}
           onBlur={handleInputBlur}
           textAlignVertical="center" // Vertically center text
           multiline // Enable multiple lines
         />
         <Animated.View style={[styles.iconButton, animatedSendStyle]}>
-          <TouchableOpacity onPress={handleSend}>
+          <TouchableOpacity onPress={() => handleSend()}>
             <SendMessageIcon />
           </TouchableOpacity>
         </Animated.View>
       </View>
+      {isShowStickers && <ListStickers isVisible={isShowStickers} onSelectSticker={(sticker) => { handleSend({ sticker: sticker }); }} />}
+
     </View>
   );
 }

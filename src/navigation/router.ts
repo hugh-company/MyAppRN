@@ -53,4 +53,6 @@ export enum SCREEN_ROUTE {
   SEARCH_MESSAGE = 'SearchMessage',
   // modal image
   IMAGE_MODAL = 'ImageModal',
+  // webview
+  WEBVIEW = 'Webview',
 }

@@ -1,12 +1,10 @@
 import { AppListDashboard, AppText } from '@components';
-import { getSearchModuleLocal } from '@redux';
 import { useSearchDashboard } from '@services';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListDashboard } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { InteractionManager, StyleSheet, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 
 interface DashboardSearchProps {
 
@@ -16,11 +14,9 @@ const MemoizedAppListDashboard = React.memo(AppListDashboard);
 const DashboardSearch = ({ }: DashboardSearchProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const dispatch = useDispatch();
-  const dataSearch = useSelector(getSearchModuleLocal);
-  const [shouldRender, setShouldRender] = React.useState(false);
   const { data, isLoading } = useSearchDashboard();
 
+  const [shouldRender, setShouldRender] = React.useState(false);
   React.useEffect(() => {
     const interactionHandle = InteractionManager.runAfterInteractions(() => {
       setShouldRender(true);

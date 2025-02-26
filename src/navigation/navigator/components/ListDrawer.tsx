@@ -8,25 +8,28 @@ import { menuNavigationInterface, PostTypeKey } from '@types';
 import { showModalConfirmation, showModalLanguage } from '@utils';
 import { t } from 'i18next';
 import React, { useCallback, useMemo } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { HeaderDrawer } from './HeaderDrawer';
 import { ItemRow } from './ItemRow';
-export interface ListDrawerProps {
 
+export interface ListDrawerProps {
+  navigation: {
+    closeDrawer: () => void;
+  };
 }
 
 export function ListDrawer(props: ListDrawerProps) {
   const { bottom, top } = useSafeAreaInsets();
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
-  const { data, isSuccess, isLoading, isRefetching, refetch } =
+  const { data, isSuccess } =
     useDashboardHome();
   const styles = createStyles(themeColors);
-  const dataMenus = isSuccess ? data?.data?.menus : [];
-  const colors = ['#B1062E', '#1E1111'];
+  const dataMenus = useMemo(() => (isSuccess ? data?.data?.menus ?? [] : []), [isSuccess, data]);
+
   const dispatch = useDispatch();
   const gotoScreen = useCallback((screen: string, params?: any) => {
     props?.navigation?.closeDrawer();
@@ -44,8 +47,6 @@ export function ListDrawer(props: ListDrawerProps) {
           {item?.items?.map((_, index) => (
             <AppButton key={index} style={[styles.btnLogin, { backgroundColor: _?.color }]} label={_?.label} onPress={() => {
               // gotoScreen(_?.name === SCREEN_ROUTE.LOGIN ? SCREEN_ROUTE.LOGIN : SCREEN_ROUTE.REGISTER);
-
-
               navigateToStack(SCREEN_ROUTE.AUTH_STACK, _?.name === 'login' ? SCREEN_ROUTE.LOGIN : SCREEN_ROUTE.REGISTER);
               props?.navigation?.closeDrawer();
 
@@ -57,7 +58,7 @@ export function ListDrawer(props: ListDrawerProps) {
   }, [gotoScreen, styles]);
   const renderPackage = useCallback((item: menuNavigationInterface) => {
     return (
-      <View style={styles.viewRank} >
+      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.WEBVIEW)} style={styles.viewRank} >
         <View>
           <AppImage uri={item?.icon} style={styles.package} />
           <View style={styles.iconVip}>
@@ -72,7 +73,7 @@ export function ListDrawer(props: ListDrawerProps) {
             {t('drawer.rank_membership')}
           </AppText>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }, [styles]);
   const renderBlockMenu = useCallback((item: menuNavigationInterface) => {
@@ -155,34 +156,38 @@ export function ListDrawer(props: ListDrawerProps) {
         return <ItemRow linkImage={item?.icon} title={item?.label} onPress={() => {
           clickTypeMenu(item);
         }} size={Spacing.width28} />;
-      case 'line':
-        return <View style={[styles.line, { backgroundColor: item?.color }]} />;
+      // case 'line':
+      //   return <View style={[styles.line, { backgroundColor: item?.color }]} />;
       default:
         return <></>;
     }
   }, [clickTypeMenu, renderBlockMenu, styles]);
   const dataSettings = useMemo(() => {
-    return token ? dataMenus.filter((_) => _.isLogin === true || !_.hasOwnProperty('isLogin')) :
+    return token ? dataMenus?.filter((_) => _.isLogin === true || !_.hasOwnProperty('isLogin')) :
       dataMenus.filter((_) => _.isLogin === false || !_.hasOwnProperty('isLogin')).filter((_) => _.name !== 'chat');
   }, [token, dataMenus]);
 
-  return <LinearGradient
-    colors={colors}
-    style={styles.gradient}
-    start={{ x: 0.5, y: 0 }}
-    end={{ x: 0.5, y: 1 }}
-    useAngle={true} // Added this line
-    angle={45} // Added this line
-  >
-    {isSuccess && <FlatList
-      data={dataSettings}
-      showsVerticalScrollIndicator={false}
-      ListHeaderComponent={<HeaderDrawer />}
-      style={{ marginTop: top, marginBottom: bottom, marginHorizontal: Spacing.width16 }}
-      keyExtractor={(item, index) => `drawer_${index}`}
-      renderItem={renderItem}
-    />}
-  </LinearGradient>;
+  return (
+    <LinearGradient
+      colors={['rgba(209, 16, 48, 0.72)', 'rgba(1, 1, 1, 0.72)']}
+      style={styles.gradientBackground}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 0, y: 1 }}
+    >
+      {/* <BlurView style={styles.blurBackground} blurAmount={10} > */}
+      {isSuccess && (
+        <FlatList
+          data={dataSettings}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={<HeaderDrawer />}
+          style={{ marginTop: top, marginBottom: bottom, marginHorizontal: Spacing.width16 }}
+          keyExtractor={(item, index) => `drawer_${index}`}
+          renderItem={renderItem}
+        />
+      )}
+      {/* </BlurView> */}
+    </LinearGradient >
+  );
 }
 
 
@@ -194,10 +199,32 @@ const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.background,
       flex: 1,
     },
-    gradient: {
+    gradientBackground: {
       flex: 1,
-      // justifyContent: 'center',
-      // alignItems: 'center',
+
+      width: '100%',
+      height: '100%',
+      borderRadius: 10,
+
+      overflow: 'hidden',
+      shadowColor: '#fff',
+      shadowOffset: { width: -8, height: 0 },
+      shadowOpacity: 0.1,
+      shadowRadius: 24,
+      backgroundColor: 'transparent',
+
+    },
+    blurBackground: {
+      ...StyleSheet.absoluteFillObject, // Fill the entire background
+      flex: 1,
+
+      width: '100%',
+      height: '100%',
+    },
+    listContainer: {
+      flex: 1,
+      // backgroundColor: 'rgba(209, 16, 48, 0.72)',
+      boxShadow: '4px 0px 4px 0px #00000040',
     },
     viewImage: {
       flexDirection: 'row',

@@ -17,7 +17,12 @@ const DrawerNavigation = React.memo(() => {
         drawerType: 'front',
         swipeEnabled: true, // Enable/disable swipe gestures
         overlayColor: 'rgba(0,0,0,0.5)', // Drawer overlay color
+        drawerStyle: {
+          backgroundColor: 'transparent',
+
+        },
       }}
+
     >
       <Drawer.Screen name={SCREEN_ROUTE.BOTTOM_NAVIGATION} component={TabBarNavigation} />
     </Drawer.Navigator>

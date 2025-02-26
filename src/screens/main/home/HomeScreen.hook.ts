@@ -1,5 +1,11 @@
 import {setBaseURLApi} from '@api';
-import {useDashboardHome, useSearchDashboard} from '@services';
+import {setGamesTrending, setStickers} from '@redux';
+import {
+  getListGamesTrendingApi,
+  getStickerApi,
+  useDashboardHome,
+  useSearchDashboard,
+} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {useEffect} from 'react';
 import {
@@ -31,10 +37,32 @@ export const useHomeScreen = () => {
     if (data && isSuccess) {
       console.log('Data', data);
       setBaseURLApi();
+
       // dispatch()
     }
   }, [data, isSuccess]);
-
+  useEffect(() => {
+    getSticker();
+    getGameTrending();
+  }, []);
+  const getSticker = async () => {
+    try {
+      const response: any = await getStickerApi();
+      console.log('Response', response);
+      dispatch(setStickers(response.data?.data));
+    } catch (error) {
+      console.log({error});
+    }
+  };
+  const getGameTrending = async () => {
+    try {
+      const response: any = await getListGamesTrendingApi();
+      console.log('Response', response);
+      dispatch(setGamesTrending(response.data?.data));
+    } catch (error) {
+      console.log({error});
+    }
+  };
   const onRefresh = () => {
     refetch();
   };

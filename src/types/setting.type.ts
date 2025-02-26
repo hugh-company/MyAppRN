@@ -32,3 +32,14 @@ export interface NotificationInterface {
   name: string;
   slug: string;
 }
+//
+export interface StickerInterface {
+  id: number;
+  title: string;
+  slug: string;
+  lang_slug: string;
+  status: string;
+  create_at: string;
+  update_at: string;
+  items: string[];
+}

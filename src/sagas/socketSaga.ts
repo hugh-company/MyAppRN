@@ -52,6 +52,7 @@ function* handleSocketOpen(
 
   for (const message of unsentMessages || []) {
     socket.send(JSON.stringify(message));
+    yield delay(500); // Add a delay of 500ms between each message
   }
 }
 

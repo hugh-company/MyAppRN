@@ -151,7 +151,7 @@
     "mute": "Tắt tiếng",
     "unmute": "Bật tiếng",
     "main_actors": "Diễn viên chính",
-    "no_chapters":"Không có tập nào",
+    "no_chapters": "Không có tập nào"
   },
   "chapter": {
     "title": "Truyện tranh",
@@ -294,6 +294,8 @@
     "userSendImage": "USER đã gửi ảnh",
     "meSendGame": "Bạn đã gửi trò chơi",
     "userSendGame": "USER đã gửi trò chơi",
-    "searchMessage": "Tìm kiếm tin nhắn"
+    "searchMessage": "Tìm kiếm tin nhắn",
+    "meSendSticker": "Bạn đã gửi sticker",
+    "userSendSticker": "USER đã gửi sticker"
   }
 }

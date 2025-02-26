@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ItemListProduct, ModuleItemInterface } from '@types';
+import { ModuleItemInterface } from '@types';
 import { APP_SLICE } from '../type';
 
 const initialState = {
@@ -9,7 +9,7 @@ const initialState = {
   games: [],
   dating: [],
   search: [],
-  games_trending: [],
+
   loading: true,
 } as {
   home: ModuleItemInterface[];
@@ -19,7 +19,7 @@ const initialState = {
   dating: ModuleItemInterface[];
   search: ModuleItemInterface[];
   loading: boolean;
-  games_trending: ItemListProduct[];
+
 };
 
 const dataLocalSlide = createSlice({
@@ -59,10 +59,7 @@ const dataLocalSlide = createSlice({
         (state as any)[type] = data;
       }
     },
-    //game trending
-    setGamesTrending(state, action) {
-      state.games_trending = action.payload;
-    },
+
   },
 });
 
@@ -75,7 +72,7 @@ export const {
   setSearch,
   setLoadingDashboard,
   refreshData,
-  setGamesTrending,
+
 } = dataLocalSlide.actions;
 
 export const fetchHomeData = () => ({ type: 'FETCH_HOME_DATA' });

@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, SavedPost, SearchMessages, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
+import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, PreviewWebview, SavedPost, SearchMessages, SearchScreen, SettingFavorite, VideoScreen, ViewListScreen } from '@screens';
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -74,6 +74,10 @@ const MainStackComponent = memo(() => {
       }} />
       {/* saved */}
       <MainStack.Screen name={SCREEN_ROUTE.SAVED_POST} component={SavedPost} options={{
+
+      }} />
+      {/* webview */}
+      <MainStack.Screen name={SCREEN_ROUTE.WEBVIEW} component={PreviewWebview} options={{
 
       }} />
     </MainStack.Navigator>

@@ -24,7 +24,6 @@ const AppInputDropdownDefault = forwardRef<SelectDropdown, AppInputDropdownDefau
         onSelect={(selectedItem, index) => {
           onSelect && onSelect(selectedItem, index);
         }}
-
         renderButton={() => {
           return (
             <View style={styles.input}>
