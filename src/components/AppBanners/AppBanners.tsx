@@ -1,8 +1,8 @@
 import { AppImage, AppText } from '@components';
-import { FlashList, ListRenderItem } from '@shopify/flash-list';
+import { ListRenderItem } from '@shopify/flash-list';
 import { useTheme, WidthScreen } from '@theme';
 import React, { useRef, useState } from 'react';
-import { View, ViewStyle } from 'react-native';
+import { FlatList, View, ViewStyle } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { createStyles } from './styles';
 export interface AppBannersProps {
@@ -48,7 +48,7 @@ const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: 
   return (
     <View style={[styles.container, style]}>
       {label && <AppText style={[styles.title, labelStyle]}>{label}</AppText>}
-      <FlashList
+      <FlatList
         ref={flatListRef}
         data={data}
         horizontal

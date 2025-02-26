@@ -9,9 +9,9 @@ import { useComicScreen } from './ComicScreen.hook';
 const MemoizedAppListDashboard = React.memo(AppListDashboard);
 
 const ComicScreen = () => {
-  const { data, styles, tabSelect,
+  const { comics, styles, tabSelect,
     handleCategorySelect,
-    scrollHandler, onRefresh, loading, categories } = useComicScreen();
+    onRefresh, loading, categories } = useComicScreen();
 
   const [shouldRenderList, setShouldRenderList] = React.useState(false);
 
@@ -36,8 +36,8 @@ const ComicScreen = () => {
 
       {shouldRenderList && (
         <MemoizedAppListDashboard
-          data={data}
-          onScroll={scrollHandler}
+          data={comics}
+
           loading={loading}
           onRefresh={onRefresh}
           categoryId={tabSelect?.id}

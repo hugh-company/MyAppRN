@@ -55,11 +55,12 @@ export const useComicsDashboard = (params?: paramsGetListInterface,) => {
     params
   );
 };
-export const useGamesDashboard = () => {
+export const useGamesDashboard = (params?: paramsGetListInterface) => {
   setBaseURLApi(ApiConfigs.baseURL);
-  return useApiQuery(
+  return useApiQuery<responseDashboard>(
     KeyQueryApi.DASHBOARD_GAME,
     '/home/game',
+    params
   );
 };
 

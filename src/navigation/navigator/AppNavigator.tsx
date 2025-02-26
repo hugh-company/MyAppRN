@@ -15,6 +15,7 @@ import { PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
 import { UserInterface } from '@types';
 import React, { useEffect, useRef } from 'react';
+import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useDispatch, useSelector } from 'react-redux';
 const Stack = createStackNavigator();
@@ -56,18 +57,22 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     useEffect(() => {
       if (token) {
         callApiProfile();
-        connectSocket(token);
+
         const unsubscribe = NetInfo.addEventListener((state) => {
           if (state.isConnected && !isConnectedRef.current) {
             console.log('Internet connection');
             isConnectedRef.current = true;
-
+            if (Platform.OS === 'android') {
+              connectSocket(token);
+            }
           } else if (!state.isConnected) {
             isConnectedRef.current = false;
             console.log('No internet connection');
           } else if (state.isConnected && isConnectedRef.current) {
             console.log('Reconnected to the internet');
-            dispatch({ type: 'RECONNECT_SOCKET' });
+            if (Platform.OS === 'ios') {
+              connectSocket(token);
+            }
           }
         });
 

@@ -25,7 +25,7 @@ const HomeScreen = () => {
         keyExtractor={(item, index) => `home_dashboard_${index}`}
       />
       <MemoizedHeaderHome
-        styleHeader={[headerBackgroundColorStyle, headerBackgroundColorStyle]}
+        styleHeader={[headerBackgroundColorStyle]}
       />
     </View>
   );

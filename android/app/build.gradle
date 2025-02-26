@@ -4,28 +4,22 @@ apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
-project.ext.react = [
-  enableHermes: true,
-]
-
 react {
     autolinkLibrariesWithApp()
 }
 
 def enableProguardInReleaseBuilds = false
-def jscFlavor = 'org.webkit:android-jsc:+'
+def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
-
     packagingOptions {
         jniLibs {
             useLegacyPackaging true
         }
     }
-
     namespace "com.myapprn"
     defaultConfig {
         applicationId "com.myapprn"
@@ -35,7 +29,7 @@ android {
         versionName "1.0.0"
         resConfigs "en", "xxhdpi"
     }
-    signingConfigs {
+      signingConfigs {
         debug {
             storeFile file(MYAPP_RELEASE_STORE_FILE)
             storePassword MYAPP_RELEASE_STORE_PASSWORD
@@ -70,6 +64,7 @@ android {
 }
 
 dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {

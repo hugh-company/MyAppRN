@@ -41,7 +41,6 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
   const togglePasswordVisibility = () => {
     setSecureTextEntry(!isPrivateText);
   };
-
   return (
     <View style={[styles.container, containerStyle]}>
       {label && <AppText style={[styles.label, labelStyle]}>{label}</AppText>}
@@ -66,7 +65,7 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
           ]}
           placeholderTextColor={themeColors.placeholder}
           secureTextEntry={isPrivateText}
-          keyboardType={'email-address'}
+
           {...inputProps}
         />
         {secureTextEntry && (

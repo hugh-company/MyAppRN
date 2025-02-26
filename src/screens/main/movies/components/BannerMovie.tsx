@@ -27,7 +27,7 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
 
 
   const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
-    <TouchableOpacity onPress={() => navigateBanner(item)} style={styles.banner}>
+    <TouchableOpacity activeOpacity={1} onPress={() => navigateBanner(item)} style={styles.banner}>
       <AppImage uri={item.banner.path} style={styles.image} />
       <LinearGradient
         colors={['rgba(0, 0, 0, 0)', 'black']}

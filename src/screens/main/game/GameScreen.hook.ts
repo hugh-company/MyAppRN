@@ -1,21 +1,12 @@
-import {fetchGamesData, RootState} from '@redux';
-import {Spacing, useTheme} from '@theme';
-import {ModuleItemInterface, TabInterface, TypeKeyListApi} from '@types';
+import {useGamesDashboard} from '@services';
+import {useTheme} from '@theme';
+import {TabInterface, TypeKeyListApi} from '@types';
 import {useEffect, useState} from 'react';
-import {
-  Extrapolate,
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useGameScreen = () => {
   const {themeColors} = useTheme();
-  const games = useSelector((state: RootState) => state.dataLocalSlide.games);
-  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const styles = createStyles(themeColors);
   const [tabSelect, setTabSelect] = useState<TabInterface | undefined>({
@@ -23,73 +14,58 @@ export const useGameScreen = () => {
     name: '',
     type: '',
   });
-  const [data, setData] = useState<ModuleItemInterface[]>([]);
+
   const [categories, setCategories] = useState<TabInterface[]>([]);
-  const scrollY = useSharedValue(0);
+
+  const {
+    data: dataDashboard,
+    refetch,
+    isLoading,
+    isFetching,
+    isSuccess,
+  } = useGamesDashboard({
+    filter: tabSelect ? `${tabSelect.type}__${tabSelect.id}` : '',
+  });
+  const games = isSuccess
+    ? dataDashboard?.data?.modules?.filter(
+        elm => elm.type !== TypeKeyListApi.TYPE_TABS,
+      ) || []
+    : [];
 
   useEffect(() => {
-    if (games?.length > 0) {
-      setData(
-        games?.filter(elm => elm.type !== TypeKeyListApi.TYPE_TABS) || [],
-      );
-      const category: any = games.find(
+    if (dataDashboard?.data?.modules?.length ?? 0 > 0) {
+      const category: any = dataDashboard?.data?.modules.find(
         item => item.type === TypeKeyListApi.TYPE_TABS,
       );
       setCategories(category?.items || []);
       if (category && category?.items?.[0] && tabSelect?.name === undefined) {
         setTabSelect(category?.items?.[0]);
       }
-      setLoading(false);
     } else {
-      setLoading(true);
-      dispatch(fetchGamesData());
     }
-  }, [games]);
+  }, [isSuccess]);
 
   useEffect(() => {
-    dispatch(fetchGamesData());
-  }, []);
+    if (tabSelect) {
+      refetch();
+    }
+  }, [tabSelect, refetch]);
 
-  const onRefresh = () => {
-    dispatch(fetchGamesData());
-  };
   const handleCategorySelect = (item: TabInterface) => {
     setTabSelect(item);
-    const textFilter = `${item.type}__${item.id}`;
-    dispatch(fetchGamesData({filter: textFilter}));
   };
-
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    scrollY.value = event.contentOffset.y;
-  });
-  const heightStyle = useAnimatedStyle(() => ({
-    height: interpolate(
-      scrollY.value,
-      [0, Spacing.height50],
-      [Spacing.height44, 0],
-      Extrapolate.CLAMP,
-    ),
-  }));
-  const opacityStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(
-      scrollY.value,
-      [0, Spacing.height50],
-      [1, 0],
-      Extrapolate.CLAMP,
-    ),
-  }));
-
+  const onRefresh = () => {
+    refetch();
+  };
   return {
     games,
     styles,
     tabSelect,
-    heightStyle,
+
     handleCategorySelect,
-    scrollHandler,
-    onRefresh,
+
     categories,
-    scrollY,
-    opacityStyle,
-    loading,
+    onRefresh,
+    loading: isFetching || isLoading,
   };
 };

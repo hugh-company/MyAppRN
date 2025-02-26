@@ -1,7 +1,7 @@
 
 import { Box, useTheme } from '@theme';
 import { debounce } from 'lodash';
-import React from 'react';
+import React, { JSX } from 'react';
 import {
   StyleProp,
   TextStyle,

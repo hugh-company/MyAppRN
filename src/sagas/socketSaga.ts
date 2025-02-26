@@ -195,6 +195,13 @@ function* handleCloseSocket(): Generator<any, void, any> {
     // );
   }
 }
+
+function* handleSocketClosed() {
+  console.log('WebSocket closed, attempting to reconnect...');
+  // yield delay(5000); // Wait for 5 seconds before attempting to reconnect
+  // yield put({type: 'RECONNECT_SOCKET'});
+}
+
 function* handleSocketEvents(
   socket: WebSocket,
   token: string,
@@ -205,7 +212,7 @@ function* handleSocketEvents(
       yield call(handleSocketOpen, action.socket, action.token);
     }
     if (action.type === 'SOCKET_CLOSED') {
-      yield call(handleCloseSocket);
+      yield call(handleSocketClosed); // Call the new saga to handle reconnection
     }
     if (action.type === 'SOCKET_ON_MESSAGE') {
       yield call(handleDataMessage, action.data);
@@ -222,31 +229,13 @@ function* watchSetSocket() {
     const {token, device_id} = action.payload;
     console.log({action});
 
-    let attempts = 0;
-    const maxAttempts = 2;
-    const retryDelay = 2000; // 2 seconds
+    const socket: WebSocket = new WebSocket(
+      `${WEBSOCKET_URL}?token=${token}&device_id=${device_id}`,
+    );
+    console.log({socket});
+    yield put(setSocket({socket}));
 
-    while (attempts < maxAttempts) {
-      try {
-        const socket: WebSocket = new WebSocket(
-          `${WEBSOCKET_URL}?token=${token}&device_id=${device_id}`,
-        );
-        console.log({socket});
-        yield put(setSocket({socket}));
-
-        yield call(handleSocketEvents, socket, token);
-        break;
-      } catch (error) {
-        console.error('WebSocket connection failed', error);
-        attempts += 1;
-        if (attempts < maxAttempts) {
-          console.log(`Retrying connection (${attempts}/${maxAttempts})...`);
-          yield call(delay, retryDelay);
-        } else {
-          console.error('Max connection attempts reached. Giving up.');
-        }
-      }
-    }
+    yield call(handleSocketEvents, socket, token);
   });
 }
 

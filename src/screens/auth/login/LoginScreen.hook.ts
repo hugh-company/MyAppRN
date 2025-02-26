@@ -6,7 +6,6 @@ import {useTheme} from '@theme';
 import {showNotificationError, showNotificationSuccess} from '@utils';
 import {loginFormData, loginSchema} from '@validations';
 import {t} from 'i18next';
-import {useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
@@ -16,7 +15,6 @@ const defaultForm = {
   password: '',
 };
 export const useLoginScreen = () => {
-  const [data, setData] = useState([]);
   const {themeColors} = useTheme();
   const dispatch = useDispatch();
   const {
@@ -51,5 +49,5 @@ export const useLoginScreen = () => {
       GlobalService.hideLoading();
     }
   });
-  return {data, themeColors, styles, control, onSubmit, errors};
+  return {themeColors, styles, control, onSubmit, errors};
 };

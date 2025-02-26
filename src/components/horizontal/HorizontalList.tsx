@@ -3,7 +3,7 @@ import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme
 import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
-import React, { useCallback, useMemo } from 'react';
+import React, { JSX, useCallback, useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';

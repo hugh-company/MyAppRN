@@ -11,10 +11,9 @@ const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextPr
 });
 
 const MovieScreen = () => {
-  const { data,
+  const { movies,
     styles,
 
-    scrollHandler,
     handleCategorySelect,
     tabSelect,
     onRefresh,
@@ -30,6 +29,7 @@ const MovieScreen = () => {
 
     return () => interactionHandle.cancel();
   }, []);
+
 
   return (
     <View style={styles.container}>
@@ -48,9 +48,8 @@ const MovieScreen = () => {
         onSelectedCategory={handleCategorySelect} />
 
       {shouldRenderList && (
-        <MemoizedAppListDashboard
-          data={data}
-          onScroll={scrollHandler}
+        <AppListDashboard
+          data={movies}
           key={'movie_dashboard'}
           loading={loading}
           onRefresh={onRefresh}

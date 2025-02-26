@@ -22,7 +22,7 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
 
 
   return (
-    <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: top > 0 ? Spacing.height100 : Spacing.height64 }, styleHeader]}>
+    <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: Spacing.height92 }, styleHeader]}>
       {/* open drawer */}
       <TouchableOpacity hitSlop={{
         top: 10, left: 10, bottom: 10, right: 10,
@@ -53,7 +53,6 @@ const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: Spacing.width16,
-      paddingBottom: Spacing.width8,
       position: 'absolute',
       top: 0,
       left: 0,

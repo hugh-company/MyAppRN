@@ -1,7 +1,7 @@
 import { NoSearchImage } from '@assets';
 import { useTheme } from '@theme';
 import { t } from 'i18next';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, JSX } from 'react';
 import { ActivityIndicator, FlatList, NativeScrollEvent, NativeSyntheticEvent, RefreshControl, RefreshControlProps, StyleProp, View, ViewStyle } from 'react-native';
 import Animated, { SharedValue } from 'react-native-reanimated';
 import { AppImage } from '../AppImage';

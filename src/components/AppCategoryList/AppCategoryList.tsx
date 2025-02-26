@@ -19,7 +19,7 @@ export interface AppCategoryListProps {
 }
 
 const CategoryItem = memo(({ item, index, categoryId, handleCategoryPress, styles }: any) => (
-  <TouchableOpacity onPress={() => handleCategoryPress(item.id, index)} style={[styles.itemCategory, categoryId === item.id && styles.btnActiveCategory]}>
+  <TouchableOpacity activeOpacity={1} onPress={() => handleCategoryPress(item.id, index)} style={[styles.itemCategory, categoryId === item.id && styles.btnActiveCategory]}>
     <AppText style={[styles.txtCategory, categoryId === item.id && styles.txtActiveCategory]}>
       {item.name}
     </AppText>

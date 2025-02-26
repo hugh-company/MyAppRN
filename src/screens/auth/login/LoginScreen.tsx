@@ -11,7 +11,7 @@ const LoginScreen = () => {
 
   return (
     <ContainerAuth style={styles.container}>
-      <AppInput name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
+      <AppInput name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} keyboardType={'email-address'} />
       <AppInput name="password" placeholder={t('login.password')} error={errors.password?.message} control={control} secureTextEntry={true} />
       <AppButton onPress={() => onSubmit()} label={t('login.login')} style={styles.btnLogin} />
       <TouchableOpacity style={styles.btnForgot} onPress={() => navigate(SCREEN_ROUTE.FORGOT_PASSWORD)}>

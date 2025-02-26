@@ -15,12 +15,18 @@ import android.view.WindowManager
 import androidx.core.view.ViewCompat
 
 class MainActivity : ReactActivity() {
-
   override fun onCreate(savedInstanceState: Bundle?) {
     SplashScreen.show(this)
     super.onCreate(savedInstanceState)
-
-
+    // Hide the status bar
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      window.insetsController?.hide(WindowInsetsCompat.Type.statusBars())
+    } else {
+      window.setFlags(
+        WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        WindowManager.LayoutParams.FLAG_FULLSCREEN
+      )
+    }
   }
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
