@@ -20,7 +20,7 @@ interface filterParams {
 }
 const defaultFilter: filterParams = {
   gender: '',
-  distance: [0],
+  distance: [20],
   age: [18, 30],
 };
 export function ModalFilterDating(props: ModalFilterDatingProps) {
@@ -41,10 +41,10 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
       label: t('male'),
       value: genderInterface.MALE,
     },
-    {
-      label: t('allGender'),
-      value: genderInterface.OTHER,
-    },
+    // {
+    //   label: t('allGender'),
+    //   value: genderInterface.OTHER,
+    // },
   ];
   const { control, handleSubmit, reset } = useForm({
     defaultValues: defaultFilter,
@@ -129,8 +129,8 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
                   values={value}
                   sliderLength={WidthScreen - Spacing.width32}
                   onValuesChangeFinish={onChange}
-                  min={0}
-                  max={1000}
+                  min={1}
+                  max={200}
                   step={1}
                   selectedStyle={styles.selectedTrack}
                   unselectedStyle={styles.unselectedTrack}
@@ -157,7 +157,7 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
                   values={value}
                   sliderLength={WidthScreen - Spacing.width32}
                   onValuesChangeFinish={onChange}
-                  min={0}
+                  min={15}
                   max={80}
                   step={1}
 

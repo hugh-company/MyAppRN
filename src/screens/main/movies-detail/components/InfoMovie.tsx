@@ -1,5 +1,5 @@
 import { LikeActiveIcon, PlayStackedIcon, StarIcon } from '@assets';
-import { AppText } from '@components';
+import { AppLessMore, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { detailPostInterface } from '@types';
 import { getPrettyNumberString } from '@utils';
@@ -9,8 +9,9 @@ import { StyleSheet, View } from 'react-native';
 
 interface InfoMovieProps {
   movie: detailPostInterface | undefined;
+  isPlaying: boolean;
 }
-export const InfoMovie = ({ movie }: InfoMovieProps) => {
+export const InfoMovie = ({ movie, isPlaying }: InfoMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
@@ -25,14 +26,27 @@ export const InfoMovie = ({ movie }: InfoMovieProps) => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <AppText style={styles.txtName}>{movie?.title}</AppText>
+  const renderOption = () => {
+    return (
       <View style={styles.viewOption}>
         {renderItem(<PlayStackedIcon color={themeColors.success} />, `${`${movie?.chapter_total || 0} ${t('home.episodes')}`}`)}
         {renderItem(<LikeActiveIcon />, `${getPrettyNumberString(movie?.like_count || 0, '1.234k')} ${t('home.likes')}`)}
         {renderItem(<StarIcon isActive={true} />, `${getPrettyNumberString(movie?.rating_count || 0, '1.234k')}/10`)}
       </View>
+    );
+  };
+  const renderDescription = () => {
+    return (
+      <View style={styles.info}>
+        <AppLessMore text={movie?.description} style={{}} />
+      </View>
+    );
+  };
+  return (
+    <View style={styles.container}>
+      <AppText style={styles.txtName}>{movie?.title}</AppText>
+      {!isPlaying && renderDescription()}
+      {renderOption()}
     </View>
   );
 };

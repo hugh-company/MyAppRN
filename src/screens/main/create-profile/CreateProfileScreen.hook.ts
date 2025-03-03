@@ -8,7 +8,6 @@ import {
   sendLocationUserApi,
   updateProfileApi,
 } from '@services';
-import {useTheme} from '@theme';
 import {genderInterface} from '@types';
 import {
   errorFormUtils,
@@ -41,7 +40,6 @@ const defaultForm = {
 };
 export const useCreateProfileScreen = () => {
   const [jobs, setJobs] = useState<{id: string; name: string}[]>([]);
-  const {themeColors} = useTheme();
   const userInfo = useSelector(getUserInfo);
   const dispatch = useDispatch();
   const {
@@ -72,6 +70,8 @@ export const useCreateProfileScreen = () => {
   };
   const checkInfoUserWithForm = async () => {
     // check info user with form
+    console.log({userInfo});
+
     if (userInfo) {
       const phoneNumber = await getInfoPhoneNumber(userInfo.phone);
       const phone = phoneNumber?.number || '';
@@ -98,7 +98,6 @@ export const useCreateProfileScreen = () => {
       });
     }
   };
-  console.log({isDirty});
 
   const onSubmit = handleSubmit(async (formData: createProfileFormData) => {
     const isValidatePhone = await validatePhoneNumber(
@@ -177,7 +176,7 @@ export const useCreateProfileScreen = () => {
       }
       Geolocation.getCurrentPosition(
         async position => {
-          console.log(position);
+          console.log({position});
           const {latitude, longitude} = position.coords;
           try {
             const responseLocation = await sendLocationUserApi({

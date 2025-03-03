@@ -1,6 +1,6 @@
 import { BrandIcon, LikeActiveIcon, RightIcon } from '@assets';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ButtonNavigationInterface, ItemListProduct, PostTypeKey } from '@types';
+import { ButtonNavigationInterface, detailPostInterface, ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
 import React, { JSX, useCallback, useMemo } from 'react';
@@ -17,7 +17,7 @@ interface HorizontalListProps {
   itemStyle?: StyleProp<ViewStyle>;
   button?: ButtonNavigationInterface;
   renderItem?: ({ item }: { item: ItemListProduct }) => JSX.Element;
-  onDetail?: (item: ItemListProduct) => void;
+  onDetail?: (item: ItemListProduct | detailPostInterface) => void;
 }
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
@@ -34,7 +34,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
 
 
-  const renderItemList = useCallback(({ item }: { item: ItemListProduct }) => {
+  const renderItemList = useCallback(({ item }: { item: ItemListProduct | detailPostInterface }) => {
     return (
       <TouchableOpacity style={[styles.btnGame, itemStyle]} onPress={() => {
         if (onDetail) {
@@ -44,7 +44,7 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         }
       }}>
         <AppImage uri={item?.feature?.path} style={styles.image} />
-        {item?.posttype !== PostTypeKey.GAMES && <View style={{ flex: 1, justifyContent: 'space-between' }}>
+        {type !== PostTypeKey.GAMES && <View style={{ flex: 1, justifyContent: 'space-between' }}>
           <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
           <View style={styles.viewOption}>
             <View style={styles.viewRow}>

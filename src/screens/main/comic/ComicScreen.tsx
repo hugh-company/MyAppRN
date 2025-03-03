@@ -4,6 +4,7 @@ import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { InteractionManager, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useComicScreen } from './ComicScreen.hook';
 
 const MemoizedAppListDashboard = React.memo(AppListDashboard);
@@ -25,15 +26,20 @@ const ComicScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderMain title={t('chapter.title')} type={PostTypeKey.COMIC} />
-      <AppInputSearch
-        onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: PostTypeKey.COMIC })}
-        editable={false}
-        style={styles.inputSearch}
-      />
+      <LinearGradient
+        colors={['rgba(209, 16, 48, 0.72)', 'rgba(1, 1, 1, 0.72)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <HeaderMain title={t('chapter.title')} type={PostTypeKey.COMIC} />
+        <AppInputSearch
+          onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: PostTypeKey.COMIC })}
+          editable={false}
+          style={styles.inputSearch}
+        />
 
-      <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />
-
+        <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />
+      </LinearGradient>
       {shouldRenderList && (
         <MemoizedAppListDashboard
           data={comics}

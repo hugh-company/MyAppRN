@@ -5,3 +5,4 @@ export * from './savedPostSlice';
 export * from './searchMessageSlice';
 export * from './settingSlice';
 export * from './socketSlice';
+export * from './videoSlice';

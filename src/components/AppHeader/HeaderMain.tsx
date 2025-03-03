@@ -1,5 +1,6 @@
-import { HomeIcon, SearchIcon } from '@assets';
+import { MenuIcon, SearchIcon } from '@assets';
 import { navigate, SCREEN_ROUTE } from '@navigation';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
 import React, { useMemo } from 'react';
@@ -28,14 +29,15 @@ export const HeaderMain: React.FC<HeaderMainProps> = ({
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
+  const navigation = useNavigation();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   return (
     <View style={[styles.container, style, { paddingTop: (Platform.OS === 'ios' ? top : top + Spacing.width16) || Spacing.width16 }]}>
       <View style={styles.flex1}>
-        {isHome && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.HOME)} style={styles.btnHome}>
-          <HomeIcon />
+        {isHome && <TouchableOpacity onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnHome}>
+          <MenuIcon />
         </TouchableOpacity>}
-        <AppText numberOfLines={1} style={[styles.title, titleStyle]}>{title}</AppText>
+        <AppText numberOfLines={1} style={[styles.title, isHome && { textAlign: 'center' }, titleStyle]}>{title}</AppText>
       </View>
       {isSearch && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, {
         type,
@@ -65,6 +67,7 @@ const createStyles = (themeColors: ThemeColors) =>
       ...FontWithFamily.FontWithFamily_500,
       color: themeColors.text,
       flex: 1,
+
     },
     flex1: {
       flexDirection: 'row',
@@ -76,7 +79,7 @@ const createStyles = (themeColors: ThemeColors) =>
       width: Spacing.width40,
       height: Spacing.width40,
       borderRadius: Spacing.height24,
-      backgroundColor: themeColors.btnSocial,
+
       alignItems: 'center',
       justifyContent: 'center',
     },

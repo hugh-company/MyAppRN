@@ -6,33 +6,36 @@ import { View } from 'react-native';
 import { useGameDetailScreen } from './GameDetailScreen.hook';
 import { HeaderGame } from './components/HeaderGame';
 
-const GameDetailScreen = () => {
-  const { data, themeColors, styles, loading } = useGameDetailScreen();
+export const GameDetailScreen = () => {
+  const { dataGame, isSuccess, styles, refetch,
+    isRefetching } = useGameDetailScreen();
 
-  if (!data) {
+  if (!dataGame) {
     return null;
   }
   return (
     <View style={styles.container}>
       <HeaderGame
-        name={data?.title}
-        logo={data?.feature?.path}
-        likes={data?.like_count}
-        poster={data?.banner?.path}
-        onPlay={() => { navigate(SCREEN_ROUTE.PREVIEW_GAME, { link: data?.iframe_game }); }}
+        name={dataGame?.title}
+        logo={dataGame?.feature?.path}
+        likes={dataGame?.like_count}
+        poster={dataGame?.banner?.path}
+        onRefresh={refetch}
+        refreshing={isRefetching}
+        onPlay={() => { navigate(SCREEN_ROUTE.PREVIEW_GAME, { link: dataGame?.iframe_game }); }}
       >
 
         <AppInfoContent
           type={PostTypeKey.GAMES}
           style={styles.infoRow}
-          typeGame={data?.categories?.map(elm => elm.name).join(', ')}
-          detail={data}
+          typeGame={dataGame?.categories?.map(elm => elm.name).join(', ')}
+          detail={dataGame}
         />
         <HorizontalList
-          data={data.related_post?.items}
+          data={dataGame.related_post?.items}
           type={PostTypeKey.GAMES}
-          button={data.related_post?.button}
-          title={data.related_post?.label}
+          button={dataGame.related_post?.button}
+          title={dataGame.related_post?.label}
           itemStyle={styles.itemImage}
 
         />
@@ -40,5 +43,3 @@ const GameDetailScreen = () => {
     </View>
   );
 };
-
-export default GameDetailScreen;

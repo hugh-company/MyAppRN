@@ -1,6 +1,7 @@
 // src/hooks/useApiQuery.ts
 import {getRequest, getRequestBaseUrlOther} from '@api';
 import {useQuery, UseQueryOptions} from '@tanstack/react-query';
+import i18next from 'i18next';
 
 export const useApiQuery = <T>(
   queryKey: string,
@@ -8,8 +9,9 @@ export const useApiQuery = <T>(
   params?: any,
   options?: UseQueryOptions<T>,
 ) => {
+  const lang = i18next.language;
   return useQuery<T>({
-    queryKey: [queryKey],
+    queryKey: [`${queryKey}_${lang}`],
     queryFn: () => getRequest<T>(url, params),
     ...options,
   });
@@ -19,8 +21,10 @@ export const useApiQueryHome = <T>(
   url: string,
   options?: UseQueryOptions<T>,
 ) => {
+  const lang = i18next.language;
   return useQuery<T>({
-    queryKey: [queryKey],
+    queryKey: [`${queryKey}_${lang}`],
+
     queryFn: () => getRequestBaseUrlOther<T>(url),
     ...options,
   });

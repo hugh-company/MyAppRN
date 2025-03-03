@@ -19,13 +19,13 @@ export interface AppInfoContentProps {
   typeGame?: string;
   onRefresh?: () => void;
   detail: detailPostInterface
-
+  isPlaying?: boolean;
 }
 const AppInfoContent = ({
   type,
   isLiked,
   typeGame,
-  style, onRefresh, detail,
+  style, onRefresh, detail, isPlaying,
 }: AppInfoContentProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
@@ -144,10 +144,10 @@ const AppInfoContent = ({
     <View style={[styles.container, style]}>
       {renderOption()}
       {renderInfo()}
-      <View style={styles.viewContent}>
+      {isPlaying && <View style={styles.viewContent}>
         <AppText style={styles.titleContent}>{t('movie.content')}</AppText>
         <AppLessMore text={detail?.description} />
-      </View>
+      </View>}
     </View>
   );
 };

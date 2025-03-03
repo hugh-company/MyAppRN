@@ -1,9 +1,9 @@
-import { AppCategoryList, AppFlatListAnimated, ItemMovie } from '@components';
+import { AppButtonViewMore, AppCategoryList, AppFlatListAnimated, ItemMovie } from '@components';
 import { Spacing, ThemeColors, useTheme } from '@theme';
 import { ItemListProduct, ModuleItemInterface, PostTypeKey, TabInterface } from '@types';
-import { goToDetail } from '@utils';
-import React, { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { goToDetail, goToListView } from '@utils';
+import React, { useEffect, useMemo } from 'react';
+import { FlatList, StyleSheet, View } from 'react-native';
 export interface CategoryListItemProps {
   data?: TabInterface[] | undefined;
   type?: PostTypeKey;
@@ -17,7 +17,13 @@ export function CategoryListItem(props: CategoryListItemProps) {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const [categoryIdSelected, setCategoryIdSelected] = React.useState(data[0]?.id);
+  const refFlatList = React.useRef<FlatList<ItemListProduct>>(null);
+  useEffect(() => {
 
+    if (refFlatList.current) {
+      refFlatList.current.scrollToOffset({ animated: false, offset: 0 });
+    }
+  }, [categoryIdSelected, refFlatList]);
   const onSelectedCategory = (category: TabInterface) => {
     setCategoryIdSelected(category.id);
   };
@@ -26,7 +32,10 @@ export function CategoryListItem(props: CategoryListItemProps) {
   };
   const renderItem = ({ item }: { item: ItemListProduct }) => {
     return (
-      <ItemMovie item={item} onPress={() => onClickDetail(item)} />
+      <ItemMovie
+        item={item}
+        onPress={() => onClickDetail(item)}
+        type={type} />
     );
   };
 
@@ -41,9 +50,20 @@ export function CategoryListItem(props: CategoryListItemProps) {
 
         onSelectedCategory={onSelectedCategory} />
       <AppFlatListAnimated
+        ref={refFlatList}
         data={data.find((item) => item.id === categoryIdSelected)?.items || []}
         horizontal keyExtractor={(item) => `item_movie_${item.id}`}
         contentContainerStyle={styles.contentContainerStyle}
+        ListFooterComponent={<AppButtonViewMore onPress={() => {
+          console.log('categoryIdSelected', data.find((item) => item.id === categoryIdSelected));
+          const dataCategory = data?.find((item) => item.id === categoryIdSelected);
+          goToListView({
+            ...dataCategory?.button,
+            keyCategory: dataCategory?.slug,
+            label: '',
+          });
+
+        }} />}
         renderItem={renderItem} />
     </View>
   );
@@ -60,5 +80,12 @@ const createStyles = (themeColors: ThemeColors) =>
     columnWrapperStyle: {
 
     },
-
+    viewMore: {
+      height: Spacing.width40,
+      width: Spacing.width40,
+      borderRadius: Spacing.width20,
+      backgroundColor: themeColors.primary,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });

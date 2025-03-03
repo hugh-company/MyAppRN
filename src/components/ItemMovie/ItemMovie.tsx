@@ -2,7 +2,7 @@ import { BrandIcon, LikeActiveIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { ItemListProduct } from '@types';
+import { ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
@@ -11,8 +11,9 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native';
 export interface ItemMovieProps {
   item: ItemListProduct;
   onPress?: () => void;
+  type?: PostTypeKey;
 }
-const ItemMovie = ({ item, onPress }: ItemMovieProps) => {
+const ItemMovie = ({ item, onPress, type }: ItemMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const image = item?.feature?.path;
@@ -40,7 +41,7 @@ const ItemMovie = ({ item, onPress }: ItemMovieProps) => {
 
         <View style={styles.viewRow}>
           <BrandIcon />
-          <AppText style={styles.txtLike}>{getPrettyNumberString(item.views)} {t('home.viewer')}</AppText>
+          <AppText style={styles.txtLike}>{getPrettyNumberString(item.views)} {t(type === PostTypeKey.GAMES ? 'home.playGame' : 'home.viewer')}</AppText>
         </View>
       </View>
     </TouchableOpacity>
@@ -52,18 +53,18 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       borderRadius: Spacing.width4,
-      width: Spacing.width240,
+      width: Spacing.width200,
       gap: Spacing.width8,
       justifyContent: 'space-between',
     },
     image: {
-      width: Spacing.width240,
-      height: Spacing.width320,
+      width: Spacing.width200,
+      height: Spacing.width280,
       borderRadius: Spacing.width4,
     },
     name: {
       marginVertical: Spacing.width8,
-      fontSize: FontSize.FontSize24,
+      fontSize: FontSize.FontSize20,
       ...FontWithFamily.FontWithFamily_600,
     },
     director: {

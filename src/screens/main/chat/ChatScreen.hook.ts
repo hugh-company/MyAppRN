@@ -20,7 +20,7 @@ import {
 } from '@types';
 import dayjs from 'dayjs';
 import {useEffect, useRef, useState} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, InteractionManager} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 interface ChatScreenProps {
@@ -36,7 +36,7 @@ export const useChatScreen = () => {
   const [repliedMessage, setRepliedMessage] =
     useState<MessageItemInterface | null>(null);
   const dispatch = useDispatch();
-  const {is_next, cursor_id, messages} = useSelector(getMessage);
+  const {is_next, cursor_id, messages, loading} = useSelector(getMessage);
   const flatListRef = useRef<FlatList>(null);
   const joinThread = useSelector(getJoinedConversation);
   useEffect(() => {
@@ -46,21 +46,26 @@ export const useChatScreen = () => {
         recipient_id: message.other_user?.id,
       }),
     );
-    dispatch(
-      joinConversationSaga({
-        thread_id: message?.thread_id,
-        recipient_id: message?.other_user?.id,
-      }),
-    );
-    if (!message?.isread && message?.thread_id) {
-      dispatch(markMessageAsReadSaga({message_id: message?.last_message.id}));
-    }
 
     return () => {
       dispatch(joinConversationSaga({thread_id: '0'}));
     };
   }, []);
+  useEffect(() => {
+    const interactionHandle = InteractionManager.runAfterInteractions(() => {
+      dispatch(
+        joinConversationSaga({
+          thread_id: message?.thread_id,
+          recipient_id: message?.other_user?.id,
+        }),
+      );
+      if (!message?.isread && message?.thread_id) {
+        dispatch(markMessageAsReadSaga({message_id: message?.last_message.id}));
+      }
+    });
 
+    return () => interactionHandle.cancel();
+  }, []);
   const handleSend = async (newMessage: {
     images?: string[];
     message?: string;
@@ -160,7 +165,7 @@ export const useChatScreen = () => {
       flatListRef.current.scrollToIndex({index});
     }
   };
-  console.log({joinThread});
+  console.log({loading});
   //
   const uploadImagesApi = async (images: any): Promise<any> => {
     try {
@@ -193,5 +198,6 @@ export const useChatScreen = () => {
 
     scrollToRepliedMessage,
     flatListRef,
+    loading,
   };
 };

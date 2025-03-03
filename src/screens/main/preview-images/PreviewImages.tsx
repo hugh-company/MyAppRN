@@ -1,12 +1,12 @@
 import { CloseIcon } from '@assets';
-import { AppImage } from '@components';
 import { goBack } from '@navigation';
-import { FlashList } from '@shopify/flash-list';
-import { HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
+import { Spacing, useTheme } from '@theme';
 import React, { useRef, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
-import ImageZoom from 'react-native-image-pan-zoom';
+import FastImage from 'react-native-fast-image';
+import { FlatList } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SnapbackZoom } from 'react-native-zoom-toolkit';
 import { usePreviewImages } from './PreviewImages.hook';
 import { createStyles } from './styles';
 
@@ -27,23 +27,18 @@ const PreviewImages = (props: any) => {
   const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
 
   const renderItemBanner = ({ item, index }: any) => (
-    <View key={index} style={styles.btn}>
-      <ImageZoom
-        cropWidth={WidthScreen}
-        cropHeight={HeightScreen}
-        imageWidth={WidthScreen}
-        imageHeight={HeightScreen}
-      >
-        <AppImage uri={item} style={styles.image} resizeMode={'center'} isBase={false} />
-      </ImageZoom>
-    </View>
+
+    <SnapbackZoom>
+      <FastImage source={{ uri: item }} style={styles.image} resizeMode={'center'} />
+    </SnapbackZoom>
+
   );
 
   if (data?.length === 0) { return null; }
 
   return (
     <View style={styles.container}>
-      <FlashList
+      <FlatList
         ref={flatListRef}
         data={data}
         horizontal
@@ -54,7 +49,7 @@ const PreviewImages = (props: any) => {
         keyExtractor={(item, index) => `banner_child_${index}`}
         onViewableItemsChanged={onViewRef.current}
         viewabilityConfig={viewConfigRef.current}
-        estimatedItemSize={WidthScreen}
+
       />
       <View style={styles.dotsContainer}>
         {data.map((_, index) => (

@@ -1,94 +1,136 @@
 import { CloseBigIcon, HeadIcon, LocationIcon } from '@assets';
-import { AppImage, AppText } from '@components';
+import { AppText } from '@components';
 import { useLocation } from '@hooks';
 import { HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
-import { debounce } from 'lodash';
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { FlatList, PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
+import { EmptyUser } from './components/EmptyUser';
+import ListGalleries from './components/ListGalleries';
 import { createStyles } from './styles';
-const width = WidthScreen;
-export interface AppSwipeProfileProps {
-  item: UserFindInterface
-  onSwipe: (type: 'like' | 'dislike' | 'superlike') => void;
 
+const width = WidthScreen;
+const SWIPE_THRESHOLD = 120; // ngưỡng vuốt để tính là swipe
+const SPRING_CONFIG = { stiffness: 300, damping: 20, overshootClamping: true };
+
+export interface AppSwipeProfileProps {
+  items: UserFindInterface[]
+  onSwipe: (type: 'like' | 'dislike' | 'superlike', user: UserFindInterface) => void;
 }
-const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref) => {
+
+const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, ref) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const translateX = useSharedValue(0);
+
   const { getDistanceLocation } = useLocation();
-  const isVisible = useSharedValue(true);
   const heightBanner = Platform.OS === 'android' ? HeightScreen * 0.8 : HeightScreen * 0.7;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [items, setItems] = useState(item.galleries);
+  const [profiles, setProfiles] = useState(items);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
   const flatListRef = useRef<FlatList>(null);
-  const onViewRef = useRef(
-    debounce(({ viewableItems }: any) => {
-      if (viewableItems.length > 0) {
-        setCurrentIndex(viewableItems[0].index);
-      }
-    }, 200)
-  );
+  const isRemoving = useRef(false);
 
-  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50 });
+  // Hàm xóa profile đầu tiên khỏi danh sách
+  const removeTopProfile = (action: 'like' | 'dislike' | 'superlike') => {
+    if (isRemoving.current) { return; }
+    isRemoving.current = true;
 
+    const currentProfile = profiles[0];
+    setProfiles((prev) => prev.slice(1));
+    console.log({ currentProfile });
 
-  const handleSwipe = (type: 'like' | 'dislike' | 'superlike') => {
-    runOnJS(onSwipe)(type);
-    runOnJS(setItems)((prevItems) => {
-      const newItems = prevItems.filter((_, index) => index !== currentIndex);
-      if (newItems.length === 0) {
-        isVisible.value = false; // Hide the card if no items are left
-      }
-      return newItems;
-    });
-    translateX.value = 0; // Reset translateX after swipe
+    // Gọi hàm callback onSwipe để thông báo action
+    onSwipe(action, currentProfile);
+    // Reset lại giá trị cho thẻ kế tiếp
+    translateX.value = 0;
+    translateY.value = 0;
+    rotation.value = 0;
+
+    isRemoving.current = false;
   };
 
   useImperativeHandle(ref, () => ({
-    triggerSwipe: (action) => {
-      if (action === 'like') {
-        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('like'));
-      } else if (action === 'dislike') {
-        translateX.value = withSpring(-width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('dislike'));
+    triggerSwipe: (action: 'like' | 'dislike' | 'superlike') => {
+      if (profiles.length === 0) { return; }
+      if (action === 'dislike') {
+        translateX.value = withSpring(-width * 1.5, SPRING_CONFIG, (finished) => {
+          if (finished) { runOnJS(removeTopProfile)(action); }
+        });
+      } else if (action === 'like') {
+        translateX.value = withSpring(width * 1.5, SPRING_CONFIG, (finished) => {
+          if (finished) { runOnJS(removeTopProfile)(action); }
+        });
       } else if (action === 'superlike') {
-        // Add your super like logic here
-        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('superlike'));
+        translateY.value = withSpring(-width * 1.5, SPRING_CONFIG, (finished) => {
+          if (finished) { runOnJS(removeTopProfile)(action); }
+        });
       }
     },
   }));
 
   const gestureHandler = useAnimatedGestureHandler({
-    onStart: (_, context) => {
-      context.startX = translateX.value;
+    onStart: (_, ctx) => {
+      ctx.startX = translateX.value;
+      ctx.startY = translateY.value;
     },
-    onActive: (event, context) => {
-      translateX.value = context.startX + event.translationX;
+    onActive: (event, ctx) => {
+      // Cập nhật vị trí thẻ theo tay kéo
+      translateX.value = ctx.startX + event.translationX;
+      translateY.value = ctx.startY + event.translationY;
+      // Hiệu ứng xoay nhẹ khi vuốt (giữ nguyên hiệu ứng hiện tại nếu có)
+      rotation.value = translateX.value * 0.0015;  // tùy chỉnh hệ số xoay
     },
-    onEnd: () => {
-      const threshold = width / 3;
-      if (translateX.value > threshold) {
-        translateX.value = withSpring(width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('like')); // Vuốt sang phải
-      } else if (translateX.value < -threshold) {
-        translateX.value = withSpring(-width, { damping: 15, stiffness: 80 }, () => runOnJS(handleSwipe)('dislike')); // Vuốt sang trái
+    onEnd: (event) => {
+      const traveledX = translateX.value;
+      // Kiểm tra nếu vuốt vượt ngưỡng để bỏ thẻ
+      if (Math.abs(traveledX) > SWIPE_THRESHOLD) {
+        // Xác định hướng vuốt (sang trái hay phải) để ném thẻ ra khỏi màn hình
+        const toX = traveledX > 0 ? width * 1.5 : -width * 1.5;
+        const action = traveledX > 0 ? 'dislike' : 'like';
+        // Thực hiện animation ném thẻ khỏi màn hình với tốc độ cao hơn
+        translateX.value = withSpring(toX, {
+          ...SPRING_CONFIG,
+          velocity: event.velocityX,  // dùng vận tốc vuốt hiện tại cho tự nhiên
+        }, (isFinished) => {
+          if (isFinished) {
+            // Xóa item khỏi danh sách ngay khi animation kết thúc
+            runOnJS(removeTopProfile)(action);
+          }
+        });
+        // Optional: cũng có thể animate translateY ra xa hơn nếu muốn
+        translateY.value = withSpring(event.translationY * 2, SPRING_CONFIG);
       } else {
-        translateX.value = withSpring(0, { damping: 15, stiffness: 80 });
+        // Nếu vuốt không đủ xa, đưa thẻ trở về vị trí cũ
+        translateX.value = withSpring(0, SPRING_CONFIG);
+        translateY.value = withSpring(0, SPRING_CONFIG);
+        rotation.value = withSpring(0, SPRING_CONFIG);
       }
     },
   });
-  const rotateZ = useDerivedValue(() => `${translateX.value / 20}deg`, [translateX]);
 
-  const animatedStyle = useAnimatedStyle(() => {
-
+  const cardStyle = useAnimatedStyle(() => {
     return {
       transform: [
         { translateX: translateX.value },
+        { translateY: translateY.value },
+        { rotate: `${rotation.value}rad` },
+      ],
+    };
+  });
+
+  const rotateZ = useDerivedValue(() => `${translateX.value / 20}deg`, [translateX]);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: translateX.value },
+        { translateY: translateY.value },
         { rotateZ: rotateZ.value },
       ],
       borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
@@ -104,7 +146,6 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
     };
   });
 
-
   const dislikeOpacity = useAnimatedStyle(() => {
     return {
       opacity: translateX.value < -50 ? 1 : 0,
@@ -112,54 +153,34 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
     };
   });
 
-  const renderItemBanner = ({ item, index }: any) => (
-    <View key={index} style={[styles.btn, { height: heightBanner }]}>
-      <Animated.View style={[styles.btn]}>
-        <AppImage uri={item} style={[styles.image, { height: heightBanner }]} />
-      </Animated.View>
+  const renderItem = ({ item }: any) => (
+    <View style={[styles.cardContent]}>
+      <ListGalleries data={item.galleries} />
+      <View style={styles.info}>
+        <AppText style={styles.name}>{[item.fullname, getAge(item.birthday)].join(', ')}</AppText>
+        {item.job && <AppText style={styles.profession}>{item.job}</AppText>}
+      </View>
+      <View style={styles.viewLocation}>
+        <LocationIcon />
+        <AppText style={styles.txtLocation}>{getDistanceLocation(item.location)}</AppText>
+      </View>
     </View>
   );
 
-
   return (
-    <PanGestureHandler onGestureEvent={gestureHandler}>
-      <Animated.View style={[styles.card, animatedStyle, { height: heightBanner, display: isVisible.value ? 'flex' : 'none' }]}>
+    <PanGestureHandler onGestureEvent={profiles.length > 0 ? gestureHandler : undefined}>
+      <Animated.View style={[styles.card, cardStyle, { height: heightBanner }]}>
         <FlatList
           ref={flatListRef}
-          data={items}
+          data={profiles}
           pagingEnabled
           showsVerticalScrollIndicator={false}
-          renderItem={renderItemBanner}
+          ListEmptyComponent={<EmptyUser />}
+          renderItem={renderItem}
+          scrollEnabled={false}
           keyExtractor={(item, index) => index.toString()}
-          onViewableItemsChanged={onViewRef.current}
-          viewabilityConfig={viewConfigRef.current}
-          getItemLayout={(data, index) => (
-            { length: heightBanner || HeightScreen, offset: (heightBanner || HeightScreen) * index, index }
-          )}
+          contentContainerStyle={{ flexGrow: 1 }}
         />
-        {items?.length > 1 && <View style={styles.dotsContainer}>
-          <View style={styles.dotsView}>
-            {items.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  currentIndex === index ? styles.activeDot : styles.inactiveDot,
-                ]}
-              />
-            ))}
-          </View>
-        </View>}
-
-        <View style={styles.info}>
-          <AppText style={styles.name}>{[item?.fullname, getAge(item?.birthday)].join(', ')}</AppText>
-          {item?.job && <AppText style={styles.profession}>{item?.job}</AppText>}
-        </View>
-        {/* location */}
-        <View style={styles.viewLocation}>
-          <LocationIcon />
-          <AppText style={styles.txtLocation}>{getDistanceLocation(item?.location)}</AppText>
-        </View>
         {/* Like/Dislike Labels */}
         <Animated.View style={[styles.likeContainer, likeOpacity]}>
           <View style={styles.btnLike}>
@@ -174,7 +195,7 @@ const AppSwipeProfile = forwardRef(({ item, onSwipe }: AppSwipeProfileProps, ref
           </View>
         </Animated.View>
       </Animated.View>
-    </PanGestureHandler >
+    </PanGestureHandler>
   );
 });
 

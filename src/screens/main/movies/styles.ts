@@ -7,6 +7,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
     },
+    gradientBackground: {},
     list: {},
     header: {},
     inputSearch: {

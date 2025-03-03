@@ -6,7 +6,6 @@ import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ButtonSearch } from './ButtonSearch';
 import { ListDatingItem } from './ListDatingItem';
-import { ListHorizontalUser } from './ListHorizontalUser';
 
 
 export interface AppListDatingProps {
@@ -18,34 +17,25 @@ export interface AppListDatingProps {
   categoryId?: number;
   onSelectedCategory?: (item: TabInterface) => void;
   keyExtractor?: (item: ModuleItemInterface, index: number) => string;
+  refreshing?: boolean;
 }
 
 const AppListDating = ({
   data = [], onScroll,
   loading, onRefresh,
   ListHeaderComponent,
-
+  refreshing,
   keyExtractor,
 }: AppListDatingProps) => {
 
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [isReset, setIsReset] = React.useState(false);
-  const onRefreshList = useCallback(() => {
-    if (onRefresh) {
-      setIsReset(true);
-      onRefresh();
-      setTimeout(() => {
-        setIsReset(false);
-      }, 1000);
-    }
-  }, [onRefresh]);
+
 
   const renderItem = useCallback(({ item }: { item: ModuleDating }) => {
     switch (item?.type) {
-      case TypeDatingInterface.TOP_NAV:
-        return <ListHorizontalUser data={item.items || []} onPress={() => { }} />;
+
       case TypeDatingInterface.BUTTON:
         return <ButtonSearch label={item.label} style={styles.search} onPress={() => {
           navigate(SCREEN_ROUTE.FILTER_DATING);
@@ -66,8 +56,8 @@ const AppListDating = ({
           style={styles.list}
           ListHeaderComponent={ListHeaderComponent}
           onScroll={onScroll}
-          onRefresh={onRefreshList}
-          refreshing={isReset}
+          onRefresh={onRefresh}
+          refreshing={refreshing}
           keyExtractor={keyExtractor}
           renderItem={renderItem} />}
     </View>
@@ -86,7 +76,7 @@ const createStyles = (themeColors: ThemeColors) =>
     },
 
     search: {
-      marginVertical: Spacing.width24,
+      marginVertical: Spacing.width16,
     },
     //
   });

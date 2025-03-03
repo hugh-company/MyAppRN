@@ -30,7 +30,7 @@ const initialState = {
 };
 
 const settingSlice = createSlice({
-  name: APP_SLICE.ACCOUNT_SLICE,
+  name: APP_SLICE.SETTING_SLICE,
   initialState,
   reducers: {
     setDataSetting: (state, action) => {

@@ -8,4 +8,5 @@ export interface IconWidthHeightProps {
   width?: number;
   height?: number;
   color?: string;
+  size?: number;
 }

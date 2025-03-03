@@ -18,9 +18,9 @@ const createIcon = fileName => {
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 import { IconWidthHeightProps } from './types';
-const ${fileName} = ({ width = Spacing.width19, height = Spacing.width20, color = '#FF1F44' }: IconWidthHeightProps) => {
+const ${fileName} = ({ width = Spacing.width24, height = Spacing.width24, color = '#FF1F44' }: IconWidthHeightProps) => {
   return (
-        <Svg width={width} height={height} viewBox="0 0 19 20"  fill="none">
+        <Svg width={width} height={height} viewBox="0 0 24 24"  fill="none">
    </Svg>
   );
 };

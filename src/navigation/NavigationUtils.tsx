@@ -93,6 +93,14 @@ export function reset(routeName: string) {
     }),
   );
 }
+// go back with specific screen
+export function goBackToScreen(screenName: string) {
+  _navigator?.dispatch(
+    CommonActions.navigate({
+      name: screenName,
+    }),
+  );
+}
 
 export const NavigationUtils = {
   navigate,

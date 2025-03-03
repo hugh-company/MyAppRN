@@ -1,11 +1,9 @@
 import {useLocation} from '@hooks';
 import {getToken} from '@redux';
-import {getDatingDashboardApi} from '@services';
+import {useDatingDashboardApi} from '@services';
 import {useTheme} from '@theme';
 import {
-  ModuleDating,
   navHorizontalInterface,
-  responseDatingNearYou,
   TypeDatingInterface,
   TypeTabDatingApi,
 } from '@types';
@@ -14,9 +12,8 @@ import {useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
 export const useDatingScreen = () => {
-  const [data, setData] = useState<ModuleDating[]>([]);
+  //
   const {themeColors} = useTheme();
-  const [loading, setLoading] = useState(true);
   const styles = createStyles(themeColors);
   const [tab, setTab] = useState<TypeTabDatingApi>(TypeTabDatingApi.NEAR_YOU);
   const [tabNav, setTabNav] = useState<navHorizontalInterface[]>([]);
@@ -27,43 +24,57 @@ export const useDatingScreen = () => {
     goToSettingLocation,
     getLocationDevice,
   } = useLocation();
+
+  //
+  const {
+    data: dataDashboard,
+    refetch,
+    isRefetching,
+    isLoading,
+    isFetching,
+    isSuccess,
+    error,
+  } = useDatingDashboardApi(tab);
+  console.log({dataDashboard});
+
   useEffect(() => {
-    setLoading(true);
-    callApi(tab);
-  }, [tab]);
+    if (dataDashboard?.data?.modules?.length ?? 0 > 0) {
+      const category: any = dataDashboard?.data?.modules.find(
+        item => item.type === TypeDatingInterface.TOP_NAV,
+      );
+      setTabNav(category?.items || []);
+    } else {
+    }
+  }, [isSuccess]);
+  useEffect(() => {
+    if (tab) {
+      refetch();
+    }
+  }, [tab, refetch]);
+  const data = isSuccess
+    ? dataDashboard?.data?.modules?.filter(
+        item => item.type !== TypeDatingInterface.TOP_NAV,
+      ) || []
+    : [];
   useEffect(() => {
     if (token) {
       checkLocation();
     }
   }, [token]);
+  useEffect(() => {
+    if (error) {
+      console.log({erroreeee: error});
+    }
+  }, [error]);
   const checkLocation = async () => {
     const check = await checkPermissionLocation();
-    console.log({check});
+
     if (check) {
       const location = await getLocationDevice();
       console.log({location});
     }
   };
-  const callApi = async (type: TypeTabDatingApi) => {
-    try {
-      const response: responseDatingNearYou = await getDatingDashboardApi(type);
-      console.log({response});
-      const menus: navHorizontalInterface[] =
-        response.data.modules.find(
-          item => item.type === TypeDatingInterface.TOP_NAV,
-        )?.items || [];
-      setTabNav(menus);
-      setData(
-        response.data.modules?.filter(
-          item => item.type !== TypeDatingInterface.TOP_NAV,
-        ) || [],
-      );
-    } catch (error) {
-      console.log({error});
-    } finally {
-      setLoading(false);
-    }
-  };
+
   const onSelectTab = (type: TypeTabDatingApi) => {
     setTab(type);
   };
@@ -71,11 +82,13 @@ export const useDatingScreen = () => {
     data,
     themeColors,
     styles,
-    loading,
+    loading: isFetching || isLoading,
     tab,
     tabNav,
     onSelectTab,
     isPermissionLocation,
     goToSettingLocation,
+    refetch,
+    isRefetching,
   };
 };

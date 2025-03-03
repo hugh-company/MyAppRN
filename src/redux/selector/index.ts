@@ -4,3 +4,4 @@ export * from './dataLocalSelector';
 export * from './savedSelector';
 export * from './settingSelector';
 export * from './socketSelector';
+export * from './videoSelector';

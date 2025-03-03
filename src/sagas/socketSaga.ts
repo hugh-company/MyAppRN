@@ -1,3 +1,4 @@
+import NetInfo from '@react-native-community/netinfo';
 import {
   addNewConversation,
   loadMoreConversations,
@@ -9,6 +10,7 @@ import {
   searchThreadsSuccess,
   setConversation,
   setInfoUser,
+  setLoadingMessage,
   setMessage,
   setSocket,
   updateMessageSent,
@@ -28,6 +30,7 @@ import {
 } from 'redux-saga/effects';
 
 const WEBSOCKET_URL = 'wss://oninapp.com/ws/';
+let messageQueue: any[] = [];
 
 interface SocketEventPayload {
   action: MessageAction;
@@ -37,6 +40,15 @@ interface SocketEventPayload {
   data?: ConversationInterface[];
   message?: any;
   thread?: any;
+}
+
+// Helper function to safely send messages
+function safeSend(socket: WebSocket, message: any) {
+  if (socket.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify(message));
+  } else {
+    messageQueue.push(message);
+  }
 }
 
 function* handleSocketOpen(
@@ -51,8 +63,15 @@ function* handleSocketOpen(
   console.log({unsentMessages});
 
   for (const message of unsentMessages || []) {
-    socket.send(JSON.stringify(message));
+    safeSend(socket, message);
     yield delay(500); // Add a delay of 500ms between each message
+  }
+
+  // Send messages from the queue
+  while (messageQueue.length > 0) {
+    const queuedMessage = messageQueue.shift();
+    safeSend(socket, queuedMessage);
+    yield delay(500);
   }
 }
 
@@ -72,7 +91,9 @@ function createSocketChannel(
     };
 
     socket.onerror = function (error) {
-      console.error('WebSocket error', error);
+      console.log({error});
+
+      // console.error('WebSocket error', error);
     };
 
     socket.onmessage = event => {
@@ -87,7 +108,13 @@ function createSocketChannel(
 }
 
 function* handleDataMessage(data: SocketEventPayload) {
+  // const infoUser = yield select(
+  //   (state: any) => state.socketSlice.infoUser,
+  // );
   console.log('handleDataMessage', data);
+  if (data?.error === 'disconnect') {
+    yield put({type: 'RECONNECT_SOCKET'});
+  }
 
   if (data?.action === MessageAction.GET_THREAD) {
     const {isLoadMore, isRefreshing} = yield select(
@@ -198,8 +225,7 @@ function* handleCloseSocket(): Generator<any, void, any> {
 
 function* handleSocketClosed() {
   console.log('WebSocket closed, attempting to reconnect...');
-  // yield delay(5000); // Wait for 5 seconds before attempting to reconnect
-  // yield put({type: 'RECONNECT_SOCKET'});
+  yield put({type: 'RECONNECT_SOCKET'});
 }
 
 function* handleSocketEvents(
@@ -252,7 +278,7 @@ function* fetchConversationsSaga(
     cursor_time: '',
   };
   console.log('fetchConversationsSaga', {params});
-  socket.send(JSON.stringify(params));
+  safeSend(socket, params);
 }
 // re-send connect
 function* reSendConnect(socket: WebSocket, token: string) {
@@ -265,7 +291,7 @@ function* reSendConnect(socket: WebSocket, token: string) {
     };
     console.log('Sending heartbeat');
 
-    socket.send(JSON.stringify(params));
+    safeSend(socket, params);
   }
 }
 
@@ -274,6 +300,7 @@ function* fetchMessagesSaga(
   action: PayloadAction<{thread_id?: string; recipient_id?: string}>,
 ): Generator<any, void, any> {
   console.log('fetchMessagesSaga');
+  yield put(setLoadingMessage());
 
   const {thread_id, recipient_id} = action.payload;
   const socket = yield select(state => state.socketSlice.socket);
@@ -283,7 +310,6 @@ function* fetchMessagesSaga(
     action: MessageAction.GET_MESSAGES,
   };
   console.log({thread_id, recipient_id});
-
   if (thread_id) {
     params.thread_id = thread_id;
   }
@@ -292,16 +318,16 @@ function* fetchMessagesSaga(
   }
   console.log('fetchMessagesSaga', {params});
 
-  socket.send(JSON.stringify(params));
+  safeSend(socket, params);
 }
 // send message to socket
 function* sendMessageSaga(action: any): Generator<any, void, any> {
   const message = action.payload;
-  console.log({message});
+  console.log({sendMessageSaga: message});
 
   const socket = yield select(state => state.socketSlice.socket);
   try {
-    socket.send(JSON.stringify(message));
+    safeSend(socket, message);
   } catch (error) {
     console.error('Message sending failed', error);
   }
@@ -491,12 +517,19 @@ function* loadMoreSearchConversationsSaga(
 }
 
 function* reconnectSocketSaga(): Generator<any, void, any> {
-  const token = yield select(state => state.socketSlice.infoUser.token);
-  const device_id = yield select(state => state.socketSlice.infoUser.device_id);
-  console.log('reconnectSocketSaga', {token, device_id});
+  const state = yield call(NetInfo.fetch);
+  if (state.isConnected) {
+    const token = yield select(state => state.socketSlice.infoUser.token);
+    const device_id = yield select(
+      state => state.socketSlice.infoUser.device_id,
+    );
+    console.log('reconnectSocketSaga', {token, device_id});
 
-  if (token && device_id) {
-    yield put(setInfoUser({token, device_id}));
+    if (token && device_id) {
+      yield put(setInfoUser({token, device_id}));
+    }
+  } else {
+    console.log('No network connection, will not attempt to reconnect.');
   }
 }
 

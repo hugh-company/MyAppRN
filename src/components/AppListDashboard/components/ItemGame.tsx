@@ -15,7 +15,7 @@ const ItemGame = ({ item }: ItemGameProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   return (
-    <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.GAME_DETAIL, { game: item })} style={styles.container}>
+    <TouchableOpacity activeOpacity={1} onPress={() => navigate(SCREEN_ROUTE.GAME_DETAIL, { game: item })} style={styles.container}>
       <AppImage uri={item?.feature.square} style={styles.image} />
 
       {/*  */}
@@ -23,10 +23,10 @@ const ItemGame = ({ item }: ItemGameProps) => {
         <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
         <View style={styles.viewOption}>
           <AppText style={styles.txtView}>
-            {`${t('type')}: ${item?.terms?.tags?.map((elm) => elm.name)?.join(', ')}`}
+            {`${item?.terms?.tags?.map((elm) => elm.name)?.join(', ')}`}
           </AppText>
 
-          <View style={styles.viewRow}>
+          <View style={[styles.viewRow, {}]}>
             <LikeActiveIcon color={themeColors.star} size={Spacing.width12} />
             <AppText style={styles.txtLike}>{getPrettyNumberString(item.like_count)} {t('home.likes')}</AppText>
           </View>
@@ -34,10 +34,10 @@ const ItemGame = ({ item }: ItemGameProps) => {
       </View>
       {/*  */}
       <View style={styles.viewPlay}>
-        <TouchableOpacity style={styles.btnPlay}>
+        <View style={styles.btnPlay}  >
           <PlayIcon size={Spacing.width16} />
           <AppText style={styles.txtPlay}>{t('play')}</AppText>
-        </TouchableOpacity>
+        </View>
         <View style={styles.viewRow}>
           <PlayIcon color={themeColors.primary} size={Spacing.width12} />
           <AppText style={styles.txtLike}>{getPrettyNumberString(item.views)} {t('home.playGame')}</AppText>
@@ -64,10 +64,10 @@ const createStyles = (themeColors: ThemeColors) =>
     viewInfo: {
       flex: 1,
       alignItems: 'baseline',
+      justifyContent: 'space-between',
     },
     name: {
       flex: 1,
-
       ...FontWithFamily.FontWithFamily_600,
     },
     director: {
@@ -80,13 +80,14 @@ const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.subtile,
     },
     viewOption: {
-      gap: 4,
+      gap: 8,
       flex: 1,
+      justifyContent: 'flex-end',
     },
     txtView: {
       fontSize: FontSize.FontSize10,
       color: themeColors.subtile,
-      flex: 1,
+
     },
 
     viewRow: {

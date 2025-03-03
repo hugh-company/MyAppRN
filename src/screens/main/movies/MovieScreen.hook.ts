@@ -28,7 +28,6 @@ export const useMovieScreen = () => {
         elm => elm.type !== TypeKeyListApi.TYPE_TABS,
       ) || []
     : [];
-  console.log({dataDashboard}, {isFetching}, {isLoading}, {isSuccess});
   // const categories=dataDashboard?.data?.modules.find(
   //   item => item.type === TypeKeyListApi.TYPE_TABS,
   // );

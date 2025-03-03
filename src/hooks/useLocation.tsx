@@ -1,5 +1,7 @@
 import { getLocations, setLocation } from '@redux';
 import { sendLocationUserApi } from '@services';
+import { showNotificationError } from '@utils';
+import { t } from 'i18next';
 import { useEffect, useState } from 'react';
 import { AppState, Linking, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
@@ -58,7 +60,7 @@ export function useLocation() {
     try {
       Geolocation.getCurrentPosition(
         async position => {
-          console.log(position);
+          console.log({ position });
           const { latitude, longitude } = position.coords;
           try {
             const responseLocation = await sendLocationUserApi({
@@ -66,16 +68,23 @@ export function useLocation() {
               lng: longitude,
             });
             console.log({ responseLocation });
-            // dispatch(setUserInfo(responseLocation.data));
             dispatch(setLocation({ latitude: latitude, longitude: longitude }));
           } catch (error) {
-            console.log({ error });
+            showNotificationError(t('location.title'), error?.message);
           }
         },
         error => {
-          console.log({ error });
+          showNotificationError(t('location.title'), t('location.description_location_permission'));
         },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+        {
+          enableHighAccuracy: true,      // Sử dụng GPS cho độ chính xác cao&#8203;:contentReference[oaicite:7]{index=7}
+          timeout: 20000,               // Chờ tối đa 20 giây (tùy chỉnh theo nhu cầu)
+          maximumAge: 0,                // Không dùng kết quả cache cũ
+          distanceFilter: 0,            // (Không quan trọng với getCurrentPosition một lần)
+          showLocationDialog: true,     // Bật dialog yêu cầu bật GPS nếu tắt
+          forceRequestLocation: true,   // Vẫn lấy vị trí nếu user từ chối tối ưu GPS
+          forceLocationManager: true,
+        },
       );
     } catch (error) {
       console.error(error);
@@ -121,12 +130,21 @@ export function useLocation() {
       subscription.remove();
     };
   }, []);
+  const checkLocation = async () => {
+    const check = await checkPermissionLocation();
+
+    if (check) {
+      const location = await getLocationDevice();
+      console.log({ location });
+    }
+    return check;
+  };
 
   return {
     getDistanceLocation,
     getLocationDevice,
     checkPermissionLocation,
-    isPermissionLocation, goToSettingLocation,
+    isPermissionLocation, goToSettingLocation, checkLocation,
 
   };
 }

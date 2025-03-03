@@ -36,6 +36,9 @@ export enum PostTypeKey {
   GAMES = 'game',
   COMIC = 'comic',
   NOVEL = 'novel',
+
+  // search
+  ALL = 'all',
 }
 export enum ItemListDashboard {
   MOVIES = 'movie',

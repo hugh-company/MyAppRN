@@ -5,7 +5,7 @@ import {
   ThemeColors,
   WidthScreen,
 } from '@theme';
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
@@ -31,7 +31,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexWrap: 'wrap',
       flexDirection: 'row',
       gap: Spacing.height8,
-      height: Spacing.height32 * 2 + Spacing.height8,
+      maxHeight: Spacing.height32 * 2 + Spacing.height8,
       overflow: 'hidden',
     },
     btnChapter: {
@@ -115,7 +115,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       fontStyle: 'italic',
       ...FontWithFamily.FontWithFamily_400,
     },
-    listModal:{
+    listModal: {
       backgroundColor: themeColors.background,
       height: Spacing.height200,
     },
@@ -124,10 +124,9 @@ export const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'center',
       alignItems: 'center',
     },
-    emptyText:{
+    emptyText: {
       color: themeColors.text,
       ...FontWithFamily.FontWithFamily_400,
       textAlign: 'center',
     },
-
   });

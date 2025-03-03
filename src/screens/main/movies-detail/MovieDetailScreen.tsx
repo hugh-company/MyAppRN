@@ -1,18 +1,19 @@
-import { AppEpisodes, AppInfoContent, AppServerList, HorizontalList } from '@components';
+import { AppEpisodes, AppHeader, AppInfoContent, AppServerList, HorizontalList } from '@components';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { useEffect } from 'react';
-import { FlatList, View } from 'react-native';
-import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { View } from 'react-native';
+import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovieDetailScreen } from './MovieDetailScreen.hook';
 import { InfoMovie } from './components/InfoMovie';
 import { VideoPlayer } from './components/VideoPlayer';
 
-
-const MovieDetailScreen = () => {
-  const { styles, error, isFullScreenVisible, setIsFullScreenVisible,
-    detailMovie, onSelectedChapter, onNavigateDetail, serverMovie,
+export const MovieDetailScreen = () => {
+  const { styles, isFullScreenVisible, setIsFullScreenVisible,
+    detailMovie, onSelectedChapter, onNavigateDetail, serverMovie, setIsPlaying,
+    isPlaying, scrollHandler,
+    headerBackgroundColorStyle,
     onSelectServer } = useMovieDetailScreen();
   const { top } = useSafeAreaInsets();
   const opacity = useSharedValue(1);
@@ -27,28 +28,42 @@ const MovieDetailScreen = () => {
 
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
-      <VideoPlayer
-        urlVideo={serverMovie?.link}
-        image={detailMovie?.feature?.path}
-        setIsFullScreenVisible={setIsFullScreenVisible}
-        isFullScreenVisible={isFullScreenVisible}
-        autoPlay={!!detailMovie?.index} // Add autoPlay prop
-      />
-      <FlatList
+      <Animated.FlatList
         key={detailMovie?.id}
         showsVerticalScrollIndicator={false}
+        onScroll={scrollHandler}
         data={[detailMovie]}
         renderItem={({ item }: any) => (
           <>
-            <InfoMovie movie={item} />
-            {serverMovie && <AppServerList list={detailMovie?.chapters?.[detailMovie?.index || 0].source || []} value={serverMovie?.link} onSelectServer={onSelectServer} />}
+            <View >
+              <VideoPlayer
+                urlVideo={serverMovie?.link}
+                image={detailMovie?.feature
+                  ?.path}
+                setIsFullScreenVisible={setIsFullScreenVisible}
+                isFullScreenVisible={isFullScreenVisible}
+                autoPlay={!!detailMovie?.index} // Add autoPlay prop
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+              />
+              <View style={[!isPlaying && styles.infoMovie]}>
+                <InfoMovie movie={item} isPlaying={isPlaying} />
+              </View>
+            </View>
+            {serverMovie &&
+              <AppServerList
+                list={detailMovie?.chapters?.[detailMovie?.index || 0].source || []}
+                value={serverMovie?.link}
+                onSelectServer={onSelectServer} />
+            }
             {item?.movie_type === 'tvseries' && item?.chapters?.length > 0 && (
               <AppEpisodes
                 episodes={item?.chapters}
                 style={styles.episodes}
-
+                value={detailMovie?.chapters?.[detailMovie?.index || 0]?.id}
                 title={t('movie.list_chapters')}
                 onSelectChapter={onSelectedChapter}
+
               />
             )}
             <AppInfoContent
@@ -58,9 +73,10 @@ const MovieDetailScreen = () => {
               onRefresh={() => {
                 onNavigateDetail(item);
               }}
+              isPlaying={isPlaying}
             />
             <HorizontalList
-              onDetail={(post) => onNavigateDetail(post)}
+              onDetail={(post: any) => onNavigateDetail(post)}
               data={item?.related_post?.items}
               type={PostTypeKey.MOVIES}
               button={item?.related_post?.button}
@@ -68,11 +84,12 @@ const MovieDetailScreen = () => {
               itemStyle={styles.itemImage}
             />
             <View style={styles.paddingBottom} />
+
           </>
         )}
       />
+      {!isPlaying && <AppHeader
+        style={[styles.header, headerBackgroundColorStyle]} />}
     </View>
   );
 };
-
-export default MovieDetailScreen;

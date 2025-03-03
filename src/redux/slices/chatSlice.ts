@@ -44,7 +44,7 @@ const initialState: chatState = {
     messages: [],
     is_next: false,
     cursor_id: 0,
-    loading: false,
+    loading: true,
     error: null,
   },
   joinedConversation: 0,
@@ -93,6 +93,12 @@ const chatSlice = createSlice({
       state.conversation.is_next = action.payload.is_next;
       state.conversation.isRefreshing = false;
     },
+    //
+    setLoadingMessage(state) {
+      console.log('sdsdadsadsdas');
+
+      state.message.loading = true;
+    },
     loadMoreMessages(state, action) {
       state.message.messages = [
         ...state.message.messages,
@@ -139,6 +145,43 @@ const chatSlice = createSlice({
       );
       console.log({indexConversation});
       // add to unsent message
+      if (indexConversation >= 0) {
+        state.conversation.conversations[indexConversation].last_message =
+          action.payload?.message;
+        state.conversation.conversations[
+          indexConversation
+        ].last_message.content.created_at = action.payload?.message.created_at;
+
+        // Move the conversation to the top
+        const updatedConversation = state.conversation.conversations.splice(
+          indexConversation,
+          1,
+        )[0];
+        console.log({updatedConversation});
+
+        state.conversation.conversations.unshift(updatedConversation);
+      }
+
+      //  update message list
+      // check message
+
+      state.message.messages = [
+        action.payload.message,
+        ...state.message.messages,
+      ];
+
+      if (!action.payload?.message.created_at) {
+        action.payload.message.content.created_at = dayjs().format(
+          'YYYY-MM-DD HH:mm:ss',
+        );
+      }
+    },
+    updateNewMessageLocal(state, action) {
+      const indexConversation = state.conversation.conversations.findIndex(
+        item => item.thread_id === action.payload?.message.thread_id,
+      );
+      console.log({indexConversation});
+      // add to unsent message
       state.unsentMessages.push(action.payload.message);
       if (indexConversation >= 0) {
         state.conversation.conversations[indexConversation].last_message =
@@ -158,6 +201,8 @@ const chatSlice = createSlice({
       }
 
       //  update message list
+      // check message
+
       state.message.messages = [
         action.payload.message,
         ...state.message.messages,
@@ -262,6 +307,9 @@ const chatSlice = createSlice({
         message => message.id !== action.payload.id,
       );
     },
+    clearAllUnSentMessage(state) {
+      state.unsentMessages = [];
+    },
   },
 });
 
@@ -287,6 +335,8 @@ export const {
   addNewConversation,
   addUnsentMessage,
   removeUnsentMessage,
+  setLoadingMessage,
+  clearAllUnSentMessage,
   // ...other actions...
 } = chatSlice.actions;
 

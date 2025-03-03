@@ -10,10 +10,9 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getToken, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
+import { getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
 import { PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
-import { UserInterface } from '@types';
 import React, { useEffect, useRef } from 'react';
 import { Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -25,25 +24,23 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     const token = useSelector(getToken);
     const dispatch = useDispatch();
     const isConnectedRef = useRef(false);
+    const userInfo = useSelector(getUserInfo);
     const callApiProfile = async () => {
       try {
         const responseUser: any = await getUserProfileApi();
         console.log({ responseUser });
-        const userInfo = responseUser?.data?.me as UserInterface;
+
+        dispatch(setUserInfo(responseUser?.data?.me));
+      } catch (error) { }
+    };
+    useEffect(() => {
+      if (userInfo) {
         const isShowDating =
           userInfo?.about_me && userInfo?.personal?.favorites && userInfo.personal.favorites.length > 0;
 
         dispatch(setIsDashboardDating(isShowDating));
-        dispatch(setUserInfo(responseUser?.data?.me));
-      } catch (error) { }
-    };
-    // useEffect(() => {
-    //   if (token) {
-    //     callApiProfile();
-    //     apiService.setToken(token);
-    //     connectSocket(token);
-    //   }
-    // }, [token]);
+      }
+    }, [userInfo]);
     const connectSocket = async (tokenData: string) => {
       try {
         const device_id = await DeviceInfo.getUniqueId();

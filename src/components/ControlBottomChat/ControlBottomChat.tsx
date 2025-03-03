@@ -1,20 +1,23 @@
-import { CloseIcon, GameHandleIcon, GlobalIcon, RightIcon, SendMessageIcon, UploadImageIcon } from '@assets';
+import { CloseIcon, SendMessageIcon } from '@assets';
 import { AppImage, AppText } from '@components';
 import { getGameTrendingLocal } from '@redux';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
-import { MessageItemInterface } from '@types';
+import { Spacing, useTheme } from '@theme';
+import { ItemListProduct, MessageItemInterface } from '@types';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Keyboard, Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Keyboard, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
-import Animated, { useAnimatedStyle, withSpring, withTiming } from 'react-native-reanimated';
 import { useSelector } from 'react-redux';
-import { ListStickers } from './ListStickers';
-import { RepliedMessage } from './RepliedMessage';
+import { ListStickers } from './blocks/ListStickers';
+import { RepliedMessage } from './blocks/RepliedMessage';
+import { SelectOption } from './blocks/SelectOption';
+import { createStyles } from './styles';
+
 interface paramSendMessage {
   images?: string[];
   message?: string;
   games?: any[];
   sticker?: string;
+
 }
 export interface ControlBottomChatProps {
   onUpdateMessage: (data: paramSendMessage) => void;
@@ -32,7 +35,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const games = useSelector(getGameTrendingLocal);
   const [isShowGame, setIsShowGame] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
-  const [gameSelected, setGameSelected] = useState(null);
+  const [gameSelected, setGameSelected] = useState<ItemListProduct | null>(null);
   const [showIcons, setShowIcons] = useState(true);
   const [isShowStickers, setIsShowStickers] = useState(false);
   const inputRef = useRef<TextInput>(null);
@@ -55,10 +58,10 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const handleSelectGame = (game: any) => setGameSelected(game);
 
   const handleShowIcons = () => {
-
     setShowIcons(true);
     setIsInputFocused(false);
   };
+
 
   const handleInputFocus = () => {
     if (!isInputFocused) {
@@ -79,17 +82,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     setIsInputFocused(false);
   };
 
-  const animatedSendStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: message.length > 0 || gameSelected ? withSpring(1, { damping: 15 }) : withSpring(0, { damping: 15 }) }],
-    opacity: message.length > 0 || gameSelected ? withTiming(1, { duration: 200 }) : withTiming(0, { duration: 200 }),
-    display: message.length > 0 || gameSelected ? 'flex' : 'none',
-  }));
 
-  const iconsAnimationStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: isInputFocused ? withTiming(-100, { duration: 0 }) : withTiming(0, { duration: 0 }) }],
-    width: isInputFocused ? withTiming(0, { duration: 0 }) : withTiming(Spacing.width120, { duration: 0 }),
-    opacity: isInputFocused ? withTiming(0, { duration: 0 }) : withTiming(1, { duration: 0 }),
-  }));
 
   const handleSelectImage = async () => {
     const options: ImageLibraryOptions = { mediaType: 'photo', selectionLimit: 1 };
@@ -97,7 +90,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
       if (response.assets && response.assets.length > 0) {
         const listImage = response.assets.map((item) => item.uri);
         if (onUpdateMessage && listImage.length > 0) {
-          onUpdateMessage({ images: listImage });
+          onUpdateMessage({ images: listImage.filter((uri): uri is string => !!uri) });
           setMessage(''); // Clear message
           setGameSelected(null); // Clear selected game
           setIsShowGame(false);  // Hide game selection
@@ -148,7 +141,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
       {repliedMessage && renderRepliedMessage()}
       {isShowGame && renderGame()}
       <View style={[styles.viewInput]}>
-        <Animated.View style={[styles.iconsContainer, iconsAnimationStyle]}>
+        {/* <Animated.View style={[styles.iconsContainer, iconsAnimationStyle]}>
           <TouchableOpacity
             disabled={isShowGame}
             onPress={handleShowStickers}
@@ -160,7 +153,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
             onPress={handleSelectImage} style={styles.iconButton}>
             <UploadImageIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
           </TouchableOpacity>
-          {/* {!gameSelected && ( */}
+
           <TouchableOpacity
             disabled={!!gameSelected}
             hitSlop={
@@ -168,13 +161,22 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
             } onPress={() => setIsShowGame(!isShowGame)} style={[styles.iconButton]}>
             <GameHandleIcon width={Spacing.width32} height={Spacing.width32} color={gameSelected ? themeColors.disable : themeColors.colorMain4} />
           </TouchableOpacity>
-          {/* )} */}
+
         </Animated.View>
         {!showIcons && (
           <TouchableOpacity onPress={handleShowIcons} style={[styles.iconButton, { width: Spacing.width30 }]}>
             <RightIcon />
           </TouchableOpacity>
-        )}
+        )} */}
+        <SelectOption
+          onSticker={() => {
+            handleShowStickers();
+          }}
+          onGame={() => { setIsShowGame(!isShowGame); }}
+          onImage={() => { handleSelectImage(); }}
+          isShowGame={isShowGame}
+          isAll={showIcons}
+          handleShowIconsAll={handleShowIcons} />
         <TextInput
           ref={inputRef}
           style={[styles.input, isInputFocused && styles.inputFocused]}
@@ -188,11 +190,10 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
           textAlignVertical="center" // Vertically center text
           multiline // Enable multiple lines
         />
-        <Animated.View style={[styles.iconButton, animatedSendStyle]}>
-          <TouchableOpacity onPress={() => handleSend()}>
-            <SendMessageIcon />
-          </TouchableOpacity>
-        </Animated.View>
+        {(message?.length > 0 || gameSelected) && <TouchableOpacity style={styles.iconButton} onPress={() => handleSend()}>
+          <SendMessageIcon />
+        </TouchableOpacity>}
+
       </View>
       {isShowStickers && <ListStickers isVisible={isShowStickers} onSelectSticker={(sticker) => { handleSend({ sticker: sticker }); }} />}
 
@@ -200,86 +201,3 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   );
 }
 
-export const createStyles = (themeColors: ThemeColors) =>
-  StyleSheet.create({
-    container: {
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      paddingTop: Spacing.width16,
-      borderTopWidth: 1,
-      borderTopColor: 'rgba(41,41,41,1)',
-      gap: Spacing.width16,
-      minHeight: Spacing.height86,
-
-    },
-    viewInput: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingHorizontal: Spacing.width16,
-    },
-    iconsContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      height: Spacing.width30,
-    },
-    iconButton: {
-      width: Spacing.width40,
-      height: Spacing.width30,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    input: {
-      flex: 1,
-      backgroundColor: 'rgba(41,41,41,1)',
-      borderRadius: Spacing.height24,
-      minHeight: Spacing.height48,
-      paddingHorizontal: Spacing.width12,
-      fontSize: FontSize.FontSize16,
-      ...FontWithFamily.FontWithFamily_400,
-      marginLeft: Spacing.width16,
-      color: themeColors.whiteColor,
-      maxHeight: Spacing.height48 * 3,
-      paddingTop: Platform.OS === 'android' ? undefined : Spacing.width16,
-      paddingVertical: Spacing.width8,
-    },
-    inputFocused: {
-      marginLeft: 0,
-    },
-    listGame: {
-      height: Spacing.width112,
-    },
-    itemImageGame: {
-      width: Spacing.width112,
-      height: Spacing.width112,
-      borderRadius: Spacing.width8,
-    },
-    imageGameSelect: {
-      width: Spacing.width64,
-      height: Spacing.width64,
-      borderRadius: Spacing.width8,
-    },
-    viewName: {
-      position: 'absolute',
-      bottom: Spacing.width8,
-      left: Spacing.width8,
-      right: Spacing.width8,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      borderRadius: Spacing.width4,
-    },
-    txtNameGame: {
-      color: themeColors.whiteColor,
-      ...FontWithFamily.FontWithFamily_400,
-      fontSize: FontSize.FontSize12,
-      textAlign: 'center',
-    },
-    btnClose: {
-      position: 'absolute',
-      top: -Spacing.width8,
-      right: -Spacing.width8,
-      backgroundColor: 'rgba(0,0,0,0.5)',
-      width: Spacing.width24,
-      height: Spacing.width24,
-      borderRadius: Spacing.width12,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-  });

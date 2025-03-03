@@ -4,7 +4,7 @@ import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme 
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
@@ -15,6 +15,8 @@ interface HeaderGameProps {
   poster?: string;
   children?: React.ReactNode;
   onPlay?: () => void;
+  onRefresh?: () => void;
+  refreshing?: boolean;
 }
 
 export const HeaderGame = ({
@@ -23,7 +25,9 @@ export const HeaderGame = ({
   poster = '',
   logo = '',
   children,
-  onPlay }: HeaderGameProps) => {
+  onPlay,
+  onRefresh,
+  refreshing = false }: HeaderGameProps) => {
   console.log({ logo });
 
   const { themeColors } = useTheme();
@@ -69,6 +73,17 @@ export const HeaderGame = ({
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
+        refreshControl={
+          onRefresh && (
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              tintColor={themeColors.text}
+
+            />
+          )
+        }
+
         style={{ backgroundColor: themeColors.background }}
       >
         <Animated.View style={[styles.container]}>

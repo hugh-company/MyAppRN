@@ -125,9 +125,11 @@
     "movie": "Phim",
     "chapter": "Truyện",
     "game": "Game",
+    "all": "Tất cả",
     "sortWith": "Sắp xếp theo",
     "viewer": "Lượt xem",
     "likes": "Lượt thích",
+
     "searchVariety": "Tìm kiếm đa dạng",
     "searchResults": "Kết quả tìm kiếm cho “NAME”:",
     "duration": "Thời lượng: ",
@@ -296,6 +298,23 @@
     "userSendGame": "USER đã gửi trò chơi",
     "searchMessage": "Tìm kiếm tin nhắn",
     "meSendSticker": "Bạn đã gửi sticker",
-    "userSendSticker": "USER đã gửi sticker"
+    "userSendSticker": "USER đã gửi sticker",
+    "repliedSticker": "Đang trả lời sticker",
+    "coversation": "Trò chuyện"
+  },
+  "location": {
+    "title": "Vị trí của bạn",
+    "description_location_permission": "Vui lòng cấp quyền truy cập vị trí để sử dụng tính năng này"
+  },
+  "filters": {
+    "time": "Theo thời gian",
+    "viewDay": "Lượt xem trong ngày",
+    "viewWeek": "Lượt xem trong tuần",
+    "viewMonth": "Lượt xem trong tháng",
+    "viewAll": "Tất cả",
+
+    "withRaring": "Theo đánh giá",
+
+    "withLike": "Theo lượt thích"
   }
 }

@@ -1,8 +1,7 @@
-import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {getDetailPostApi, viewsPostApi} from '@services';
+import {useDetailPostApi, viewsPostApi} from '@services';
 import {useQuery} from '@tanstack/react-query';
-import {useTheme} from '@theme';
+import {Spacing, useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
   detailPostInterface,
@@ -12,6 +11,12 @@ import {
 import React, {useEffect, useState} from 'react';
 import {BackHandler} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
+import {
+  interpolateColor,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {createStyles} from './styles';
 interface MovieDetailScreenProps {
   movie: detailPostInterface;
@@ -27,7 +32,8 @@ export const useMovieDetailScreen = () => {
     detailPostInterface | undefined
   >(movie);
   const [movieId, setMovieId] = useState(movie.id);
-
+  const [isPlaying, setIsPlaying] = React.useState(false); // Use autoPlay prop
+  const scrollY = useSharedValue(0);
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [showRating, setShowRating] = useState(false);
@@ -36,10 +42,10 @@ export const useMovieDetailScreen = () => {
     SourceVideoInterface | undefined
   >(undefined);
   //
-  const {data, isSuccess, refetch, error} = useQuery({
-    queryKey: ['movieDetail', movieId],
-    queryFn: () => getDetailPostApi(PostTypeKey.MOVIES, movieId),
-  });
+  const {data, isSuccess, refetch, error} = useDetailPostApi(
+    movieId,
+    PostTypeKey.MOVIES,
+  );
   const {} = useQuery({
     queryKey: ['viewMoves', movie.id],
     queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
@@ -47,10 +53,10 @@ export const useMovieDetailScreen = () => {
 
   useEffect(() => {
     if (isSuccess && data) {
-      console.log({data: data?.data});
-
-      setDetailMovie(data?.data);
-      setServerMovie(data?.data?.chapters?.[0]?.source?.[0]);
+      setDetailMovie({
+        ...data?.data,
+        index: 0,
+      });
     }
     return () => {
       setDetailMovie(undefined);
@@ -58,6 +64,15 @@ export const useMovieDetailScreen = () => {
     };
   }, [isSuccess, data]);
 
+  //
+  useEffect(() => {
+    if (detailMovie) {
+      setServerMovie(
+        data?.data?.chapters?.[detailMovie?.index || 0]?.source?.[0],
+      );
+    }
+  }, [detailMovie, data?.data?.chapters]);
+  //
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -77,71 +92,50 @@ export const useMovieDetailScreen = () => {
     }, [isFullScreenVisible]),
   );
 
-  const goToPlay = () => {
-    const index = detailMovie?.index;
-    if (index) {
-      console.log(detailMovie?.chapters?.[index]);
-
-      navigate(SCREEN_ROUTE.VIDEO, {
-        video: {
-          ...detailMovie?.chapters?.[index - 1],
-
-          name: [
-            detailMovie?.title,
-            `(${
-              detailMovie?.chapters?.[(detailMovie?.index || 1) - 1]?.title
-            })`,
-          ].join(' '),
-        },
-      });
-    } else {
-      navigate(SCREEN_ROUTE.VIDEO, {
-        video: {
-          ...detailMovie?.chapters?.[0],
-          name: detailMovie?.title,
-        },
-      });
-    }
-    // navigate(SCREEN_ROUTE.VIDEO, {
-    //   video: {
-    //     ...detailMovie?.chapters?.[0],
-    //     name: detailMovie?.title,
-    //   },
-    // });
-  };
-
   const onSelectedChapter = (chapter: chapterEpisodeInterface) => {
-    console.log({chapter});
-    setServerMovie(chapter?.source?.[0]);
     setDetailMovie(prev => {
       if (!prev) {
         return prev;
       }
       return {
         ...prev,
-        index: chapter.index,
+        index: (chapter.index || 1) - 1,
         feature: chapter.feature,
       };
     });
   };
+
   const onNavigateDetail = (post: detailPostInterface) => {
     setMovieId(post.id);
     setDetailMovie(post);
+    setIsPlaying(false);
     refetch();
   };
   const onSelectServer = (item: SourceVideoInterface) => {
     setServerMovie(item);
   };
+  console.log({detailMovie});
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
+  const headerBackgroundColorStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      scrollY.value,
+      [0, Spacing.height315],
+      ['transparent', '#B1062E'],
+    ),
+  }));
   return {
     themeColors,
     styles,
     detailMovie,
-
+    scrollHandler,
+    headerBackgroundColorStyle,
     onRefresh: refetch,
 
     showRating,
     setShowRating,
-    goToPlay,
+
     onSelectedChapter,
     error,
     isFullScreenVisible,
@@ -150,5 +144,7 @@ export const useMovieDetailScreen = () => {
     onNavigateDetail,
     serverMovie,
     onSelectServer,
+    setIsPlaying,
+    isPlaying,
   };
 };

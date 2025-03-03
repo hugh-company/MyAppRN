@@ -17,8 +17,8 @@ interface propsImage {
   tintColor?: string;
 }
 
-export const AppImage = React.memo((props: propsImage) => {
-  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking, tintColor = undefined, imgSource } = props;
+export const AppImage = (props: propsImage) => {
+  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking = true, tintColor = undefined, imgSource } = props;
   const [status, setStatus] = useState({ isLoading: false, isError: false });
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
 
@@ -35,12 +35,11 @@ export const AppImage = React.memo((props: propsImage) => {
     }
   }, [uriBase, checkNetworking]);
 
-  const source = status.isError ? NoImage : (imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage));
+  const source = !checkNetworking ? { uri: uriBase } : status.isError ? NoImage : (imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage));
 
   return (
     <Box justifyContent={'center'} alignItems="center">
       <FastImage
-        key={uriBase}
         source={source}
         style={[styles.image, style]}
         resizeMode={resizeMode}
@@ -48,16 +47,10 @@ export const AppImage = React.memo((props: propsImage) => {
         tintColor={tintColor}
         onError={() => setStatus({ isLoading: false, isError: true })}
       />
-      {/* {status.isLoading && (
-        <SkeletonPlaceholder>
-          <View style={[styles.image, style]} />
-        </SkeletonPlaceholder>
-      )} */}
+
     </Box>
   );
-}, (prevProps, nextProps) => {
-  return prevProps.uri === nextProps.uri && prevProps.style === nextProps.style;
-});
+};
 
 const styles = StyleSheet.create({
   image: {

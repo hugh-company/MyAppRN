@@ -1,17 +1,11 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet';
-import { navigate } from '@navigation';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { Spacing, useTheme } from '@theme';
-import { chapterEpisodeInterface, PostTypeKey } from '@types';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { FlatList } from 'react-native';
-import {
-  interpolate,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated';
-import { createStyles } from './styles';
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
+import {navigate} from '@navigation';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useTheme} from '@theme';
+import {chapterEpisodeInterface, PostTypeKey} from '@types';
+import {useCallback, useEffect, useRef, useState} from 'react';
+import {Animated, FlatList} from 'react-native';
+import {createStyles} from './styles';
 interface PreviewChapterProps {
   chapters: chapterEpisodeInterface[];
   chapter: chapterEpisodeInterface;
@@ -26,12 +20,12 @@ export const usePreviewChapter = () => {
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
   const refModal = useRef<BottomSheetModal>(null);
   const [showModalFilter, setShowModalFilter] = useState(false);
-   const scrollRef = useRef<FlatList>(null);
+  const scrollRef = useRef<FlatList>(null);
 
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-  const scrollY = useSharedValue(0);
-  const prevScrollY = useSharedValue(0);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const prevScrollY = useRef(0);
   const [filterText, setFilterText] = useState({
     styleText: '',
     size: [14],
@@ -39,68 +33,72 @@ export const usePreviewChapter = () => {
     background: '#000000',
   });
 
-  useEffect(() => {
-    if (scrollRef?.current && scrollRef.current.scrollToIndex && data.length > 0) {
-      scrollRef.current.scrollToIndex({ animated: false, index: 0 });
-    }
-  }, [scrollRef, data]);
+  // useEffect(() => {
+  //   if (
+  //     scrollRef?.current &&
+  //     scrollRef.current.scrollToIndex &&
+  //     data.length > 0
+  //   ) {
+  //     scrollRef.current.scrollToIndex({animated: false, index: 0});
+  //   }
+  // }, [scrollRef, data]);
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: event => {
-      const currentY = event.contentOffset.y;
-      if (currentY < 50) {
-        scrollY.value = 0;
-      } else if (currentY > prevScrollY.value) {
-        scrollY.value = 1; // scrolling down
-      } else if (currentY < prevScrollY.value) {
-        scrollY.value = 0; // scrolling up
-      }
-      prevScrollY.value = currentY;
+  const headerTranslateY = useRef(new Animated.Value(0)).current;
+  const bottomTranslateY = useRef(new Animated.Value(0)).current;
+
+  const scrollHandler = Animated.event(
+    [{nativeEvent: {contentOffset: {y: scrollY}}}],
+    {
+      useNativeDriver: true,
+      listener: (event: any) => {
+        const currentY = event.nativeEvent.contentOffset.y;
+        const distance = Math.abs(currentY - prevScrollY.current);
+        if (
+          distance > 300 ||
+          currentY <= 0 ||
+          currentY >=
+            event.nativeEvent.contentSize.height -
+              event.nativeEvent.layoutMeasurement.height
+        ) {
+          if (currentY > prevScrollY.current && currentY > 0) {
+            // Scrolling down
+            Animated.timing(headerTranslateY, {
+              toValue: -150,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+            Animated.timing(bottomTranslateY, {
+              toValue: 100,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+          } else if (
+            currentY < prevScrollY.current &&
+            currentY <
+              event.nativeEvent.contentSize.height -
+                event.nativeEvent.layoutMeasurement.height
+          ) {
+            // Scrolling up and not at the bottom
+            Animated.timing(headerTranslateY, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+            Animated.timing(bottomTranslateY, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+          }
+          prevScrollY.current = currentY;
+        }
+      },
     },
-  });
+  );
 
-  const headerStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 1],
-      [0, -Spacing.height150],
-      'clamp',
-    );
-    return {
-      transform: [
-        {
-          translateY:
-            scrollY.value === 0 && prevScrollY.value < 100 ? 0 : translateY,
-        },
-      ],
-    };
-  });
-  const bottomStyle = useAnimatedStyle(() => {
-    const translateY = interpolate(
-      scrollY.value,
-      [0, 1],
-      [0, Spacing.width100],
-      'clamp',
-    );
-    return {
-      transform: [
-        {
-          translateY:
-            scrollY.value === 0 && prevScrollY.value < 100 ? 0 : translateY,
-        },
-      ],
-    };
-  });
   const fetchData = useCallback(() => {
     if (chapter) {
-      if (type === PostTypeKey.COMIC) {
-        const images: {url: string}[] = Array.isArray(chapter.content)
-          ? chapter.content.map(item => {
-              return {url: item};
-            })
-          : [];
-        setData(images);
-      } else {
+      if (type !== PostTypeKey.COMIC) {
         let arrayText: {text: string}[] = [];
         if (!Array.isArray(chapter.content) && chapter.content?.blocks) {
           arrayText = chapter.content.blocks.map(item => {
@@ -115,7 +113,6 @@ export const usePreviewChapter = () => {
   const goToNextChapter = useCallback(() => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex < chapters.length - 1) {
-
       const nextChapter = chapters[currentIndex + 1];
       navigate('PreviewChapter', {
         chapter: {
@@ -125,15 +122,13 @@ export const usePreviewChapter = () => {
         chapters,
         type,
       });
-      scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
-
+      scrollRef.current?.scrollToOffset({animated: true, offset: 0});
     }
   }, [chapters, chapter, navigation, type]);
 
   const goToPrevChapter = useCallback(() => {
     const currentIndex = chapters.findIndex(item => item.id === chapter.id);
     if (currentIndex > 0) {
-
       const prevChapter = chapters[currentIndex - 1];
       navigate('PreviewChapter', {
         chapter: {
@@ -143,8 +138,7 @@ export const usePreviewChapter = () => {
         chapters,
         type,
       });
-      scrollRef.current?.scrollToOffset({ animated: true, offset: 0 });
-
+      scrollRef.current?.scrollToOffset({animated: true, offset: 0});
     }
   }, [chapters, chapter, navigation, type]);
 
@@ -153,7 +147,6 @@ export const usePreviewChapter = () => {
   }, [fetchData]);
 
   const onApplyFilter = useCallback(item => {
-
     setFilterText({
       styleText: item.styleText,
       size: item.size,
@@ -162,12 +155,12 @@ export const usePreviewChapter = () => {
     });
   }, []);
   const onClickScreen = useCallback(() => {
-    if (scrollY.value === 0) {
-      scrollY.value = 1;
-    } else {
-      scrollY.value = 0;
-    }
-  }, []);
+    Animated.timing(scrollY, {
+      toValue: scrollY._value === 0 ? 1 : 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [scrollY]);
   const onSelectChapter = useCallback((item: chapterEpisodeInterface) => {
     navigate('PreviewChapter', {
       chapter: {
@@ -180,14 +173,14 @@ export const usePreviewChapter = () => {
   }, []);
 
   return {
-    data,
+    data: type === PostTypeKey.COMIC ? chapter.content : data,
     themeColors,
     styles,
     chapter,
     type,
-    headerStyle,
+    headerStyle: {transform: [{translateY: headerTranslateY}]},
     scrollHandler,
-    bottomStyle,
+    bottomStyle: {transform: [{translateY: bottomTranslateY}]},
     chapters,
     goToNextChapter,
     goToPrevChapter,

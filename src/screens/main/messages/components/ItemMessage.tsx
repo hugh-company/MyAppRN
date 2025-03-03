@@ -35,7 +35,7 @@ export function ItemMessage(props: ItemMessageProps) {
     }
   };
   return (
-    <TouchableOpacity style={styles.container} onPress={() => {
+    <TouchableOpacity activeOpacity={1} style={styles.container} onPress={() => {
       navigate(SCREEN_ROUTE.CHAT, { message: item });
     }}>
       <View>

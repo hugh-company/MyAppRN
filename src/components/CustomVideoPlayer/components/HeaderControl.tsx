@@ -1,8 +1,10 @@
 import { CloseIcon, LeftIcon, MuteIcon, SpeedIcon, UnmuteIcon } from '@assets';
+import { setMute } from '@redux';
 import { Spacing, useTheme } from '@theme';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import { ButtonAction } from './ButtonAction';
 
 interface HeaderControlProps {
@@ -18,6 +20,7 @@ export const HeaderControl = ({ goBackScreen, isFullScreenVisible, isMuted, togg
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { top, bottom } = useSafeAreaInsets();
+  const dispatch = useDispatch();
   return (
     <>
       <View style={[styles.container, isFullScreenVisible && { paddingTop: top }]}>
@@ -26,7 +29,11 @@ export const HeaderControl = ({ goBackScreen, isFullScreenVisible, isMuted, togg
         </TouchableOpacity>
 
         <View style={styles.viewOption}>
-          <ButtonAction Icon={isMuted ? UnmuteIcon : MuteIcon} onPress={() => toggleMute?.()} style={styles.btnBack} />
+          <ButtonAction Icon={isMuted ? UnmuteIcon : MuteIcon} onPress={() => {
+            console.log('asdasdasdasd');
+
+            dispatch(setMute());
+          }} style={styles.btnBack} />
           <ButtonAction Icon={SpeedIcon} onPress={() => setSpeedVisible(true)} style={styles.btnBack} />
         </View>
       </View>
@@ -41,7 +48,7 @@ const createStyles = (themeColors: any) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-
+      gap: Spacing.width16,
     },
     btnBack: {
       width: Spacing.width40,

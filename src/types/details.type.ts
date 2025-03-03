@@ -155,3 +155,9 @@ export interface detailPostInterface {
     posttype: PostTypeKey;
   };
 }
+//
+export interface detailPostResponseInterface {
+  data: detailPostInterface;
+  message: string;
+  status: number;
+}

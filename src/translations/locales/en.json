@@ -280,6 +280,16 @@
     "send": "Send",
     "sending": "Sending...",
     "repliedGame": "Replying to game",
-    "repliedImage": "Replying to image"
+    "repliedImage": "Replying to image",
+    "repliedText": "Replying to text",
+    "repliedVideo": "Replying to video",
+    "meSendImage": "You sent an image",
+    "userSendImage": "USER sent an image",
+    "meSendGame": "You sent a game",
+    "userSendGame": "USER sent a game",
+    "searchMessage": "Search messages",
+    "meSendSticker": "You sent a sticker",
+    "userSendSticker": "USER sent a sticker",
+    "repliedSticker": "Replying to sticker"
   }
 }

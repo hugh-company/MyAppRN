@@ -1,116 +1,58 @@
 import { AppText } from '@components';
-import { FontWithFamily, Spacing, useTheme, WidthScreen } from '@theme';
+import { useTheme } from '@theme';
 import { t } from 'i18next';
 import React, { useCallback, useState } from 'react';
-import { LayoutChangeEvent, Platform, TouchableOpacity, View } from 'react-native';
-import RenderHTML, { defaultSystemFonts } from 'react-native-render-html';
+import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { defaultSystemFonts } from 'react-native-render-html';
 import { createStyles } from './styles';
 
 export interface AppLessMoreProps {
   html?: string
   text?: string
   initialNumberOfLines?: number
+  style?: StyleProp<ViewStyle>
 }
 const systemFonts = [...defaultSystemFonts];
 
 
-const AppLessMore = ({ html, initialNumberOfLines = 3, text }: AppLessMoreProps) => {
+const AppLessMore = ({ html, initialNumberOfLines = 3, text, style }: AppLessMoreProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [lengthMore, setLengthMore] = useState(false);
-  const [layoutMeasured, setLayoutMeasured] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
   };
 
-
-
-  const onLayout = (e: LayoutChangeEvent) => {
-    if (!layoutMeasured) {
-      setLengthMore(e.nativeEvent.layout.height >= 100);
-      setLayoutMeasured(true);
+  const onTextLayout = useCallback(e => {
+    if (isFirstRender) {
+      const { lines } = e.nativeEvent;
+      if (lines.length > initialNumberOfLines) {
+        setShowToggle(true);
+      }
+      setIsFirstRender(false);
     }
-  };
-  const onTextLayout = useCallback((e: any) => {
-    setLengthMore(e.nativeEvent.lines.length > initialNumberOfLines); //to check the text is more than 4 lines or not
-    // console.log(e.nativeEvent);
-  }, []);
-  return (
-    <View style={styles.container}>
-      {text ? (
-        <>
-          <AppText
-            onTextLayout={onTextLayout}
-            numberOfLines={isExpanded ? undefined : initialNumberOfLines}>
-            {text}
-          </AppText>
-          {lengthMore && (
-            <TouchableOpacity hitSlop={
-              { top: 10, bottom: 10, left: 10, right: 10 }
-            } style={styles.btnMore} onPress={toggleExpand}>
-              <AppText style={styles.txtMore}>{isExpanded ? t('movie.show_less') : t('movie.more')}</AppText>
-            </TouchableOpacity>
-          )}
-        </>
-      ) : (
-        <View
-          onLayout={onLayout}
-          style={[styles.content, lengthMore && (!isExpanded ? { height: Spacing.height100 } : { height: 'auto' })]}
+  }, [isFirstRender, initialNumberOfLines]);
 
-        >
-          <RenderHTML
-            contentWidth={WidthScreen - Spacing.width32}
-            source={{ html: html || '' }}
-            // systemFonts={systemFonts}
-            renderersProps={{
-              TNodeChildrenRenderer: {
-                // Use JavaScript default parameters instead of defaultProps
-              },
-            }}
-            tagsStyles={{
-              ul: {
-                color: themeColors.text,
-                ...FontWithFamily.FontWithFamily_400,
-              },
-              ol: {
-                color: themeColors.text,
-                ...FontWithFamily.FontWithFamily_500,
-              },
-              p: {
-                color: themeColors.text,
-                ...FontWithFamily.FontWithFamily_500,
-              },
-              h2: {
-                ...FontWithFamily.FontWithFamily_600,
-                ...(Platform.OS === 'android' && { fontWeight: '600' }),
-              },
-              strong: {
-                color: themeColors.text,
-                ...(Platform.OS === 'android' && { fontWeight: '600' }),
-              },
-              span: {
-                color: themeColors.text,
-                ...FontWithFamily.FontWithFamily_400,
-              },
-              li: {
-                justifyContent: 'center',
-                position: 'absolute',
-                lineHeight: Spacing.height28,
-                top: -Spacing.height6,
-              },
-            }}
-          />
-        </View>
-      )}
-      {lengthMore && !text && (
+
+  return (
+    <View style={[styles.container, style]}>
+      <AppText
+        onTextLayout={onTextLayout}
+        numberOfLines={isFirstRender ? undefined : isExpanded ? undefined : initialNumberOfLines}
+      >
+        {text}
+      </AppText>
+      {showToggle && (
         <TouchableOpacity hitSlop={
           { top: 10, bottom: 10, left: 10, right: 10 }
-        } style={styles.btnMore} onPress={() => toggleExpand()}>
+        } style={styles.btnMore} onPress={toggleExpand}>
           <AppText style={styles.txtMore}>{isExpanded ? t('movie.show_less') : t('movie.more')}</AppText>
         </TouchableOpacity>
       )}
+
     </View>
   );
 };

@@ -1,21 +1,21 @@
-import { navigate, SCREEN_ROUTE } from '@navigation';
-import { useRoute } from '@react-navigation/native';
-import { getDetailPostApi, viewsPostApi } from '@services';
-import { useQuery } from '@tanstack/react-query';
-import { Spacing, useTheme } from '@theme';
+import {navigate, SCREEN_ROUTE} from '@navigation';
+import {useRoute} from '@react-navigation/native';
+import {useDetailPostApi, viewsPostApi} from '@services';
+import {useQuery} from '@tanstack/react-query';
+import {Spacing, useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
   detailPostInterface,
   PostTypeKey,
 } from '@types';
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import { createStyles } from './styles';
+import {createStyles} from './styles';
 interface ChapterDetailInterface {
   chapter: detailPostInterface;
   type: PostTypeKey;
@@ -31,11 +31,9 @@ export const useChapterDetail = () => {
   const styles = createStyles(themeColors);
   const scrollY = useSharedValue(0);
   // call api
-  const {data, isSuccess, refetch, error, isFetching} = useQuery({
-    queryKey: ['chapterDetail', idPost],
-    queryFn: () => getDetailPostApi(type, idPost),
-  });
-  console.log({data},error);
+  const {data, isSuccess, refetch, isFetching, isRefetching, error} =
+    useDetailPostApi(idPost, PostTypeKey.COMIC);
+  console.log({data}, error);
 
   useQuery({
     queryKey: ['viewChapter', idPost],
@@ -118,5 +116,6 @@ export const useChapterDetail = () => {
     type,
     onSelectChapter,
     refList,
+    isRefetching,
   };
 };

@@ -1,5 +1,6 @@
-import { BackgroundChat, ProfileIcon } from '@assets';
-import { AppHeader } from '@components';
+import { BASE_IMAGE_URL } from '@api';
+import { BackgroundChat } from '@assets';
+import { AppHeader, AppImage, ControlBottomChat } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { MessageItemInterface } from '@types';
@@ -7,11 +8,10 @@ import React from 'react';
 import { FlatList, ImageBackground, TouchableOpacity, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useChatScreen } from './ChatScreen.hook';
-import { ControlBottomChat } from './components/ControlBottomChat';
 import { ItemChat } from './components/ItemChat';
 // KeyboardController.setInputMode(1);
-const ChatScreen = React.memo(() => {
-  const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, themeColors, flatListRef, message, styles, handleSend, userInfo, scrollToRepliedMessage } = useChatScreen();
+export const ChatScreen = () => {
+  const { messages, handleSwipeToReply, repliedMessage, setRepliedMessage, themeColors, flatListRef, message, styles, handleSend, userInfo, scrollToRepliedMessage, loading } = useChatScreen();
   const renderMessage = ({ item }: { item: MessageItemInterface }) => {
     return (
       <ItemChat
@@ -24,6 +24,7 @@ const ChatScreen = React.memo(() => {
       />
     );
   };
+  console.log({ message }, `${BASE_IMAGE_URL}${message?.other_user?.avatar}`);
 
   return (
     <View style={styles.container}>
@@ -32,7 +33,7 @@ const ChatScreen = React.memo(() => {
         behavior={'padding'}
         style={styles.containerList}
       >
-        <FlatList
+        {!loading && <FlatList
           data={messages}
           ref={flatListRef}
           keyExtractor={(item) => item.id?.toString()}
@@ -49,7 +50,7 @@ const ChatScreen = React.memo(() => {
           updateCellsBatchingPeriod={100}
           onEndReachedThreshold={0.5}
 
-        />
+        />}
 
         <ControlBottomChat
           onUpdateMessage={handleSend}
@@ -63,8 +64,11 @@ const ChatScreen = React.memo(() => {
           onClearRepliedMessage={() => setRepliedMessage(null)}
         />
       </KeyboardAvoidingView>
+
       <AppHeader
         style={[styles.header, { backgroundColor: themeColors.primary }]}
+        title={message?.other_user?.fullname || ''}
+        titleStyle={styles.title}
         rightComponent={
           <TouchableOpacity
             onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER, {
@@ -72,12 +76,13 @@ const ChatScreen = React.memo(() => {
                 ...message?.other_user,
               },
             })} style={styles.iconProfile}>
-            <ProfileIcon />
+
+            <AppImage uri={message?.other_user?.avatar} style={styles.avatar} />
+            <View style={styles.status} />
           </TouchableOpacity>}
       />
 
     </View>
   );
-});
+};
 
-export default ChatScreen;

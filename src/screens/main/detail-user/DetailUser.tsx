@@ -1,7 +1,8 @@
-import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, FlagIcon, HeadIcon, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
+import { BriefcaseIcon, CalenderIcon, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
+import { PostTypeKey } from '@types';
 import { formatDate, getAge } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
@@ -17,11 +18,22 @@ const DetailUser = () => {
     return <ItemGame item={item} />;
   };
 
+  const goToScreenMessage = () => {
+    navigate(SCREEN_ROUTE.CHAT, {
+      message: {
+        other_user: {
+          id: data?.id,
+          fullname: data?.fullname,
+          avatar: data?.avatar,
+        },
+      },
+    });
+  };
   return (
 
     <View style={styles.container}>
-      <AppHeader rightComponent={<TouchableOpacity>
-        <FlagIcon />
+      <AppHeader rightComponent={<TouchableOpacity onPress={goToScreenMessage}>
+        <IconMessager width={Spacing.width30} height={Spacing.width30} color="white" />
       </TouchableOpacity>} />
 
       <FlatList
@@ -56,7 +68,7 @@ const DetailUser = () => {
             <View style={styles.valueAbout_me}>
               <AppText  >{data?.about_me}</AppText>
             </View>
-            <HorizontalList data={games} title={'Game chơi cùng'} renderItem={renderItem} />
+            <HorizontalList data={games} type={PostTypeKey.GAMES} title={'Game chơi cùng'} renderItem={renderItem} />
 
             <View style={styles.viewInfo} >
               <View style={styles.view_contact}>
@@ -73,18 +85,10 @@ const DetailUser = () => {
 
                 </View>
 
-                <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CHAT, {
-                  message: {
-                    other_user: {
-                      id: data?.id,
-                      fullname: data?.fullname,
-                      avatar: data?.avatar,
-                    },
-                  },
-                })} style={styles.btnChat}>
+                {/* <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
                   <AppText style={styles.txtChat}>{t('chatWith')} {data?.fullname}</AppText>
                   <ChatIcon />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
 
               <View style={styles.viewListInfo}>

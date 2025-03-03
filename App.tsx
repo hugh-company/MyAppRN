@@ -1,6 +1,6 @@
 import { apiService } from '@api';
 
-import { ThemeProvider } from '@theme';
+import { Spacing, ThemeProvider } from '@theme';
 import { initI18n } from '@translations';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -52,8 +52,6 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
-
-
   useEffect(() => {
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
@@ -85,7 +83,7 @@ function App(): React.JSX.Element {
                       <ModalConfirmation />
                       <ModalChangeLanguage />
                       <AppRatingMovie />
-                      <FlashMessage position="top" />
+                      <FlashMessage position="top" style={{ marginTop: Spacing.width24 }} />
                       <GlobalUI ref={GlobalService.globalUIRef} />
 
                     </View>

@@ -11,13 +11,15 @@ export const createStyles = (themeColors: ThemeColors) =>
       position: 'absolute',
       top: 0,
     },
-    iconProfile: {
+    avatar: {
       width: Spacing.width35,
       height: Spacing.width35,
       borderRadius: Spacing.height24,
-      backgroundColor: themeColors.btnSocial,
+    },
+    iconProfile: {
       alignItems: 'center',
       justifyContent: 'center',
+      padding: Spacing.width4,
     },
     background: {
       flex: 1,
@@ -71,4 +73,19 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
     },
     btnOption: {},
+    status: {
+      width: Spacing.width15,
+      height: Spacing.width15,
+      borderRadius: Spacing.width15,
+      backgroundColor: themeColors.active,
+      position: 'absolute',
+      top: -Spacing.width4,
+      right: -Spacing.width4,
+      borderWidth: 2,
+      borderColor: themeColors.whiteColor,
+    },
+    title: {
+      textAlign: 'center',
+      flex: 1,
+    },
   });

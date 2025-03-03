@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ImageStyle, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Image, ImageStyle, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import FastImage, { ResizeMode } from 'react-native-fast-image';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
 
@@ -29,6 +29,12 @@ export const UploadImage = React.memo((props: propsImage) => {
 
   useEffect(() => {
     setLoading(true);
+  }, [uriBase]);
+
+  useEffect(() => {
+    FastImage.clearMemoryCache().then(() => {
+      setLoading(true);
+    });
   }, [uriBase]);
 
   useEffect(() => {
@@ -102,8 +108,15 @@ export const UploadImage = React.memo((props: propsImage) => {
     return (
       <>
         <View>
-          <FastImage
-            source={{ uri: uriBase }}
+          <Image source={{
+            uri: uriBase,
+          }}
+            style={[styles.image, style]}
+            resizeMode={resizeMode}
+          />
+          {/* <FastImage
+            source={{ uri: uriBase, cache: FastImage.cacheControl.immutable }}
+
             style={[styles.image, style]}
             resizeMode={resizeMode}
 
@@ -112,7 +125,7 @@ export const UploadImage = React.memo((props: propsImage) => {
             }}
 
             onError={() => setLoading(false)}
-          />
+          /> */}
           <View style={styles.btnIconCamera}>
             <CameraIcon />
           </View>

@@ -1,11 +1,13 @@
-import { useRoute } from '@react-navigation/native';
-import { useTheme } from '@theme';
-import { FilterKey, PostTypeKey } from '@types';
-import { t } from 'i18next';
-import { useEffect, useRef, useState } from 'react';
-import { TextInput } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { createStyles } from './styles';
+import {useRoute} from '@react-navigation/native';
+import {useTheme} from '@theme';
+import {FilterKey, PostTypeKey} from '@types';
+import {t} from 'i18next';
+import {debounce} from 'lodash';
+import {useEffect, useRef, useState} from 'react';
+import {TextInput} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {createStyles} from './styles';
+
 interface SearchInterface {
   type: PostTypeKey;
 }
@@ -17,6 +19,11 @@ export const useSearchScreen = () => {
   };
   const refSearch = useRef<TextInput>(null);
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  const debouncedSetSearch = debounce(text => {
+    setDebouncedSearch(text);
+  }, 300);
 
   const [typeScreen, setTypeScreen] = useState<PostTypeKey | undefined>(type);
   const [sort, setSort] = useState<FilterKey | ''>('');
@@ -27,11 +34,11 @@ export const useSearchScreen = () => {
   const [isFilterSort, setIsFilterSort] = useState(false);
   const [isFilterType, setIsFilterType] = useState(false);
   console.log({typeScreen});
-  useEffect(()=>{
-    if(type){
+  useEffect(() => {
+    if (type) {
       setTypeScreen(type);
     }
-  },[type]);
+  }, [type]);
   const menuType = [
     {
       key: PostTypeKey.MOVIES,
@@ -49,6 +56,10 @@ export const useSearchScreen = () => {
       key: PostTypeKey.NOVEL,
       value: t('search.novel'),
     },
+    {
+      key: PostTypeKey.ALL,
+      value: t('search.all'),
+    },
   ];
   const menuSort = [
     {
@@ -65,7 +76,15 @@ export const useSearchScreen = () => {
 
   const onSearch = (text: string) => {
     setSearch(text);
+    debouncedSetSearch(text);
   };
+
+  useEffect(() => {
+    return () => {
+      debouncedSetSearch.cancel();
+    };
+  }, [debouncedSetSearch]);
+
   const filterByType = ({key}: {key: PostTypeKey}) => {
     setTypeScreen(key);
   };
@@ -101,5 +120,6 @@ export const useSearchScreen = () => {
 
     //
     onClear,
+    debouncedSearch,
   };
 };

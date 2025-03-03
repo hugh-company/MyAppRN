@@ -13,11 +13,11 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderColor: themeColors.inputBorder,
       borderRadius: 8,
       paddingHorizontal: Spacing.width12,
-      backgroundColor: themeColors.inputBackground,
+      backgroundColor: themeColors.borderSecondary,
     },
     input: {
       fontSize: FontSize.FontSize14,
-      color: themeColors.text,
+      color: themeColors.whiteColor,
 
       flex: 1,
       height: '100%',

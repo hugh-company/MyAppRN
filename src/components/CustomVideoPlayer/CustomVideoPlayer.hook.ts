@@ -1,24 +1,29 @@
 import {goBack} from '@navigation';
+import {setMute, setSpeed, videoSettingsSelector} from '@redux';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
+import {useDispatch, useSelector} from 'react-redux';
 import {CustomVideoPlayerProps} from './CustomVideoPlayer';
 
 export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   const {isFullScreenVisible, setIsFullScreenVisible, uri} = props;
   const videoRef = useRef<any>(null);
   const [error, setError] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
   const [paused, setPaused] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [playbackRate, setPlaybackRate] = useState(1.0);
+  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(false);
   const [isSpeedVisible, setSpeedVisible] = useState(false);
-
+  //
+  const {isMute, speed} = useSelector(videoSettingsSelector);
+  //
   const toggleMute = useCallback(() => {
-    setIsMuted(prev => !prev);
+    console.log('toggleMute', isMute);
+
+    dispatch(setMute(!isMute));
   }, []);
 
   const togglePlayPause = useCallback(() => {
@@ -89,24 +94,26 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
 
   useEffect(() => {
     setCurrentTime(0);
-    setPlaybackRate(1.0);
+
     setError(false);
   }, [uri]);
-
+  const setPlaybackRate = useCallback(rate => {
+    dispatch(setSpeed(rate));
+  }, []);
   return useMemo(
     () => ({
       setCurrentTime: time => {
         setCurrentTime(time);
       },
       currentTime,
-      playbackRate,
+      speed,
       handlePress,
       fastForward,
       paused,
       togglePlayPause,
       rewind,
       setDuration,
-      isMuted,
+      isMute,
       goBackScreen,
       toggleMute,
       duration,
@@ -125,15 +132,16 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       setError,
       handleDoubleClick,
       setControlsVisible,
+      setPaused,
     }),
     [
-      playbackRate,
+      speed,
       fastForward,
       paused,
       togglePlayPause,
       rewind,
       setDuration,
-      isMuted,
+      isMute,
       goBackScreen,
       toggleMute,
       duration,
@@ -154,6 +162,7 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       handlePress,
       setControlsVisible,
       currentTime,
+      setPaused,
     ],
   );
 };

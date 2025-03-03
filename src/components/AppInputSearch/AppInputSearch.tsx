@@ -30,7 +30,7 @@ const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) =
           style={[
             styles.input,
           ]}
-          placeholderTextColor={themeColors.placeholder}
+          placeholderTextColor={themeColors.whiteColor}
           placeholder={placeholder || t('search.movies')}
           value={value}
           onChangeText={onChangeText}

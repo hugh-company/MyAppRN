@@ -1,16 +1,13 @@
 import {GlobalService} from '@components';
+import {useLocation} from '@hooks';
 import {getLocations, sendMatchSaga} from '@redux';
 import {findUserApi} from '@services';
 import {useTheme} from '@theme';
 import {UserFindInterface} from '@types';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
-enum ActionType {
-  LIKE = 'like',
-  DISLIKE = 'dislike',
-  SUPER_LIKE = 'super_like',
-}
+
 export const useFilterDating = () => {
   const [data, setData] = useState<UserFindInterface[]>([]);
   const {themeColors} = useTheme();
@@ -20,13 +17,22 @@ export const useFilterDating = () => {
   const [matchUser, setMatchUser] = useState<UserFindInterface | null>(null);
   const swipeRef = useRef<{triggerSwipe: (action: string) => void}>(null);
   const dispatch = useDispatch();
+  const {checkLocation} = useLocation();
+
   const [filter, setFilter] = useState<any>({
     age: [18, 30],
     distance: [0],
     gender: '',
   });
-
+  console.log({location});
+  useEffect(() => {
+    checkLocation();
+  }, []);
   const onFilterApi = async (value: any): Promise<void> => {
+    const check = await checkLocation();
+    if (!check) {
+      return;
+    }
     GlobalService.showLoading();
     setFilter(value);
     try {
@@ -37,7 +43,7 @@ export const useFilterDating = () => {
         location: {...location},
       };
       const response: any = await findUserApi(params);
-      console.log({response});
+      console.log({responseFindUser: response});
       setData(response.data);
     } catch (error) {
       console.log({error});
@@ -54,34 +60,6 @@ export const useFilterDating = () => {
         relation_type: direction,
       }),
     );
-    if (direction === 'like') {
-      handleLike(user);
-    } else if (direction === 'dislike') {
-      handleDislike(user);
-    } else if (direction === 'superlike') {
-      handleSuperLike(user);
-    }
-  };
-
-  const handleSwipeAction = (action: string): void => {
-    if (swipeRef.current) {
-      swipeRef.current.triggerSwipe(action);
-    }
-  };
-
-  const handleLike = (user: UserFindInterface): void => {
-    console.log('Liked');
-    // setMatchUser(user);
-  };
-
-  const handleDislike = (user: UserFindInterface): void => {
-    console.log('Disliked');
-    // Add your dislike logic here
-  };
-
-  const handleSuperLike = (user: UserFindInterface): void => {
-    console.log('Super Liked');
-    // Add your super like logic here
   };
 
   return {
@@ -96,7 +74,7 @@ export const useFilterDating = () => {
 
     swipeRef,
     handleSwipe,
-    handleSwipeAction,
+
     matchUser,
     setMatchUser,
   };

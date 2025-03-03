@@ -13,6 +13,7 @@ export const APP_SLICE = {
   CHAT_SLICE: 'CHAT_SLICE',
   SEARCH_MESSAGE_SLICE: 'SEARCH_MESSAGE_SLICE',
   SAVE_POST_SLICE: 'SAVE_POST_SLICE',
+  VIDEO_SLICE: 'VIDEO_SLICE',
 };
 export interface IAccount {
   token: string;
@@ -32,10 +33,5 @@ export interface IMessageSlice {
 export interface IUpdateConversationsPayload {
   conversations: ConversationInterface[];
   cursor_time: string;
-  is_next: boolean;
-}
-export interface IUpdateMessagesPayload {
-  messages: MessageItem[];
-  cursor_id: number;
   is_next: boolean;
 }

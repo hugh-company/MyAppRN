@@ -19,35 +19,35 @@ const SearchList = ({ valueSearch, typeScreen, sort }: SearchListProps) => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [canLoadMore, setCanLoadMore] = useState(true);
+  const [debouncedSearch, setDebouncedSearch] = useState(valueSearch);
 
   useEffect(() => {
-    if (typeScreen !== undefined || sort !== '' || valueSearch !== '') {
+    setDebouncedSearch(valueSearch);
+  }, [valueSearch]);
+
+  useEffect(() => {
+    if (typeScreen !== undefined || sort !== '' || debouncedSearch !== '') {
       setLoading(true);
       setCanLoadMore(true);
+      setPage(1); // Reset page to 1 when new search starts
     }
-  }, [typeScreen, sort, valueSearch]);
+  }, [typeScreen, sort, debouncedSearch]);
 
   useEffect(() => {
-    console.log({ loading, page });
-
     if (loading) {
-      setPage(1);
-
       callApiSearch({
-        search: valueSearch,
+        search: debouncedSearch,
         typeScreen,
         sort,
-        paged: 1,
+        paged: page,
       });
     }
   }, [loading]);
 
   useEffect(() => {
-    console.log({ page });
-
     if (page > 1 && !loading) {
       callApiSearch({
-        search: valueSearch,
+        search: debouncedSearch,
         typeScreen,
         sort,
         paged: page,
@@ -70,9 +70,8 @@ const SearchList = ({ valueSearch, typeScreen, sort }: SearchListProps) => {
     paged?: number;
   }) => {
     console.log({ filter }, canLoadMore, page, searchData);
-    setLoading(false);
     if (!canLoadMore) {
-
+      setLoading(false);
       return;
     }
     try {
@@ -82,13 +81,12 @@ const SearchList = ({ valueSearch, typeScreen, sort }: SearchListProps) => {
       if (filter?.search) {
         params.q = filter.search;
       }
-      if (filter?.typeScreen) {
+      if (filter?.typeScreen !== PostTypeKey.ALL && filter?.typeScreen) {
         params.filter = `posttype__${typeScreen}`;
       }
       if (filter?.sort) {
         params.sortby = sort;
       }
-
 
       const responseSearch: any = await searchApi(params);
       console.log({ responseSearch }, { params });
@@ -96,12 +94,12 @@ const SearchList = ({ valueSearch, typeScreen, sort }: SearchListProps) => {
       setSearchData(prevData => params?.paged === 1 ? responseSearch.data?.data || [] : [...prevData, ...responseSearch.data?.data || []]);
       setLoading(false);
     } catch (error) {
-      console.log({ error });
+      console.log({ search: error });
       setSearchData([]);
       setLoading(false);
-
     }
   };
+
   if (loading) {
     return (
       <LoadingList numColumns={2} />

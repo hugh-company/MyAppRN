@@ -83,4 +83,10 @@ export const createStyles = (themeColors: ThemeColors) =>
     paddingBottom: {
       paddingBottom: Spacing.width50,
     },
+    infoMovie: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+    },
   });

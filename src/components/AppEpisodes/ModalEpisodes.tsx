@@ -1,4 +1,4 @@
-import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { HeightScreen, useTheme } from '@theme';
 import { chapterEpisodeInterface } from '@types';
 import { t } from 'i18next';
@@ -10,7 +10,7 @@ import { AppText } from '../AppText';
 import { createStyles } from './styles';
 
 export interface ModalEpisodesProps {
-  refModal: React.RefObject<BottomSheetModal>;
+  refModal: React.RefObject<BottomSheetModal> | null;
   onSelectChapter?: any;
   selectEpisodes?: any;
 
@@ -94,7 +94,7 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
           }
         />
       </View>
-      <BottomSheetFlashList
+      <BottomSheetFlatList
         data={filteredEpisodes}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}

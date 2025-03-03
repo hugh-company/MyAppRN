@@ -3,7 +3,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Spacing, useTheme } from '@theme';
 import { chapterEpisodeInterface, PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { ModalEpisodes } from './ModalEpisodes';
 import { createStyles } from './styles';
@@ -13,25 +13,31 @@ export interface AppEpisodesProps {
   title?: string;
   style?: StyleProp<ViewStyle>;
   onSelectChapter?: (item: chapterEpisodeInterface) => void;
+  value?: number;
 
 }
 const AppEpisodes = ({
   style,
   episodes = [],
   onSelectChapter,
-  title,
+  title, value = 0,
 }: AppEpisodesProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [selectEpisodes, setSelectEpisodes] = useState(0);
+  const [selectEpisodes, setSelectEpisodes] = useState(value);
 
   const lineHeight = Spacing.height32;
   const bottomModal = React.useRef<BottomSheetModal>(null);
 
-
+  useEffect(() => {
+    if (value) {
+      setSelectEpisodes(value);
+    }
+  }, [value]);
   const handleLoadMore = () => {
     bottomModal.current?.present();
   };
+  if (!episodes?.length) { return null; }
   return (
     <>
       <View style={[styles.container, style]}>
@@ -57,7 +63,7 @@ const AppEpisodes = ({
       </View>
 
       <ModalEpisodes
-        refModal={bottomModal}
+        refModal={bottomModal as any}
         episodes={episodes}
         minHeight={1}
         height={1}

@@ -9,7 +9,7 @@ import SearchList from './components/SearchList';
 
 const MemoizedModalFilter = memo(ModalFilter);
 const MemoizedDashboardSearch = memo(DashboardSearch);
-
+const MemoizedSearchList = memo(SearchList);
 
 const SearchScreen = () => {
 
@@ -19,15 +19,16 @@ const SearchScreen = () => {
 
     //new
     onClear,
+    debouncedSearch, // new
   } = useSearchScreen();
 
   const renderBody = () => {
-    if (search?.length > 0 || sort !== '' || typeScreen !== undefined) {
+    if (debouncedSearch?.length > 0 || sort !== '' || typeScreen !== undefined) {
       return (
-        <SearchList
+        <MemoizedSearchList
           typeScreen={typeScreen}
           sort={sort}
-          valueSearch={search} />
+          valueSearch={debouncedSearch} />
       );
     }
     return <MemoizedDashboardSearch />;
@@ -38,9 +39,7 @@ const SearchScreen = () => {
         placeholder={t('message.searchMessage')}
         onSearch={onSearch}
         searchText={search}
-        onClear={() => {
-          onClear();
-        }} />
+        onClear={onClear} />
 
       <View style={styles.filter}>
         <TouchableOpacity onPress={() => setIsFilterType(true)} style={[styles.btnType, typeScreen && styles.btnActive]}>

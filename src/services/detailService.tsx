@@ -1,5 +1,7 @@
-import { API_ENDPOINTS, ApiConfigs, apiService } from '@api';
-import { KeyTypeWithCategory, PostTypeKey } from '@types';
+import { API_ENDPOINTS, ApiConfigs, apiService, KeyQueryApi } from '@api';
+import { useApiQuery } from '@hooks';
+import { detailPostResponseInterface, KeyTypeWithCategory, PostTypeKey } from '@types';
+import i18next from 'i18next';
 import { csrfTokenApi } from './loginService';
 
 export const getDetailPostApi = (type: PostTypeKey, id: number) => {
@@ -96,5 +98,16 @@ export const viewsPostApi = async (id: number, type: PostTypeKey) => {
     {
       'Content-Type': 'multipart/form-data',
     },
+  );
+};
+
+// use for get list of post
+export const useDetailPostApi = (id: number, type: PostTypeKey) => {
+  const lang = i18next.language;
+
+  return useApiQuery<detailPostResponseInterface>(
+    `${KeyQueryApi.POST_DETAIL}${type}${id}${lang}`,
+    `${API_ENDPOINTS.DETAIL}${type}/${id}`,
+
   );
 };

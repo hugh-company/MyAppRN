@@ -4,10 +4,7 @@ import {useTheme} from '@theme';
 import {ItemListProduct, PostTypeKey, TabInterface, TypeList} from '@types';
 import {navigateViewListProps} from '@utils';
 import {useEffect, useRef, useState} from 'react';
-import {
-  useAnimatedScrollHandler,
-  useSharedValue,
-} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 import {createStyles} from './styles';
 
 export const useViewListScreen = () => {
@@ -30,9 +27,9 @@ export const useViewListScreen = () => {
   const scrollY = useSharedValue(0);
   const [isNext, setIsNext] = useState(true);
   const refFlatList = useRef<any>(null);
-  const scrollHandler = useAnimatedScrollHandler(event => {
-    scrollY.value = event.contentOffset.y;
-  });
+  //
+  const [isFilter, setIsFilter] = useState(false);
+  //
   const onSelectedCategory = (item: TabInterface) => {
     if (item.slug === slugCategory) {
       if (refFlatList.current) {
@@ -129,7 +126,7 @@ export const useViewListScreen = () => {
     list,
     slugCategory,
     onLoadMore,
-    scrollHandler,
+
     onSelectedCategory,
     scrollY,
     categoriesList,
@@ -137,5 +134,7 @@ export const useViewListScreen = () => {
     type,
     loading,
     refFlatList,
+    isFilter,
+    setIsFilter,
   };
 };

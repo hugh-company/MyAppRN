@@ -15,6 +15,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     header: {
       position: 'absolute',
+      top: 0,
     },
     banner: {
       width: '100%',

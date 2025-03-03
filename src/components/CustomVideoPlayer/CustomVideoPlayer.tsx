@@ -30,13 +30,13 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   const {
     videoRef,
     error,
-    isMuted,
+    isMute,
     currentTime,
     paused,
     toggleFullScreen,
     duration,
     setDuration,
-    playbackRate,
+    speed,
     setPlaybackRate,
     isLoading,
     setIsLoading,
@@ -49,7 +49,7 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     updateProgress,
     setSpeedVisible, setError, handlePress,
     setIsFullScreenVisible, controlsVisible,
-    setControlsVisible,
+    setPaused,
   } = useCustomVideoPlayer(props);
   const { top, bottom } = useSafeAreaInsets();
 
@@ -69,11 +69,12 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
             runOnJS(updateProgress)(data.currentTime);
           }}
           onLoad={({ duration }) => setDuration(duration)}
-          muted={isMuted}
+          muted={isMute}
           paused={paused}
-          rate={playbackRate}
+          rate={speed}
           onLoadStart={() => setIsLoading(true)}
           onReadyForDisplay={() => setIsLoading(false)}
+          onEnd={() => setPaused(true)}
           {...(Platform.OS === 'android' && {
             ignoreSilentSwitch: 'ignore',
             playInBackground: true,
@@ -99,7 +100,7 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
                 goBack();
               }
             }}
-            isMuted={isMuted}
+            isMuted={isMute}
             toggleMute={toggleMute}
             setSpeedVisible={setSpeedVisible}
           />
@@ -131,9 +132,9 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
         </Animated.View>}
         <MemoizedModalSpeed
           visible={isSpeedVisible}
-          currentSpeed={playbackRate}
-          onSelectSpeed={(speed) => {
-            setPlaybackRate(speed);
+          currentSpeed={speed}
+          onSelectSpeed={(speedVideo) => {
+            setPlaybackRate(speedVideo);
             setSpeedVisible(false);
           }}
           onClose={() => {

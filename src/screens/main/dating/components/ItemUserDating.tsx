@@ -13,7 +13,7 @@ export function ItemUserDating(props: ItemUserDatingProps) {
   const { item, onPress } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  return <TouchableOpacity style={[styles.container, { borderColor: item?.frameColor }]} onPress={onPress}>
+  return <TouchableOpacity style={[styles.container, { borderColor: '#6D0101' }]} onPress={onPress}>
     <AppImage style={styles.item} uri={item.avatar} />
 
     <View style={styles.viewInfo}>
@@ -24,9 +24,9 @@ export function ItemUserDating(props: ItemUserDatingProps) {
         <AppText numberOfLines={3} style={styles.txtName}>{[item?.fullname?.trim(), getAge(item?.birthday)].join(', ')}</AppText>
         {item?.online === StatusAccount.ONLINE && <View style={styles.viewActive} />}
       </View>
-      <AppText style={styles.address}>{item?.place}</AppText>
+      {/* <AppText style={styles.address}>{item?.place}</AppText> */}
     </View>
-    <View style={[styles.viewMatch, { backgroundColor: item?.frameColor }]}>
+    <View style={[styles.viewMatch, { backgroundColor: '#6D0101' }]}>
       <AppText style={styles.txtMatch}>{item?.frameLabel}</AppText>
     </View>
 
@@ -36,7 +36,7 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       width: (WidthScreen - Spacing.width44) / 2,
-      height: Spacing.width230,
+      height: (WidthScreen - Spacing.width44) / 2,
       borderWidth: 4,
       borderColor: themeColors.primary,
       borderRadius: Spacing.width8,
@@ -61,7 +61,7 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     item: {
       width: (WidthScreen - Spacing.width44) / 2,
-      height: Spacing.width230,
+      height: (WidthScreen - Spacing.width44) / 2,
     },
     title: {
       fontSize: FontSize.FontSize16,
@@ -85,7 +85,7 @@ const createStyles = (themeColors: ThemeColors) =>
       left: 0,
       right: 0,
       alignItems: 'center',
-      paddingVertical: Spacing.width16,
+      paddingVertical: Spacing.width4,
       gap: Spacing.width16,
       backgroundColor: 'rgba(0,0,0,0.5)',
     },
@@ -105,7 +105,7 @@ const createStyles = (themeColors: ThemeColors) =>
       fontSize: FontSize.FontSize12,
     },
     txtName: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize13,
       ...FontWithFamily.FontWithFamily_600,
       maxWidth: '80%',
       flex: 1,

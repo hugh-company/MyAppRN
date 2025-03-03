@@ -6,6 +6,7 @@ import savedPostSlice from './slices/savedPostSlice';
 import searchMessageSlice from './slices/searchMessageSlice';
 import settingSlice from './slices/settingSlice';
 import socketSlice from './slices/socketSlice';
+import videoSlice from './slices/videoSlice';
 const rootReducer = combineReducers({
   accountSlice,
   settingSlice,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   chatSlice,
   searchMessageSlice,
   savedPostSlice,
+  videoSlice,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 export default rootReducer;

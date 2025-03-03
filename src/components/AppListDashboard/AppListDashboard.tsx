@@ -86,10 +86,6 @@ const AppListDashboard = React.memo(({
       case TypeKeyListApi.LIST_ITEM_TAB:
         return <MemoizedCategoryListItem
           data={item?.items as TabInterface[]}
-          isTab={false}
-          goToViewList={() => {
-            console.log({ item });
-          }}
           itemModule={item}
           type={item?.posttype} />;
       case TypeKeyListApi.LIST_SLIDER:

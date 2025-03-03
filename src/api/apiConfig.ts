@@ -61,7 +61,7 @@ export const API_ENDPOINTS = {
   LIKE: '/posts/action/like/',
   // favorite
   LIST_FAVORITE: '/users/favorites',
-  LIST_JOBS: '/user/jobs',
+  LIST_JOBS: '/users/jobs',
   FAVORITE: '/posts/action/favorites/',
   SAVED: '/posts/action/save/',
   // view
@@ -95,4 +95,6 @@ export const KeyQueryApi = {
   DASHBOARD_GAME: 'dashboardGame',
   DASHBOARD_DATING: 'dashboardDating',
   DASHBOARD_SEARCH: 'dashboardSearch',
+  POST_DETAIL: 'postDetail',
+  GET_LIST_POST: 'getListPost',
 };

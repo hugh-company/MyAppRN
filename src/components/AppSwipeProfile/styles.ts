@@ -1,11 +1,4 @@
-import {
-  FontSize,
-  FontWithFamily,
-  Shadow,
-  Spacing,
-  ThemeColors,
-  WidthScreen,
-} from '@theme';
+import {FontSize, FontWithFamily, Shadow, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -15,11 +8,9 @@ export const createStyles = (themeColors: ThemeColors) =>
       backgroundColor: themeColors.background,
     },
     card: {
-      position: 'absolute',
-      width: WidthScreen,
-      borderRadius: 20,
+      borderRadius: Spacing.width16,
+      // flex: 1,
       overflow: 'hidden',
-      backgroundColor: '#fff',
       shadowColor: '#000',
       shadowOffset: {width: 0, height: 4},
       shadowOpacity: 0.1,
@@ -95,14 +86,12 @@ export const createStyles = (themeColors: ThemeColors) =>
     viewLocation: {
       flexDirection: 'row',
       alignItems: 'center',
-
       backgroundColor: 'rgba(0,0,0,0.5)',
       position: 'absolute',
       left: Spacing.width16,
       top: Spacing.width16,
       borderRadius: 20,
       padding: Spacing.width4,
-
       gap: Spacing.width4,
     },
     txtLocation: {
@@ -123,7 +112,6 @@ export const createStyles = (themeColors: ThemeColors) =>
     dotsView: {
       backgroundColor: themeColors.btnSocial,
       paddingVertical: Spacing.width4,
-      // paddingHorizontal: Spacing.width2,
       gap: Spacing.width8,
       borderRadius: Spacing.width8,
     },
@@ -145,5 +133,15 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     linear: {
       ...StyleSheet.absoluteFillObject,
+    },
+    cardContent: {
+      backgroundColor: themeColors.background,
+    },
+    innerBannerContainer: {
+      flex: 1,
+    },
+    innerBannerImage: {
+      width: '100%',
+      height: '100%',
     },
   });

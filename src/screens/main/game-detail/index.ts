@@ -1,1 +1,1 @@
-export { default as GameDetailScreen } from './GameDetailScreen';
+export * from './GameDetailScreen';

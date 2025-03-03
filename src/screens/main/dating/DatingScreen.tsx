@@ -1,16 +1,19 @@
-import { LocationIcon2, MessageIcon } from '@assets';
+import { FilterIcon, LocationIcon2, ProfileIcon } from '@assets';
 import { AppButton, AppText, HeaderMain } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { TouchableOpacity, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useDatingScreen } from './DatingScreen.hook';
 import AppListDating from './components/AppListDating';
 import { ListHorizontalUser } from './components/ListHorizontalUser';
 
 const DatingScreen = () => {
-  const { data, loading, styles, tab, tabNav, onSelectTab, isPermissionLocation, goToSettingLocation } = useDatingScreen();
+  const { data, loading, styles, tab, refetch,
+    isRefetching, tabNav, onSelectTab, isPermissionLocation, goToSettingLocation } = useDatingScreen();
+
 
   if (!isPermissionLocation) {
     return (
@@ -24,26 +27,41 @@ const DatingScreen = () => {
   }
   return (
     <View style={styles.container}>
-      <HeaderMain
-        title={t('navigation.dating')}
-        isHome={false}
-        isSearch={false}
-        renderIconRight={<TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MESSAGES)} style={styles.btnMessage}>
-          <MessageIcon />
-        </TouchableOpacity>}
-      />
-      <ListHorizontalUser
-        data={tabNav || []}
-        tabSelected={tab}
-        onPress={(item) => {
-          onSelectTab(item.type as any);
-        }}
-        style={styles.tab}
+      <LinearGradient
+        colors={['rgba(209, 16, 48, 0.72)', 'rgba(1, 1, 1, 0.72)']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <HeaderMain
+          title={t('navigation.dating')}
 
-      />
+          isSearch={false}
+
+          renderIconRight={<View style={styles.optionHeader}>
+            <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.FILTER_DATING)} style={styles.btnMessage}>
+              <FilterIcon size={Spacing.width28} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CREATE_PROFILE)} style={styles.btnMessage}>
+              <ProfileIcon />
+            </TouchableOpacity>
+
+          </View>}
+        />
+        <ListHorizontalUser
+          data={tabNav || []}
+          tabSelected={tab}
+          onPress={(item) => {
+            onSelectTab(item.type as any);
+          }}
+          style={styles.tab}
+
+        />
+      </LinearGradient>
       <AppListDating
         data={data}
         loading={loading}
+        onRefresh={refetch}
+        refreshing={isRefetching}
       />
     </View>
   );

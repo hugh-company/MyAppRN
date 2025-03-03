@@ -8,7 +8,7 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, readChapter, scrollHandler, onSelectChapter, onNavigateDetail, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
+  const { styles, detail, readChapter, scrollHandler, onSelectChapter, onNavigateDetail, isRefetching, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
 
   if (!detail) {
     return null;
@@ -18,7 +18,7 @@ const ChapterDetail = () => {
       <Animated.ScrollView
         // refetch data
         ref={refList}
-        refreshControl={<RefreshControl refreshing={false} onRefresh={onRefresh} tintColor={themeColors.text} />}
+        refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} tintColor={themeColors.text} />}
         showsVerticalScrollIndicator={false}
         onScroll={scrollHandler}
       >
@@ -29,7 +29,7 @@ const ChapterDetail = () => {
           type={PostTypeKey.COMIC}
           views={detail?.views}
           likes={detail?.like_count}
-          poster={detail?.feature?.path}
+          poster={detail?.banner?.path}
           totalEpisodes={detail?.chapters?.length || 0}
           onPlay={() => {
             if (detail?.chapters?.length) {

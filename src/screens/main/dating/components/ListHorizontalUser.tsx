@@ -1,10 +1,11 @@
+import { IconMessager } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { getUserInfo } from '@redux';
-import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
+import { getConversation } from '@redux';
+import { ColorsApp, FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import { navHorizontalInterface, TypeTabDatingApi } from '@types';
 import { t } from 'i18next';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSelector } from 'react-redux';
 import { SlideImage } from './SlideImage';
@@ -19,7 +20,11 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
   const { data, onPress, style, tabSelected = TypeTabDatingApi.NEAR_YOU } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const profile = useSelector(getUserInfo);
+  const { conversations } = useSelector(getConversation);
+  const countMessage = useMemo(() => conversations?.filter(elm => !elm.isread), [conversations]);
+
+
+
   const menuBorderColors = {
     [TypeTabDatingApi.NEAR_YOU]: {
       borderColor: themeColors.primary,
@@ -48,14 +53,7 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
     );
   };
 
-  const renderInfoUser = () => {
-    return (
-      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CREATE_PROFILE)} style={[styles.item, { marginRight: 0 }]}>
-        <AppImage uri={profile?.avatar} style={styles.viewProfile} />
-        <AppText style={styles.txt}>{t('profile')}</AppText>
-      </TouchableOpacity>
-    );
-  };
+
   const renderItem = ({ item }: { item: navHorizontalInterface }) => {
 
     return (
@@ -80,10 +78,15 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
         renderItem={renderItem}
         horizontal
         style={styles.list}
-
         keyExtractor={(item, index) => `list_category_${index}`}
       />
-      {renderInfoUser()}
+      <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.MESSAGES)} style={styles.btnMessage}>
+        <IconMessager width={Spacing.width40} height={Spacing.width40} color="white" />
+        {countMessage?.length > 0 && <View style={styles.countMessage}>
+          <AppText style={styles.txtMessage}>{countMessage?.length > 9 ? '9+' : countMessage?.length}</AppText>
+        </View>}
+        <AppText style={styles.txt}>{t('message.title')}</AppText>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -95,11 +98,11 @@ const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
     },
     list: {
-      paddingVertical: Spacing.width16,
+      paddingVertical: Spacing.width8,
     },
     image: {
-      width: Spacing.width56,
-      height: Spacing.width56,
+      width: Spacing.width48,
+      height: Spacing.width48,
       borderRadius: Spacing.width56,
 
     },
@@ -140,10 +143,34 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     imageNearYou: {
 
-
+      width: Spacing.width48,
+      height: Spacing.width48,
+      borderRadius: Spacing.width56,
     },
 
+    btnMessage: {
+      gap: Spacing.width12,
 
+      borderRadius: Spacing.width56,
+      alignItems: 'center',
+      justifyContent: 'center',
+
+
+    },
+    countMessage: {
+      position: 'absolute',
+      top: -Spacing.width2,
+      right: -Spacing.width2,
+      backgroundColor: ColorsApp.primary,
+      width: Spacing.width16,
+      height: Spacing.width16,
+      borderRadius: Spacing.width16,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txtMessage: {
+      fontSize: FontSize.FontSize12,
+    },
     //
     dots: {
       width: Spacing.width12,

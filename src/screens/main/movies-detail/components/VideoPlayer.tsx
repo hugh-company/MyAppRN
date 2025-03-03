@@ -1,11 +1,10 @@
-import { LeftIcon, PlayIcon } from '@assets';
+import { PlayIcon } from '@assets';
 import { AppImage, AppText, CustomVideoPlayer } from '@components';
-import { goBack } from '@navigation';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { t } from 'i18next';
 import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
-import Orientation from 'react-native-orientation-locker';
+import LinearGradient from 'react-native-linear-gradient';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 
 export interface VideoPlayerProps {
@@ -14,28 +13,30 @@ export interface VideoPlayerProps {
   setIsFullScreenVisible: (visible: boolean) => void;
   isFullScreenVisible: boolean;
   autoPlay?: boolean; // Add autoPlay prop
+  isPlaying: boolean;
+  setIsPlaying: (isPlaying: boolean) => void;
 }
 
 export const BannerDetail = React.memo(({ imageUri, setIsPlaying, styles }: any) => {
   return (
     <View style={styles.imageBanner}>
-      <AppImage uri={imageUri} style={styles.banner} checkNetworking={false} />
-      {/* <FastImage source={{ uri: `https://oninapp.com${imageUri}` }} style={styles.banner} /> */}
+
+      <AppImage uri={imageUri} style={[styles.banner, { height: HeightScreen / 10 * 7 }]} checkNetworking={false} />
+
+      <LinearGradient
+        colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.9)']}
+
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+        style={styles.gradient}
+      />
       <View style={styles.control}>
         <TouchableOpacity onPress={() => setIsPlaying(true)} style={styles.btnPlay}>
           <PlayIcon />
           <AppText style={styles.txtPlay}>{t('play')}</AppText>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity
-        style={styles.btnBack}
-        onPress={() => {
-          Orientation.lockToPortrait();
-          goBack();
-        }}
-      >
-        <LeftIcon />
-      </TouchableOpacity>
+
     </View>
   );
 }, (prevProps, nextProps) => prevProps.imageUri === nextProps.imageUri);
@@ -84,13 +85,13 @@ const VideoComponent = ({ urlVideo, isFullScreenVisible, setIsFullScreenVisible,
   );
 };
 
-export function VideoPlayer({ image, urlVideo, setIsFullScreenVisible, isFullScreenVisible, autoPlay }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = React.useState(autoPlay || false); // Use autoPlay prop
+export function VideoPlayer({ image, urlVideo, setIsFullScreenVisible, isFullScreenVisible, autoPlay, isPlaying, setIsPlaying }: VideoPlayerProps) {
   const { themeColors } = useTheme();
   const styles = useMemo(() => createStyles(themeColors), []);
 
   return (
     <View style={styles.container}>
+
       {isPlaying ? (
         <VideoComponent
           urlVideo={urlVideo}
@@ -112,8 +113,6 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
-
-
   },
   btnPlay: {
     backgroundColor: themeColors.primary,
@@ -146,7 +145,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   imageBanner: {
     width: '100%',
-    height: (WidthScreen * 9) / 16,
+    height: HeightScreen / 10 * 7,
   },
   control: {
     position: 'absolute',
@@ -157,5 +156,8 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
   },
 });

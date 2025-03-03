@@ -1,4 +1,5 @@
-import { API_ENDPOINTS, ApiConfigs, apiService } from '@api';
+import { API_ENDPOINTS, ApiConfigs, apiService, KeyQueryApi } from '@api';
+import { useApiQuery } from '@hooks';
 import { PostTypeKey } from '@types';
 
 interface paramsPost {
@@ -51,4 +52,12 @@ export const getListGamesTrendingApi = async () => {
     // ?sortby=views_day__DESC
     sortby: 'views_day__DESC',
   });
+};
+// useViewListScreen.tsx
+export const useGetListPost = (url: string, params: paramsPost, category?: string) => {
+  const uri = `${url}${category}/`;
+  return useApiQuery(
+    KeyQueryApi.GET_LIST_POST,
+    uri
+  );
 };

@@ -1,4 +1,10 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  ColorsApp,
+  FontSize,
+  FontWithFamily,
+  Spacing,
+  ThemeColors,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -6,6 +12,11 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       flex: 1,
       backgroundColor: themeColors.background,
+    },
+    optionHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
     },
     tab: {
       marginHorizontal: Spacing.width16,
@@ -42,5 +53,19 @@ export const createStyles = (themeColors: ThemeColors) =>
 
       alignItems: 'center',
       justifyContent: 'center',
+    },
+    countMessage: {
+      position: 'absolute',
+      top: Spacing.width2,
+      right: Spacing.width2,
+      backgroundColor: ColorsApp.primary,
+      width: Spacing.width16,
+      height: Spacing.width16,
+      borderRadius: Spacing.width16,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    txtMessage: {
+      fontSize: FontSize.FontSize12,
     },
   });

@@ -4,6 +4,7 @@ import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { InteractionManager, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { useMovieScreen } from './MovieScreen.hook';
 
 const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextProps) => {
@@ -33,19 +34,26 @@ const MovieScreen = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderMain title={t('movies.movieGood')} type={PostTypeKey.MOVIES} />
+      <LinearGradient
+        colors={['rgba(209, 16, 48, 0.72)', 'rgba(1, 1, 1, 0.72)']}
+        style={styles.gradientBackground}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <HeaderMain title={t('movies.movieGood')} type={PostTypeKey.MOVIES} />
 
-      <AppInputSearch
-        onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: ItemListDashboard.MOVIES })}
-        editable={false}
-        style={styles.inputSearch}
-      />
+        <AppInputSearch
+          onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: ItemListDashboard.MOVIES })}
+          editable={false}
+          style={styles.inputSearch}
+        />
 
-      <AppCategoryList
-        contentContainerStyle={styles.category}
-        data={categories}
-        categoryId={tabSelect?.id}
-        onSelectedCategory={handleCategorySelect} />
+        <AppCategoryList
+          contentContainerStyle={styles.category}
+          data={categories}
+          categoryId={tabSelect?.id}
+          onSelectedCategory={handleCategorySelect} />
+      </LinearGradient>
 
       {shouldRenderList && (
         <AppListDashboard
