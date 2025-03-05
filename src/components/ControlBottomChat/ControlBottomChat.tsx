@@ -3,6 +3,7 @@ import { AppImage, AppText } from '@components';
 import { getGameTrendingLocal } from '@redux';
 import { Spacing, useTheme } from '@theme';
 import { ItemListProduct, MessageItemInterface } from '@types';
+import { t } from 'i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import { FlatList, Keyboard, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
@@ -55,7 +56,11 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     onClearRepliedMessage && onClearRepliedMessage();
   };
 
-  const handleSelectGame = (game: any) => setGameSelected(game);
+  const handleSelectGame = (game: any) => {
+    setMessage(t('message.template_message_chat_game').replace('GAME', `"${game.title}"`));
+    setGameSelected(game);
+    setShowIcons(false);
+  };
 
   const handleShowIcons = () => {
     setShowIcons(true);
@@ -141,33 +146,6 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
       {repliedMessage && renderRepliedMessage()}
       {isShowGame && renderGame()}
       <View style={[styles.viewInput]}>
-        {/* <Animated.View style={[styles.iconsContainer, iconsAnimationStyle]}>
-          <TouchableOpacity
-            disabled={isShowGame}
-            onPress={handleShowStickers}
-            style={styles.iconButton}>
-            <GlobalIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            disabled={isShowGame}
-            onPress={handleSelectImage} style={styles.iconButton}>
-            <UploadImageIcon color={isShowGame ? themeColors.disable : themeColors.colorMain4} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            disabled={!!gameSelected}
-            hitSlop={
-              { top: 10, bottom: 10, left: 10, right: 10 }
-            } onPress={() => setIsShowGame(!isShowGame)} style={[styles.iconButton]}>
-            <GameHandleIcon width={Spacing.width32} height={Spacing.width32} color={gameSelected ? themeColors.disable : themeColors.colorMain4} />
-          </TouchableOpacity>
-
-        </Animated.View>
-        {!showIcons && (
-          <TouchableOpacity onPress={handleShowIcons} style={[styles.iconButton, { width: Spacing.width30 }]}>
-            <RightIcon />
-          </TouchableOpacity>
-        )} */}
         <SelectOption
           onSticker={() => {
             handleShowStickers();

@@ -149,10 +149,9 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   control: {
     position: 'absolute',
-    bottom: 0,
+    top: (HeightScreen / 10 * 7) / 3.5,
     left: 0,
     right: 0,
-    top: 0,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

@@ -35,7 +35,6 @@ export const useDatingScreen = () => {
     isSuccess,
     error,
   } = useDatingDashboardApi(tab);
-  console.log({dataDashboard});
 
   useEffect(() => {
     if (dataDashboard?.data?.modules?.length ?? 0 > 0) {

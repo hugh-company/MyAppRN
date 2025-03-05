@@ -1,10 +1,9 @@
-import { CheckRead, IconReadMessage } from '@assets';
 import { AppImage, AppText } from '@components';
 import { FontSize, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
-import { MessageItemInterface, MessageStatus, MessageType, OtherUser } from '@types';
+import { MessageItemInterface, MessageType, OtherUser } from '@types';
 import { checkMessageTime } from '@utils';
 import React from 'react';
-import { ActivityIndicator, Animated, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { MessageGame } from './MessageGame';
 import { MessageImages } from './MessageImages';
@@ -40,19 +39,7 @@ export function MessageReceived(props: MessageReceivedProps) {
       useNativeDriver: true,
     }).start();
   };
-  const renderStatusMessage = () => {
-    switch (item.content.status) {
-      case MessageStatus.SENDING:
-        return <ActivityIndicator size="small" color={themeColors.whiteColor} />;
-      case MessageStatus.RECEIVED:
-      case MessageStatus.SEEN:
-        return <CheckRead />;
-      case MessageStatus.READ:
-        return <IconReadMessage />;
-      default:
-        return <IconReadMessage />;
-    }
-  };
+
   return (
     <PanGestureHandler
       onGestureEvent={handleGestureEvent}
@@ -80,7 +67,7 @@ export function MessageReceived(props: MessageReceivedProps) {
           {item?.content?.type === MessageType.GAME && item.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
           {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
 
-          {item?.content?.data?.text && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
+          {item?.content?.data?.text?.length > 0 && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
           <View style={styles.viewRead}>
 
             <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>

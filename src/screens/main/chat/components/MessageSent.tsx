@@ -50,6 +50,7 @@ export function MessageSent(props: MessageSentProps) {
         return <ActivityIndicator size="small" color={themeColors.whiteColor} />;
       case MessageStatus.RECEIVED:
       case MessageStatus.SEEN:
+      case MessageStatus.SENT:
         return <CheckRead />;
       case MessageStatus.READ:
         return <IconReadMessage />;
@@ -67,10 +68,7 @@ export function MessageSent(props: MessageSentProps) {
       <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
 
         <View style={[styles.containerMessage, item?.content?.data?.sticker && { backgroundColor: 'transparent' }]}>
-          {/* <LinearGradient
-            colors={['#77051F', '#432617']}
 
-          > */}
           <View style={[styles.message]}>
 
             {item.content?.replyto && (
@@ -86,16 +84,14 @@ export function MessageSent(props: MessageSentProps) {
             }}
               thread_id={item.thread_id} id={item.id} />}
             {item?.content?.type === MessageType.GAME && item?.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
-            {item?.content?.data?.text && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
+            {item?.content?.data?.text?.length > 0 && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
             {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
             <View style={styles.viewRead}>
               <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>
-
               {renderStatusMessage()}
-
             </View>
           </View>
-          {/* </LinearGradient> */}
+
         </View>
         <View>
           <AppImage style={styles.avatar} uri={userSent?.avatar} />
@@ -159,8 +155,9 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   },
   message: {
     padding: Spacing.width16,
-    gap: Spacing.width24,
+    gap: Spacing.width16,
     minWidth: Spacing.width100,
+
     flex: 1,
 
   },

@@ -26,16 +26,12 @@ export const UploadImage = React.memo((props: propsImage) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
+  console.log({ uriBase });
 
   useEffect(() => {
     setLoading(true);
   }, [uriBase]);
 
-  useEffect(() => {
-    FastImage.clearMemoryCache().then(() => {
-      setLoading(true);
-    });
-  }, [uriBase]);
 
   useEffect(() => {
 
@@ -52,6 +48,13 @@ export const UploadImage = React.memo((props: propsImage) => {
     }
   }, [uriBase]);
 
+  useEffect(() => {
+    return () => {
+      // Clear image cache when component unmounts
+      FastImage.clearMemoryCache();
+      FastImage.clearDiskCache();
+    };
+  }, []);
 
   const onGetImageWithDevice = () => {
     const options: ImageLibraryOptions = {
@@ -131,11 +134,7 @@ export const UploadImage = React.memo((props: propsImage) => {
           </View>
         </View>
 
-        {isLoading && (
 
-          <View style={[styles.imageLoading, style]} />
-
-        )}
       </>
     );
   };

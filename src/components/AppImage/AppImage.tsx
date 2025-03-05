@@ -1,53 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { ImageStyle, StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import FastImage, { ResizeMode, Source } from 'react-native-fast-image';
+import React, { useEffect, useMemo, useState } from 'react';
+import { StyleProp, StyleSheet } from 'react-native';
+import FastImage, { ImageStyle as FastImageStyle, ResizeMode, Source } from 'react-native-fast-image';
 
 import { BASE_IMAGE_URL } from '@api';
 import { NoImage } from '@assets';
 import { Box } from '@theme';
 
-interface propsImage {
-  uri?: string | null;
-  style?: StyleProp<ImageStyle | ViewStyle> | any;
+interface PropsImage {
+  style?: StyleProp<FastImageStyle>;
   resizeMode?: ResizeMode;
   defaultSource?: Source | null;
   imgSource?: Source;
   checkNetworking?: boolean;
   isBase?: boolean;
   tintColor?: string;
+  disableCache?: boolean; // mới: bật tùy chọn không cache
+  uri: string;
 }
 
-export const AppImage = (props: propsImage) => {
-  const { uri, style, resizeMode, defaultSource, isBase = true, checkNetworking = true, tintColor = undefined, imgSource } = props;
-  const [status, setStatus] = useState({ isLoading: false, isError: false });
+const AppImageComponent = (props: PropsImage) => {
+  const {
+    uri,
+    style,
+    resizeMode = FastImage.resizeMode.cover,
+    defaultSource,
+    imgSource,
+    isBase = true,
+    checkNetworking = true,
+    tintColor,
+    disableCache = false,
+  } = props;
+
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const uriBase = isBase ? `${BASE_IMAGE_URL}${uri}` : uri;
 
+  // Nếu cần kiểm tra kết nối thì sử dụng FastImage callbacks để cập nhật trạng thái
   useEffect(() => {
-    if (uriBase && !defaultSource && checkNetworking) {
-      setStatus({ isLoading: true, isError: false });
-      fetch(uriBase).then(data => {
-        setStatus({ isLoading: false, isError: false });
-      }).catch(() => {
-        setStatus({ isLoading: false, isError: true });
-      });
-    } else {
-      setStatus({ isLoading: false, isError: false });
-    }
+    // Reset trạng thái khi uri thay đổi
+    setHasError(false);
+    setIsLoading(false);
   }, [uriBase, checkNetworking]);
 
-  const source = !checkNetworking ? { uri: uriBase } : status.isError ? NoImage : (imgSource || (uri ? { uri: uriBase } : defaultSource || NoImage));
+  // Tính toán source với caching option, dùng useMemo để tránh tính lại không cần thiết
+  const source: Source = useMemo(() => {
+    if (!checkNetworking) { return { uri: uriBase }; }
+    if (hasError) { return NoImage; }
+    if (imgSource) { return imgSource; }
+    if (uri) { return { uri: uriBase, cache: disableCache ? 'reload' : 'immutable' }; }
+    return defaultSource || NoImage;
+  }, [uriBase, checkNetworking, hasError, imgSource, uri, defaultSource, disableCache]);
 
   return (
-    <Box justifyContent={'center'} alignItems="center">
+    <Box justifyContent="center" alignItems="center">
       <FastImage
         source={source}
         style={[styles.image, style]}
         resizeMode={resizeMode}
-        onLoadEnd={() => setStatus(prev => ({ ...prev, isLoading: false }))}
+        onLoadStart={() => setIsLoading(true)}
+        onLoadEnd={() => setIsLoading(false)}
+        onError={() => setHasError(true)}
         tintColor={tintColor}
-        onError={() => setStatus({ isLoading: false, isError: true })}
       />
-
     </Box>
   );
 };
@@ -56,7 +70,7 @@ const styles = StyleSheet.create({
   image: {
     height: '100%',
     width: '100%',
-
   },
 });
 
+export const AppImage = React.memo(AppImageComponent);

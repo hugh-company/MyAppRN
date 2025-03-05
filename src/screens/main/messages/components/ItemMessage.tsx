@@ -18,7 +18,7 @@ export function ItemMessage(props: ItemMessageProps) {
   const styles = createStyles(themeColors);
   const userInfo = useSelector(getUserInfo);
   const sanitizeFullname = (fullname: string) => {
-    return fullname?.replace(/[^a-zA-Z0-9 ]/g, '');
+    return fullname;
   };
   const renderTextMessage = () => {
     switch (item?.last_message?.content?.type) {
@@ -74,12 +74,12 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   status: {
     width: Spacing.width15,
     height: Spacing.width15,
-    borderRadius: Spacing.width15,
+    borderRadius: Spacing.width30,
     backgroundColor: themeColors.active,
     position: 'absolute',
     top: 0,
     right: 0,
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: themeColors.whiteColor,
   },
   viewInfo: {

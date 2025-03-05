@@ -9,6 +9,7 @@ import {
   loadMoreMessagesSaga,
   markMessageAsReadSaga,
   sendMessageSaga,
+  setLoadMoreMessage,
   updateNewMessage,
 } from '@redux';
 import {uploadImages} from '@services';
@@ -36,7 +37,8 @@ export const useChatScreen = () => {
   const [repliedMessage, setRepliedMessage] =
     useState<MessageItemInterface | null>(null);
   const dispatch = useDispatch();
-  const {is_next, cursor_id, messages, loading} = useSelector(getMessage);
+  const {is_next, cursor_id, messages, loading, isLoadMore} =
+    useSelector(getMessage);
   const flatListRef = useRef<FlatList>(null);
   const joinThread = useSelector(getJoinedConversation);
   useEffect(() => {
@@ -86,6 +88,7 @@ export const useChatScreen = () => {
       token: token,
 
       recipient_id: message.other_user?.id,
+      sender_id: userInfo?.id,
       temp_id: `temp_${new Date().getTime()}`,
       content: {
         type: typeMessage,
@@ -133,7 +136,8 @@ export const useChatScreen = () => {
     setRepliedMessage(item);
   };
   const handleLoadMoreMessages = () => {
-    if (is_next) {
+    if (is_next && !isLoadMore) {
+      dispatch(setLoadMoreMessage());
       dispatch(loadMoreMessagesSaga({thread_id: message.thread_id, cursor_id}));
     }
   };
@@ -165,7 +169,6 @@ export const useChatScreen = () => {
       flatListRef.current.scrollToIndex({index});
     }
   };
-  console.log({loading});
   //
   const uploadImagesApi = async (images: any): Promise<any> => {
     try {
@@ -174,7 +177,6 @@ export const useChatScreen = () => {
         path: `chats/${message.thread_id || joinThread}`,
         token,
       });
-      console.log({responseImage: responseImage});
       return responseImage?.data?.uploaded_files?.map(
         (image: any) => image?.name,
       );
@@ -199,5 +201,7 @@ export const useChatScreen = () => {
     scrollToRepliedMessage,
     flatListRef,
     loading,
+    is_next,
+    isLoadMore,
   };
 };

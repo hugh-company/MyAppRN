@@ -7,11 +7,11 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderRadius: Spacing.width4,
       marginLeft: Spacing.width16,
       overflow: 'hidden',
-      width: Spacing.width240,
+      width: Spacing.width200,
     },
     image: {
-      width: Spacing.width240,
-      height: Spacing.width320,
+      width: Spacing.width200,
+      height: Spacing.width280,
     },
     name: {
       marginVertical: Spacing.width8,

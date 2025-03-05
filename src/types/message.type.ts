@@ -31,6 +31,9 @@ export enum MessageAction {
   SEND_MATCH_ACTION = 'send_match_action',
   MESSAGE_SENT = 'message_sent',
   SEARCH_MESSAGE = 'search_threads',
+  USER_ONLINE = 'get_online_list',
+  NOITE_ONLINE = 'notice_online',
+  NOTICE_OFFLINE = 'notice_offline',
 }
 export interface ChatInterface {
   id: number;

@@ -40,7 +40,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       marginBottom: Spacing.width16,
     },
     image: {
-      height: Spacing.width172,
+      height: Spacing.width220,
       width: '100%',
       borderRadius: Spacing.width4,
       overflow: 'hidden',

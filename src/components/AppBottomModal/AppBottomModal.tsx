@@ -1,6 +1,6 @@
 import { useTheme } from '@theme';
 import React, { useEffect } from 'react';
-import { Dimensions, StyleProp, TouchableWithoutFeedback, useWindowDimensions, View, ViewStyle } from 'react-native';
+import { BackHandler, Dimensions, StyleProp, TouchableWithoutFeedback, useWindowDimensions, View, ViewStyle } from 'react-native';
 import { GestureHandlerStateChangeEvent, PanGestureHandler, State } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { createStyles } from './styles';
@@ -31,6 +31,20 @@ const AppBottomModal = ({ visible, isLine = true, onSwipeOut, onClose, children,
       translateY.value = withTiming(windowHeight, { duration: 500 });
     };
   }, [visible, windowHeight]);
+  // Lắng nghe sự kiện back button khi modal đang hiển thị
+  useEffect(() => {
+    const onBackPress = () => {
+      if (visible) {
+        translateY.value = withTiming(windowHeight, { duration: 500 });
+        onSwipeOut ? onSwipeOut() : onClose?.();
+        return true; // ngăn hệ thống xử lý back mặc định
+      }
+      return false;
+    };
+
+    const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => subscription.remove();
+  }, [visible, windowHeight, onClose, onSwipeOut, translateY]);
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],

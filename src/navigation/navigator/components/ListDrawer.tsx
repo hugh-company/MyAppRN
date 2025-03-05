@@ -1,6 +1,6 @@
 import { VipIcon } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
-import { navigate, navigateToStack, SCREEN_ROUTE } from '@navigation';
+import { navigate, navigateToStack, reset, SCREEN_ROUTE } from '@navigation';
 import { getToken, logout } from '@redux';
 import { useDashboardHome } from '@services';
 import { FontSize, FontWithFamily, sizeWidth, Spacing, ThemeColors, useTheme } from '@theme';
@@ -135,6 +135,7 @@ export function ListDrawer(props: ListDrawerProps) {
           message: t('drawer.logoutMessage'),
           onConfirm: () => {
             dispatch(logout());
+            reset(SCREEN_ROUTE.MAIN_STACK);
           },
           onCancel: () => { },
 

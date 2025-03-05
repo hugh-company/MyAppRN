@@ -3,8 +3,8 @@ import {getCategoryApi, getListPostApi} from '@services';
 import {useTheme} from '@theme';
 import {ItemListProduct, PostTypeKey, TabInterface, TypeList} from '@types';
 import {navigateViewListProps} from '@utils';
+import {t} from 'i18next';
 import {useEffect, useRef, useState} from 'react';
-import {useSharedValue} from 'react-native-reanimated';
 import {createStyles} from './styles';
 
 export const useViewListScreen = () => {
@@ -19,17 +19,42 @@ export const useViewListScreen = () => {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(paged || 1);
   const [list, setList] = useState<ItemListProduct[]>([]);
-  const [search, setSearch] = useState('');
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [categoriesList, setCategoriesList] = useState<TabInterface[]>([]);
   const [slugCategory, setSlugCategory] = useState<string>(keyCategory || '');
-  const scrollY = useSharedValue(0);
   const [isNext, setIsNext] = useState(true);
   const refFlatList = useRef<any>(null);
   //
   const [isFilter, setIsFilter] = useState(false);
   //
+  const menuSort = [
+    {
+      key: 'views__desc',
+      value: t('search.viewer'),
+    },
+    {
+      key: 'like_count__desc',
+      value: t('search.likes'),
+    },
+    {
+      key: 'created_at__desc',
+      value: t('search.newest'),
+    },
+
+    {
+      key: 'views_day__desc',
+      value: t('search.viewDay'),
+    },
+    {
+      key: 'views_week__desc',
+      value: t('search.viewWeek'),
+    },
+    {
+      key: 'rating_total__desc',
+      value: t('search.viewRating'),
+    },
+  ];
   const onSelectedCategory = (item: TabInterface) => {
     if (item.slug === slugCategory) {
       if (refFlatList.current) {
@@ -63,7 +88,7 @@ export const useViewListScreen = () => {
     setCategoriesList(responseCategory?.data);
   };
   //
-  const callApi = async () => {
+  const callApi = async (filter?: any) => {
     if (!isNext) {
       setLoading(false);
       return;
@@ -78,7 +103,12 @@ export const useViewListScreen = () => {
           sortby: sortby,
         };
       }
-
+      // if (filter) {
+      //   params = {
+      //     ...params,
+      //     sortby: filter,
+      //   };
+      // }
       const response: any = await getListPostApi(
         data?.api || '',
         params,
@@ -98,9 +128,7 @@ export const useViewListScreen = () => {
       setLoading(false);
     }
   };
-  const onSearch = (text: string) => {
-    setSearch(text);
-  };
+
   // load more
   useEffect(() => {
     if (page > 1) {
@@ -116,19 +144,19 @@ export const useViewListScreen = () => {
     }
     setPage(prev => prev + 1);
   };
+  const filterBySort = (item: any) => {};
   return {
     data,
     themeColors,
     styles,
     label,
-    search,
-    onSearch,
+
     list,
     slugCategory,
     onLoadMore,
 
     onSelectedCategory,
-    scrollY,
+
     categoriesList,
     setCategoriesList,
     type,
@@ -136,5 +164,7 @@ export const useViewListScreen = () => {
     refFlatList,
     isFilter,
     setIsFilter,
+    menuSort,
+    filterBySort,
   };
 };

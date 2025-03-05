@@ -1,4 +1,4 @@
-import { FilterIcon, SearchIcon } from '@assets';
+import { SearchIcon } from '@assets';
 import { AppCategoryList, AppHeader, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
@@ -26,11 +26,11 @@ export const HeaderListScreen = ({ title, onFilter, categories = [], onSelectedC
     <View style={styles.container}>
       <AppHeader title={isCategory ? title : ''} rightComponent={
         <View style={styles.viewRow}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => onFilter?.()}
             style={[styles.btnSearchCategory, !isCategory && styles.btnSearch]}>
             <FilterIcon size={Spacing.width28} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: KeyHomeData.MOVIES })}
             style={[styles.btnSearchCategory, !isCategory && styles.btnSearch]}>

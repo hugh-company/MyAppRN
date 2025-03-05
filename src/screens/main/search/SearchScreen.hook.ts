@@ -70,6 +70,23 @@ export const useSearchScreen = () => {
       key: 'like_count__desc',
       value: t('search.likes'),
     },
+    {
+      key: 'created_at__desc',
+      value: t('search.newest'),
+    },
+
+    {
+      key: 'views_day__desc',
+      value: t('search.viewDay'),
+    },
+    {
+      key: 'views_week__desc',
+      value: t('search.viewWeek'),
+    },
+    {
+      key: 'rating_total__desc',
+      value: t('search.viewRating'),
+    },
   ];
 
   // filter

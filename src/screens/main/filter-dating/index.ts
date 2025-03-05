@@ -1,1 +1,1 @@
-export { default as FilterDating } from './FilterDating';
+export * from './FilterDating';

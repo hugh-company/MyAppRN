@@ -13,6 +13,8 @@ const ChapterDetail = () => {
   if (!detail) {
     return null;
   }
+  console.log({ detail });
+
   return (
     <View style={styles.container}>
       <Animated.ScrollView
@@ -29,7 +31,7 @@ const ChapterDetail = () => {
           type={PostTypeKey.COMIC}
           views={detail?.views}
           likes={detail?.like_count}
-          poster={detail?.banner?.path}
+          poster={detail?.feature?.path}
           totalEpisodes={detail?.chapters?.length || 0}
           onPlay={() => {
             if (detail?.chapters?.length) {
@@ -61,7 +63,7 @@ const ChapterDetail = () => {
         <AppInfoContent
           type={type}
           // isLiked={data?.isLiked
-
+          isPlaying={true}
           style={styles.infoRow}
           detail={detail}
         />

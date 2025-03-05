@@ -1,4 +1,4 @@
-import { AppleIcon, FacebookIcon, GoogleIcon } from '@assets';
+import { GoogleIcon } from '@assets';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
@@ -9,9 +9,7 @@ import { AppText } from '../AppText';
 import { createStyles } from './styles';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-GoogleSignin.configure({
-  webClientId: '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com',
-});
+
 
 export interface LoginSocialProps {
   isTopOr?: boolean
@@ -24,28 +22,31 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
       title: 'Google',
       onPress: () => onLoginGoogle(),
     },
-    {
-      icon: <FacebookIcon />,
-      title: 'Facebook',
-      onPress: () => onLoginFacebook(),
-    },
-    {
-      icon: <AppleIcon />,
-      title: 'Apple',
-      onPress: () => onLoginApple(),
-    },
+    // {
+    //   icon: <FacebookIcon />,
+    //   title: 'Facebook',
+    //   onPress: () => onLoginFacebook(),
+    // },
+    // {
+    //   icon: <AppleIcon />,
+    //   title: 'Apple',
+    //   onPress: () => onLoginApple(),
+    // },
   ];
   const styles = createStyles(themeColors);
 
   const onLoginGoogle = async () => {
     try {
-
+      await logoutGoogle();
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('Google Sign-In Success:', userInfo);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
     }
+  };
+  const logoutGoogle = async () => {
+    await GoogleSignin.signOut();
   };
   const onLoginApple = async () => {
     try {

@@ -5,10 +5,10 @@ import { HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
-import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
 import { Platform, View } from 'react-native';
 import { FlatList, PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useDerivedValue, useSharedValue, withSpring } from 'react-native-reanimated';
+import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { EmptyUser } from './components/EmptyUser';
 import ListGalleries from './components/ListGalleries';
 import { createStyles } from './styles';
@@ -18,11 +18,12 @@ const SWIPE_THRESHOLD = 120; // ngưỡng vuốt để tính là swipe
 const SPRING_CONFIG = { stiffness: 300, damping: 20, overshootClamping: true };
 
 export interface AppSwipeProfileProps {
-  items: UserFindInterface[]
+  items: UserFindInterface[];
   onSwipe: (type: 'like' | 'dislike' | 'superlike', user: UserFindInterface) => void;
+  onDetailUser?: (user: UserFindInterface) => void; // added callback for detail view
 }
 
-const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, ref) => {
+const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipeProfileProps, ref) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
@@ -74,6 +75,12 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
     },
   }));
 
+  const callDetail = () => {
+    if (onDetailUser && profiles.length > 0) {
+      onDetailUser(profiles[0]);
+    }
+  };
+
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
       ctx.startX = translateX.value;
@@ -87,13 +94,16 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
       rotation.value = translateX.value * 0.0015;  // tùy chỉnh hệ số xoay
     },
     onEnd: (event) => {
-      const traveledX = translateX.value;
-      // Kiểm tra nếu vuốt vượt ngưỡng để bỏ thẻ
-      if (Math.abs(traveledX) > SWIPE_THRESHOLD) {
-        // Xác định hướng vuốt (sang trái hay phải) để ném thẻ ra khỏi màn hình
+      // Check upward swipe for detail action: swipe up with minimal horizontal movement
+      if (translateY.value < -SWIPE_THRESHOLD && Math.abs(translateX.value) < 50) {
+        runOnJS(callDetail)();
+        translateX.value = withSpring(0, SPRING_CONFIG);
+        translateY.value = withSpring(0, SPRING_CONFIG);
+        rotation.value = withSpring(0, SPRING_CONFIG);
+      } else if (Math.abs(translateX.value) > SWIPE_THRESHOLD) {
+        const traveledX = translateX.value;
         const toX = traveledX > 0 ? width * 1.5 : -width * 1.5;
         const action = traveledX > 0 ? 'dislike' : 'like';
-        // Thực hiện animation ném thẻ khỏi màn hình với tốc độ cao hơn
         translateX.value = withSpring(toX, {
           ...SPRING_CONFIG,
           velocity: event.velocityX,  // dùng vận tốc vuốt hiện tại cho tự nhiên
@@ -124,21 +134,6 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
     };
   });
 
-  const rotateZ = useDerivedValue(() => `${translateX.value / 20}deg`, [translateX]);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: translateX.value },
-        { translateY: translateY.value },
-        { rotateZ: rotateZ.value },
-      ],
-      borderColor: translateX.value > 50 ? 'rgba(209, 16, 48, 1)' : 'transparent',
-      borderWidth: translateX.value > 50 ? 2 : 0,
-      elevation: translateX.value > 50 ? 10 : 0,
-    };
-  });
-
   const likeOpacity = useAnimatedStyle(() => {
     return {
       opacity: translateX.value > 50 ? 1 : 0,
@@ -153,7 +148,8 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
     };
   });
 
-  const renderItem = ({ item }: any) => (
+  // Memo hoá renderItem
+  const renderItem = useCallback(({ item }: any) => (
     <View style={[styles.cardContent]}>
       <ListGalleries data={item.galleries} />
       <View style={styles.info}>
@@ -165,7 +161,7 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
         <AppText style={styles.txtLocation}>{getDistanceLocation(item.location)}</AppText>
       </View>
     </View>
-  );
+  ), [getDistanceLocation, styles]);
 
   return (
     <PanGestureHandler onGestureEvent={profiles.length > 0 ? gestureHandler : undefined}>
@@ -173,13 +169,14 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe }: AppSwipeProfileProps, re
         <FlatList
           ref={flatListRef}
           data={profiles}
-          pagingEnabled
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<EmptyUser />}
           renderItem={renderItem}
           scrollEnabled={false}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
+          removeClippedSubviews={true}
+          initialNumToRender={1}
         />
         {/* Like/Dislike Labels */}
         <Animated.View style={[styles.likeContainer, likeOpacity]}>

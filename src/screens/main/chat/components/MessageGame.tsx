@@ -1,4 +1,4 @@
-import { AppImage } from '@components';
+import { AppImage, AppText } from '@components';
 import { Spacing } from '@theme';
 import { ItemListProduct, PostTypeKey } from '@types';
 import { goToDetail } from '@utils';
@@ -13,14 +13,15 @@ export function MessageGame(props: MessageGameProps) {
   const { list } = props;
   const renderItem = ({ item }: { item: ItemListProduct }) => {
     return (
-      <TouchableOpacity onPress={() => {
+      <TouchableOpacity style={styles.item} onPress={() => {
         goToDetail({ item, type: PostTypeKey.GAMES });
       }}>
         <AppImage uri={item.banner.path} style={styles.image} />
+        <AppText>{item.title}</AppText>
       </TouchableOpacity>
     );
   };
-  return <View>
+  return <View style={styles.container}>
     <FlatList
       data={list}
       keyExtractor={(item) => item.id.toString()}
@@ -33,12 +34,18 @@ export function MessageGame(props: MessageGameProps) {
   </View>;
 }
 const styles = StyleSheet.create({
+  container: {
+    alignItems: 'flex-end',
+  },
   list: {
-    padding: 10,
+
   },
   image: {
     width: Spacing.width150,
     height: Spacing.width150,
     borderRadius: 10,
+  },
+  item: {
+    gap: Spacing.width8,
   },
 });

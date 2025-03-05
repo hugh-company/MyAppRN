@@ -30,6 +30,7 @@ export const GameDetailScreen = () => {
           style={styles.infoRow}
           typeGame={dataGame?.categories?.map(elm => elm.name).join(', ')}
           detail={dataGame}
+          isPlaying={true}
         />
         <HorizontalList
           data={dataGame.related_post?.items}

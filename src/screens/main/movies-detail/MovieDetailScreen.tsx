@@ -89,7 +89,7 @@ export const MovieDetailScreen = () => {
         )}
       />
       {!isPlaying && <AppHeader
-        style={[styles.header, headerBackgroundColorStyle]} />}
+        style={[styles.header, {}]} />}
     </View>
   );
 };

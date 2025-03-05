@@ -3,6 +3,7 @@ import {
   ConversationInterface,
   MessageItemInterface,
   MessageStatus,
+  OtherUser,
 } from '@types';
 import dayjs from 'dayjs';
 import {APP_SLICE} from '../type';
@@ -28,6 +29,7 @@ interface chatState {
   };
   joinedConversation: number;
   unsentMessages: any[];
+  listUserOnline: OtherUser[];
 }
 
 const initialState: chatState = {
@@ -49,6 +51,7 @@ const initialState: chatState = {
   },
   joinedConversation: 0,
   unsentMessages: [],
+  listUserOnline: [],
 };
 
 const chatSlice = createSlice({
@@ -98,6 +101,9 @@ const chatSlice = createSlice({
       console.log('sdsdadsadsdas');
 
       state.message.loading = true;
+    },
+    setLoadMoreMessage(state) {
+      state.message.isLoadMore = true;
     },
     loadMoreMessages(state, action) {
       state.message.messages = [
@@ -310,6 +316,62 @@ const chatSlice = createSlice({
     clearAllUnSentMessage(state) {
       state.unsentMessages = [];
     },
+    clearAllChat(state) {
+      state.conversation = {
+        conversations: [],
+        cursor_time: '',
+        is_next: false,
+        isRefreshing: false,
+        isLoadMore: false,
+        loading: false,
+        error: null,
+      };
+      state.message = {
+        messages: [],
+        is_next: false,
+        cursor_id: 0,
+        loading: true,
+        error: null,
+      };
+      state.joinedConversation = 0;
+      state.unsentMessages = [];
+      state.listUserOnline = [];
+    },
+    setListUserOnline(state, action) {
+      state.listUserOnline = action.payload;
+    },
+    userOnline(state, action) {
+      const indexUser = state.listUserOnline.findIndex(
+        user => user.id === action.payload.id,
+      );
+      if (indexUser >= 0) {
+        state.listUserOnline[indexUser].online = true;
+      } else {
+        state.listUserOnline = [...state.listUserOnline, action.payload];
+      }
+
+      // update with conversation
+      const indexConversation = state.conversation.conversations.findIndex(
+        item => item.other_user.id === action.payload.id,
+      );
+      if (indexConversation >= 0) {
+        state.conversation.conversations[indexConversation].other_user.online =
+          true;
+      }
+    },
+    userOffline(state, action) {
+      state.listUserOnline = state.listUserOnline.filter(
+        user => user.id !== action.payload.id,
+      );
+      // update with conversation
+      const indexConversation = state.conversation.conversations.findIndex(
+        item => item.other_user.id === action.payload.id,
+      );
+      if (indexConversation >= 0) {
+        state.conversation.conversations[indexConversation].other_user.online =
+          false;
+      }
+    },
   },
 });
 
@@ -337,6 +399,11 @@ export const {
   removeUnsentMessage,
   setLoadingMessage,
   clearAllUnSentMessage,
+  clearAllChat,
+  setListUserOnline,
+  userOnline,
+  userOffline,
+  setLoadMoreMessage,
   // ...other actions...
 } = chatSlice.actions;
 
@@ -390,5 +457,10 @@ export const sendTypingIndicatorSaga = (params?: any) => ({
 // ...other actions...
 export const sendMatchSaga = (params?: any) => ({
   type: 'SEND_MATCH_ACTION',
+  payload: params,
+});
+// fetch user online
+export const fetchUserOnlineSaga = (params?: any) => ({
+  type: 'FETCH_USER_ONLINE',
   payload: params,
 });

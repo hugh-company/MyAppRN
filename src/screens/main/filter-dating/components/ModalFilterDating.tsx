@@ -19,8 +19,8 @@ interface filterParams {
   age: number[];
 }
 const defaultFilter: filterParams = {
-  gender: '',
-  distance: [20],
+  gender: genderInterface.OTHER,
+  distance: [50],
   age: [18, 30],
 };
 export function ModalFilterDating(props: ModalFilterDatingProps) {
@@ -41,22 +41,24 @@ export function ModalFilterDating(props: ModalFilterDatingProps) {
       label: t('male'),
       value: genderInterface.MALE,
     },
-    // {
-    //   label: t('allGender'),
-    //   value: genderInterface.OTHER,
-    // },
+    {
+      label: t('allGender'),
+      value: genderInterface.OTHER,
+    },
   ];
   const { control, handleSubmit, reset } = useForm({
     defaultValues: defaultFilter,
   });
   useEffect(() => {
+    console.log('aa:', props.filter);
+
     if (visible) {
       reset({
         ...defaultFilter,
         ...props.filter,
       });
     }
-  }, [visible]);
+  }, [visible, props.filter, reset]);
   const onSubmit = handleSubmit((value) => {
     onFilter?.(value);
     onClose?.();

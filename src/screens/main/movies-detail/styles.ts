@@ -18,6 +18,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       top: 0,
       left: 0,
       right: 0,
+      backgroundColor: 'transparent',
     },
     banner: {
       width: '100%',

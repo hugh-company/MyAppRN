@@ -41,7 +41,7 @@ const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.Forwarde
 
               <View style={styles.viewRow}>
                 <BrandIcon />
-                <AppText style={styles.txtLike}>{getPrettyNumberString(item.views ?? 0)} {t('home.viewer')}</AppText>
+                <AppText style={styles.txtLike}>{getPrettyNumberString(item.views ?? 0)} {t(type === PostTypeKey.GAMES ? 'home.playGame' : 'home.viewer')}</AppText>
               </View>
             </View>
           </View>

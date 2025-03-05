@@ -1,7 +1,8 @@
 import { AppImage } from '@components';
 import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import React, { forwardRef, useRef } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 export interface BannerUserProps {
   label?: string;
   style?: ViewStyle;

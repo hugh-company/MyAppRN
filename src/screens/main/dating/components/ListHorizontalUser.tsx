@@ -57,7 +57,7 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
   const renderItem = ({ item }: { item: navHorizontalInterface }) => {
 
     return (
-      <TouchableOpacity style={[styles.item]} onPress={() => {
+      <TouchableOpacity style={[styles.item, { overflow: 'hidden' }]} onPress={() => {
         onPress && onPress(item);
       }}>
         {item?.type === TypeTabDatingApi.NEAR_YOU ? renderImageNearYou(item) : <View>
@@ -204,5 +204,6 @@ const createStyles = (themeColors: ThemeColors) =>
       left: 0,
       alignItems: 'center',
       justifyContent: 'center',
+      borderRadius: Spacing.width56,
     },
   });

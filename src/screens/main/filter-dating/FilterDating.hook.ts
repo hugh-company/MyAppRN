@@ -3,7 +3,7 @@ import {useLocation} from '@hooks';
 import {getLocations, sendMatchSaga} from '@redux';
 import {findUserApi} from '@services';
 import {useTheme} from '@theme';
-import {UserFindInterface} from '@types';
+import {genderInterface, UserFindInterface} from '@types';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
@@ -18,13 +18,13 @@ export const useFilterDating = () => {
   const swipeRef = useRef<{triggerSwipe: (action: string) => void}>(null);
   const dispatch = useDispatch();
   const {checkLocation} = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const [filter, setFilter] = useState<any>({
     age: [18, 30],
-    distance: [0],
-    gender: '',
+    distance: [50],
+    gender: genderInterface.OTHER,
   });
-  console.log({location});
   useEffect(() => {
     checkLocation();
   }, []);
@@ -34,20 +34,26 @@ export const useFilterDating = () => {
       return;
     }
     GlobalService.showLoading();
+    setLoading(true);
     setFilter(value);
     try {
       const params: any = {
         age: value.age.join('-'),
         distance: value.distance[0],
-        gender: value.gender,
+
+        paged: 1,
         location: {...location},
       };
+      if (value.gender !== genderInterface.OTHER) {
+        params.gender = value.gender;
+      }
       const response: any = await findUserApi(params);
       console.log({responseFindUser: response});
       setData(response.data);
     } catch (error) {
       console.log({error});
     } finally {
+      setLoading(false);
       GlobalService.hideLoading();
     }
   };
@@ -74,7 +80,7 @@ export const useFilterDating = () => {
 
     swipeRef,
     handleSwipe,
-
+    loading,
     matchUser,
     setMatchUser,
   };

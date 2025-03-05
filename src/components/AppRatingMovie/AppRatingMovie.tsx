@@ -40,7 +40,7 @@ const AppRatingMovie = ({ }: AppRatingMovieProps) => {
     try {
       await ratingPostApi(id, type, { rating, content: txt });
 
-      showNotificationSuccess(t('ratings.success'), t('ratings.successMessage'));
+      showNotificationSuccess(t('ratings.ratings'), t('ratings.successMessage'));
       setVisible(false);
       setTxt('');
       setRating(0);

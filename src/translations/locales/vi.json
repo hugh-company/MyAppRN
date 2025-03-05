@@ -135,7 +135,12 @@
     "duration": "Thời lượng: ",
     "searchNotFound": "Chúng tôi không tìm thấy từ khoá bạn yêu cầu",
     "novel": "Truyện chữ",
-    "comic": "Truyện tranh"
+    "comic": "Truyện tranh",
+    "newest": "Mới nhất",
+    "updated": "Cập nhật",
+    "viewDay": "Lượt xem trong ngày",
+    "viewWeek": "Lượt xem trong tuần",
+    "viewRating": "Đánh giá"
   },
   "movie": {
     "list_chapters": "Danh sách tập",
@@ -165,6 +170,7 @@
     "playGame": "Bắt đầu game"
   },
   "ratings": {
+    "ratings": "Đánh giá",
     "title": "Đánh giá trải nghiệm",
     "content": "Nội dung đánh giá...",
     "sendRating": "Gửi đánh giá",
@@ -208,7 +214,11 @@
     "titleCategory": "Danh sách theo thể loại",
     "otherMovie": "Phim liên quan",
     "otherChapter": "Truyện liên quan",
-    "otherGame": "Game liên quan"
+    "otherGame": "Game liên quan",
+    "withTime": "Theo thời gian",
+    "withView": "Theo lượt xem",
+    "withRating": "Theo đánh giá",
+    "withLike": "Theo lượt thích"
   },
   "favorites": {
     "title": "Đã lưu",
@@ -269,15 +279,15 @@
   "background": "Màu nền",
   "today": "Hôm nay",
   "permission": {
-    "titleLocation": "Vị trí của bạn",
-    "messageLocation": "Chúng tôi cần biết vị trí của bạn để tìm kiếm người phù hợp nhất",
-    "allow": "Cho phép",
-    "notAllow": "Không cho phép",
     "locationNotFound": "Không tìm thấy vị trí của bạn",
     "locationError": "Không thể lấy vị trí của bạn",
     "permission_location": "Vui lòng cấp quyền truy cập vị trí để sử dụng tính năng này",
     "des_permission_location": "Chúng tôi cần biết vị trí của bạn để tìm kiếm người phù hợp nhất",
-    "setting_location": "Vào cài đặt để cấp quyền"
+    "setting_location": "Vào cài đặt để cấp quyền",
+    "titleLocation": "Quyền truy cập vị trí",
+    "messageLocation": "Ứng dụng cần quyền truy cập vị trí của bạn để cung cấp dịch vụ tốt hơn",
+    "allow": "Cho phép",
+    "notAllow": "Không cho phép"
   },
   "playGame": "Rủ Chơi Cùng",
   "chatWith": "Chat với",
@@ -300,7 +310,8 @@
     "meSendSticker": "Bạn đã gửi sticker",
     "userSendSticker": "USER đã gửi sticker",
     "repliedSticker": "Đang trả lời sticker",
-    "coversation": "Trò chuyện"
+    "coversation": "Trò chuyện",
+    "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!"
   },
   "location": {
     "title": "Vị trí của bạn",

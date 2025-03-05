@@ -3,10 +3,11 @@ import { sendLocationUserApi } from '@services';
 import { showNotificationError } from '@utils';
 import { t } from 'i18next';
 import { useEffect, useState } from 'react';
-import { AppState, Linking, PermissionsAndroid, Platform } from 'react-native';
+import { AppState, Linking, NativeModules, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { useDispatch, useSelector } from 'react-redux';
 
+const { LocationModule } = NativeModules;
 const toRadians = (degrees: number) => degrees * (Math.PI / 180);
 
 const calculateDistance = (loc1: { latitude: number, longitude: number }, loc2: { latitude: number, longitude: number }) => {
@@ -31,16 +32,23 @@ export function useLocation() {
   const checkPermissionLocation = async () => {
     let granted = false;
     if (Platform.OS === 'android') {
-      granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Location Permission',
-          message: 'This app needs access to your location',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
-      ) === PermissionsAndroid.RESULTS.GRANTED;
+      const currentStatus = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
+      console.log({ currentStatus });
+
+      if (currentStatus) {
+        granted = true;
+      } else {
+        granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: 'Location Permission',
+            message: 'This app needs access to your location',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        ) === PermissionsAndroid.RESULTS.GRANTED;
+      }
     } else if (Platform.OS === 'ios') {
       granted = await new Promise((resolve) => {
         Geolocation.requestAuthorization('whenInUse').then((status) => {
@@ -74,11 +82,12 @@ export function useLocation() {
           }
         },
         error => {
-          showNotificationError(t('location.title'), t('location.description_location_permission'));
+          console.log({ error });
+
         },
         {
           enableHighAccuracy: true,      // Sử dụng GPS cho độ chính xác cao&#8203;:contentReference[oaicite:7]{index=7}
-          timeout: 20000,               // Chờ tối đa 20 giây (tùy chỉnh theo nhu cầu)
+
           maximumAge: 0,                // Không dùng kết quả cache cũ
           distanceFilter: 0,            // (Không quan trọng với getCurrentPosition một lần)
           showLocationDialog: true,     // Bật dialog yêu cầu bật GPS nếu tắt

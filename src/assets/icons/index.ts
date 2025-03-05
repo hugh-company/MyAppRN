@@ -89,3 +89,4 @@ export { default as ArrowDropRight } from './ArrowDropRight';
 export { default as IconNumberedList } from './IconNumberedList';
 export { default as IconMessager } from './IconMessager';
 export { default as DoubleArrowIcon } from './DoubleArrowIcon';
+export { default as ScrollTopIcon } from './ScrollTopIcon';

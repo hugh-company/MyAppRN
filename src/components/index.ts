@@ -46,3 +46,4 @@ export * from './LoginSocial';
 export * from './ModalChangeLanguage';
 export * from './ModalConfirmation';
 export * from './ModalFilter';
+export * from './ModalInfoUser';

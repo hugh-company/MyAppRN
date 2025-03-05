@@ -5,6 +5,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { useMessageScreen } from './MessageScreen.hook';
 import { ItemMessage } from './components/ItemMessage';
+import { ListUserOnline } from './components/ListUserOnline';
 
 const MessageScreen = () => {
   const { conversations, onRefresh,
@@ -20,6 +21,7 @@ const MessageScreen = () => {
       <AppInputSearch value={''} editable={false} style={styles.inputSearch} onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_MESSAGE)} />
       <AppFlatListAnimated
         data={conversations || []}
+        ListHeaderComponent={<ListUserOnline />}
         scrollEventThrottle={16}
         onRefresh={onRefresh}
         // refreshing={loading}

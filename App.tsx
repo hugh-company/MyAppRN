@@ -5,7 +5,7 @@ import { initI18n } from '@translations';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
-import { LogBox, StatusBar, StyleSheet, View } from 'react-native';
+import { LogBox, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import Orientation from 'react-native-orientation-locker';
@@ -13,6 +13,8 @@ import Orientation from 'react-native-orientation-locker';
 import { AppRatingMovie, GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import {
   initialWindowMetrics,
@@ -28,7 +30,7 @@ enableScreens();
 enableFreeze(true);
 // Ask for consent first if necessary
 // Possibly only do this for iOS if no need to handle a GDPR-type flow
-// Settings.initializeSDK();
+Settings.initializeSDK();
 // GoogleSignin.configure({
 //   scopes: ['email'],
 //   webClientId: Platform.OS === 'ios' ?
@@ -36,7 +38,10 @@ enableFreeze(true);
 //     '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com',
 // });
 // connect apollo client
-
+GoogleSignin.configure({
+  webClientId: Platform.OS === 'android' ? '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com' : '215589107688-bcn6h0es0jot0hj4jg8har3a1njh689m.apps.googleusercontent.com',
+  offlineAccess: true, // added to help resolve DEVELOPER_ERROR
+});
 initI18n();
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -83,7 +88,7 @@ function App(): React.JSX.Element {
                       <ModalConfirmation />
                       <ModalChangeLanguage />
                       <AppRatingMovie />
-                      <FlashMessage position="top" style={{ marginTop: Spacing.width24 }} />
+                      <FlashMessage position="top" style={{ paddingTop: Spacing.width24 }} />
                       <GlobalUI ref={GlobalService.globalUIRef} />
 
                     </View>

@@ -14,6 +14,7 @@ const ListGalleries = (props: ListGalleriesProps) => {
   const flatListRefBanner = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const heightBanner = Platform.OS === 'android' ? HeightScreen * 0.8 : HeightScreen * 0.7;
+
   // Khi dữ liệu thay đổi, reset currentIndex và scroll về offset 0
   React.useEffect(() => {
     setCurrentIndex(0);
@@ -53,7 +54,7 @@ const ListGalleries = (props: ListGalleriesProps) => {
           handlePress(index, position);
         }}
       >
-        <AppImage style={[styles.image, { height: heightBanner }]} uri={item} isBase={false} />
+        <AppImage style={[styles.image, { height: heightBanner }]} uri={item} />
       </TouchableOpacity>
     ),
     [heightBanner, handlePress]
@@ -67,12 +68,9 @@ const ListGalleries = (props: ListGalleriesProps) => {
         ref={flatListRefBanner}
         data={data}
         horizontal
-        // display scroll theo từng item
         scrollEnabled={false}
         pagingEnabled
-        decelerationRate="fast" // Tăng tốc độ scroll
         showsHorizontalScrollIndicator={false}
-
         renderItem={renderItem}
         keyExtractor={keyExtractor}
         onViewableItemsChanged={onViewRef.current}
@@ -83,8 +81,10 @@ const ListGalleries = (props: ListGalleriesProps) => {
           offset: WidthScreen * index,
           index,
         })}
+        removeClippedSubviews={true}
+        initialNumToRender={1}
       />
-      <View style={styles.indicator}>
+      {data?.length > 1 && <View style={styles.indicator}>
         {data.map((_, index) => (
           <View
             key={index}
@@ -95,7 +95,7 @@ const ListGalleries = (props: ListGalleriesProps) => {
             ]}
           />
         ))}
-      </View>
+      </View>}
     </View>
   );
 };

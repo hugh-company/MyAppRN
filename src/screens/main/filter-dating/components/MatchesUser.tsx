@@ -1,8 +1,9 @@
 import { CloseBigIcon, HeadIcon, StarActiveIcon } from '@assets';
-import { AppSwipeProfile } from '@components';
+import { AppSwipeProfile, ModalInfoUser } from '@components';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { ColorsApp, Spacing } from '@theme';
 import { UserFindInterface } from '@types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export interface ListUserDatingProps {
@@ -15,7 +16,12 @@ export function MatchesUser(props: ListUserDatingProps) {
   const { bottom } = useSafeAreaInsets();
   const swipeRef = React.useRef<{ triggerSwipe: (action: string) => void }>(null);
   const [profiles, setProfiles] = React.useState(data);
-
+  console.log({ data });
+  const bottomModal = React.useRef<BottomSheetModal>(null);
+  const [selectUser, setSelectUser] = React.useState<UserFindInterface | null>(null);
+  useEffect(() => {
+    setProfiles(data);
+  }, [data]);
   const handleSwipeAction = (type: string, user?: UserFindInterface) => {
     console.log('handleSwipeAction', type, user);
     setProfiles((prev) => prev.slice(1));
@@ -25,6 +31,15 @@ export function MatchesUser(props: ListUserDatingProps) {
     console.log('onClickAction', type);
     swipeRef.current?.triggerSwipe(type);
   };
+  const onDetailUser = (user: UserFindInterface) => {
+    // console.log('onDetailUser', user);
+    setSelectUser(user);
+    // setTimeout(() => {
+
+    bottomModal.current?.present();
+    // }, 500);
+  };
+  console.log({ selectUser });
 
   return (
     <View style={styles.container}>
@@ -33,6 +48,7 @@ export function MatchesUser(props: ListUserDatingProps) {
           ref={swipeRef}
           items={profiles}
           onSwipe={(type, user) => handleSwipeAction(type, user)}
+          onDetailUser={(user) => onDetailUser(user)}
         />
       </View>
 
@@ -49,6 +65,9 @@ export function MatchesUser(props: ListUserDatingProps) {
           </TouchableOpacity>
         </View>
       )}
+
+      <ModalInfoUser user={selectUser} refModal={bottomModal} />
+
     </View>
   );
 }

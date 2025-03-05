@@ -7,10 +7,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
     },
-    header: {
-      position: 'absolute',
-      top: 0,
-    },
+    header: {},
     avatar: {
       width: Spacing.width35,
       height: Spacing.width35,
@@ -28,11 +25,11 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     containerList: {
       flex: 1,
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
+      // position: 'absolute',
+      // top: 0,
+      // bottom: 0,
+      // left: 0,
+      // right: 0,
     },
     chatContainer: {
       // flex: 1,
@@ -87,5 +84,16 @@ export const createStyles = (themeColors: ThemeColors) =>
     title: {
       textAlign: 'center',
       flex: 1,
+    },
+    btnScrollToTop: {
+      width: Spacing.width40,
+      height: Spacing.width40,
+      borderRadius: Spacing.width20,
+      backgroundColor: themeColors.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      bottom: Spacing.width100,
+      right: Spacing.width16,
     },
   });

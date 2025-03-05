@@ -1,4 +1,4 @@
-import { FontSize, FontWithFamily, ThemeColors, useTheme } from '@theme';
+import { ColorsApp, FontSize, FontWithFamily, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
 import { StyleSheet, Text, TextProps } from 'react-native';
 
@@ -19,7 +19,7 @@ const AppText: React.FC<AppTextProps> = ({ children, style, variant = 'default',
 
 
   return (
-    <Text style={[variantStyles[variant], { color: themeColors.text }, style]} {...props}>
+    <Text style={[variantStyles[variant], { color: ColorsApp.text }, style]} {...props}>
       {children}
     </Text>
   );

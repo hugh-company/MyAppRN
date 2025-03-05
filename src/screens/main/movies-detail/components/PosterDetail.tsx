@@ -1,6 +1,6 @@
 import { LikeActiveIcon, NewIcon, PlayIcon, PlayStackedIcon, StarIcon } from '@assets';
 import { AppImage, AppText } from '@components';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
 import { PostTypeKey } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
@@ -120,7 +120,7 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     banner: {
       width: '100%',
-      height: Spacing.height560,
+      height: HeightScreen / 10 * 8,
     },
     btnDots: {
       width: Spacing.width40,

@@ -1,14 +1,16 @@
-import { AppFilterControl, AppListMovies, LoadingList } from '@components';
-import React from 'react';
+import { AppListMovies, LoadingList, ModalFilter } from '@components';
+import { t } from 'i18next';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useViewListScreen } from './ViewListScreen.hook';
 import { HeaderListScreen } from './components/HeaderListScreen';
-
+const MemoizedModalFilter = memo(ModalFilter);
 const ViewListScreen = () => {
-  const { data, refFlatList, styles, label, search, onSearch, slugCategory, onSelectedCategory, scrollY,
+  const { data, refFlatList, styles, label, slugCategory, onSelectedCategory,
     categoriesList, loading, list,
-    onLoadMore, isFilter, setIsFilter,
+    onLoadMore, isFilter, setIsFilter, menuSort,
+    filterBySort,
   } = useViewListScreen();
 
   return (
@@ -25,7 +27,6 @@ const ViewListScreen = () => {
         <AppListMovies
           ref={refFlatList}
           numColumns={2}
-
           scrollEventThrottle={16}
           data={list}
           type={data?.posttype}
@@ -34,10 +35,12 @@ const ViewListScreen = () => {
 
         />
       </Animated.View>}
-      <AppFilterControl
+      <MemoizedModalFilter
         visible={isFilter}
         onClose={() => setIsFilter(false)}
-
+        label={`${t('search.sort')}:`}
+        onSelect={filterBySort}
+        data={menuSort}
       />
     </View>
   );
