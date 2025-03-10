@@ -10,8 +10,9 @@ const HomeScreen = () => {
     scrollHandler,
     onRefresh,
     headerBackgroundColorStyle,
-    isLoading, isRefetching,
+    isLoading, isRefetching, isError,
   } = useHomeScreen();
+
   return (
     <View style={[styles.container]}>
       <AppListDashboard

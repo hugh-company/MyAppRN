@@ -1,7 +1,6 @@
 /**
  * @format
  */
-
 import {
   AppRegistry,
   Text,
@@ -30,4 +29,5 @@ TextInput.defaultProps = {
   ...(TextInput.defaultProps || {}),
   allowFontScaling: false,
 };
+
 AppRegistry.registerComponent(appName, () => App);

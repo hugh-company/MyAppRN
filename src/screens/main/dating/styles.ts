@@ -13,10 +13,30 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
     },
+    header: {},
     optionHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
+    },
+    search: {
+      marginVertical: Spacing.width16,
+    },
+    title: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_600,
+      alignItems: 'center',
+    },
+    total: {
+      color: themeColors.primary,
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_600,
+    },
+    label: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 8,
+      marginBottom: Spacing.width16,
     },
     tab: {
       marginHorizontal: Spacing.width16,

@@ -67,10 +67,15 @@ export const checkMessageTime = (date: Date | string): string => {
   const messageDate = dayjs(date);
   const today = dayjs();
   if (messageDate.isSame(today, 'day')) {
-    return t('today');
+    const diffMinutes = today.diff(messageDate, 'minute');
+    if (diffMinutes < 60) {
+      return `${diffMinutes} ${t('minutes_ago')}`;
+    }
+    return messageDate.format('HH:mm');
   }
   return messageDate.format('DD/MM');
 };
+
 export const getNewDateWithFormat = (format: string): string => {
   return dayjs().format(format);
 };

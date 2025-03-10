@@ -64,15 +64,16 @@ function createSocketChannel(
 
     socket.onclose = event => {
       console.log('WebSocket closed', event);
-      if (event.code === 1006) {
-        // 1006 is a special code that means the connection was closed abnormally (e.g. the server process was killed)
-        return;
-      }
+      // if (event.code === 1006) {
+      //   // 1006 is a special code that means the connection was closed abnormally (e.g. the server process was killed)
+      //   return;
+      // }
       emit({type: 'SOCKET_CLOSED', event});
     };
 
     socket.onerror = error => {
-      console.error('WebSocket error', error);
+      console.log('WebSocket error', error);
+      emit({type: 'SOCKET_CLOSED'});
       // Bạn có thể phát hành một sự kiện lỗi nếu cần
     };
 
@@ -82,7 +83,7 @@ function createSocketChannel(
         console.log('Received message:', data);
         emit({type: 'SOCKET_ON_MESSAGE', data});
       } catch (err) {
-        console.error('Error parsing message', err);
+        console.log('Error parsing message', err);
       }
     };
 
@@ -123,7 +124,29 @@ function* handleSocketOpen(
   yield take('SOCKET_CLOSED');
   yield cancel(heartbeatTask);
 }
+function* ensureSocketConnection(): Generator<any, void, any> {
+  const socket = yield select(state => state.socketSlice.socket);
 
+  // Nếu socket chưa kết nối hoặc đang đóng, tiến hành kết nối lại
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    console.log('Socket is not open. Reconnecting...');
+
+    // Kiểm tra kết nối mạng
+    const netState = yield call(NetInfo.fetch);
+    if (netState.isConnected) {
+      const token = yield select(state => state.socketSlice.infoUser.token);
+      const device_id = yield select(
+        state => state.socketSlice.infoUser.device_id,
+      );
+
+      if (token && device_id) {
+        yield put(setInfoUser({token, device_id}));
+      }
+    } else {
+      console.log('No network connection. Reconnect postponed.');
+    }
+  }
+}
 // Saga gửi heartbeat mỗi 55 giây
 function* heartbeatSaga(
   socket: WebSocket,
@@ -267,7 +290,7 @@ function* watchSocketEvents(
       if (event.type === 'SOCKET_OPEN') {
         yield fork(handleSocketOpen, event.socket, event.token);
       } else if (event.type === 'SOCKET_CLOSED') {
-        yield put({type: 'RECONNECT_SOCKET'});
+        // yield put({type: 'RECONNECT_SOCKET'});
         break; // Thoát vòng lặp khi đóng kết nối
       } else if (event.type === 'SOCKET_ON_MESSAGE') {
         yield call(handleDataMessage, event.data);

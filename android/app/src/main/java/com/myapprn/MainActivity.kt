@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import android.os.Build
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
+import android.content.Intent
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,12 @@ class MainActivity : ReactActivity() {
       )
     }
   }
+
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+  }
+
   /**
    * Returns the name of the main component registered from JavaScript. This is used to schedule
    * rendering of the component.

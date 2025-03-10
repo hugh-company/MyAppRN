@@ -1,5 +1,6 @@
 import {GlobalService} from '@components';
 import {zodResolver} from '@hookform/resolvers/zod';
+import {navigate, SCREEN_ROUTE} from '@navigation';
 import {registerApi} from '@services';
 import {useTheme} from '@theme';
 import {errorFormUtils, showNotificationSuccess} from '@utils';
@@ -41,6 +42,7 @@ export const useRegisterScreen = () => {
       const res = await registerApi(params);
       showNotificationSuccess(t('register.registerSuccess'), res?.message);
       reset();
+      navigate(SCREEN_ROUTE.LOGIN);
     } catch (error: any) {
       // show error with field
       console.log({error: error});

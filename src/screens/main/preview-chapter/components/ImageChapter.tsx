@@ -4,7 +4,6 @@ import { ColorsApp, HeightScreen, WidthScreen } from '@theme';
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { useAnimatedRef } from 'react-native-reanimated';
 
 interface ImageChapterProps {
   uri: string;
@@ -14,9 +13,6 @@ interface ImageChapterProps {
 const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
   const [heightImage, setHeightImage] = useState<number>(0);
   const [status, setStatus] = useState({ isLoading: true, isError: false });
-  const animatedRef = useAnimatedRef();
-
-
   useEffect(() => {
     let isMounted = true;
     Image.getSize(

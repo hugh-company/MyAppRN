@@ -4,6 +4,7 @@ import {
   SCREEN_ROUTE,
 } from '@navigation';
 import NetInfo from '@react-native-community/netinfo';
+import messaging from '@react-native-firebase/messaging';
 import {
   DarkTheme,
   NavigationContainer,
@@ -14,11 +15,75 @@ import { getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo }
 import { PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
-import { Platform } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useDispatch, useSelector } from 'react-redux';
 const Stack = createStackNavigator();
+const NAVIGATION_IDS = ['home', 'post', 'settings'];
 
+function buildDeepLinkFromNotificationData(data): string | null {
+  const navigationId = data?.navigationId;
+  if (!NAVIGATION_IDS.includes(navigationId)) {
+    console.warn('Unverified navigationId', navigationId);
+    return null;
+  }
+  if (navigationId === 'home') {
+    return 'myapp://home';
+  }
+  if (navigationId === 'settings') {
+    return 'myapp://settings';
+  }
+  const postId = data?.postId;
+  if (typeof postId === 'string') {
+    return `myapp://post/${postId}`;
+  }
+  console.warn('Missing postId');
+  return null;
+}
+
+const linking = {
+  prefixes: ['myapp://'],
+  config: {
+    screens: {
+      Home: 'home',
+      Post: 'post/:id',
+      Settings: 'settings',
+    },
+  },
+  async getInitialURL() {
+    const url = await Linking.getInitialURL();
+    if (typeof url === 'string') {
+      return url;
+    }
+    //getInitialNotification: When the application is opened from a quit state.
+    const message = await messaging().getInitialNotification();
+    const deeplinkURL = buildDeepLinkFromNotificationData(message?.data);
+    console.log({ deeplinkURL });
+
+    if (typeof deeplinkURL === 'string') {
+      return deeplinkURL;
+    }
+  },
+  subscribe(listener: (url: string) => void) {
+    const onReceiveURL = ({ url }: { url: string }) => listener(url);
+
+    // Listen to incoming links from deep linking
+    const linkingSubscription = Linking.addEventListener('url', onReceiveURL);
+
+    //onNotificationOpenedApp: When the application is running, but in the background.
+    const unsubscribe = messaging().onNotificationOpenedApp(remoteMessage => {
+      const url = buildDeepLinkFromNotificationData(remoteMessage.data);
+      if (typeof url === 'string') {
+        listener(url);
+      }
+    });
+
+    return () => {
+      linkingSubscription.remove();
+      unsubscribe();
+    };
+  },
+};
 const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
   (props, ref) => {
     const token = useSelector(getToken);
@@ -80,7 +145,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     }, [token]);
 
     return (
-      <NavigationContainer theme={DarkTheme} ref={ref}>
+      <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>
         <Stack.Navigator screenOptions={{
           // detachPreviousScreen: true,
           freezeOnBlur: true,

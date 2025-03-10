@@ -1,16 +1,15 @@
 import { CloseBigIcon, HeadIcon, LocationIcon } from '@assets';
-import { AppText } from '@components';
+import { AppImage, AppText } from '@components';
 import { useLocation } from '@hooks';
-import { HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
+import { Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
 import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { Platform, View } from 'react-native';
-import { FlatList, PanGestureHandler } from 'react-native-gesture-handler';
+import { View } from 'react-native';
+import { FlatList, PanGestureHandler, TouchableOpacity } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 import { EmptyUser } from './components/EmptyUser';
-import ListGalleries from './components/ListGalleries';
 import { createStyles } from './styles';
 
 const width = WidthScreen;
@@ -28,7 +27,6 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
   const styles = createStyles(themeColors);
 
   const { getDistanceLocation } = useLocation();
-  const heightBanner = Platform.OS === 'android' ? HeightScreen * 0.8 : HeightScreen * 0.7;
   const [profiles, setProfiles] = useState(items);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
@@ -150,8 +148,9 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
 
   // Memo hoá renderItem
   const renderItem = useCallback(({ item }: any) => (
-    <View style={[styles.cardContent]}>
-      <ListGalleries data={item.galleries} />
+    <TouchableOpacity activeOpacity={1} onPress={() => onDetailUser?.(item)} style={[styles.cardContent]}>
+      {/* <ListGalleries data={item.galleries} /> */}
+      <AppImage uri={item.avatar} style={styles.innerBannerImage} />
       <View style={styles.info}>
         <AppText style={styles.name}>{[item.fullname, getAge(item.birthday)].join(', ')}</AppText>
         {item.job && <AppText style={styles.profession}>{item.job}</AppText>}
@@ -160,12 +159,12 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
         <LocationIcon />
         <AppText style={styles.txtLocation}>{getDistanceLocation(item.location)}</AppText>
       </View>
-    </View>
+    </TouchableOpacity>
   ), [getDistanceLocation, styles]);
 
   return (
     <PanGestureHandler onGestureEvent={profiles.length > 0 ? gestureHandler : undefined}>
-      <Animated.View style={[styles.card, cardStyle, { height: heightBanner }]}>
+      <Animated.View style={[styles.card, cardStyle]}>
         <FlatList
           ref={flatListRef}
           data={profiles}

@@ -1,16 +1,15 @@
 import { AppFlatListAnimated, AppLoadingDating } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing, ThemeColors, useTheme } from '@theme';
-import { ModuleDating, ModuleItemInterface, TabInterface, TypeDatingInterface } from '@types';
+import { ModuleItemInterface, TabInterface, UserItemInterface } from '@types';
 import React, { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ButtonSearch } from './ButtonSearch';
-import { ListDatingItem } from './ListDatingItem';
+import { ItemUserDating } from './ItemUserDating';
 
 
 export interface AppListDatingProps {
   ListHeaderComponent?: React.ReactElement<any, string | React.JSXElementConstructor<any>> | React.ComponentType<any> | null | undefined
-  data?: ModuleDating[];
+  data?: UserItemInterface[];
   loading?: boolean;
   onRefresh?: () => void;
   onScroll?: (event: any) => void;
@@ -18,6 +17,8 @@ export interface AppListDatingProps {
   onSelectedCategory?: (item: TabInterface) => void;
   keyExtractor?: (item: ModuleItemInterface, index: number) => string;
   refreshing?: boolean;
+  onEndReached?: () => void;
+
 }
 
 const AppListDating = ({
@@ -25,7 +26,7 @@ const AppListDating = ({
   loading, onRefresh,
   ListHeaderComponent,
   refreshing,
-  keyExtractor,
+  keyExtractor, onEndReached,
 }: AppListDatingProps) => {
 
 
@@ -33,18 +34,12 @@ const AppListDating = ({
   const styles = createStyles(themeColors);
 
 
-  const renderItem = useCallback(({ item }: { item: ModuleDating }) => {
-    switch (item?.type) {
-
-      case TypeDatingInterface.BUTTON:
-        return <ButtonSearch label={item.label} style={styles.search} onPress={() => {
-          navigate(SCREEN_ROUTE.FILTER_DATING);
-        }} />;
-      case TypeDatingInterface.USERS_LIST:
-        return <ListDatingItem data={item?.items?.data || []} label={item?.label} total={item?.total} />;
-      default:
-        return <></>;
-    }
+  const renderItem = useCallback(({ item }: { item: UserItemInterface }) => {
+    return (
+      <ItemUserDating item={item} onPress={() => {
+        navigate(SCREEN_ROUTE.DETAIL_USER, { user: item });
+      }} />
+    );
   }, []);
 
   return (
@@ -54,11 +49,15 @@ const AppListDating = ({
           data={data}
           scrollEventThrottle={16}
           style={styles.list}
+          numColumns={2}
           ListHeaderComponent={ListHeaderComponent}
           onScroll={onScroll}
           onRefresh={onRefresh}
           refreshing={refreshing}
           keyExtractor={keyExtractor}
+          columnWrapperStyle={styles.listItem}
+          onEndReachedThreshold={0.5}
+          onLoadMore={onEndReached}
           renderItem={renderItem} />}
     </View>
   );
@@ -70,6 +69,10 @@ const createStyles = (themeColors: ThemeColors) =>
     container: {
       flex: 1,
       backgroundColor: themeColors.background,
+    },
+    listItem: {
+      gap: Spacing.width12,
+      marginBottom: Spacing.width12,
     },
     list: {
       paddingHorizontal: Spacing.width16,

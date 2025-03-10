@@ -9,6 +9,7 @@ import {
 } from '@redux';
 import {useTheme} from '@theme';
 import {t} from 'i18next';
+import {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {createStyles} from './styles';
 
@@ -25,9 +26,9 @@ export const useMessageScreen = () => {
   const dispatch = useDispatch();
   const {is_next, conversations, cursor_time, isLoadMore, isRefreshing} =
     useSelector(getConversation);
-  // useEffect(() => {
-  //   fetchConversations();
-  // }, []);
+  useEffect(() => {
+    fetchConversations();
+  }, []);
   console.log({conversations});
 
   const fetchConversations = async () => {

@@ -32,7 +32,7 @@
     "validate_email": "Email không hợp lệ",
     "email_req": "Vui lòng nhập email",
     "validate_password": "Mật khẩu không hợp lệ",
-
+    "validate_min_password": "Mật khẩu phải ít nhất 6 ký tự",
     "validate_name": "Vui lòng nhập tên của bạn",
     "validate_max_name": "Tên không được dài quá 50 ký tự",
 
@@ -311,7 +311,8 @@
     "userSendSticker": "USER đã gửi sticker",
     "repliedSticker": "Đang trả lời sticker",
     "coversation": "Trò chuyện",
-    "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!"
+    "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!",
+    "minutes_ago": "phút trước"
   },
   "location": {
     "title": "Vị trí của bạn",

@@ -1,12 +1,11 @@
+import {NavigationUtils} from '@navigation';
 import axios, {AxiosError} from 'axios';
 import {Alert} from 'react-native';
 
 import {logout, store} from '@redux';
 import {ERROR_MESSAGES} from './apiConfig';
 
-export const handleResponse = async (error: unknown) => {
-  console.log('sssdsadas:', error);
-
+export const handleResponse = async (error: any) => {
   if (axios.isCancel(error)) {
     console.log(
       ERROR_MESSAGES.REQUEST_CANCELLED,
@@ -21,6 +20,7 @@ export const handleResponse = async (error: unknown) => {
   } else {
     console.log('Error:', (error as Error).message);
   }
+  console.log({error});
 
   return Promise.reject(error.response.data);
 };
@@ -36,10 +36,7 @@ const handleTokenExpiration = async () => {
         {
           text: 'OK',
           onPress: () => {
-            // Navigate to login screen
-            // You might need to use a navigation service or pass a navigation prop
-            // to handle this navigation
-            // For example: navigationService.navigate('Login');
+            NavigationUtils.navigate('Login');
           },
         },
       ],

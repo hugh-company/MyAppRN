@@ -2,4 +2,5 @@
     <string name="app_name">MyAppRN</string>
     <string name="facebook_app_id">1210257530621547</string>
     <string name="facebook_client_token">c79bca12ec0471aa054676804ca006f6</string>
+    <string name="important">important</string>
 </resources>

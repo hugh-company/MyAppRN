@@ -7,7 +7,7 @@ import { useMessageScreen } from './MessageScreen.hook';
 import { ItemMessage } from './components/ItemMessage';
 import { ListUserOnline } from './components/ListUserOnline';
 
-const MessageScreen = () => {
+export const MessageScreen = () => {
   const { conversations, onRefresh,
     handleLoadMore, styles, title,
   } = useMessageScreen();
@@ -34,4 +34,3 @@ const MessageScreen = () => {
   );
 };
 
-export default MessageScreen;

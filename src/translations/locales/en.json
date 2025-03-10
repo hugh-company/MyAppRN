@@ -292,6 +292,7 @@
     "meSendSticker": "You sent a sticker",
     "userSendSticker": "USER sent a sticker",
     "repliedSticker": "Replying to sticker",
-    "template_message_chat_game": "Let's play the game GAME together ❤️!"
+    "template_message_chat_game": "Let's play the game GAME together ❤️!",
+    "minutes_ago": "minutes ago"
   }
 }

@@ -9,7 +9,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     card: {
       borderRadius: Spacing.width16,
-      // flex: 1,
+      flex: 1,
       overflow: 'hidden',
       shadowColor: '#000',
       shadowOffset: {width: 0, height: 4},

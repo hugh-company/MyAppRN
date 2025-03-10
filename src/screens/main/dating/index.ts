@@ -1,1 +1,1 @@
-export { default as DatingScreen } from './DatingScreen';
+export * from './DatingScreen';

@@ -8,11 +8,14 @@ import { TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useDatingScreen } from './DatingScreen.hook';
 import AppListDating from './components/AppListDating';
+import { ButtonSearch } from './components/ButtonSearch';
 import { ListHorizontalUser } from './components/ListHorizontalUser';
 
-const DatingScreen = () => {
-  const { data, loading, styles, tab, refetch,
-    isRefetching, tabNav, onSelectTab, isPermissionLocation, goToSettingLocation } = useDatingScreen();
+export const DatingScreen = () => {
+  const { data, loading, styles, tab,
+    onSelectTab, isPermissionLocation, goToSettingLocation, loadMore, isLoadingMore,
+    dataHeader, onRefresh,
+  } = useDatingScreen();
 
 
   if (!isPermissionLocation) {
@@ -25,6 +28,20 @@ const DatingScreen = () => {
       </View>
     );
   }
+  console.log({ data });
+  const renderHeader = () => {
+    return (
+      <View style={styles.header}>
+        {dataHeader?.button && <ButtonSearch label={dataHeader?.button.label} style={styles.search} onPress={() => {
+          navigate(SCREEN_ROUTE.FILTER_DATING);
+        }} />}
+        {dataHeader?.infoDating && <View style={styles.label}>
+          <AppText style={styles.title}>{dataHeader?.infoDating?.label}</AppText>
+          <AppText style={[styles.total]}>{dataHeader?.infoDating?.total}</AppText>
+        </View>}
+      </View>
+    );
+  };
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -34,9 +51,7 @@ const DatingScreen = () => {
       >
         <HeaderMain
           title={t('navigation.dating')}
-
           isSearch={false}
-
           renderIconRight={<View style={styles.optionHeader}>
             <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.FILTER_DATING)} style={styles.btnMessage}>
               <FilterIcon size={Spacing.width28} color="white" />
@@ -48,7 +63,7 @@ const DatingScreen = () => {
           </View>}
         />
         <ListHorizontalUser
-          data={tabNav || []}
+          data={dataHeader?.tabs || []}
           tabSelected={tab}
           onPress={(item) => {
             onSelectTab(item.type as any);
@@ -60,11 +75,14 @@ const DatingScreen = () => {
       <AppListDating
         data={data}
         loading={loading}
-        onRefresh={refetch}
-        refreshing={isRefetching}
+        ListHeaderComponent={renderHeader}
+        onRefresh={onRefresh}
+
+        onEndReached={loadMore}
+
       />
     </View>
   );
 };
 
-export default DatingScreen;
+

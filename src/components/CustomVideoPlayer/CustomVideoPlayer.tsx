@@ -41,13 +41,13 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     isLoading,
     setIsLoading,
     setCurrentTime,
-    isSpeedVisible,
+
     toggleMute,
     togglePlayPause,
     rewind,
     fastForward,
     updateProgress,
-    setSpeedVisible, setError, handlePress,
+    bottomModal, setError, handlePress,
     setIsFullScreenVisible, controlsVisible,
     setPaused,
   } = useCustomVideoPlayer(props);
@@ -102,7 +102,9 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
             }}
             isMuted={isMute}
             toggleMute={toggleMute}
-            setSpeedVisible={setSpeedVisible}
+            setSpeedVisible={() => {
+              bottomModal.current?.present();
+            }}
           />
           {
             !error && <>
@@ -131,15 +133,12 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
           }
         </Animated.View>}
         <MemoizedModalSpeed
-          visible={isSpeedVisible}
+          refModal={bottomModal as any}
           currentSpeed={speed}
           onSelectSpeed={(speedVideo) => {
             setPlaybackRate(speedVideo);
-            setSpeedVisible(false);
           }}
-          onClose={() => {
-            setSpeedVisible(false);
-          }} />
+        />
       </View>
     </TouchableWithoutFeedback>
   );

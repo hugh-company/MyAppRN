@@ -1,17 +1,18 @@
 import { AppText } from '@components';
-import { FontSize, FontWithFamily, HeightScreen, Spacing, useTheme, WidthScreen } from '@theme';
+import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
-import { Modal, Platform, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface ModalSpeedProps {
-  visible: boolean;
-  onClose: () => void;
+  refModal: React.RefObject<BottomSheetModal> | null;
+
   currentSpeed?: number;
   onSelectSpeed?: (speed: number) => void;
 }
-export const ModalSpeed = ({ visible, onClose, currentSpeed, onSelectSpeed }: ModalSpeedProps) => {
+export const ModalSpeed = ({ refModal, currentSpeed, onSelectSpeed }: ModalSpeedProps) => {
 
   const { bottom } = useSafeAreaInsets();
 
@@ -27,50 +28,59 @@ export const ModalSpeed = ({ visible, onClose, currentSpeed, onSelectSpeed }: Mo
     { label: '2x', value: 2 },
   ];
 
-  return (
-    <Modal
-      visible={!!visible}
-      // transparent={true}
-      backdropColor={'rgba(0,0,0,0.5)'}
-      animationType="slide"
-      onRequestClose={onClose}
-      style={[styles.modal, { width: width, height: height }]}
-
-    >
-      <TouchableOpacity onPressIn={onClose} activeOpacity={1} style={[styles.modalBackground, { width: width, height: Platform.OS === 'android' ? HeightScreen : height }]}>
-        <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
-          <View style={styles.body}>
-            <AppText style={styles.title}>{t('movie.speed')}</AppText>
-            <View style={styles.list}>
-              {dataSpeed.map((item, index) => (
-                <TouchableOpacity onPressIn={() => {
-                  onSelectSpeed && onSelectSpeed(item.value);
-                }} key={index} style={[styles.item, currentSpeed === item.value && styles.btnActive]}>
-                  <AppText style={styles.textItem}>{item.label}</AppText>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-        </View>
+  const renderItem = ({ item }) => {
+    return (
+      <TouchableOpacity onPressIn={() => {
+        onSelectSpeed && onSelectSpeed(item.value);
+        refModal?.current?.dismiss();
+      }} style={[styles.item, currentSpeed === item.value && styles.btnActive]}>
+        <AppText style={styles.textItem}>{item.label}</AppText>
       </TouchableOpacity>
+    );
+  };
+  return (
+    <BottomSheetModal
+      ref={refModal}
+      snapPoints={[HeightScreen / 2, HeightScreen]}
+      backgroundStyle={styles.modal}
+      onAnimate={(fromIndex, toIndex) => {
+        if (toIndex === -1) {
+          setTimeout(() => refModal?.current?.dismiss(), 0);
+        }
+      }}
+    >
 
-    </Modal>
+      <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
+        <View style={styles.body}>
+          <AppText style={styles.title}>{t('movie.speed')}</AppText>
+
+
+          <BottomSheetFlatList
+            data={dataSpeed}
+            keyExtractor={(item) => item.label.toString()}
+            renderItem={renderItem}
+            removeClippedSubviews
+            style={styles.list}
+          />
+        </View>
+
+      </View>
+
+    </BottomSheetModal>
   );
 };
 
 const createStyles = (themeColors: any) => StyleSheet.create({
   modal: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: themeColors.background,
 
   },
-  modalBackground: {
-    // flex: 1,
-    // backgroundColor: 'red',
-    justifyContent: 'flex-end',
-    width: WidthScreen,
-    height: HeightScreen,
+  modalContainer: {
+    flex: 1,
+    backgroundColor: themeColors.background,
   },
+
   container: {
     backgroundColor: themeColors.background,
 
@@ -94,6 +104,8 @@ const createStyles = (themeColors: any) => StyleSheet.create({
     borderTopRightRadius: Spacing.width16,
   },
   list: {
+    backgroundColor: themeColors.background,
+
   },
   item: {
     flexDirection: 'row',

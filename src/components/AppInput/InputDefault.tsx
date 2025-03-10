@@ -86,7 +86,7 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       marginBottom: Spacing.height16,
-      height: Spacing.height48,
+      minHeight: Spacing.height48,
     },
     label: {
       fontSize: FontSize.FontSize14,

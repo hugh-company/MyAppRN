@@ -47,11 +47,35 @@ export interface UserItemInterface {
   };
   job: string | null;
 }
-
+export interface ItemDatingUserInterface {
+  id: number;
+  frameColor: string;
+  frameLabel: string;
+  username: string;
+  email: string;
+  fullname: string;
+  avatar: string;
+  phone: string;
+  birthday: string;
+  about_me: string;
+  online: number;
+  place: string;
+  age: number;
+  location: {latitude: number; longitude: number};
+  galleries: string[];
+  favorites: string[];
+  job: string;
+}
 export enum TypeTabDatingApi {
   NEAR_YOU = 'nearyou',
   LIKE = 'likeyou',
   MATCHED = 'matched',
+}
+
+export interface dataHeaderDatingInterface {
+  tabs: navHorizontalInterface[];
+  button: ModuleDating;
+  infoDating: ModuleDating;
 }
 export interface navHorizontalInterface {
   data: {title: string; type: string; api: string};
@@ -77,6 +101,8 @@ export interface ModuleDating {
   items:
     | {
         data: UserItemInterface[];
+        is_next: boolean;
+        page: number;
       }
     | navHorizontalInterface[];
   total: number;

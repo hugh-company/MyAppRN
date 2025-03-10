@@ -2,8 +2,8 @@ import { getLocations, setLocation } from '@redux';
 import { sendLocationUserApi } from '@services';
 import { showNotificationError } from '@utils';
 import { t } from 'i18next';
-import { useEffect, useState } from 'react';
-import { AppState, Linking, NativeModules, PermissionsAndroid, Platform } from 'react-native';
+import { useState } from 'react';
+import { Linking, NativeModules, PermissionsAndroid, Platform } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -33,8 +33,6 @@ export function useLocation() {
     let granted = false;
     if (Platform.OS === 'android') {
       const currentStatus = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-      console.log({ currentStatus });
-
       if (currentStatus) {
         granted = true;
       } else {
@@ -105,11 +103,15 @@ export function useLocation() {
       latitude: locationUser?.latitude,
       longitude: locationUser?.longitude,
     };
-    const distanceInMeters = calculateDistance(userLocation, location);
-    if (distanceInMeters > 1000) {
-      return `${(distanceInMeters / 1000).toFixed(2)} km`;
+    let distanceInMeters = calculateDistance(userLocation, location);
+    distanceInMeters = Math.round(distanceInMeters); // Round to nearest integer
+    if (distanceInMeters === 0) {
+      return '0.1 m';
     }
-    return `${distanceInMeters.toFixed(2)} m`;
+    if (distanceInMeters >= 1000) {
+      return `${(distanceInMeters / 1000).toFixed(1)} km`;
+    }
+    return `${distanceInMeters} m`;
   };
   const goToSettingLocation = () => {
     if (Platform.OS === 'android') {
@@ -119,26 +121,6 @@ export function useLocation() {
     }
   };
 
-  useEffect(() => {
-    const checkPermissionOnAppEnter = async () => {
-      await checkPermissionLocation();
-    };
-    checkPermissionOnAppEnter();
-  }, []);
-
-  useEffect(() => {
-    const handleAppStateChange = async (nextAppState) => {
-      if (nextAppState === 'active') {
-        await checkPermissionLocation();
-      }
-    };
-
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
   const checkLocation = async () => {
     const check = await checkPermissionLocation();
 

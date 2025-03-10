@@ -100,7 +100,6 @@ export const useMovieDetailScreen = () => {
       return {
         ...prev,
         index: (chapter.index || 1) - 1,
-        feature: chapter.feature,
       };
     });
   };

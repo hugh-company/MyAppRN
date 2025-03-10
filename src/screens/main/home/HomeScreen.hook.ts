@@ -30,7 +30,7 @@ export const useHomeScreen = () => {
     scrollY.value = event.contentOffset.y;
   });
 
-  const {data, isSuccess, isLoading, isRefetching, refetch} =
+  const {data, isSuccess, isLoading, isRefetching, refetch, isError} =
     useDashboardHome();
   const {} = useSearchDashboard();
   useEffect(() => {
@@ -93,5 +93,6 @@ export const useHomeScreen = () => {
     headerBackgroundColorStyle,
     onRefresh,
     isLoading,
+    isError,
   };
 };

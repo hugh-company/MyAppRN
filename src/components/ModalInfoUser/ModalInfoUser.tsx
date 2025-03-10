@@ -1,4 +1,4 @@
-import { BriefcaseIcon, CalenderIcon, FacebookIcon, HeadIcon, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
+import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, HeadIcon, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppImage, AppText, BannerUser, ItemGame } from '@components';
 import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { navigate, SCREEN_ROUTE } from '@navigation';
@@ -55,6 +55,7 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
       <BottomSheetFlatList
         data={[data]}
         keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.contentContainerStyle}
         renderItem={() => (
           <>
             <View>
@@ -73,9 +74,15 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
 
 
             </View>
-            <View style={styles.btnStatus}>
-              <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
-              <AppText style={styles.txtBtnStatus}>Đang độc thân</AppText>
+            <View style={[styles.viewRow, { marginVertical: Spacing.width16 }]}>
+              <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
+                <AppText style={styles.txtChat} numberOfLines={1}>{t('chatWith')} {data?.fullname}</AppText>
+                <ChatIcon />
+              </TouchableOpacity>
+              <View style={[styles.btnStatus, { flex: 1 }]}>
+                <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
+                <AppText style={styles.txtBtnStatus}>Đang độc thân</AppText>
+              </View>
             </View>
 
             <View style={styles.viewAbout_me}>
@@ -102,10 +109,7 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
 
                 </View>
 
-                {/* <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
-                    <AppText style={styles.txtChat}>{t('chatWith')} {data?.fullname}</AppText>
-                    <ChatIcon />
-                  </TouchableOpacity> */}
+
               </View>
 
               <View style={styles.viewListInfo}>

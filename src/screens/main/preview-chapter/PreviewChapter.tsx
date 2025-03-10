@@ -23,7 +23,8 @@ const PreviewChapter = () => {
   const canGoToPrevChapter = currentIndex > 0;
 
   const renderItem = useCallback(({ item }: { item: any }) => {
-    if (type === PostTypeKey.COMIC && filterText && data) {
+
+    if (type === PostTypeKey.COMIC) {
       return (
         <ImageChapter uri={item} onPress={onClickScreen} />
       );
@@ -47,7 +48,6 @@ const PreviewChapter = () => {
 
     return () => interactionHandle.cancel();
   }, []);
-
   return (
 
     <View style={styles.container}>

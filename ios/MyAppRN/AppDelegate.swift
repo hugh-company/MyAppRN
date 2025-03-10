@@ -16,8 +16,6 @@ class AppDelegate: RCTAppDelegate {
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
         }
-    } else {
-        // print("GoogleService-Info.plist file not found. Please download one from https://console.firebase.google.com/")
     }
     ApplicationDelegate.shared.initializeSDK()
     ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)

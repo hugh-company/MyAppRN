@@ -13,6 +13,7 @@ import Orientation from 'react-native-orientation-locker';
 import { AppRatingMovie, GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
+import { initNotifications } from '@notifications';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
@@ -57,16 +58,22 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
+
   useEffect(() => {
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
     apiService.setBaseURL();
     // getAllApiStartApp(); // Prefetch all dashboard data
+
+    // Request notification permissions and get the token
+    initNotifications();
+
   }, []);
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
     'Open debug',
   ]);
+
   return (
     <GestureHandlerRootView style={styles.containerApp}>
       <BottomSheetModalProvider>
@@ -80,6 +87,7 @@ function App(): React.JSX.Element {
                     <View style={styles.container} >
                       <StatusBar translucent backgroundColor="transparent" />
                       <AppNavigator
+
                         ref={(navigatorRef: any) => {
                           NavigationUtils.setTopLevelNavigator(navigatorRef);
                         }}

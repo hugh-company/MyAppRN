@@ -28,6 +28,15 @@ export const createStyles = (themeColors: ThemeColors) =>
     profession: {
       fontSize: FontSize.FontSize16,
     },
+    viewRow: {
+      flex: 1,
+
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: Spacing.width16,
+      gap: Spacing.width8,
+    },
     viewLocation: {
       flexDirection: 'row',
       alignItems: 'center',
@@ -46,8 +55,10 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: '#fff',
       ...FontWithFamily.FontWithFamily_600,
     },
+    contentContainerStyle: {
+      flexGrow: 1,
+    },
     btnStatus: {
-      width: Spacing.width181,
       height: Spacing.width48,
       borderRadius: Spacing.width90,
       backgroundColor: themeColors.btnSocial,
@@ -55,11 +66,10 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       flexDirection: 'row',
       gap: Spacing.width16,
-      alignSelf: 'center',
-      marginVertical: Spacing.width16,
+      width: '48%',
     },
     txtBtnStatus: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize14,
       ...FontWithFamily.FontWithFamily_600,
     },
     viewAbout_me: {
@@ -101,18 +111,20 @@ export const createStyles = (themeColors: ThemeColors) =>
       gap: Spacing.width16,
     },
     btnChat: {
+      flex: 1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: Spacing.width8,
+      gap: Spacing.width4,
       backgroundColor: themeColors.primary,
       borderRadius: Spacing.width88,
       paddingHorizontal: Spacing.width16,
       paddingVertical: Spacing.width12,
-      maxWidth: Spacing.width178,
+      // maxWidth: Spacing.width178,
+      width: '48%',
     },
     txtChat: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize14,
       ...FontWithFamily.FontWithFamily_600,
     },
     viewListInfo: {

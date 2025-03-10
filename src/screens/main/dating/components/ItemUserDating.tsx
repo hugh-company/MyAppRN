@@ -1,4 +1,5 @@
 import { AppImage, AppText } from '@components';
+import { useLocation } from '@hooks';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { StatusAccount, UserItemInterface } from '@types';
 import { getAge } from '@utils';
@@ -12,22 +13,20 @@ export interface ItemUserDatingProps {
 export function ItemUserDating(props: ItemUserDatingProps) {
   const { item, onPress } = props;
   const { themeColors } = useTheme();
+  const { getDistanceLocation } = useLocation();
   const styles = createStyles(themeColors);
-  return <TouchableOpacity style={[styles.container, { borderColor: '#6D0101' }]} onPress={onPress}>
+  return <TouchableOpacity style={[styles.container]} onPress={onPress}>
     <AppImage style={styles.item} uri={item.avatar} />
 
     <View style={styles.viewInfo}>
-      {item?.distance && <View style={styles.viewLocation}>
-        <AppText style={styles.txtLocation}>{item?.distance}</AppText>
-      </View>}
+
       <View style={[styles.viewRow, { gap: 8 }]}>
         <AppText numberOfLines={3} style={styles.txtName}>{[item?.fullname?.trim(), getAge(item?.birthday)].join(', ')}</AppText>
         {item?.online === StatusAccount.ONLINE && <View style={styles.viewActive} />}
       </View>
-      {/* <AppText style={styles.address}>{item?.place}</AppText> */}
     </View>
-    <View style={[styles.viewMatch, { backgroundColor: '#6D0101' }]}>
-      <AppText style={styles.txtMatch}>{item?.frameLabel}</AppText>
+    <View style={[styles.viewMatch]}>
+      <AppText style={styles.txtLocation}>{getDistanceLocation(item?.location)}</AppText>
     </View>
 
   </TouchableOpacity>;
@@ -38,7 +37,7 @@ const createStyles = (themeColors: ThemeColors) =>
       width: (WidthScreen - Spacing.width44) / 2,
       height: (WidthScreen - Spacing.width44) / 2,
       borderWidth: 4,
-      borderColor: themeColors.primary,
+      borderColor: '#6D0101',
       borderRadius: Spacing.width8,
       overflow: 'hidden',
     },
@@ -48,7 +47,7 @@ const createStyles = (themeColors: ThemeColors) =>
       gap: Spacing.width8,
       position: 'absolute',
       top: 0,
-      backgroundColor: themeColors.primary,
+      backgroundColor: '#6D0101',
       borderBottomLeftRadius: Spacing.width16,
       borderBottomRightRadius: Spacing.width16,
       paddingHorizontal: Spacing.width16,

@@ -1,33 +1,41 @@
 import {t} from 'i18next';
 import {z} from 'zod';
 
-export const loginSchema = z.object({
-  username: z.string().min(1, t('validate.validate_username')),
+const usernameValidation = z
+  .string()
+  .regex(/^[a-zA-Z0-9_]+$/, {message: t('validate.validate_username')})
+  .min(1, {message: t('validate.validate_username')});
 
-  password: z.string().min(1, t('validate.password_req')),
+const passwordValidation = z
+  .string()
+  .min(6, {message: t('validate.password_req')});
+
+const fullnameValidation = z
+  .string()
+  .regex(/^[\p{L} ]+$/u, {message: t('validate.validate_fullname')})
+  .min(1, {message: t('validate.validate_fullname')});
+
+export const loginSchema = z.object({
+  username: usernameValidation,
+  password: passwordValidation,
 });
 export type loginFormData = z.infer<typeof loginSchema>;
 
-export const registerSchema = z.object({
-  username: z.string().min(1, {message: t('validate.validate_username')}),
-  fullname: z.string().min(1, {message: t('validate.validate_fullname')}),
-  email: z
-    .string()
-    .min(1, t('validate.email_req'))
-    .email(t('validate.validate_email')),
-  password: z
-    .string()
-    .min(1, t('validate.password_req'))
-    .min(8, {message: t('validate.password_req')})
-    .max(32, {message: t('validate.password_max')}),
-  confirmPassword: z
-    .string()
-    .min(1, t('validate.validate_confirmPassword_min'))
-    .max(32, {message: t('validate.validate_confirmPassword_max')})
-    .superRefine(({password, confirmPassword}: any, ctx) => {
-      if (password !== confirmPassword) {
-        console.log('sssss');
-      }
-    }),
-});
+export const registerSchema = z
+  .object({
+    username: usernameValidation,
+    fullname: fullnameValidation,
+    email: z
+      .string()
+      .min(1, t('validate.email_req'))
+      .email(t('validate.validate_email')),
+    password: passwordValidation,
+    confirmPassword: z
+      .string()
+      .min(6, t('validate.validate_confirmPassword_min')),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: t('validate.check_password'),
+    path: ['confirmPassword'],
+  });
 export type registerFormData = z.infer<typeof registerSchema>;

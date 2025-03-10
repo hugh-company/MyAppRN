@@ -1,4 +1,4 @@
-import { GoogleIcon } from '@assets';
+import { FacebookIcon, GoogleIcon } from '@assets';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
@@ -22,11 +22,11 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
       title: 'Google',
       onPress: () => onLoginGoogle(),
     },
-    // {
-    //   icon: <FacebookIcon />,
-    //   title: 'Facebook',
-    //   onPress: () => onLoginFacebook(),
-    // },
+    {
+      icon: <FacebookIcon />,
+      title: 'Facebook',
+      onPress: () => onLoginFacebook(),
+    },
     // {
     //   icon: <AppleIcon />,
     //   title: 'Apple',

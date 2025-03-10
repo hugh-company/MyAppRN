@@ -1,6 +1,7 @@
+import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {goBack} from '@navigation';
 import {setMute, setSpeed, videoSettingsSelector} from '@redux';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import {useDispatch, useSelector} from 'react-redux';
@@ -16,7 +17,8 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [controlsVisible, setControlsVisible] = useState(false);
-  const [isSpeedVisible, setSpeedVisible] = useState(false);
+  const bottomModal = React.useRef<BottomSheetModal>(null);
+
   //
   const {isMute, speed} = useSelector(videoSettingsSelector);
   //
@@ -84,7 +86,7 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
         clearTimeout(timeout);
       };
     }
-  }, [controlsVisible, isSpeedVisible]);
+  }, [controlsVisible]);
   const handleDoubleClick = useCallback(() => {
     toggleFullScreen();
   }, [toggleFullScreen]);
@@ -119,8 +121,8 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       duration,
       videoRef,
       error,
-      isSpeedVisible,
-      setSpeedVisible,
+      bottomModal,
+
       isLoading,
       setIsLoading,
       updateProgress,
@@ -147,8 +149,7 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       duration,
       videoRef,
       error,
-      isSpeedVisible,
-      setSpeedVisible,
+
       isLoading,
       setIsLoading,
       setIsFullScreenVisible,

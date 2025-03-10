@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDetailUser } from './DetailUser.hook';
 import ItemGame from './components/ItemGame';
 
-const DetailUser = () => {
+export const DetailUser = () => {
   const { data, themeColors, styles, games, getDistanceLocation } = useDetailUser();
   const { bottom } = useSafeAreaInsets();
   const renderItem = ({ item }) => {
@@ -122,5 +122,3 @@ const DetailUser = () => {
     </View>
   );
 };
-
-export default DetailUser;
