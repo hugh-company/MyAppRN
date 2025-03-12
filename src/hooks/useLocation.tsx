@@ -1,4 +1,4 @@
-import { getLocations, setLocation } from '@redux';
+import { getLocations, getToken, setLocation } from '@redux';
 import { sendLocationUserApi } from '@services';
 import { showNotificationError } from '@utils';
 import { t } from 'i18next';
@@ -27,32 +27,22 @@ const calculateDistance = (loc1: { latitude: number, longitude: number }, loc2: 
 
 export function useLocation() {
   const locationUser = useSelector(getLocations);
+  const token = useSelector(getToken);
+
   const [isPermissionLocation, setIsPermissionLocation] = useState(true);
   const dispatch = useDispatch();
   const checkPermissionLocation = async () => {
     let granted = false;
     if (Platform.OS === 'android') {
-      const currentStatus = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION);
-      if (currentStatus) {
-        granted = true;
-      } else {
-        granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          {
-            title: 'Location Permission',
-            message: 'This app needs access to your location',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        ) === PermissionsAndroid.RESULTS.GRANTED;
-      }
-    } else if (Platform.OS === 'ios') {
-      granted = await new Promise((resolve) => {
-        Geolocation.requestAuthorization('whenInUse').then((status) => {
-          resolve(status === 'granted');
-        });
-      });
+      const result = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      console.log({ result });
+
+      granted = result === PermissionsAndroid.RESULTS.GRANTED;
+    } else {
+      const result = await Geolocation.requestAuthorization('whenInUse');
+      granted = result === 'granted';
     }
     setIsPermissionLocation(granted);
     return granted;
@@ -63,8 +53,10 @@ export function useLocation() {
       console.log('Location permission not granted');
       return;
     }
+    console.log({ hasPermission });
+
     try {
-      Geolocation.getCurrentPosition(
+      await Geolocation.getCurrentPosition(
         async position => {
           console.log({ position });
           const { latitude, longitude } = position.coords;
@@ -84,13 +76,7 @@ export function useLocation() {
 
         },
         {
-          enableHighAccuracy: true,      // Sử dụng GPS cho độ chính xác cao&#8203;:contentReference[oaicite:7]{index=7}
 
-          maximumAge: 0,                // Không dùng kết quả cache cũ
-          distanceFilter: 0,            // (Không quan trọng với getCurrentPosition một lần)
-          showLocationDialog: true,     // Bật dialog yêu cầu bật GPS nếu tắt
-          forceRequestLocation: true,   // Vẫn lấy vị trí nếu user từ chối tối ưu GPS
-          forceLocationManager: true,
         },
       );
     } catch (error) {
@@ -103,6 +89,8 @@ export function useLocation() {
       latitude: locationUser?.latitude,
       longitude: locationUser?.longitude,
     };
+    console.log({ userLocation, location });
+
     let distanceInMeters = calculateDistance(userLocation, location);
     distanceInMeters = Math.round(distanceInMeters); // Round to nearest integer
     if (distanceInMeters === 0) {
@@ -130,6 +118,7 @@ export function useLocation() {
     }
     return check;
   };
+
 
   return {
     getDistanceLocation,

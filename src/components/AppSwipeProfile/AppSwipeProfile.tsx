@@ -5,7 +5,7 @@ import { Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
-import React, { forwardRef, useCallback, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { View } from 'react-native';
 import { FlatList, PanGestureHandler, TouchableOpacity } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -27,14 +27,16 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
   const styles = createStyles(themeColors);
 
   const { getDistanceLocation } = useLocation();
-  const [profiles, setProfiles] = useState(items);
+  const [profiles, setProfiles] = useState(items as UserFindInterface[]);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const rotation = useSharedValue(0);
 
   const flatListRef = useRef<FlatList>(null);
   const isRemoving = useRef(false);
-
+  useEffect(() => {
+    setProfiles(items || []);
+  }, [items]);
   // Hàm xóa profile đầu tiên khỏi danh sách
   const removeTopProfile = (action: 'like' | 'dislike' | 'superlike') => {
     if (isRemoving.current) { return; }
@@ -171,7 +173,7 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<EmptyUser />}
           renderItem={renderItem}
-          scrollEnabled={false}
+          // scrollEnabled={false}
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
           removeClippedSubviews={true}

@@ -1,39 +1,32 @@
 import { AppText } from '@components';
 import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FontSize, FontWithFamily, HeightScreen, Spacing, useTheme } from '@theme';
-import { t } from 'i18next';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface ModalSpeedProps {
   refModal: React.RefObject<BottomSheetModal> | null;
-
-  currentSpeed?: number;
-  onSelectSpeed?: (speed: number) => void;
+  data?: any[];
+  value?: any;
+  onSelectSpeed?: (value: any) => void;
+  title?: string;
 }
-export const ModalSpeed = ({ refModal, currentSpeed, onSelectSpeed }: ModalSpeedProps) => {
+export const ModalSpeed = ({ refModal, data, value, onSelectSpeed, title }: ModalSpeedProps) => {
 
   const { bottom } = useSafeAreaInsets();
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
-  const { width, height } = useWindowDimensions();
-  const dataSpeed = [
-    { label: '0.25x', value: 0.25 },
-    { label: '0.5x', value: 0.5 },
-    { label: '1x', value: 1 },
-    { label: '1.5x', value: 1.5 },
-    { label: '2x', value: 2 },
-  ];
+
 
   const renderItem = ({ item }) => {
     return (
-      <TouchableOpacity onPressIn={() => {
+      <TouchableOpacity onPress={() => {
         onSelectSpeed && onSelectSpeed(item.value);
         refModal?.current?.dismiss();
-      }} style={[styles.item, currentSpeed === item.value && styles.btnActive]}>
+      }} style={[styles.item, value === item.value && styles.btnActive]}>
         <AppText style={styles.textItem}>{item.label}</AppText>
       </TouchableOpacity>
     );
@@ -41,8 +34,12 @@ export const ModalSpeed = ({ refModal, currentSpeed, onSelectSpeed }: ModalSpeed
   return (
     <BottomSheetModal
       ref={refModal}
-      snapPoints={[HeightScreen / 2, HeightScreen]}
+      snapPoints={[HeightScreen / 2]}
       backgroundStyle={styles.modal}
+      onDismiss={() => {
+        setTimeout(() => refModal?.current?.dismiss(), 0);
+      }}
+
       onAnimate={(fromIndex, toIndex) => {
         if (toIndex === -1) {
           setTimeout(() => refModal?.current?.dismiss(), 0);
@@ -51,19 +48,17 @@ export const ModalSpeed = ({ refModal, currentSpeed, onSelectSpeed }: ModalSpeed
     >
 
       <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
-        <View style={styles.body}>
-          <AppText style={styles.title}>{t('movie.speed')}</AppText>
+        <AppText style={styles.title}>{title}</AppText>
 
 
-          <BottomSheetFlatList
-            data={dataSpeed}
-            keyExtractor={(item) => item.label.toString()}
-            renderItem={renderItem}
-            removeClippedSubviews
-            style={styles.list}
-          />
-        </View>
-
+        <BottomSheetFlatList
+          data={data}
+          keyExtractor={(item) => item.label.toString()}
+          renderItem={renderItem}
+          removeClippedSubviews
+          style={styles.list}
+          contentContainerStyle={{ minHeight: Spacing.height40 * 7 }}
+        />
       </View>
 
     </BottomSheetModal>
@@ -82,13 +77,14 @@ const createStyles = (themeColors: any) => StyleSheet.create({
   },
 
   container: {
-    backgroundColor: themeColors.background,
+    flex: 1,
+    paddingHorizontal: Spacing.width16,
 
   },
   title: {
     fontSize: FontSize.FontSize14,
     ...FontWithFamily.FontWithFamily_600,
-
+    paddingBottom: Spacing.width8,
   },
   subtitle: {  // New subtitle style
     fontSize: FontSize.FontSize14,
@@ -105,13 +101,14 @@ const createStyles = (themeColors: any) => StyleSheet.create({
   },
   list: {
     backgroundColor: themeColors.background,
-
+    height: Spacing.height200,
   },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
 
     height: Spacing.height40,
+
     paddingHorizontal: Spacing.width8,
   },
   btnActive: {

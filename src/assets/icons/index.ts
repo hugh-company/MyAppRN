@@ -90,3 +90,6 @@ export { default as IconNumberedList } from './IconNumberedList';
 export { default as IconMessager } from './IconMessager';
 export { default as DoubleArrowIcon } from './DoubleArrowIcon';
 export { default as ScrollTopIcon } from './ScrollTopIcon';
+export { default as SettingVideoIcon } from './SettingVideoIcon';
+export { default as SkipNextIcon } from './SkipNextIcon';
+export { default as SkipPreviousIcon } from './SkipPreviousIcon';

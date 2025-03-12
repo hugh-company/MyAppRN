@@ -290,7 +290,7 @@ function* watchSocketEvents(
       if (event.type === 'SOCKET_OPEN') {
         yield fork(handleSocketOpen, event.socket, event.token);
       } else if (event.type === 'SOCKET_CLOSED') {
-        // yield put({type: 'RECONNECT_SOCKET'});
+        yield put({type: 'RECONNECT_SOCKET'});
         break; // Thoát vòng lặp khi đóng kết nối
       } else if (event.type === 'SOCKET_ON_MESSAGE') {
         yield call(handleDataMessage, event.data);
@@ -376,7 +376,7 @@ function* fetchConversationsSaga(
   const params = {
     token,
     action: 'get_threads',
-    cursor_time: action.payload.cursor_time || '',
+    cursor_time: action.payload?.cursor_time || '',
   };
   console.log({socket});
 

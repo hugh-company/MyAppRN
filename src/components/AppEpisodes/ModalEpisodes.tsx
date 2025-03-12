@@ -36,12 +36,11 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
     setFilteredEpisodes(episodes);
   }, [episodes]);
   const handleSearch = debounce((text: string) => {
-
     if (text === '') {
       setFilteredEpisodes(episodes);
     } else {
       const filtered = episodes?.filter((episode) =>
-        episode.title.toLowerCase().includes(text.toLowerCase())
+        `${t('home.episode')} ${episode.index}`.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredEpisodes(filtered);
     }
@@ -54,7 +53,7 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
         setSelectEpisodes?.(item.id);
         onSelectChapter?.(item);
       }} style={[styles.itemChapter, selectEpisodes === item.id && styles.btnChapterActive]} >
-        <AppText style={[styles.txtChapterItem, selectEpisodes === item.id && styles.txtChapterActive]}>{item?.title}</AppText>
+        <AppText style={[styles.txtChapterItem, selectEpisodes === item.id && styles.txtChapterActive]}>{`${t('home.episode')} ${item?.index}`}</AppText>
       </TouchableOpacity>
     );
   };
@@ -62,13 +61,8 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
   return (
     <BottomSheetModal
       ref={refModal}
-      backgroundStyle={styles.modalContainer}
+      backgroundStyle={[styles.modalContainer]}
       snapPoints={[minHeight * HeightScreen, height * HeightScreen]}
-      onAnimate={(fromIndex, toIndex) => {
-        if (toIndex === -1) {
-          setTimeout(() => refModal?.current?.dismiss(), 0);
-        }
-      }}
     >
       <View style={styles.headerModal}>
         <View style={styles.viewTitle}>
@@ -100,6 +94,7 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
         renderItem={renderItem}
         removeClippedSubviews
         style={styles.listModal}
+        contentContainerStyle={[styles.contentContainerStyle, { minHeight: HeightScreen * minHeight }]}
         ListEmptyComponent={<AppText style={styles.emptyText}>{t('movie.no_chapters')}</AppText>}
       />
     </BottomSheetModal>

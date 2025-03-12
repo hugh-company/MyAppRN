@@ -36,7 +36,7 @@ export function ListStickers(props: ListStickersProps) {
   const renderTabButtons = () => {
     return (
       <View style={styles.tabContainer}>
-        {stickers.map((sticker, idx) => (
+        {stickers?.map((sticker, idx) => (
           <TouchableOpacity key={idx} onPress={() => setSelectedTab(idx)} style={[styles.tabButton, selectedTab === idx && styles.tabSelected]}>
             <AppText style={styles.tabText}>{sticker.title}</AppText>
           </TouchableOpacity>
@@ -49,7 +49,7 @@ export function ListStickers(props: ListStickersProps) {
     const sticker = stickers[selectedTab];
     return (
       <FlatList
-        data={sticker.items}
+        data={sticker?.items || []}
         renderItem={renderSticker}
         numColumns={numColumns}
         keyExtractor={(item, index) => index.toString()}
@@ -61,6 +61,7 @@ export function ListStickers(props: ListStickersProps) {
     );
   };
 
+  if (!stickers) { return null; }
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
       {renderTabButtons()}

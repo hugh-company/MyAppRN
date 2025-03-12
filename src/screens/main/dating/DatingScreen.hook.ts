@@ -28,6 +28,7 @@ export const useDatingScreen = () => {
     isPermissionLocation,
     goToSettingLocation,
     getLocationDevice,
+    checkLocation,
   } = useLocation();
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -36,9 +37,14 @@ export const useDatingScreen = () => {
   //
 
   useEffect(() => {
-    setLoading(true);
-    callApi();
-  }, []);
+    if (isPermissionLocation) {
+      setLoading(true);
+      getLocationDevice().then(() => {
+        callApi();
+      });
+    }
+  }, [isPermissionLocation]);
+
   const callApi = async (type?: TypeTabDatingApi, pageNumber?: number) => {
     const params = {
       paged: pageNumber,
@@ -87,15 +93,6 @@ export const useDatingScreen = () => {
     }
   }, [token]);
 
-  const checkLocation = async () => {
-    const check = await checkPermissionLocation();
-
-    if (check) {
-      const location = await getLocationDevice();
-      console.log({location});
-    }
-  };
-
   const onSelectTab = (type: TypeTabDatingApi) => {
     setLoading(true);
     setTab(type);
@@ -109,11 +106,16 @@ export const useDatingScreen = () => {
       setIsLoadingMore(false);
     }
   };
+
   const onRefresh = async () => {
-    setPage(1);
-    setIsLoadingMore(false);
-    await callApi(tab, 1);
+    if (isPermissionLocation) {
+      setPage(1);
+      await getLocationDevice();
+      setIsLoadingMore(false);
+      await callApi(tab, 1);
+    }
   };
+
   return {
     data,
     themeColors,

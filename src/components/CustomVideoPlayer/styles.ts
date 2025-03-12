@@ -5,12 +5,16 @@ export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: themeColors.background,
     },
     fullScreen: {},
+    containerVideo: {
+      width: '100%',
+      height: '100%',
+      backgroundColor: themeColors.background,
+    },
     video: {
-      // flex: 1,
-      // backgroundColor: 'green',
+      width: '100%',
+      height: '100%',
     },
     errorContainer: {
       ...StyleSheet.absoluteFillObject,

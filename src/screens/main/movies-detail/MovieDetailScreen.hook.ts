@@ -42,10 +42,11 @@ export const useMovieDetailScreen = () => {
     SourceVideoInterface | undefined
   >(undefined);
   //
-  const {data, isSuccess, refetch, error} = useDetailPostApi(
-    movieId,
-    PostTypeKey.MOVIES,
-  );
+  const {data, isSuccess, refetch, error, isLoading, isFetching} =
+    useDetailPostApi(movieId, PostTypeKey.MOVIES);
+
+  console.log({isLoading}, isFetching);
+
   const {} = useQuery({
     queryKey: ['viewMoves', movie.id],
     queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
@@ -102,6 +103,7 @@ export const useMovieDetailScreen = () => {
         index: (chapter.index || 1) - 1,
       };
     });
+    setIsPlaying(true);
   };
 
   const onNavigateDetail = (post: detailPostInterface) => {
@@ -124,6 +126,31 @@ export const useMovieDetailScreen = () => {
       ['transparent', '#B1062E'],
     ),
   }));
+
+  const onSkipNext = () => {
+    const index = detailMovie?.index || 0;
+    // next chapter video
+    if (index < detailMovie?.chapters?.length - 1) {
+      setDetailMovie(prev => {
+        return {
+          ...prev,
+          index: index + 1,
+        };
+      });
+    }
+  };
+  const onSkipPrevious = () => {
+    const index = detailMovie?.index || 0;
+    // next chapter video
+    if (index > 0) {
+      setDetailMovie(prev => {
+        return {
+          ...prev,
+          index: index - 1,
+        };
+      });
+    }
+  };
   return {
     themeColors,
     styles,
@@ -145,5 +172,8 @@ export const useMovieDetailScreen = () => {
     onSelectServer,
     setIsPlaying,
     isPlaying,
+    isLoading,
+    onSkipNext,
+    onSkipPrevious,
   };
 };

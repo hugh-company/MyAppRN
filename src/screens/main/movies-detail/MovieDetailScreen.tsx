@@ -1,4 +1,4 @@
-import { AppEpisodes, AppHeader, AppInfoContent, AppServerList, HorizontalList } from '@components';
+import { AppEpisodes, AppHeader, AppInfoContent, AppServerList, CustomVideoPlayer, HorizontalList } from '@components';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { useEffect } from 'react';
@@ -6,15 +6,17 @@ import { View } from 'react-native';
 import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovieDetailScreen } from './MovieDetailScreen.hook';
-import { InfoMovie } from './components/InfoMovie';
-import { VideoPlayer } from './components/VideoPlayer';
+import { BannerInfoMovie } from './components/BannerInfoMovie';
+import { StatusInfoMovie } from './components/StatusInfoMovie';
 
 export const MovieDetailScreen = () => {
   const { styles, isFullScreenVisible, setIsFullScreenVisible,
     detailMovie, onSelectedChapter, onNavigateDetail, serverMovie, setIsPlaying,
     isPlaying, scrollHandler,
-    headerBackgroundColorStyle,
-    onSelectServer } = useMovieDetailScreen();
+    isLoading,
+    onSelectServer,
+    onSkipNext,
+    onSkipPrevious } = useMovieDetailScreen();
   const { top } = useSafeAreaInsets();
   const opacity = useSharedValue(1);
 
@@ -36,21 +38,30 @@ export const MovieDetailScreen = () => {
         renderItem={({ item }: any) => (
           <>
             <View >
-              <VideoPlayer
-                urlVideo={serverMovie?.link}
-                image={detailMovie?.feature
-                  ?.path}
+              {isPlaying ? <CustomVideoPlayer
+                uri={serverMovie?.link || ''}
                 setIsFullScreenVisible={setIsFullScreenVisible}
                 isFullScreenVisible={isFullScreenVisible}
-                autoPlay={!!detailMovie?.index} // Add autoPlay prop
+                typeMovie={item?.movie_type}
+                valueChapter={detailMovie?.index || 0}
+                episodes={item?.chapters || []}
+                onSkipNext={() => {
+                  onSkipNext();
+                }}
+                onSkipPrevious={() => {
+                  onSkipPrevious();
+                }}
+              /> : <BannerInfoMovie
+                movie={item}
+                disabledVideo={!serverMovie?.link}
                 isPlaying={isPlaying}
-                setIsPlaying={setIsPlaying}
-              />
-              <View style={[!isPlaying && styles.infoMovie]}>
-                <InfoMovie movie={item} isPlaying={isPlaying} />
-              </View>
+                loading={isLoading}
+                onPlay={() => setIsPlaying(true)}
+              />}
+
             </View>
-            {serverMovie &&
+            <StatusInfoMovie movie={item} isPlaying={isPlaying} />
+            {serverMovie && !isLoading &&
               <AppServerList
                 list={detailMovie?.chapters?.[detailMovie?.index || 0].source || []}
                 value={serverMovie?.link}

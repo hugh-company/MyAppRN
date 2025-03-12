@@ -4,7 +4,7 @@ import {z} from 'zod';
 export const createProfileSchema = z.object({
   fullname: z.string().min(1, {message: t('validate.validate_fullname')}),
   avatar: z.string().min(1, {message: t('validate.validate_avatar')}),
-  about_me: z.string().min(1, {message: t('validate.validate_about_me')}),
+  about_me: z.string().optional(),
   birthday: z.string().min(1, {message: t('validate.validate_birthday')}),
   gender: z.string().min(1, {message: t('validate.validate_gender')}),
   // phone
@@ -15,6 +15,6 @@ export const createProfileSchema = z.object({
   galleries: z
     .array(z.string())
     .min(1, {message: t('validate.validate_galleries')}),
-  job: z.string().min(1, {message: t('validate.validate_job')}),
+  job: z.string().optional(),
 });
 export type createProfileFormData = z.infer<typeof createProfileSchema>;

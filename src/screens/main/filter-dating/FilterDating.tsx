@@ -11,7 +11,6 @@ export const FilterDating: React.FC = () => {
   const { data, styles, isFilter, setIsFilter, filter, onFilterApi,
     handleSwipe, loading,
   } = useFilterDating();
-  console.log({ data });
 
   return (
     <View style={styles.container}>
@@ -19,8 +18,7 @@ export const FilterDating: React.FC = () => {
         rightComponent={<TouchableOpacity onPress={() => setIsFilter(true)} style={styles.btnFilter}>
           <FilterIcon size={Spacing.width28} color="white" />
         </TouchableOpacity>} />
-      {!loading && <MatchesUser data={data} onSendAction={handleSwipe} />}
-      {/* {data.length > 0 ? <MatchesUser data={data} /> : renderEmpty()} */}
+      <MatchesUser data={data || []} onSendAction={handleSwipe} />
       <ModalFilterDating
         visible={isFilter}
         filter={filter}
@@ -29,13 +27,6 @@ export const FilterDating: React.FC = () => {
           onFilterApi(value);
         }} />
 
-      {/* {matchUser && (
-        <MatchScreen
-          visible={!!matchUser}
-          userMatch={matchUser}
-          onClose={() => setMatchUser(null)}
-        />
-      )} */}
     </View>
   );
 };

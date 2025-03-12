@@ -1,12 +1,12 @@
 import { AppText } from '@components';
 import { goBack } from '@navigation';
-import { Spacing, useTheme } from '@theme';
+import { useTheme } from '@theme';
+import { chapterEpisodeInterface } from '@types';
 import { t } from 'i18next';
 import React, { memo } from 'react';
 import { Platform, StyleProp, TouchableWithoutFeedback, View, ViewStyle } from 'react-native';
 import Orientation from 'react-native-orientation-locker';
 import Animated, { runOnJS } from 'react-native-reanimated';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Video from 'react-native-video';
 import { AppControlBottom } from './components/AppControlBottom';
 import { ControlCenter } from './components/ControlCenter';
@@ -17,15 +17,23 @@ import { createStyles } from './styles';
 
 export interface CustomVideoPlayerProps {
   uri: string;
-  style: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle>;
   styleVideo?: StyleProp<ViewStyle>;
   isFullScreenVisible: boolean;
   setIsFullScreenVisible: any;
+  typeMovie?: 'tvseries' | 'movies';
+  valueChapter?: number;
+  onSkipNext?: () => void;
+  onSkipPrevious?: () => void;
+  episodes?: chapterEpisodeInterface[];
 }
 
 const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   const { themeColors } = useTheme();
-  const { uri, style, styleVideo, isFullScreenVisible } = props;
+  const { uri, style, styleVideo, isFullScreenVisible, typeMovie = 'movies',
+    valueChapter = 0, episodes = [],
+    onSkipNext, onSkipPrevious,
+  } = props;
   const styles = createStyles(themeColors);
   const {
     videoRef,
@@ -35,112 +43,146 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     paused,
     toggleFullScreen,
     duration,
-    setDuration,
     speed,
-    setPlaybackRate,
     isLoading,
-    setIsLoading,
     setCurrentTime,
-
     toggleMute,
     togglePlayPause,
     rewind,
     fastForward,
     updateProgress,
-    bottomModal, setError, handlePress,
-    setIsFullScreenVisible, controlsVisible,
-    setPaused,
+    bottomModal, handlePress,
+    setIsFullScreenVisible,
+    setPaused, controlsVisible,
+    animatedStyle,
+    setPlaybackRate,
+    getInfoVideo,
+    setError, setIsLoading, reinitializeVideo, listQuality, bottomQualityModal, dataSpeed,
+    quality, onChangeQuality,
   } = useCustomVideoPlayer(props);
-  const { top, bottom } = useSafeAreaInsets();
 
   return (
-    <TouchableWithoutFeedback onPress={handlePress}>
-      <View style={[styles.container, style, isFullScreenVisible && { ...styles.fullScreen }]}>
-        <Video
-          source={{ uri }}
-          style={[styleVideo, styles.video, isFullScreenVisible && { paddingTop: Platform.OS === 'ios' ? top + Spacing.width16 : 0, paddingBottom: bottom + Spacing.width16 }]}
-          controls={false}
-          ref={videoRef}
-          resizeMode={'contain'}
-          onError={(e) => {
-            setError(true);
-          }}
-          onProgress={(data) => {
-            runOnJS(updateProgress)(data.currentTime);
-          }}
-          onLoad={({ duration }) => setDuration(duration)}
-          muted={isMute}
-          paused={paused}
-          rate={speed}
-          onLoadStart={() => setIsLoading(true)}
-          onReadyForDisplay={() => setIsLoading(false)}
-          onEnd={() => setPaused(true)}
-          {...(Platform.OS === 'android' && {
-            ignoreSilentSwitch: 'ignore',
-            playInBackground: true,
-            playWhenInactive: true,
-          })}
-        />
-        {error && (
-          <Animated.View style={styles.errorContainer}>
-            <AppText style={styles.errorText}>{t('movie.error')}</AppText>
-          </Animated.View>
-        )}
-        {controlsVisible && <Animated.View style={[styles.controls]}>
-          <MemoizedHeaderControl
-            isFullScreenVisible={isFullScreenVisible}
-            goBackScreen={() => {
-              console.log({ isFullScreenVisible });
+    <Animated.View style={[styles.containerVideo, animatedStyle]}>
 
-              if (isFullScreenVisible) {
-                Orientation.unlockAllOrientations();
-                Orientation.lockToPortrait();
-                setIsFullScreenVisible(false);
-              } else {
-                goBack();
-              }
+      <TouchableWithoutFeedback onPress={handlePress}>
+        <View style={[styles.container, style, isFullScreenVisible && { ...styles.fullScreen }]}>
+          <Video
+            source={{ uri: quality ? quality : uri }}
+            controls={false}
+            ref={videoRef}
+            resizeMode={'contain'}
+            style={[styleVideo, styles.video]}
+            onError={(e) => {
+              console.log({ e });
+              setError(true);
+
             }}
-            isMuted={isMute}
-            toggleMute={toggleMute}
-            setSpeedVisible={() => {
-              bottomModal.current?.present();
+            onProgress={(data) => {
+              runOnJS(updateProgress)(data.currentTime);
+            }}
+            onLoad={(event) => {
+              runOnJS(getInfoVideo)(event);
+            }}
+
+            muted={isMute}
+            paused={paused}
+            rate={speed}
+            onLoadStart={() => setIsLoading(true)}
+            onReadyForDisplay={() => setIsLoading(false)}
+            onEnd={() => {
+              // setPaused(true);
+              onSkipNext?.();
+            }}
+            {...(Platform.OS === 'android' && {
+              ignoreSilentSwitch: 'ignore',
+              playInBackground: true,
+              playWhenInactive: true,
+            })}
+          />
+
+          {error && (
+            <Animated.View style={styles.errorContainer}>
+              <AppText style={styles.errorText}>{t('movie.error')}</AppText>
+            </Animated.View>
+          )}
+          {controlsVisible && <Animated.View style={[styles.controls]}>
+            <MemoizedHeaderControl
+              isFullScreenVisible={isFullScreenVisible}
+              goBackScreen={() => {
+                console.log({ isFullScreenVisible });
+
+                if (isFullScreenVisible) {
+                  Orientation.unlockAllOrientations();
+                  Orientation.lockToPortrait();
+                  setIsFullScreenVisible(false);
+                } else {
+                  goBack();
+                }
+              }}
+              isMuted={isMute}
+              toggleMute={toggleMute}
+              setSpeedVisible={() => {
+                bottomModal.current?.present();
+              }}
+            />
+            {
+              !error && <>
+                <ControlCenter
+                  isError={error}
+                  isLoading={isLoading}
+                  currentTime={currentTime}
+                  onPlayPause={togglePlayPause}
+                  onSkipBackward={rewind}
+                  onSkipForward={fastForward}
+                  paused={paused}
+                  onSkipNext={onSkipNext}
+                  onSkipPrevious={onSkipPrevious}
+                  typeMovie={typeMovie}
+                  isSkipNext={valueChapter < episodes?.length - 1}
+                  isSkipPrevious={valueChapter > 0}
+                />
+                <MemoizedAppControlBottom
+                  isFullScreenVisible={isFullScreenVisible}
+                  isError={error}
+                  setCurrentTime={setCurrentTime}
+                  videoRef={videoRef}
+                  duration={duration}
+                  currentTime={currentTime}
+                  loading={isLoading}
+                  toggleFullScreen={toggleFullScreen}
+                  seekTime={currentTime}
+
+
+                  qualities={listQuality}
+                  onQuality={() => {
+                    bottomQualityModal.current?.present();
+                  }}
+                />
+              </>
+            }
+          </Animated.View>}
+          <MemoizedModalSpeed
+            refModal={bottomModal as any}
+            value={speed}
+            title={t('movie.speed')}
+            data={dataSpeed}
+            onSelectSpeed={(speedVideo) => {
+              setPlaybackRate(speedVideo);
             }}
           />
-          {
-            !error && <>
-
-              <ControlCenter
-                isError={error}
-                isLoading={isLoading}
-                currentTime={currentTime}
-                onPlayPause={togglePlayPause}
-                onSkipBackward={rewind}
-                onSkipForward={fastForward}
-                paused={paused}
-              />
-              <MemoizedAppControlBottom
-                isFullScreenVisible={isFullScreenVisible}
-                isError={error}
-                setCurrentTime={setCurrentTime}
-                videoRef={videoRef}
-                duration={duration}
-                currentTime={currentTime}
-                loading={isLoading}
-                toggleFullScreen={toggleFullScreen}
-                seekTime={currentTime} // Add this line
-              />
-            </>
-          }
-        </Animated.View>}
-        <MemoizedModalSpeed
-          refModal={bottomModal as any}
-          currentSpeed={speed}
-          onSelectSpeed={(speedVideo) => {
-            setPlaybackRate(speedVideo);
-          }}
-        />
-      </View>
-    </TouchableWithoutFeedback>
+          <MemoizedModalSpeed
+            title={t('movie.quality')}
+            refModal={bottomQualityModal as any}
+            value={quality}
+            data={listQuality}
+            onSelectSpeed={(value) => {
+              console.log({ value });
+              onChangeQuality(value);
+            }}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </Animated.View>
   );
 };
 
@@ -153,7 +195,8 @@ const MemoizedAppControlBottom = memo(AppControlBottom, (prevProps, nextProps) =
     prevProps.duration === nextProps.duration &&
     prevProps.currentTime === nextProps.currentTime &&
     prevProps.loading === nextProps.loading &&
-    prevProps.toggleFullScreen === nextProps.toggleFullScreen;
+    prevProps.toggleFullScreen === nextProps.toggleFullScreen &&
+    prevProps.qualities === nextProps.qualities;
 });
 const MemoizedModalSpeed = memo(ModalSpeed);
 export default CustomVideoPlayer;

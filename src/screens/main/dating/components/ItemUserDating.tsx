@@ -15,6 +15,7 @@ export function ItemUserDating(props: ItemUserDatingProps) {
   const { themeColors } = useTheme();
   const { getDistanceLocation } = useLocation();
   const styles = createStyles(themeColors);
+  if (!item?.location?.latitude) { return <></>; }
   return <TouchableOpacity style={[styles.container]} onPress={onPress}>
     <AppImage style={styles.item} uri={item.avatar} />
 

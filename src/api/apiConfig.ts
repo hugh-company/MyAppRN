@@ -97,4 +97,5 @@ export const KeyQueryApi = {
   DASHBOARD_SEARCH: 'dashboardSearch',
   POST_DETAIL: 'postDetail',
   GET_LIST_POST: 'getListPost',
+  FIND_LIST_USER: 'findListUser',
 };

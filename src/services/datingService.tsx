@@ -45,3 +45,26 @@ export const useDatingDashboardApi = (type: TypeTabDatingApi, params?: any) => {
     params
   );
 };
+// find user
+export const useFindUserApi = (params: UserFindInterface, enabled: boolean) => {
+  const location = `${params.location?.latitude.toString().replace('.', '__')}__${params.location?.longitude.toString().replace('.', '__')}`;
+
+  let newParams = {
+    ...params,
+    location,
+  };
+  if (params?.gender) {
+    newParams = {
+      ...newParams,
+      gender: params.gender,
+    };
+  }
+  return useApiQuery<any>(KeyQueryApi.FIND_LIST_USER,
+    API_ENDPOINTS.FIND_DATING,
+    newParams,
+    {
+      queryKey: [KeyQueryApi.FIND_LIST_USER, newParams],
+      enabled,
+    }
+  );
+};

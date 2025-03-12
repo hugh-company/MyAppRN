@@ -1,10 +1,11 @@
-import { ExitFullScreenIcon, FullScreenIcon } from '@assets';
+import { ExitFullScreenIcon, FullScreenIcon, SettingVideoIcon } from '@assets';
 import { AppText } from '@components';
 import Slider from '@react-native-community/slider';
 import { FontSize, FontWithFamily, Spacing, useTheme, WidthScreen } from '@theme';
 import { formatTimeSeconds } from '@utils';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { ItemQualityProps } from '../CustomVideoPlayer.hook';
 import { ButtonAction } from './ButtonAction';
 
 interface AppControlBottomProps {
@@ -14,9 +15,12 @@ interface AppControlBottomProps {
   videoRef: any; // Add this prop
   loading: boolean; // Add this prop
   toggleFullScreen: () => void; // Add this prop
+  onQuality: () => void; // Add this prop
   isFullScreenVisible: boolean; // Add this prop
   isError: boolean; // Add this prop
   seekTime: number; // Add this prop
+  qualities: ItemQualityProps[]; // Add this prop
+
 }
 
 const SliderComponent = memo(Slider, (prevProps, nextProps) => {
@@ -28,24 +32,16 @@ const SliderComponent = memo(Slider, (prevProps, nextProps) => {
     prevProps.thumbTintColor === nextProps.thumbTintColor;
 });
 
-export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0, setCurrentTime, toggleFullScreen, isFullScreenVisible, seekTime }: AppControlBottomProps) => {
+export const AppControlBottom = memo(({ isError, duration, videoRef, onQuality, setCurrentTime, toggleFullScreen, isFullScreenVisible, seekTime, qualities }: AppControlBottomProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-  const [seekTimeState, setSeekTimeState] = useState(currentTime);
   const [sliderWidth, setSliderWidth] = useState(0); // Add this line
-
-  useEffect(() => {
-    setSeekTimeState(seekTime);
-  }, [seekTime]);
 
   const handleSlidingComplete = (value) => {
     setCurrentTime(value);
     videoRef.current.seek(value);
   };
 
-  const handleValueChange = (value) => {
-    setSeekTimeState(value);
-  };
 
   const handleSliderLayout = (event) => { // Add this function
     const { width } = event.nativeEvent.layout;
@@ -73,7 +69,11 @@ export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0,
             <AppText style={[styles.txtTime, { opacity: 0.6 }]} > / {formatTimeSeconds(duration)}</AppText>
           </View>
         </View>
-        <ButtonAction Icon={isFullScreenVisible ? ExitFullScreenIcon : FullScreenIcon} onPress={toggleFullScreen} />
+        <View style={[styles.viewOption, { gap: Spacing.width8 }]}>
+          {qualities?.length > 1 && <ButtonAction Icon={SettingVideoIcon} onPress={onQuality} />}
+
+          <ButtonAction Icon={isFullScreenVisible ? ExitFullScreenIcon : FullScreenIcon} onPress={toggleFullScreen} />
+        </View>
       </View>
       <View style={styles.viewBottom}>
         {/* {loading && <ActivityIndicator size="small" color={themeColors.primary} />} */}
@@ -82,18 +82,19 @@ export const AppControlBottom = ({ isError, duration, videoRef, currentTime = 0,
           minimumValue={0}
           maximumValue={duration}
           value={seekTime}
-          onValueChange={handleValueChange}
+
+          // onValueChange={handleValueChange}
           onSlidingComplete={handleSlidingComplete}
           minimumTrackTintColor={themeColors.primary}
           maximumTrackTintColor={'rgba(255, 255, 255, 0.5)'}
-          thumbTintColor="transparent"
+          thumbTintColor={themeColors.primary}
           onLayout={handleSliderLayout} // Add this line
           onTouchEnd={handleTouchEnd} // Add this line
         />
       </View>
     </View>
   );
-};
+});
 
 const createStyles = (themeColors: any) =>
   StyleSheet.create({
@@ -151,11 +152,13 @@ const createStyles = (themeColors: any) =>
       maxHeight: Spacing.height40,
       height: Spacing.height40,
       minHeight: Spacing.height40,
+
     },
     name: {
       fontSize: FontSize.FontSize18,
       flex: 1,
       ...FontWithFamily.FontWithFamily_500,
     },
+
   });
 

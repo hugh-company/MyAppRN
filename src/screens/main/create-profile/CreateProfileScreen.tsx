@@ -56,17 +56,7 @@ export const CreateProfileScreen = () => {
           name="fullname"
           placeholder={t('name')}
           error={errors.fullname?.message} />
-        <AppInputDropdown
-          control={control}
-          name={'job'}
-          data={jobs.map((item) => ({ label: item.name, value: item.id?.toString() }))}
-          placeholder={t('selectJob')}
-        />
-        <AppInput
-          control={control}
-          name="about_me"
-          placeholder={t('about_me')}
-          error={errors.about_me?.message} />
+
         <AppDate
           control={control}
           name="birthday"
@@ -78,6 +68,18 @@ export const CreateProfileScreen = () => {
           name={'gender'}
           data={gender}
           placeholder={t('selectGender')}
+        />
+
+        <AppInput
+          control={control}
+          name="about_me"
+          placeholder={t('about_me')}
+          error={errors.about_me?.message} />
+        <AppInputDropdown
+          control={control}
+          name={'job'}
+          data={jobs.map((item) => ({ label: item.name, value: item.id?.toString() }))}
+          placeholder={t('selectJob')}
         />
         <Controller
           control={control}

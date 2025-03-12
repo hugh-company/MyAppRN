@@ -111,3 +111,33 @@ export const useDetailPostApi = (id: number, type: PostTypeKey) => {
 
   );
 };
+export const getResolutionsFromM3U8 = async (url: string) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Không thể tải file M3U8');
+    }
+
+    const text = await response.text(); // Lấy nội dung file M3U8 dưới dạng chuỗi
+    const lines = text.split('\n'); // Tách thành từng dòng
+
+    const resolutions = [];
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].includes('RESOLUTION=')) {
+        const match = lines[i].match(/RESOLUTION=(\d+x\d+)/);
+        if (match) {
+          resolutions.push({
+            resolution: match[1], // Lưu độ phân giải (ví dụ: "1280x720")
+            url: lines[i + 1].trim(), // Đường link phát video tương ứng
+          });
+        }
+      }
+    }
+    console.log({ resolutions });
+
+    return resolutions; // Trả về danh sách độ phân giải
+  } catch (error) {
+    console.error('Lỗi lấy danh sách phân giải:', error);
+    return [];
+  }
+};

@@ -31,7 +31,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexWrap: 'wrap',
       flexDirection: 'row',
       gap: Spacing.height8,
-      maxHeight: Spacing.height32 * 2 + Spacing.height8,
       overflow: 'hidden',
     },
     btnChapter: {
@@ -118,6 +117,9 @@ export const createStyles = (themeColors: ThemeColors) =>
     listModal: {
       backgroundColor: themeColors.background,
       height: Spacing.height200,
+    },
+    contentContainerStyle: {
+      minHeight: Spacing.height200,
     },
     emptyList: {
       flex: 1,

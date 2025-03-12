@@ -105,6 +105,7 @@
     "comicManage": "Truyện tranh",
     "multipPeopleRead": "Nhiều người đọc",
     "episodes": "tập",
+    "episode": "Tập",
     "likes": "lượt thích",
     "minute": "phút"
   },
@@ -158,7 +159,8 @@
     "mute": "Tắt tiếng",
     "unmute": "Bật tiếng",
     "main_actors": "Diễn viên chính",
-    "no_chapters": "Không có tập nào"
+    "no_chapters": "Không có tập nào",
+    "quality": "Chất lượng"
   },
   "chapter": {
     "title": "Truyện tranh",
@@ -239,6 +241,7 @@
   "confirm": "Xác nhận",
   "notFound": "Không có dữ liệu",
   "play": "Play",
+  "noVideo": "Không có video",
   "like": "Thích",
   "liked": "Đã thích",
   "rating": "Đánh giá",
@@ -312,7 +315,8 @@
     "repliedSticker": "Đang trả lời sticker",
     "coversation": "Trò chuyện",
     "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!",
-    "minutes_ago": "phút trước"
+    "minutes_ago": "phút trước",
+    "just_now": "vừa xong"
   },
   "location": {
     "title": "Vị trí của bạn",

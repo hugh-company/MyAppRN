@@ -1,4 +1,4 @@
-import { PauseIcon, PlayIcon, SkipBackwardIcon, SkipForwardIcon } from '@assets';
+import { PauseIcon, PlayIcon, SkipBackwardIcon, SkipForwardIcon, SkipNextIcon, SkipPreviousIcon } from '@assets';
 import { Spacing, useTheme } from '@theme';
 import React from 'react';
 import { ActivityIndicator, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
@@ -12,9 +12,17 @@ interface ControlCenterProps {
   paused: boolean;
   isError?: boolean;
   currentTime?: number;
+  onSkipNext?: () => void;
+  onSkipPrevious?: () => void;
+  typeMovie: 'tvseries' | 'movies';
+  isSkipNext?: boolean;
+  isSkipPrevious?: boolean;
+
 }
 
-export const ControlCenter = ({ isLoading, isError, onPlayPause, onSkipBackward, onSkipForward, paused, currentTime }: ControlCenterProps) => {
+export const ControlCenter = ({ isLoading, isError,
+  onPlayPause, onSkipBackward, onSkipForward, paused,
+  onSkipNext, onSkipPrevious, typeMovie, isSkipNext, isSkipPrevious }: ControlCenterProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const scaleValue = useSharedValue(1);
@@ -39,6 +47,14 @@ export const ControlCenter = ({ isLoading, isError, onPlayPause, onSkipBackward,
 
   return (
     <View style={styles.container}>
+      {typeMovie === 'tvseries' && <TouchableOpacity
+        style={[styles.controlButton, { width: 50, height: 50 }, !isSkipPrevious && { opacity: 0.5 }]}
+        onPress={onSkipPrevious}
+        disabled={!isSkipPrevious}
+      // disabled={!currentTime || currentTime <= 0}
+      >
+        <SkipPreviousIcon />
+      </TouchableOpacity>}
       <TouchableOpacity
         style={[styles.controlButton, { width: 50, height: 50 }]}
         onPress={onSkipBackward}
@@ -58,6 +74,15 @@ export const ControlCenter = ({ isLoading, isError, onPlayPause, onSkipBackward,
       >
         <SkipForwardIcon />
       </TouchableOpacity>
+
+      {typeMovie === 'tvseries' && <TouchableOpacity
+        style={[styles.controlButton, { width: 50, height: 50 }, !isSkipNext && { opacity: 0.5 }]}
+        onPress={onSkipNext}
+        disabled={!isSkipNext}
+      // disabled={!currentTime || currentTime <= 0}
+      >
+        <SkipNextIcon />
+      </TouchableOpacity>}
     </View>
   );
 };

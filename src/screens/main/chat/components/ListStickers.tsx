@@ -15,6 +15,7 @@ export interface ListStickersProps {
 export function ListStickers(props: ListStickersProps) {
   const { isVisible, onSelectSticker } = props;
   const stickers = useSelector(stickersSelector);
+  console.log({ stickers });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: isVisible ? withSpring(0) : withSpring(300) }],
@@ -32,14 +33,14 @@ export function ListStickers(props: ListStickersProps) {
     return (
       <View style={styles.listItem}>
         <AppText style={styles.title}>{item.title}</AppText>
-        <FlatList data={item?.items} renderItem={renderSticker} horizontal={true} showsHorizontalScrollIndicator={false} />
+        <FlatList data={item?.items || []} renderItem={renderSticker} horizontal={true} showsHorizontalScrollIndicator={false} />
       </View>
     );
   };
 
   return (
     <Animated.View style={[styles.container, animatedStyle]}>
-      <FlatList data={stickers} renderItem={renderItem} />
+      <FlatList data={stickers || []} renderItem={renderItem} />
     </Animated.View>
   );
 }

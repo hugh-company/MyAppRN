@@ -25,6 +25,7 @@ export function MatchesUser(props: ListUserDatingProps) {
   const handleSwipeAction = (type: string, user?: UserFindInterface) => {
     console.log('handleSwipeAction', type, user);
     setProfiles((prev) => prev.slice(1));
+    props.onSendAction(type, user); // Call the callback
   };
 
   const onClickAction = (type: string) => {

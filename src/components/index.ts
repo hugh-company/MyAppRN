@@ -31,6 +31,7 @@ export * from './AppSearchInput';
 export * from './AppSelectColor';
 export * from './AppServerList';
 export * from './AppSwipeProfile';
+export * from './AppVideos';
 export * from './AppZoomImage';
 export * from './Containers';
 export * from './ControlBottomChat';
