@@ -12,7 +12,8 @@
     "username": "Tên tài khoản",
     "loginSuccess": "Đăng nhập thành công",
     "loginFail": "Đăng nhập thất bại",
-    "fullname": "Họ và tên"
+    "fullname": "Họ và tên",
+    "loginGoogle": "Đăng nhập với Google"
   },
   "register": {
     "title": "Đăng ký tài khoản",
@@ -222,7 +223,18 @@
     "withTime": "Theo thời gian",
     "withView": "Theo lượt xem",
     "withRating": "Theo đánh giá",
-    "withLike": "Theo lượt thích"
+    "withLike": "Theo lượt thích",
+
+    "trending": "Top thịnh hành",
+    "newest": "Mới nhất",
+    "last_update": "Mới cập nhật",
+    "likes": "Lượt thích",
+    "views": "Lượt xem",
+    "rating": "Đánh giá",
+    "sort": "Sắp xếp theo",
+    "movie": "Phim",
+    "chapter": "Truyện",
+    "game": "Game"
   },
   "favorites": {
     "title": "Đã lưu",
@@ -284,6 +296,7 @@
   "colorText": "Màu chữ",
   "background": "Màu nền",
   "today": "Hôm nay",
+  "done": "Xong",
   "permission": {
     "locationNotFound": "Không tìm thấy vị trí của bạn",
     "locationError": "Không thể lấy vị trí của bạn",

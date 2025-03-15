@@ -14,6 +14,7 @@ export const FilterDating: React.FC = () => {
     handleSwipe, loading, onLoadMore, setUsers, page,
   } = useFilterDating();
   const navigationState = useNavigationState(state => state);
+  console.log({ data }, page);
 
   return (
     <View style={styles.container}>
@@ -31,7 +32,7 @@ export const FilterDating: React.FC = () => {
           <FilterIcon size={Spacing.width28} color="white" />
         </TouchableOpacity>} />
       <MatchesUser
-
+        loading={loading}
         onLoadMore={() => onLoadMore()}
         data={data || []} onSendAction={handleSwipe}
         setProfiles={setUsers}

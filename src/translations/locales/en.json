@@ -12,7 +12,8 @@
     "username": "Username",
     "loginSuccess": "Login successful",
     "loginFail": "Login failed",
-    "fullname": "Full name"
+    "fullname": "Full name",
+    "loginGoogle": "Login with Google"
   },
   "register": {
     "title": "Register an account",
@@ -50,7 +51,8 @@
     "validate_birthday": "Please select a birthday",
     "validate_gender": "Please select a gender",
     "validate_galleries": "Please select images",
-    "validate_job": "Please enter a job"
+    "validate_job": "Please enter a job",
+    "validate_min_password": "Password must be at least 6 characters"
   },
   "navigation": {
     "home": "Home",
@@ -145,7 +147,9 @@
     "error": "Video cannot be played",
     "mute": "Mute",
     "unmute": "Unmute",
-    "main_actors": "Main actors"
+    "main_actors": "Main actors",
+    "no_chapters": "No episodes",
+    "quality": "Quality"
   },
   "chapter": {
     "title": "Comics",
@@ -201,7 +205,11 @@
     "titleCategory": "Category list",
     "otherMovie": "Related movies",
     "otherChapter": "Related comics",
-    "otherGame": "Related games"
+    "otherGame": "Related games",
+    "withTime": "By time",
+    "withView": "By views",
+    "withRating": "By rating",
+    "withLike": "By likes"
   },
   "favorites": {
     "title": "Saved",
@@ -298,5 +306,14 @@
     "template_message_chat_game": "Let's play the game GAME together ❤️!",
     "minutes_ago": "minutes ago",
     "single": "Single"
+  },
+  "filters": {
+    "time": "By time",
+    "viewDay": "Views today",
+    "viewWeek": "Views this week",
+    "viewMonth": "Views this month",
+    "viewAll": "All",
+    "withRaring": "By rating",
+    "withLike": "By likes"
   }
 }

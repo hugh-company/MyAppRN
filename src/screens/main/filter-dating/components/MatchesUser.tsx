@@ -11,10 +11,12 @@ export interface ListUserDatingProps {
   onSendAction: (type: string, user: UserFindInterface) => void;
   onLoadMore?: () => void;
   setProfiles: React.Dispatch<React.SetStateAction<UserFindInterface[]>>;
+  loading?: boolean;
+  page?: number;
 }
 
 export function MatchesUser(props: ListUserDatingProps) {
-  const { data, onLoadMore, setProfiles } = props;
+  const { data, onLoadMore, setProfiles, loading, page } = props;
   const { bottom } = useSafeAreaInsets();
   const swipeRef = React.useRef<{ triggerSwipe: (action: string) => void }>(null);
   const [profiles, setProfilesState] = React.useState(data);
@@ -22,11 +24,17 @@ export function MatchesUser(props: ListUserDatingProps) {
   const bottomModal = React.useRef<BottomSheetModal>(null);
   const [selectUser, setSelectUser] = React.useState<UserFindInterface | null>(null);
   useEffect(() => {
-    setProfilesState(prevProfiles => [...prevProfiles, ...data]);
+
+    if (page === 1) {
+      setProfilesState(data);
+    } else {
+      setProfilesState(prevProfiles => [...prevProfiles, ...data]);
+
+    }
     return () => {
       setProfilesState([]);
     };
-  }, [data]);
+  }, [data, page]);
   const handleSwipeAction = (type: string, user?: UserFindInterface) => {
     console.log('handleSwipeAction', type, user);
     setProfiles((prev) => prev.slice(1)); // Update profiles using setProfiles

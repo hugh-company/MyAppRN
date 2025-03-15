@@ -77,7 +77,7 @@ const AppListDashboard = React.memo(({
       case TypeKeyListApi.BANNER:
         return <MemoizedBannerHome data={item?.items as ItemListProduct[]} />;
       case TypeKeyListApi.POST_TYPE:
-        return <MemoizedBannerMovie data={item?.items as ItemListProduct[]} isGame={item?.posttype === PostTypeKey.GAMES} />;
+        return <BannerMovie data={item?.items as ItemListProduct[]} isGame={item?.posttype === PostTypeKey.GAMES} />;
       case TypeKeyListApi.TYPE_TABS:
         return <MemoizedAppCategoryList data={item?.items as TabInterface[]} categoryId={categoryId} onSelectedCategory={onSelectedCategory} />;
       case TypeKeyListApi.CHAT_HOME:

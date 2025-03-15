@@ -7,6 +7,14 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
     },
+    gradientBackground: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      height: '100%',
+    },
     btnSearch: {
       width: Spacing.width40,
       height: Spacing.width40,

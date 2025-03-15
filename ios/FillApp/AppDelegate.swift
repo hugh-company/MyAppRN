@@ -8,6 +8,7 @@ import FBSDKCoreKit
 import Firebase
 import UserNotifications
 import GoogleSignIn
+
 @main
 class AppDelegate: RCTAppDelegate {
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
@@ -17,6 +18,7 @@ class AppDelegate: RCTAppDelegate {
             FirebaseApp.configure()
         }
     }
+    GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: FirebaseApp.app()?.options.clientID ?? "")
     ApplicationDelegate.shared.initializeSDK()
     ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 

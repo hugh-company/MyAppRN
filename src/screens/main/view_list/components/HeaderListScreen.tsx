@@ -1,11 +1,11 @@
-import { SearchIcon } from '@assets';
-import { AppCategoryList, AppHeader } from '@components';
+import { IconFilter, SearchIcon } from '@assets';
+import { AppCategoryList, AppHeader, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { FontSize, FontWithFamily, HeightScreen, Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { KeyHomeData, PostTypeKey, TabInterface } from '@types';
+import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 interface HeaderListScreenProps {
   title: string;
@@ -29,12 +29,7 @@ export const HeaderListScreen = ({ title, onFilter, categories = [], onSelectedC
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#B1062E', '#1E1111']}
-        style={styles.gradientBackground}
-        start={{ x: 0.5, y: -0.1061 }}
-        end={{ x: 0.5, y: 0.9383 }}
-      />
+
       <AppHeader title={title}
         styleBack={{ backgroundColor: themeColors.transparent }}
         titleStyle={styles.titleHeader}
@@ -48,22 +43,14 @@ export const HeaderListScreen = ({ title, onFilter, categories = [], onSelectedC
           </View>
 
         } />
-      {(isCategory && type === PostTypeKey.MOVIES) && <>
-        <AppCategoryList
-          data={categories}
-          categoryId={activeCategory}
-          onSelectedCategory={(item) => onSelectedCategory?.(item)}
-          listStyle={styles.listCategory} />
-      </>}
 
-      {(type === PostTypeKey.COMIC && isCategory) && <>
-        <AppCategoryList
-          data={categories}
-          categoryId={activeCategory}
-          onSelectedCategory={(item) => onSelectedCategory?.(item)}
-          listStyle={styles.listCategory} />
-      </>}
-      {/* <View style={styles.viewFilter}>
+      <AppCategoryList
+        data={categories}
+        categoryId={activeCategory}
+        onSelectedCategory={(item) => onSelectedCategory?.(item)}
+        listStyle={styles.listCategory} />
+
+      <View style={styles.viewFilter}>
         <AppText style={styles.valueFilter}>{sort?.value}</AppText>
 
         <TouchableOpacity style={styles.btnFilter} activeOpacity={1} onPress={onFilter}>
@@ -71,7 +58,7 @@ export const HeaderListScreen = ({ title, onFilter, categories = [], onSelectedC
           <AppText style={styles.txtFilter}>{t('filter_1')}</AppText>
 
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 };
@@ -84,13 +71,7 @@ const createStyles = (themeColors: any) => StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.width8,
   },
-  gradientBackground: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: HeightScreen / 3,
-  },
+
   btnSearch: {
     width: Spacing.width40,
     height: Spacing.width40,
@@ -104,6 +85,8 @@ const createStyles = (themeColors: any) => StyleSheet.create({
     ...FontWithFamily.FontWithFamily_600,
     textAlign: 'center',
     flex: 1,
+
+    paddingRight: Spacing.width16,
   },
   title: {
     fontSize: FontSize.FontSize24,
@@ -153,6 +136,8 @@ const createStyles = (themeColors: any) => StyleSheet.create({
 
   },
   listCategory: {
-    paddingLeft: Spacing.width16,
+    paddingLeft: Spacing.width8,
+    marginVertical: 0,
+    marginTop: Spacing.width8,
   },
 });

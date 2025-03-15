@@ -1,14 +1,15 @@
-import { AppButton, AppText } from '@components';
+import { AppText } from '@components';
+import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { FilterKey, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { memo } from 'react';
-import { Modal, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 export interface ModalFilterProps {
   value?: string;
-  visible: boolean;
-  onClose: () => void;
+  refBottomSheet?: React.RefObject<BottomSheetModal>;
   styleContainer?: StyleProp<ViewStyle>;
   label?: string;
   data?: {
@@ -20,41 +21,58 @@ export interface ModalFilterProps {
     value?: string,
   }) => void
 }
-export const FilterListModal = memo(({ visible, onClose, styleContainer, data, label, onSelect, value }: ModalFilterProps) => {
+
+export const FilterListModal = memo(({ refBottomSheet, styleContainer, data, label, onSelect, value }: ModalFilterProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { bottom } = useSafeAreaInsets();
+
+
+
   return (
-    <Modal
-      animationType="slide"
-      transparent
-      visible={visible}
-      onRequestClose={onClose}
+    <BottomSheetModal
+      ref={refBottomSheet}
+      backgroundStyle={[styles.modalContainer]}
+      snapPoints={[Spacing.height302, Spacing.height302]}
+      onDismiss={() => {
+        refBottomSheet?.current?.close();
+      }}
     >
-      <TouchableOpacity activeOpacity={1} onPress={onClose} style={styles.container}>
-        <View style={[styles.content, styleContainer, { paddingBottom: bottom + Spacing.width16 }]}>
-          <View style={styles.list}>
-            <View style={styles.item}>
-              <AppText style={styles.title}>{label}</AppText>
-            </View>
-            {data?.map(elm => (
-              <TouchableOpacity key={elm.key} onPress={() => {
-                onClose?.();
-                onSelect?.(elm);
-              }} style={[styles.item, value === elm.key && styles.active]}>
-                <AppText style={styles.txtItem}>{elm.value}</AppText>
-              </TouchableOpacity>
-            ))}
+      <View style={[styles.content, styleContainer, { paddingBottom: bottom + Spacing.width16 }]}>
+        <View style={styles.list}>
+
+          <View style={styles.viewHeader}>
+            <AppText style={styles.title}>{label}</AppText>
+            <TouchableOpacity
+              onPress={() => {
+                refBottomSheet?.current?.close();
+                onSelect?.({ key: '', value: '' });
+              }}
+              style={[styles.done]}
+            >
+              <AppText style={[styles.title, { ...FontWithFamily.FontWithFamily_400 }]}>{t('reset')}</AppText>
+            </TouchableOpacity>
           </View>
-          <AppButton label={t('cancel')} labelStyle={styles.txtCancel} style={styles.cancel} onPress={() => {
-            onClose?.();
-
-          }} />
+          <BottomSheetFlatList
+            data={data}
+            keyExtractor={item => item.key}
+            contentContainerStyle={{ height: Spacing.height302 }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => {
+                  refBottomSheet?.current?.close();
+                  onSelect?.(item);
+                }}
+                style={[styles.item, value === item.key && styles.active]}
+              >
+                <AppText style={styles.txtItem}>{item.value}</AppText>
+              </TouchableOpacity>
+            )}
+          />
         </View>
-      </TouchableOpacity>
-    </Modal>
+      </View>
+    </BottomSheetModal>
   );
-
 });
 
 const createStyles = (themeColors: ThemeColors) =>
@@ -66,11 +84,22 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     content: {
       margin: 0,
+    },
+    viewHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingHorizontal: Spacing.width16,
+      paddingBottom: Spacing.width8,
 
-      // Add this line to round the top corners
+    },
+    title: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_600,
+      color: themeColors.text,
     },
     list: {
-      backgroundColor: '#C8C7C8',
+
       borderRadius: Spacing.width12,
       marginBottom: Spacing.width8,
     },
@@ -84,22 +113,23 @@ const createStyles = (themeColors: ThemeColors) =>
     txtCancel: {
       color: themeColors.txtLink,
     },
-    title: {
-      fontSize: FontSize.FontSize16,
-      ...FontWithFamily.FontWithFamily_600,
-      color: themeColors.btnSocial,
-    },
+
     item: {
-      height: Spacing.height50,
-      alignItems: 'center',
+      height: Spacing.height40,
+      paddingHorizontal: Spacing.width16,
       justifyContent: 'center',
-      borderBottomWidth: 1,
-      borderBlockColor: '#9B9B9B',
+
     },
     txtItem: {
-      color: themeColors.btnSocial,
     },
     active: {
       backgroundColor: themeColors.btnSocial,
+    },
+    modalContainer: {
+      backgroundColor: themeColors.background,
+    },
+    done: {
+      height: Spacing.height30,
+      paddingHorizontal: Spacing.width16,
     },
   });

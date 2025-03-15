@@ -1,1 +1,1 @@
-export { default as AppBanners } from './AppBanners';
+export * from './AppBanners';

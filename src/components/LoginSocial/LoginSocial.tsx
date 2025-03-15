@@ -1,4 +1,4 @@
-import { FacebookIcon, GoogleIcon } from '@assets';
+import { GoogleIcon } from '@assets';
 import appleAuth from '@invertase/react-native-apple-authentication';
 import { Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
@@ -24,14 +24,14 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
   const menuLogin = [
     {
       icon: <GoogleIcon />,
-      title: 'Google',
+      title: t('login.loginGoogle'),
       onPress: () => onLoginGoogle(),
     },
-    {
-      icon: <FacebookIcon />,
-      title: 'Facebook',
-      onPress: () => onLoginFacebook(),
-    },
+    // {
+    //   icon: <FacebookIcon />,
+    //   title: 'Facebook',
+    //   onPress: () => onLoginFacebook(),
+    // },
     // {
     //   icon: <AppleIcon />,
     //   title: 'Apple',
@@ -53,7 +53,7 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
         user: userInfo?.data?.user,
       };
       GlobalService.hideLoading();
-      // callApiLoginGoogle(params);
+      callApiLoginGoogle(params);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
     } finally {
@@ -66,7 +66,7 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
       console.log({ params });
 
       const response = await loginGoogleApi(params);
-      console.log({ response }, response.data.access_token);
+      console.log({ response }, response?.data?.access_token);
       showNotificationSuccess(t('login.loginSuccess'), response?.message);
       dispatch(setToken(response?.data?.access_token));
       dispatch(setUserInfo(response?.data?.me));
@@ -121,6 +121,7 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
         {menuLogin.map((item) => {
           return <TouchableOpacity onPress={item?.onPress} key={item.title} style={styles.btn} >
             {item.icon}
+            <AppText>{item.title}</AppText>
           </TouchableOpacity>;
         })}
       </View>

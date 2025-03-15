@@ -142,6 +142,7 @@ class AxiosClass {
       this.api.defaults.headers,
       this.api.defaults.headers.common.Authorization,
       this.token,
+      {newHeader},
     );
     return this.api
       .get(url, {

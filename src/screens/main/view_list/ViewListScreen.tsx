@@ -1,26 +1,47 @@
 import { AppListMovies, LoadingList, ModalFilter } from '@components';
+import { PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { memo } from 'react';
+import React, { memo, useRef } from 'react';
 import { View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useViewListScreen } from './ViewListScreen.hook';
 import { FilterListModal } from './components/FilterListModal';
 import { HeaderListScreen } from './components/HeaderListScreen';
 const MemoizedModalFilter = memo(ModalFilter);
 const ViewListScreen = () => {
-  const { data, refFlatList, styles, label, slugCategory, onSelectedCategory,
+  const { data, refFlatList, styles, type, slugCategory, onSelectedCategory,
     categoriesList, loading, list,
-    onLoadMore, isFilter, setIsFilter, menuSort,
+    onLoadMore, menuSort,
     filterBySort, sort,
   } = useViewListScreen();
-
+  const refModal = useRef<any>(null);
+  const renderTitle = () => {
+    const title = categoriesList?.find((item) => item?.slug === (slugCategory || 0))?.name || '';
+    switch (data?.posttype) {
+      case PostTypeKey.MOVIES:
+        return `${t('view_list.movie')} ${title}`;
+      case PostTypeKey.COMIC:
+        return `${t('view_list.chapter')} ${title}`;
+      case PostTypeKey.GAMES:
+        return `${t('view_list.game')} ${title}`;
+      default:
+        return `${title}`;
+    }
+  };
   return (
     <View style={styles.container}>
+      <LinearGradient
+        colors={['#B1062E', '#1E1111', '#1E1111', 'rgba(0,0,0,0)']}
+        style={styles.gradientBackground}
+        start={{ x: 0.5, y: -0.1061 }}
+        end={{ x: 0.5, y: 0.9383 }}
+      />
       <HeaderListScreen
-        title={label || ''}
+        title={renderTitle()}
         onSelectedCategory={onSelectedCategory}
-        onFilter={() => setIsFilter(true)}
-        activeCategory={categoriesList?.find((item) => item?.slug === slugCategory)?.id}
+        onFilter={() => refModal.current?.present()}
+        activeCategory={categoriesList?.find((item) => item?.slug === (slugCategory || 0))?.id}
         categories={categoriesList}
         type={data?.posttype}
         sort={menuSort?.find((item) => item.key === sort)}
@@ -39,10 +60,9 @@ const ViewListScreen = () => {
 
       </Animated.View>}
       <FilterListModal
-        visible={isFilter}
+        refBottomSheet={refModal}
         value={sort}
-        onClose={() => setIsFilter(false)}
-        label={`${t('search.sort')}:`}
+        label={`${t('view_list.sort')}`}
         onSelect={filterBySort}
         data={menuSort}
       />

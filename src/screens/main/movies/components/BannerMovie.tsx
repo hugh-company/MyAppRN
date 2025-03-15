@@ -14,7 +14,7 @@ interface BannerMovieProps {
   title?: string;
   isGame?: boolean;
 }
-export const BannerMovie = React.memo(({ data, style, title, isGame = false }: BannerMovieProps) => {
+export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
@@ -63,13 +63,14 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
   return (
     <View style={[styles.container, style]}>
       <AppBanners
-        width={WidthScreen} label={title}
+        width={WidthScreen}
+        label={title}
         data={data}
         labelStyle={styles.title}
         renderItem={renderItemBanner} />
     </View>
   );
-});
+};
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
@@ -88,9 +89,6 @@ const createStyles = (themeColors: ThemeColors) =>
       width: WidthScreen,
       height: Spacing.height240,
       paddingHorizontal: Spacing.width16,
-
-
-
     },
     image: {
       borderWidth: 1,
@@ -115,10 +113,11 @@ const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'space-between',
 
       gap: Spacing.width16,
+
     },
     viewInfo: {
       flex: 1,
-
+      gap: Spacing.width8,
 
     },
     btnPlay: {
@@ -138,7 +137,6 @@ const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       alignItems: 'center',
 
-      marginTop: Spacing.width16,
       gap: Spacing.width16,
 
     },

@@ -27,7 +27,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'center',
       position: 'absolute',
 
-      bottom: 10,
+      bottom: 2,
       alignSelf: 'center',
       backgroundColor: themeColors.btnSocial,
       padding: 4,

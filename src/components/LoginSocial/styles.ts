@@ -10,11 +10,14 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     btn: {
       backgroundColor: themeColors.btnSocial,
-      width: Spacing.width56,
-      height: Spacing.width56,
+      flex: 1,
+      height: Spacing.width48,
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: Spacing.width56,
+      marginHorizontal: Spacing.width16,
+      flexDirection: 'row',
+      gap: Spacing.width16,
     },
     viewIcon: {
       flexDirection: 'row',

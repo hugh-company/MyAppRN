@@ -1,7 +1,7 @@
 import {useRoute} from '@react-navigation/native';
 import {getCategoryApi, getListPostApi} from '@services';
 import {useTheme} from '@theme';
-import {ItemListProduct, PostTypeKey, TabInterface, TypeList} from '@types';
+import {ItemListProduct, PostTypeKey, TabInterface} from '@types';
 import {navigateViewListProps} from '@utils';
 import {t} from 'i18next';
 import {useEffect, useRef, useState} from 'react';
@@ -25,35 +25,40 @@ export const useViewListScreen = () => {
   const [slugCategory, setSlugCategory] = useState<string>(keyCategory || '');
   const [isNext, setIsNext] = useState(true);
   const refFlatList = useRef<any>(null);
-  const [sort, setSort] = useState('');
+  const [sort, setSort] = useState(sortby);
   //
   const [isFilter, setIsFilter] = useState(false);
   //
+  //   trending
+  // last_updated
+  // newest
+  // likes
+  // views
   const menuSort = [
     {
-      key: 'views__desc',
-      value: t('search.viewer'),
-    },
-    {
-      key: 'like_count__desc',
-      value: t('search.likes'),
+      key: 'views_day__desc',
+      value: t('view_list.trending'),
     },
     {
       key: 'created_at__desc',
-      value: t('search.newest'),
+      value: t('view_list.newest'),
+    },
+    {
+      key: 'updated_at__desc',
+      value: t('view_list.last_update'),
     },
 
     {
-      key: 'views_day__desc',
-      value: t('search.viewDay'),
+      key: 'like_count__desc',
+      value: t('view_list.likes'),
     },
     {
       key: 'views_week__desc',
-      value: t('search.viewWeek'),
+      value: t('view_list.views'),
     },
     {
       key: 'rating_total__desc',
-      value: t('search.viewRating'),
+      value: t('view_list.rating'),
     },
   ];
   const onSelectedCategory = (item: TabInterface) => {
@@ -72,20 +77,30 @@ export const useViewListScreen = () => {
   };
   // callapi
   useEffect(() => {
-    callApi();
-  }, [slugCategory]);
+    if (slugCategory) {
+      callApi();
+      return;
+    }
+    if (sort) {
+      callApi(sort);
+    } else {
+      callApi();
+    }
+  }, [slugCategory, sort]);
   //
 
   // call api category
   useEffect(() => {
-    if (data?.type === TypeList.CATEGORY) {
-      callApiCategory();
-    }
-  }, [data?.type]);
+    // if (data?.type === TypeList.CATEGORY) {
+    callApiCategory();
+    // }
+  }, []);
   const callApiCategory = async () => {
     const responseCategory: any = await getCategoryApi(
       data?.posttype || PostTypeKey.MOVIES,
     );
+    console.log({responseCategory});
+
     setCategoriesList(responseCategory?.data);
   };
   //
@@ -104,18 +119,18 @@ export const useViewListScreen = () => {
           sortby: sortby,
         };
       }
-      // if (filter) {
-      //   params = {
-      //     ...params,
-      //     sortby: filter,
-      //   };
-      // }
+      if (filter) {
+        params = {
+          ...params,
+          sortby: filter,
+        };
+      }
       const response: any = await getListPostApi(
         data?.api || '',
         params,
         slugCategory,
       );
-      console.log({response});
+      console.log({response}, {params});
 
       setIsNext(response?.data?.is_next || false);
       //
@@ -149,7 +164,7 @@ export const useViewListScreen = () => {
     setSort(item.key);
     setPage(1);
     setIsNext(true);
-    setList([]);
+
     setLoading(true);
     setIsFilter(false);
   };

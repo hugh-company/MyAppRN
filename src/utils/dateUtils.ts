@@ -66,6 +66,7 @@ export const getAge = (date: string): number => {
 export const checkMessageTime = (date: Date | string): string => {
   const messageDate = dayjs(date);
   const today = dayjs();
+
   if (messageDate.isSame(today, 'day')) {
     const diffMinutes = today.diff(messageDate, 'minute');
     // if less than 1 minute
@@ -77,7 +78,16 @@ export const checkMessageTime = (date: Date | string): string => {
     }
     return messageDate.format('HH:mm');
   }
-  return messageDate.format('DD/MM');
+
+  if (messageDate.isSame(today, 'month')) {
+    return messageDate.format('HH:mm DD/MM');
+  }
+
+  if (messageDate.isSame(today, 'year')) {
+    return messageDate.format('HH:mm DD/MM');
+  }
+
+  return messageDate.format('HH:mm DD/MM/YYYY');
 };
 
 export const getNewDateWithFormat = (format: string): string => {

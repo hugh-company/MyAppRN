@@ -13,7 +13,7 @@ export interface AppBannersProps {
   renderItem?: ListRenderItem<any> | null | undefined;
   width?: number;
 }
-const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: AppBannersProps) => {
+export const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: AppBannersProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const flatListRef = useRef<any>(null);
@@ -78,5 +78,3 @@ const AppBanners = ({ label, data = [], renderItem, width, labelStyle, style }: 
     </View>
   );
 };
-
-export default AppBanners;

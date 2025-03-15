@@ -1,3 +1,4 @@
+import {GlobalService} from '@components';
 import {useLocation} from '@hooks';
 import {getLocations, sendMatchSaga} from '@redux';
 import {getFindUserApi} from '@services';
@@ -25,29 +26,54 @@ export const useFilterDating = () => {
   const [users, setUsers] = useState<UserFindInterface[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isNext, setNext] = useState(false);
-  const fetchUsers = async () => {
-    setIsLoading(true);
-    const response = await getFindUserApi({
-      age: filter.age.join('-'),
-      distance: filter.distance[0],
-      gender: filter.gender === genderInterface.OTHER ? null : filter.gender,
-      location: {
-        latitude: location?.latitude ?? 0,
-        longitude: location?.longitude ?? 0,
-      },
-      paged: page,
-    });
-    console.log({response});
-    // setNext(response.isNext);
-    setNext(response?.data?.is_next);
-    setUsers(prevUsers => [...prevUsers, ...(response.data?.data || [])]);
-    setIsLoading(false);
+  const fetchUsers = async (newFilter?: any) => {
+    try {
+      let params: any = {
+        age: filter.age.join('-'),
+        distance: filter.distance[0],
+        gender:
+          filter?.gender === genderInterface.OTHER ? null : filter?.gender,
+        location: {
+          latitude: location?.latitude ?? 0,
+          longitude: location?.longitude ?? 0,
+        },
+        paged: page,
+      };
+      console.log({params});
+
+      if (newFilter) {
+        params = {
+          age: newFilter?.age.join('-'),
+          distance: newFilter?.distance[0],
+          gender:
+            newFilter?.gender === genderInterface.OTHER
+              ? null
+              : newFilter.gender,
+          location: {...location},
+          paged: 1,
+        };
+      }
+      const response = await getFindUserApi(params);
+      console.log({response});
+      // setNext(response.isNext);
+      setNext(response?.data?.is_next);
+      if (response?.data?.page === 1) {
+        setUsers(response.data?.data || []);
+        setIsLoading(false);
+        return;
+      }
+      setUsers(prevUsers => [...prevUsers, ...(response.data?.data || [])]);
+      setIsLoading(false);
+    } catch (error) {
+      console.log({error});
+      setIsLoading(false);
+      GlobalService.hideLoading();
+    }
   };
 
   useEffect(() => {
     if (page > 1) {
       console.log({page});
-
       fetchUsers();
     }
   }, [page]);
@@ -66,23 +92,37 @@ export const useFilterDating = () => {
     );
   };
   const onFilterApi = async (value: any): Promise<void> => {
-    console.log({location});
+    console.log({value});
     const check = await checkLocation();
     if (!check) {
       return;
     }
+    const params = {
+      ...value,
+      location: {...location},
+    };
+    setPage(1);
+    setIsLoading(true);
     await setFilter({
       ...value,
       location: {...location},
     });
-    fetchUsers();
-  };
 
+    fetchUsers(params);
+  };
+  useEffect(() => {
+    if (isLoading) {
+      GlobalService.showLoading();
+    } else {
+      GlobalService.hideLoading();
+    }
+  }, [isLoading]);
   const onLoadMore = () => {
     if (isNext) {
       setPage(prev => prev + 1);
     }
   };
+
   return {
     data: users,
     themeColors,

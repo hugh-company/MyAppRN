@@ -12,7 +12,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating } from '@redux';
+import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
 import { PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
@@ -101,7 +101,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
         const responseUser: any = await getUserProfileApi();
         console.log({ responseUser });
 
-        // dispatch(setUserInfo(responseUser?.data?.me));
+        dispatch(setUserInfo(responseUser?.data?.me));
       } catch (error) { }
     };
     useEffect(() => {
