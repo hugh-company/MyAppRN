@@ -4,6 +4,7 @@ export const getUserProfileApi = () => {
   apiService.setBaseURL(ApiConfigs.baseURL);
   return apiService.get(API_ENDPOINTS.USER_PROFILE);
 };
+
 // update profile
 export interface paramsUpdateProfile {
   fullname: string;
@@ -16,6 +17,9 @@ export interface paramsUpdateProfile {
   galleries: string[];
 
 }
+
+
+//
 export const updateProfileApi = (params: paramsUpdateProfile) => {
   apiService.setBaseURL(ApiConfigs.baseURL);
   const formData = createFormData(params);

@@ -1,11 +1,10 @@
 import { AppButton, AppText } from '@components';
-import { Spacing, useTheme } from '@theme';
+import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { FilterKey, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React, { memo } from 'react';
-import { Modal, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Modal, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { createStyles } from './styles';
 export interface ModalFilterProps {
   value?: string;
   visible: boolean;
@@ -21,7 +20,7 @@ export interface ModalFilterProps {
     value?: string,
   }) => void
 }
-const ModalFilter = memo(({ visible, onClose, styleContainer, data, label, onSelect, value }: ModalFilterProps) => {
+export const FilterListModal = memo(({ visible, onClose, styleContainer, data, label, onSelect, value }: ModalFilterProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { bottom } = useSafeAreaInsets();
@@ -58,4 +57,49 @@ const ModalFilter = memo(({ visible, onClose, styleContainer, data, label, onSel
 
 });
 
-export default ModalFilter;
+const createStyles = (themeColors: ThemeColors) =>
+  StyleSheet.create({
+    container: {
+      justifyContent: 'flex-end',
+      margin: 0,
+      flex: 1,
+    },
+    content: {
+      margin: 0,
+
+      // Add this line to round the top corners
+    },
+    list: {
+      backgroundColor: '#C8C7C8',
+      borderRadius: Spacing.width12,
+      marginBottom: Spacing.width8,
+    },
+    modal: {
+      backgroundColor: 'transparent',
+    },
+    cancel: {
+      backgroundColor: themeColors.whiteColor,
+      borderRadius: Spacing.width16,
+    },
+    txtCancel: {
+      color: themeColors.txtLink,
+    },
+    title: {
+      fontSize: FontSize.FontSize16,
+      ...FontWithFamily.FontWithFamily_600,
+      color: themeColors.btnSocial,
+    },
+    item: {
+      height: Spacing.height50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderBottomWidth: 1,
+      borderBlockColor: '#9B9B9B',
+    },
+    txtItem: {
+      color: themeColors.btnSocial,
+    },
+    active: {
+      backgroundColor: themeColors.btnSocial,
+    },
+  });

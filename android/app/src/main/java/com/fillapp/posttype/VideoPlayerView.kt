@@ -1,4 +1,4 @@
-package com.myapprn
+package com.fillapp.posttype
 
 import android.content.Context
 import android.net.Uri

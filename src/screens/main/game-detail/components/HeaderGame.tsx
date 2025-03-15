@@ -87,7 +87,7 @@ export const HeaderGame = ({
         style={{ backgroundColor: themeColors.background }}
       >
         <Animated.View style={[styles.container]}>
-          <AppImage resizeMode={'contain'} uri={poster} style={styles.banner} />
+          <AppImage resizeMode={'stretch'} uri={poster} style={styles.banner} />
           <View style={styles.control}>
             <TouchableOpacity onPress={() => {
               onPlay?.();

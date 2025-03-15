@@ -1,7 +1,7 @@
 import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
 import { AppBanners, AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
-import { ItemListProduct } from '@types';
+import { ItemListProduct, PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
 import React, { useCallback } from 'react';
@@ -51,7 +51,7 @@ export const BannerMovie = React.memo(({ data, style, title, isGame = false }: B
               </View>
             </View>
           </View>
-          {!isGame && <View style={styles.btnPlay}>
+          {item?.posttype === PostTypeKey.MOVIES && <View style={styles.btnPlay}>
             <PlayIcon />
           </View>}
         </View>

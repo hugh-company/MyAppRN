@@ -20,9 +20,9 @@ android {
             useLegacyPackaging true
         }
     }
-    namespace "com.myapprn"
+    namespace "com.fillapp.posttype"
     defaultConfig {
-        applicationId "com.myapprn"
+        applicationId "com.fillapp.posttype"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

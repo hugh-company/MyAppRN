@@ -15,10 +15,6 @@ export const ApiConfigs = {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'multipart/form-data',
     Accept: 'application/json',
-    timeout: 60000,
-    'Cache-Control': 'no-cache',
-    Pragma: 'no-cache',
-    Expires: '0',
   },
   timeout: 60000,
 };
@@ -40,6 +36,7 @@ export const API_ENDPOINTS = {
   // auth
   LOGIN: '/auth/login/',
   REGISTER: '/auth/register',
+  LOGIN_GOOGLE: '/auth/google/',
   LOGOUT: '/auth/logout',
   CSRF_TOKEN: '/auth/csrf_create/',
   // account
@@ -51,6 +48,8 @@ export const API_ENDPOINTS = {
   MOVIES: '/terms/lists/',
   DETAIL: '/posts/detail/',
   LIST: '/posts/lists/',
+  DETAIL_EPISODE: '/posts/chapter/',
+  LIST_EPISODE: '/posts/listchapter/',
   // CATEGORY: '/posts/category/',
   CATEGORY: '/terms/lists/',
   //rating
@@ -98,4 +97,6 @@ export const KeyQueryApi = {
   POST_DETAIL: 'postDetail',
   GET_LIST_POST: 'getListPost',
   FIND_LIST_USER: 'findListUser',
+  GET_LIST_EPISODE: 'getListEpisode',
+  GET_DETAIL_EPISODE: 'getDetailEpisode',
 };

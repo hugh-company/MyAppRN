@@ -11,6 +11,7 @@ export interface UserFindInterface {
     longitude: number;
   };
   distance?: number;
+  paged?: number;
 }
 export const findUserApi = async (params: UserFindInterface) => {
   apiService.setBaseURL(ApiConfigs.baseURL);
@@ -46,12 +47,14 @@ export const useDatingDashboardApi = (type: TypeTabDatingApi, params?: any) => {
   );
 };
 // find user
-export const useFindUserApi = (params: UserFindInterface, enabled: boolean) => {
+export const getFindUserApi = async (params: UserFindInterface) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
   const location = `${params.location?.latitude.toString().replace('.', '__')}__${params.location?.longitude.toString().replace('.', '__')}`;
-
-  let newParams = {
-    ...params,
+  let newParams: any = {
+    age: params.age,
+    distance: params.distance,
     location,
+    paged: params.paged,
   };
   if (params?.gender) {
     newParams = {
@@ -59,12 +62,5 @@ export const useFindUserApi = (params: UserFindInterface, enabled: boolean) => {
       gender: params.gender,
     };
   }
-  return useApiQuery<any>(KeyQueryApi.FIND_LIST_USER,
-    API_ENDPOINTS.FIND_DATING,
-    newParams,
-    {
-      queryKey: [KeyQueryApi.FIND_LIST_USER, newParams],
-      enabled,
-    }
-  );
+  return apiService.get(API_ENDPOINTS.FIND_DATING, newParams);
 };

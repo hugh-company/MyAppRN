@@ -9,38 +9,45 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 export interface ListUserDatingProps {
   data: UserFindInterface[];
   onSendAction: (type: string, user: UserFindInterface) => void;
+  onLoadMore?: () => void;
+  setProfiles: React.Dispatch<React.SetStateAction<UserFindInterface[]>>;
 }
 
 export function MatchesUser(props: ListUserDatingProps) {
-  const { data } = props;
+  const { data, onLoadMore, setProfiles } = props;
   const { bottom } = useSafeAreaInsets();
   const swipeRef = React.useRef<{ triggerSwipe: (action: string) => void }>(null);
-  const [profiles, setProfiles] = React.useState(data);
-  console.log({ data });
+  const [profiles, setProfilesState] = React.useState(data);
+
   const bottomModal = React.useRef<BottomSheetModal>(null);
   const [selectUser, setSelectUser] = React.useState<UserFindInterface | null>(null);
   useEffect(() => {
-    setProfiles(data);
+    setProfilesState(prevProfiles => [...prevProfiles, ...data]);
+    return () => {
+      setProfilesState([]);
+    };
   }, [data]);
   const handleSwipeAction = (type: string, user?: UserFindInterface) => {
     console.log('handleSwipeAction', type, user);
-    setProfiles((prev) => prev.slice(1));
+    setProfiles((prev) => prev.slice(1)); // Update profiles using setProfiles
     props.onSendAction(type, user); // Call the callback
   };
 
   const onClickAction = (type: string) => {
-    console.log('onClickAction', type);
     swipeRef.current?.triggerSwipe(type);
   };
   const onDetailUser = (user: UserFindInterface) => {
-    // console.log('onDetailUser', user);
     setSelectUser(user);
-    // setTimeout(() => {
-
     bottomModal.current?.present();
-    // }, 500);
   };
-  console.log({ selectUser });
+
+  useEffect(() => {
+    if (profiles.length <= 3) {
+      console.log('phân trang');
+
+      onLoadMore && onLoadMore();
+    }
+  }, [profiles]);
 
   return (
     <View style={styles.container}>
@@ -50,6 +57,7 @@ export function MatchesUser(props: ListUserDatingProps) {
           items={profiles}
           onSwipe={(type, user) => handleSwipeAction(type, user)}
           onDetailUser={(user) => onDetailUser(user)}
+          setProfiles={setProfilesState}
         />
       </View>
 
@@ -67,7 +75,7 @@ export function MatchesUser(props: ListUserDatingProps) {
         </View>
       )}
 
-      <ModalInfoUser user={selectUser} refModal={bottomModal} />
+      {selectUser && <ModalInfoUser user={selectUser} refModal={bottomModal} />}
 
     </View>
   );

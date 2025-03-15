@@ -13,6 +13,7 @@ interface ImageChapterProps {
 const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
   const [heightImage, setHeightImage] = useState<number>(0);
   const [status, setStatus] = useState({ isLoading: true, isError: false });
+
   useEffect(() => {
     let isMounted = true;
     Image.getSize(
@@ -21,26 +22,17 @@ const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
         if (isMounted) {
           const screenWidth = Dimensions.get('window').width;
           const scaleFactor = screenWidth / width;
-          const imageHeight = height * scaleFactor;
-          console.log({ width, imageHeight }, { heightImage });
-
-          setHeightImage(imageHeight);
+          setHeightImage(height * scaleFactor);
           setStatus({ isLoading: false, isError: false });
-
         }
       },
       error => {
-        console.log({ error });
-
         if (isMounted) {
-          console.error('Error fetching image size:', error);
           setStatus({ isLoading: false, isError: true });
         }
-      },
+      }
     );
     return () => {
-      console.log('unmount');
-
       isMounted = false;
     };
   }, [uri]);
@@ -55,7 +47,6 @@ const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
     );
   }
   return (
-
     <AppZoomImage>
       <FastImage
         source={{ uri }}
@@ -87,4 +78,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default React.memo(ImageChapter, (prevProps, nextProps) => prevProps.uri === nextProps.uri && prevProps.onPress === nextProps.onPress);
+export default React.memo(ImageChapter, (prevProps, nextProps) =>
+  prevProps.uri === nextProps.uri && prevProps.onPress === nextProps.onPress
+);

@@ -36,6 +36,7 @@ const ComicScreen = () => {
           onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: PostTypeKey.COMIC })}
           editable={false}
           style={styles.inputSearch}
+          placeholder={t('search.chapters')}
         />
 
         <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />

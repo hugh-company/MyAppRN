@@ -141,3 +141,26 @@ export const getResolutionsFromM3U8 = async (url: string) => {
     return [];
   }
 };
+//
+export const getDetailEpisodeApi = (type: PostTypeKey, idPost: number, id: number) => {
+  const uri = `${API_ENDPOINTS.DETAIL_EPISODE}${type}/${idPost}/${id}`;
+  return apiService.get(uri);
+};
+
+export const getListEpisodeApi = (type: PostTypeKey, idPost: number, paged: number) => {
+  const uri = `${API_ENDPOINTS.LIST_EPISODE}${type}/${idPost}`;
+  return apiService.get(uri, { paged });
+};
+export const useListEpisodeApi = (type: PostTypeKey, idPost: number, paged?: number) => {
+  return useApiQuery<any>(
+    `${KeyQueryApi.GET_LIST_EPISODE}${type}${idPost}${paged}`,
+    `${API_ENDPOINTS.LIST_EPISODE}${type}/${idPost}`,
+    { paged },
+  );
+};
+export const useDetailEpisodeApi = (type: PostTypeKey, idPost: number, id: number) => {
+  return useApiQuery<any>(
+    `${KeyQueryApi.GET_DETAIL_EPISODE}${type}${idPost}${id}`,
+    `${API_ENDPOINTS.DETAIL_EPISODE}${type}/${idPost}/${id}`,
+  );
+};

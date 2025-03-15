@@ -7,9 +7,6 @@ import { InteractionManager, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useMovieScreen } from './MovieScreen.hook';
 
-const MemoizedAppListDashboard = React.memo(AppListDashboard, (prevProps, nextProps) => {
-  return prevProps.data === nextProps.data && prevProps.loading === nextProps.loading;
-});
 
 const MovieScreen = () => {
   const { movies,
@@ -31,6 +28,7 @@ const MovieScreen = () => {
     return () => interactionHandle.cancel();
   }, []);
 
+  console.log({ movies });
 
   return (
     <View style={styles.container}>

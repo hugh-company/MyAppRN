@@ -1,6 +1,6 @@
 {
   "login": {
-    "title": "Siêu ứng dụn giải trí, tất cả trong 1 nền tảng.",
+    "title": "Siêu ứng dụng giải trí, tất cả trong 1 nền tảng.",
     "or": "Hoặc",
     "login": "Đăng nhập",
     "createAccountNow": "Tạo tài khoản ngay.",
@@ -87,7 +87,8 @@
     "package_member": "Gói thành viên",
     "rank_membership": "Hạng Membership",
     "rank_gold": "Hạng Gold",
-    "rank_diamond": "Hạng Diamond"
+    "rank_diamond": "Hạng Diamond",
+    "totalPriceAccount": "Số dư :"
   },
   "home": {
     "datingTitle": "Tìm một nửa của bạn",
@@ -165,7 +166,8 @@
   "chapter": {
     "title": "Truyện tranh",
     "readChapter": "Đọc truyện",
-    "newChapter": "Chương mới"
+    "newChapter": "Chương mới",
+    "noChapter": "Không có chương nào"
   },
   "games": {
     "title": "Game online",
@@ -242,6 +244,7 @@
   "notFound": "Không có dữ liệu",
   "play": "Play",
   "noVideo": "Không có video",
+  "filter_1": "Lọc",
   "like": "Thích",
   "liked": "Đã thích",
   "rating": "Đánh giá",
@@ -316,7 +319,8 @@
     "coversation": "Trò chuyện",
     "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!",
     "minutes_ago": "phút trước",
-    "just_now": "vừa xong"
+    "just_now": "vừa xong",
+    "single": "Đang độc thân"
   },
   "location": {
     "title": "Vị trí của bạn",

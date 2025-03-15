@@ -25,6 +25,7 @@ export const useViewListScreen = () => {
   const [slugCategory, setSlugCategory] = useState<string>(keyCategory || '');
   const [isNext, setIsNext] = useState(true);
   const refFlatList = useRef<any>(null);
+  const [sort, setSort] = useState('');
   //
   const [isFilter, setIsFilter] = useState(false);
   //
@@ -144,7 +145,14 @@ export const useViewListScreen = () => {
     }
     setPage(prev => prev + 1);
   };
-  const filterBySort = (item: any) => {};
+  const filterBySort = (item: any) => {
+    setSort(item.key);
+    setPage(1);
+    setIsNext(true);
+    setList([]);
+    setLoading(true);
+    setIsFilter(false);
+  };
   return {
     data,
     themeColors,
@@ -166,5 +174,6 @@ export const useViewListScreen = () => {
     setIsFilter,
     menuSort,
     filterBySort,
+    sort,
   };
 };

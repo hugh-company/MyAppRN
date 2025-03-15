@@ -71,6 +71,11 @@ const savedPostSlice = createSlice({
         }
       }
     },
+    clearSavedPost: state => {
+      state.movies = [];
+      state.comics = [];
+      state.novels = [];
+    },
   },
 });
 
@@ -80,6 +85,7 @@ export const {
   setNovelsSaved,
   addItem,
   toggleItemSaved,
+  clearSavedPost,
 } = savedPostSlice.actions;
 
 export default savedPostSlice.reducer;

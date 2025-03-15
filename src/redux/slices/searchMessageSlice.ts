@@ -55,6 +55,16 @@ const searchMessageSlice = createSlice({
       state.error = action.payload;
       state.isLoadMore = false;
     },
+
+    clearSearchThreads: state => {
+      state.conversations = [];
+      state.cursor_time = '';
+      state.is_next = false;
+      state.isRefreshing = false;
+      state.isLoadMore = false;
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
@@ -65,6 +75,7 @@ export const {
   loadMoreSearchConversations,
   loadMoreSearchConversationsSuccess,
   loadMoreSearchConversationsFailure,
+  clearSearchThreads,
 } = searchMessageSlice.actions;
 
 export default searchMessageSlice.reducer;

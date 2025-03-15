@@ -9,6 +9,18 @@ interface paramsLogin {
   username: string;
   password: string;
 }
+
+export interface UserLoginGoogleInterface {
+  idToken: string;
+  user: {
+    photo: string;
+    givenName: string;
+    familyName: string;
+    email: string;
+    name: string;
+    id: string;
+  }
+}
 interface paramsRegister {
   'username': string,
   'fullname': string,
@@ -35,6 +47,19 @@ export const loginApi = (data: paramsLogin) => {
 
   });
 };
+
+export const loginGoogleApi = (data: UserLoginGoogleInterface) => {
+
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const formData = new FormData();
+  formData.append('idToken', data.idToken);
+  formData.append('user', JSON.stringify(data.user));
+
+  return apiService.postNormal<LoginResponse>(API_ENDPOINTS.LOGIN_GOOGLE, formData, {
+    'Content-Type': 'multipart/form-data',
+  });
+};
+
 export const csrfTokenApi = () => {
   return apiService.get(API_ENDPOINTS.CSRF_TOKEN);
 };

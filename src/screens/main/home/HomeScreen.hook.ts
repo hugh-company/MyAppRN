@@ -63,6 +63,7 @@ export const useHomeScreen = () => {
       console.log({error});
     }
   };
+
   const onRefresh = () => {
     refetch();
   };

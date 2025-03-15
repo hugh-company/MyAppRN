@@ -1,6 +1,6 @@
 {
-  "name": "MyAppRN",
-  "displayName": "MyAppRN",
+  "name": "FillApp",
+  "displayName": "FillApp",
   "androidStatusBar": {
     "translucent": true
   }

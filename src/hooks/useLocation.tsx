@@ -89,7 +89,6 @@ export function useLocation() {
       latitude: locationUser?.latitude,
       longitude: locationUser?.longitude,
     };
-    console.log({ userLocation, location });
 
     let distanceInMeters = calculateDistance(userLocation, location);
     distanceInMeters = Math.round(distanceInMeters); // Round to nearest integer

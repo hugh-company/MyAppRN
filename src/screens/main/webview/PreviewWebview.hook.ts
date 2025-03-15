@@ -10,7 +10,10 @@ export const usePreviewWebview = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [loading, setLoading] = useState(true);
+
   const token = useSelector(getToken);
-  const link = `${BASE_IMAGE_URL}`;
+  const link = `${BASE_IMAGE_URL}/me?token=${token}`;
+  console.log({link});
+
   return {data, themeColors, styles, link, loading, setLoading};
 };

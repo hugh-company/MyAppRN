@@ -7,6 +7,11 @@ import { useRegisterScreen } from './RegisterScreen.hook';
 
 const RegisterScreen = () => {
   const { control, errors, styles, onSubmit } = useRegisterScreen();
+  const fullnameRef = React.useRef(null);
+  const usernameRef = React.useRef(null);
+  const emailRef = React.useRef(null);
+  const passwordRef = React.useRef(null);
+  const confirmPasswordRef = React.useRef(null);
 
   return (
     <View style={styles.container}>
@@ -27,16 +32,33 @@ const RegisterScreen = () => {
 
         <AppInput
           key={'fullname'}
-          name="fullname" placeholder={t('login.fullname')} error={errors.fullname?.message} control={control} />
+          name="fullname"
+          placeholder={t('login.fullname')}
+          autoCapitalize="none"
+          error={errors.fullname?.message}
+          control={control}
+          ref={fullnameRef}
+          onSubmitEditing={() => usernameRef.current.focus()}
+        />
 
 
         <AppInput
           key={'username'}
-          name="username" placeholder={t('login.username')} error={errors.username?.message} control={control} />
+          name="username" placeholder={t('login.username')}
+          autoCapitalize="none"
+          error={errors.username?.message} control={control}
+          ref={usernameRef}
+          onSubmitEditing={() => emailRef.current.focus()}
+        />
 
         <AppInput
           key={'email'}
-          name="email" placeholder={t('register.email')} error={errors.email?.message} control={control} />
+          name="email"
+          autoCapitalize="none"
+          placeholder={t('register.email')} error={errors.email?.message} control={control}
+          ref={emailRef}
+          onSubmitEditing={() => passwordRef.current.focus()}
+        />
 
         <AppInput
           name="password"
@@ -45,13 +67,19 @@ const RegisterScreen = () => {
           control={control}
           secureTextEntry={true}
           key={'password'}
+          autoCapitalize="none"
+          ref={passwordRef}
+          onSubmitEditing={() => confirmPasswordRef.current.focus()}
         />
         <AppInput name="confirmPassword"
           placeholder={t('register.confirmPassword')}
           error={errors.confirmPassword?.message}
           control={control}
           secureTextEntry={true}
+          autoCapitalize="none"
           key={'confirmPassword'}
+          ref={confirmPasswordRef}
+          onSubmitEditing={() => onSubmit()}
         />
 
         <AppButton onPress={() => onSubmit()} label={t('register.register')} style={styles.btnLogin} />

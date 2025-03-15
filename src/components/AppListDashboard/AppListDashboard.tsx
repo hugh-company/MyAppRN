@@ -8,6 +8,7 @@ import BannerHome from './components/BannerHome';
 import { CategoryListItem } from './components/CategoryListItem';
 import { DatingItem } from './components/DatingItem';
 import { LabelView } from './components/LabelView';
+import { ListPostGird } from './components/ListPostGird';
 import { ListVertical } from './components/ListVertical';
 import { createStyles } from './styles';
 
@@ -47,7 +48,7 @@ const AppListDashboard = React.memo(({
   const MemoizedSliderList = useMemo(() => React.memo(SliderList), [data]);
   const MemoizedHorizontalList = useMemo(() => React.memo(HorizontalList), [data]);
   const MemoizedListVertical = useMemo(() => React.memo(ListVertical), [data]);
-
+  const MemoizedListGrid = useMemo(() => React.memo(ListPostGird), [data]);
 
   const renderLoading = useCallback(() => {
 
@@ -104,6 +105,8 @@ const AppListDashboard = React.memo(({
         return <MemoizedListVertical data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       case TypeKeyListApi.SPACE:
         return <View style={{ height: sizeWidth(item?.height || 0) }} />;
+      case TypeKeyListApi.ITEM_GRID:
+        return <MemoizedListGrid data={item?.items as ItemListProduct[]} type={item?.posttype} title={item?.label} button={item?.button} />;
       default:
         return <></>;
     }

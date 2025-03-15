@@ -1,21 +1,24 @@
+import {GlobalService} from '@components';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {navigate} from '@navigation';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
+import {useDetailEpisodeApi} from '@services';
 import {useTheme} from '@theme';
-import {chapterEpisodeInterface, PostTypeKey} from '@types';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {detailPostInterface, PostTypeKey} from '@types';
+import React, {useCallback, useRef, useState} from 'react';
 import {Animated, FlatList} from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {createStyles} from './styles';
+
 interface PreviewChapterProps {
-  chapters: chapterEpisodeInterface[];
-  chapter: chapterEpisodeInterface;
+  detailPost: detailPostInterface;
+  indexChapter: number;
   type: PostTypeKey;
 }
 export const usePreviewChapter = () => {
   const router = useRoute();
-  const navigation = useNavigation();
-  const {chapters, chapter, type} = router.params as PreviewChapterProps;
-  console.log({chapters, chapter, type});
+  const {detailPost, type, indexChapter} = router.params as PreviewChapterProps;
+  console.log({indexChapter, detailPost, type});
 
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
   const refModal = useRef<BottomSheetModal>(null);
@@ -33,16 +36,11 @@ export const usePreviewChapter = () => {
     background: '#000000',
   });
 
-  // useEffect(() => {
-  //   if (
-  //     scrollRef?.current &&
-  //     scrollRef.current.scrollToIndex &&
-  //     data.length > 0
-  //   ) {
-  //     scrollRef.current.scrollToIndex({animated: false, index: 0});
-  //   }
-  // }, [scrollRef, data]);
-
+  const {data: responseDetailChapter} = useDetailEpisodeApi(
+    type,
+    detailPost.id,
+    indexChapter,
+  );
   const headerTranslateY = useRef(new Animated.Value(0)).current;
   const bottomTranslateY = useRef(new Animated.Value(0)).current;
 
@@ -90,61 +88,81 @@ export const usePreviewChapter = () => {
               useNativeDriver: true,
             }).start();
           }
+          // check if the user is at the bottom of the list
+          if (
+            currentY >=
+            event.nativeEvent.contentSize.height -
+              event.nativeEvent.layoutMeasurement.height
+          ) {
+            Animated.timing(headerTranslateY, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+            Animated.timing(bottomTranslateY, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start();
+          }
+
+          // Save current scroll position
           prevScrollY.current = currentY;
         }
       },
     },
   );
 
-  const fetchData = useCallback(() => {
-    if (chapter) {
-      if (type !== PostTypeKey.COMIC) {
-        let arrayText: {text: string}[] = [];
-        if (!Array.isArray(chapter.content) && chapter.content?.blocks) {
-          arrayText = chapter.content.blocks.map(item => {
-            return {text: item?.data?.text};
-          });
-        }
-        setData(arrayText);
-      }
+  const chapter = responseDetailChapter?.data;
+  console.log({chapter});
+
+  // Prefetch comic images when available
+  React.useEffect(() => {
+    if (
+      type === PostTypeKey.COMIC &&
+      chapter?.content &&
+      Array.isArray(chapter.content)
+    ) {
+      const prefetchImages = chapter?.content.map(uri => ({uri}));
+      FastImage.preload(prefetchImages);
     }
-  }, [chapter]);
+    if (type !== PostTypeKey.COMIC && chapter?.content) {
+      let arrayText: {text: string}[] = [];
+      if (!Array.isArray(chapter.content) && chapter.content?.blocks) {
+        arrayText = chapter.content.blocks.map(item => {
+          return {text: item?.data?.text};
+        });
+      }
+      setData(arrayText);
+    }
+  }, [type, chapter]);
 
   const goToNextChapter = useCallback(() => {
-    const currentIndex = chapters.findIndex(item => item.id === chapter.id);
-    if (currentIndex < chapters.length - 1) {
-      const nextChapter = chapters[currentIndex + 1];
-      navigate('PreviewChapter', {
-        chapter: {
-          ...nextChapter,
-          name: chapter.name,
-        },
-        chapters,
-        type,
-      });
-      scrollRef.current?.scrollToOffset({animated: true, offset: 0});
-    }
-  }, [chapters, chapter, navigation, type]);
+    GlobalService.showLoading();
+    navigate('PreviewChapter', {
+      detailPost: detailPost,
+      indexChapter: indexChapter + 1,
+      type,
+    });
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    GlobalService.hideLoading();
+  }, [type, indexChapter, detailPost]);
 
   const goToPrevChapter = useCallback(() => {
-    const currentIndex = chapters.findIndex(item => item.id === chapter.id);
-    if (currentIndex > 0) {
-      const prevChapter = chapters[currentIndex - 1];
-      navigate('PreviewChapter', {
-        chapter: {
-          ...prevChapter,
-          name: chapter.name,
-        },
-        chapters,
-        type,
-      });
-      scrollRef.current?.scrollToOffset({animated: true, offset: 0});
-    }
-  }, [chapters, chapter, navigation, type]);
+    console.log({indexChapter});
+    GlobalService.showLoading();
+    navigate('PreviewChapter', {
+      detailPost: detailPost,
+      indexChapter: indexChapter - 1,
+      type,
+    });
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    GlobalService.hideLoading();
+  }, [type, indexChapter, detailPost]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  // useEffect(() => {
+  //   fetchData();
+  // }, [fetchData]);
 
   const onApplyFilter = useCallback(item => {
     setFilterText({
@@ -161,19 +179,20 @@ export const usePreviewChapter = () => {
       useNativeDriver: true,
     }).start();
   }, [scrollY]);
-  const onSelectChapter = useCallback((item: chapterEpisodeInterface) => {
+  const onSelectChapter = useCallback((item: number) => {
+    GlobalService.showLoading();
     navigate('PreviewChapter', {
-      chapter: {
-        ...item,
-        name: chapter.name,
-      },
-      chapters,
+      detailPost: detailPost,
+      indexChapter: item,
       type,
     });
+    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    GlobalService.hideLoading();
   }, []);
 
   return {
-    data: type === PostTypeKey.COMIC ? chapter.content : data,
+    // Use chapter (retrieved from responseDetailChapter?.data) directly for COMIC type
+    data: type === PostTypeKey.COMIC ? chapter?.content : data,
     themeColors,
     styles,
     chapter,
@@ -181,7 +200,7 @@ export const usePreviewChapter = () => {
     headerStyle: {transform: [{translateY: headerTranslateY}]},
     scrollHandler,
     bottomStyle: {transform: [{translateY: bottomTranslateY}]},
-    chapters,
+
     goToNextChapter,
     goToPrevChapter,
     refModal,
@@ -191,7 +210,8 @@ export const usePreviewChapter = () => {
     showModalFilter,
     setShowModalFilter,
     onSelectChapter,
-
+    detailPost,
     scrollRef,
+    indexChapter,
   };
 };

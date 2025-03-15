@@ -1,9 +1,12 @@
 import NetInfo from '@react-native-community/netinfo'; // Import NetInfo
-import { store } from '@redux';
-import axios, { AxiosResponse, CancelTokenSource } from 'axios';
+import {store} from '@redux';
+import axios, {AxiosResponse, CancelTokenSource} from 'axios';
 import i18next from 'i18next';
-import { ApiConfigs } from './apiConfig';
-import { handleResponse } from './responseHandler';
+import {MMKV} from 'react-native-mmkv'; // Import MMKV
+import {ApiConfigs} from './apiConfig';
+import {handleResponse} from './responseHandler';
+
+const storage = new MMKV(); // Initialize MMKV
 
 class AxiosClass {
   static instance: AxiosClass;
@@ -38,10 +41,13 @@ class AxiosClass {
     this.api.interceptors.request.use(this.interceptorRequests);
 
     this.listenToNetworkChanges(); // Add network change listener
+    this.loadToken(); // Load token from storage
   }
 
   interceptorRequests = async (config: any): Promise<any> => {
     const token = await store.getState().accountSlice.token;
+    console.log({token});
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -57,19 +63,32 @@ class AxiosClass {
   };
 
   setToken = async (token: string) => {
+    console.log('setToken Api', token);
+
     this.token = `Bearer ${token}`;
     this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    storage.set('token', this.token); // Save token to storage
   };
 
   setTokenWithoutSaveLocal = async (token: string) => {
     this.token = token;
-    this.api.defaults.headers.common.Authorization = token;
+    this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
   };
 
   clear = () => {
     this.token = '';
     this.api.defaults.headers.common.Authorization = null;
+    storage.delete('token'); // Remove token from storage
   };
+
+  loadToken = () => {
+    const token = storage.getString('token');
+    if (token) {
+      this.token = token;
+      this.api.defaults.headers.common.Authorization = token;
+    }
+  };
+
   getToken = () => this.token;
   setStoreKey = (key: string) => {
     this.storeKey = key;
@@ -96,10 +115,10 @@ class AxiosClass {
           cancelToken: CancelTokenSource;
         },
   ): Promise<T> {
-    console.log('GET ------->>', url, this.api.defaults.headers);
     const newHeader: any = {
       headers: {
         ...this.api.defaults.headers,
+
         // ...headers,
       },
     };
@@ -117,13 +136,19 @@ class AxiosClass {
     if (headers?.cancelToken) {
       newHeader.cancelToken = headers.cancelToken;
     }
-    console.log(url, {
-      ...newHeader,
-    });
-
+    console.log(
+      'GET ------->>',
+      url,
+      this.api.defaults.headers,
+      this.api.defaults.headers.common.Authorization,
+      this.token,
+    );
     return this.api
       .get(url, {
         ...newHeader,
+        headers: {
+          ...newHeader.headers,
+        },
       })
       .catch(this.handleRequestError);
   }
@@ -239,6 +264,13 @@ class AxiosClass {
       });
     }
     return Promise.reject(error);
+  };
+
+  reset = async () => {
+    this.clear();
+    this.pendingRequests = [];
+    this.api.defaults.headers.common = {};
+    this.setBaseURL();
   };
 }
 

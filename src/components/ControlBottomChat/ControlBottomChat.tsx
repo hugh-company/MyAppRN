@@ -5,7 +5,7 @@ import { Spacing, useTheme } from '@theme';
 import { ItemListProduct, MessageItemInterface } from '@types';
 import { t } from 'i18next';
 import React, { useEffect, useRef, useState } from 'react';
-import { FlatList, Keyboard, TextInput, TouchableOpacity, View } from 'react-native';
+import { DeviceEventEmitter, FlatList, Keyboard, TextInput, TouchableOpacity, View } from 'react-native';
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker';
 import { useSelector } from 'react-redux';
 import { ListStickers } from './blocks/ListStickers';
@@ -40,6 +40,15 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   const [showIcons, setShowIcons] = useState(true);
   const [isShowStickers, setIsShowStickers] = useState(false);
   const inputRef = useRef<TextInput>(null);
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener('SendGame', (event) => {
+      setIsShowGame(true);
+      setTimeout(() => {
+        handleSelectGame(event.game);
+      }, 100);
+    });
+  }, []);
   useEffect(() => {
     if (isShowGame) { setGameSelected(null); }
   }, [isShowGame]);

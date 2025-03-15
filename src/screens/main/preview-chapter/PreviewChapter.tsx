@@ -12,30 +12,36 @@ import ImageChapter from './components/ImageChapter';
 import { ModalFilterChapter } from './components/ModalFilterChapter';
 
 const PreviewChapter = () => {
-  const { data, chapter, chapters, styles, type, headerStyle,
+  const { data, chapter, styles, type, headerStyle,
     scrollHandler, bottomStyle, goToNextChapter, goToPrevChapter,
     refModal, onApplyFilter,
     filterText, onClickScreen, showModalFilter,
-    setShowModalFilter, onSelectChapter, scrollRef } = usePreviewChapter();
+    setShowModalFilter, onSelectChapter, scrollRef,
+    detailPost, indexChapter } = usePreviewChapter();
   const { top, bottom } = useSafeAreaInsets();
-  const currentIndex = chapters?.findIndex((item) => item.id === chapter.id) || 0;
-  const canGoToNextChapter = currentIndex < chapters.length - 1;
-  const canGoToPrevChapter = currentIndex > 0;
+  const currentChapter = (indexChapter || 1) - 1;
+  const canGoToNextChapter = currentChapter < detailPost.chapter_total - 1;
+  const canGoToPrevChapter = currentChapter > 0;
+
 
   const renderItem = useCallback(({ item }: { item: any }) => {
-
     if (type === PostTypeKey.COMIC) {
-      return (
-        <ImageChapter uri={item} onPress={onClickScreen} />
-      );
+      return <ImageChapter uri={item} onPress={onClickScreen} />;
     } else {
       return (
-        <AppText style={[styles.txtChapter, {
-          fontSize: normalize(filterText.size[0]),
-          color: filterText.color,
-          backgroundColor: filterText.background,
-          fontFamily: filterText.styleText || 'Roboto',
-        }]}>{item.text}</AppText>
+        <AppText
+          style={[
+            styles.txtChapter,
+            {
+              fontSize: normalize(filterText.size[0]),
+              color: filterText.color,
+              backgroundColor: filterText.background,
+              fontFamily: filterText.styleText || 'Roboto',
+            },
+          ]}
+        >
+          {item.text}
+        </AppText>
       );
     }
   }, [filterText, type, data]);
@@ -48,26 +54,31 @@ const PreviewChapter = () => {
 
     return () => interactionHandle.cancel();
   }, []);
+
   return (
-
     <View style={styles.container}>
-      {shouldRenderList && <Animated.FlatList
-        data={data}
-        renderItem={renderItem}
-        ref={scrollRef}
-        ListHeaderComponent={<View style={[styles.headerTitle, { height: Spacing.height70 + top, paddingTop: top }]} >
-          <AppText style={styles.titleChapter}>{chapter.title}</AppText>
-        </View>}
-        style={[type === PostTypeKey.NOVEL && styles.containerList]}
-        keyExtractor={(item, index) => index.toString()}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
+      {shouldRenderList && (
+        <Animated.FlatList
+          data={data}
+          renderItem={renderItem}
+          ref={scrollRef}
+          removeClippedSubviews={true}
+          ListHeaderComponent={
+            <View style={[styles.headerTitle, { height: Spacing.height70 + top, paddingTop: top }]}>
+              <AppText style={styles.titleChapter}>{chapter?.title}</AppText>
+            </View>
+          }
+          style={[type === PostTypeKey.NOVEL && styles.containerList]}
+          keyExtractor={(item, index) => index.toString()}
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
+          initialNumToRender={type === PostTypeKey.COMIC ? 2 : 10}
+          maxToRenderPerBatch={100}
+          windowSize={100}
 
-        initialNumToRender={10}
-        maxToRenderPerBatch={100}
-        windowSize={100}
-        ListFooterComponent={<View style={[styles.bottom, { height: bottom + Spacing.height50 }]} />}
-      />}
+          ListFooterComponent={<View style={[styles.bottom, { height: bottom + Spacing.height70 }]} />}
+        />
+      )}
 
       <Animated.View style={[styles.bottomStep, bottomStyle]}>
         <ControlBottom
@@ -82,8 +93,8 @@ const PreviewChapter = () => {
       </Animated.View>
       <Animated.View style={[styles.header, styles.positionHeader, headerStyle]}>
         <ControlHeader
-          name={chapter.name || ''}
-          nameChapter={chapter.title || ''}
+          name={detailPost?.title || ''}
+          nameChapter={chapter?.title || ''}
         />
       </Animated.View>
 
@@ -94,11 +105,13 @@ const PreviewChapter = () => {
       />
       <ModalEpisodes
         refModal={refModal}
-        episodes={chapters}
         height={0.7}
         minHeight={0.7}
         onSelectChapter={onSelectChapter}
-        selectEpisodes={chapter.id} />
+        selectEpisodes={chapter?.id}
+        totalChapter={detailPost?.chapter_total || 0}
+
+      />
     </View>
   );
 };

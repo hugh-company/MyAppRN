@@ -6,13 +6,14 @@ import { ItemListProduct } from '@types';
 import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 
 export interface ItemGameProps {
   item: ItemListProduct;
   onPress?: () => void;
+  styleItem?: StyleProp<ViewStyle>
 }
-const ItemGame = ({ item, onPress }: ItemGameProps) => {
+const ItemGame = ({ item, onPress, styleItem }: ItemGameProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const image = item?.feature?.path;
@@ -32,7 +33,7 @@ const ItemGame = ({ item, onPress }: ItemGameProps) => {
           <View style={styles.btnPlay}>
 
             <AppText style={styles.txtLike}>{t('playGame')}</AppText>
-            <PlayIcon size={Spacing.width24} />
+            <PlayIcon size={Spacing.width16} />
           </View>
         </View>
         <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
@@ -59,20 +60,19 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       borderRadius: Spacing.width4,
-      marginLeft: Spacing.width16,
-      width: Spacing.width240,
+      width: Spacing.width150,
       gap: Spacing.width8,
       justifyContent: 'space-between',
     },
     image: {
-      width: Spacing.width240,
-      height: Spacing.width320,
+      width: '100%',
+      height: Spacing.width180,
       borderRadius: Spacing.width8,
       overflow: 'hidden',
     },
     name: {
       marginVertical: Spacing.width8,
-      fontSize: FontSize.FontSize24,
+      fontSize: FontSize.FontSize16,
       ...FontWithFamily.FontWithFamily_600,
     },
     director: {
@@ -89,10 +89,10 @@ const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
     },
     txtView: {
-      fontSize: FontSize.FontSize14,
+      fontSize: FontSize.FontSize12,
     },
     txtLike: {
-      fontSize: FontSize.FontSize14,
+      fontSize: FontSize.FontSize12,
     },
     viewRow: {
       flexDirection: 'row',

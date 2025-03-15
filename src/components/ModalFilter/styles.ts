@@ -43,4 +43,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     txtItem: {
       color: themeColors.btnSocial,
     },
+    active: {
+      backgroundColor: themeColors.btnSocial,
+    },
   });

@@ -9,13 +9,18 @@ import { AppText } from '../AppText';
 import { createStyles } from './styles';
 
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-
-
+import { setToken, setUserInfo } from '@redux';
+import { loginGoogleApi, UserLoginGoogleInterface } from '@services';
+import { showNotificationSuccess } from '@utils';
+import { useDispatch } from 'react-redux';
+import { GlobalService } from '../GlobalUI';
 export interface LoginSocialProps {
   isTopOr?: boolean
 }
 const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
   const { themeColors } = useTheme();
+  const dispatch = useDispatch();
+
   const menuLogin = [
     {
       icon: <GoogleIcon />,
@@ -35,14 +40,41 @@ const LoginSocial = ({ isTopOr }: LoginSocialProps) => {
   ];
   const styles = createStyles(themeColors);
 
+
   const onLoginGoogle = async () => {
     try {
-      await logoutGoogle();
+
+      GlobalService.showLoading();
       await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
+      const userInfo: any = await GoogleSignin.signIn();
       console.log('Google Sign-In Success:', userInfo);
+      const params = {
+        idToken: userInfo?.data?.idToken,
+        user: userInfo?.data?.user,
+      };
+      GlobalService.hideLoading();
+      // callApiLoginGoogle(params);
     } catch (error) {
       console.error('Google Sign-In Error:', error);
+    } finally {
+      GlobalService.hideLoading();
+    }
+  };
+
+  const callApiLoginGoogle = async (params: UserLoginGoogleInterface) => {
+    try {
+      console.log({ params });
+
+      const response = await loginGoogleApi(params);
+      console.log({ response }, response.data.access_token);
+      showNotificationSuccess(t('login.loginSuccess'), response?.message);
+      dispatch(setToken(response?.data?.access_token));
+      dispatch(setUserInfo(response?.data?.me));
+    } catch (error) {
+      console.log({ error });
+
+    } finally {
+      GlobalService.hideLoading();
     }
   };
   const logoutGoogle = async () => {

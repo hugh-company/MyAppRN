@@ -20,7 +20,7 @@ class AppDelegate: RCTAppDelegate {
     ApplicationDelegate.shared.initializeSDK()
     ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 
-    self.moduleName = "MyAppRN"
+    self.moduleName = "FillApp"
     self.dependencyProvider = RCTAppDependencyProvider()
 
     // You can add your custom initial props in the dictionary below.

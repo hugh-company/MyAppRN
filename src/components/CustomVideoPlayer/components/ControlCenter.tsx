@@ -95,7 +95,7 @@ const createStyles = (themeColors: any) =>
       flexDirection: 'row',
       justifyContent: 'center',
       alignItems: 'center',
-      gap: Spacing.width24,
+      gap: Spacing.width16,
     },
     controlButton: {
       backgroundColor: 'rgba(0, 0, 0, 0.3)',

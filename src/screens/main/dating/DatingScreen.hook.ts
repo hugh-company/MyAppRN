@@ -1,4 +1,4 @@
-import {useLocation} from '@hooks';
+import {useInterval, useLocation} from '@hooks';
 import {getToken} from '@redux';
 import {getDatingDashboardApi} from '@services';
 import {useTheme} from '@theme';
@@ -24,7 +24,6 @@ export const useDatingScreen = () => {
   //
   const token = useSelector(getToken);
   const {
-    checkPermissionLocation,
     isPermissionLocation,
     goToSettingLocation,
     getLocationDevice,
@@ -93,7 +92,14 @@ export const useDatingScreen = () => {
     }
   }, [token]);
 
+  useInterval(() => {
+    callApi(tab, 1);
+  }, 180000); // Call API every 3 minutes
+
   const onSelectTab = (type: TypeTabDatingApi) => {
+    if (type === tab) {
+      return;
+    }
     setLoading(true);
     setTab(type);
   };

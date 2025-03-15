@@ -4,13 +4,14 @@ import React, { memo } from 'react';
 import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useViewListScreen } from './ViewListScreen.hook';
+import { FilterListModal } from './components/FilterListModal';
 import { HeaderListScreen } from './components/HeaderListScreen';
 const MemoizedModalFilter = memo(ModalFilter);
 const ViewListScreen = () => {
   const { data, refFlatList, styles, label, slugCategory, onSelectedCategory,
     categoriesList, loading, list,
     onLoadMore, isFilter, setIsFilter, menuSort,
-    filterBySort,
+    filterBySort, sort,
   } = useViewListScreen();
 
   return (
@@ -22,6 +23,7 @@ const ViewListScreen = () => {
         activeCategory={categoriesList?.find((item) => item?.slug === slugCategory)?.id}
         categories={categoriesList}
         type={data?.posttype}
+        sort={menuSort?.find((item) => item.key === sort)}
       />
       {loading ? <LoadingList numColumns={2} /> : <Animated.View style={styles.listContainer}>
         <AppListMovies
@@ -34,9 +36,11 @@ const ViewListScreen = () => {
           keyExtractor={(item, index) => `view_list_${item?.id || index}`}
 
         />
+
       </Animated.View>}
-      <MemoizedModalFilter
+      <FilterListModal
         visible={isFilter}
+        value={sort}
         onClose={() => setIsFilter(false)}
         label={`${t('search.sort')}:`}
         onSelect={filterBySort}

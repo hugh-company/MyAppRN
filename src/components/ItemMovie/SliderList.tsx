@@ -42,6 +42,7 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
 
 
   const renderItem = useCallback(({ item }: { item: TabInterface }) => {
+    if (item?.items.length === 0) { return null; }
     return (
       <View style={styles.itemType}>
         <View style={styles.listMovie}>
@@ -53,7 +54,7 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
               }}
               style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}
             >
-              <AppImage uri={movieItem.feature.square} style={styles.image} />
+              <AppImage uri={movieItem?.feature?.square} style={styles.image} />
             </TouchableOpacity>
           ))}
         </View>

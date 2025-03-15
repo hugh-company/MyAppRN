@@ -35,6 +35,7 @@ function debounceNavigation(action: () => void) {
 
 export function navigate(routeName: string, params?: object | undefined) {
   debounceNavigation(() => {
+
     _navigator?.dispatch(
       CommonActions.navigate({
         name: routeName,
@@ -94,10 +95,11 @@ export function reset(routeName: string) {
   );
 }
 // go back with specific screen
-export function goBackToScreen(screenName: string) {
+export function goBackToScreen(screenName: string, params?: object | undefined) {
   _navigator?.dispatch(
     CommonActions.navigate({
       name: screenName,
+      params,
     }),
   );
 }

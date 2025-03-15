@@ -28,7 +28,7 @@ export const DatingScreen = () => {
       </View>
     );
   }
-  console.log({ data });
+
   const renderHeader = () => {
     return (
       <View style={styles.header}>

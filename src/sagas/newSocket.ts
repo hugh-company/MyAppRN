@@ -1,12 +1,10 @@
 import NetInfo from '@react-native-community/netinfo';
 import {
   addNewConversation,
-  clearSocketInfoUser,
   loadMoreConversations,
   loadMoreMessages,
   loadMoreSearchConversationsSuccess,
-  readAllMessagesConversions,
-  readAllMessagesWithRoom,
+  readAllMessages,
   refreshConversations,
   refreshMessages,
   searchThreadsSuccess,
@@ -39,13 +37,11 @@ import {
 
 const WEBSOCKET_URL = 'wss://oninapp.com/ws/';
 
-// Queue chứa các message chưa gửi được khi socket chưa sẵn sàng
+// Queue chứa các message chưa gửi nếu socket chưa mở
 let messageQueue: any[] = [];
 
-// Hàm gửi message an toàn: nếu socket mở thì gửi ngay, nếu không đưa vào hàng đợi
+// Hàm gửi message an toàn: nếu socket mở thì gửi ngay, nếu chưa mở sẽ lưu vào queue
 function safeSend(socket: WebSocket, message: any) {
-  console.log('Sending message:', message, socket);
-
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
   } else {
@@ -53,7 +49,7 @@ function safeSend(socket: WebSocket, message: any) {
   }
 }
 
-// Tạo eventChannel cho websocket
+// Tạo eventChannel để lắng nghe các sự kiện của WebSocket
 function createSocketChannel(
   socket: WebSocket,
   token: string,
@@ -66,68 +62,44 @@ function createSocketChannel(
 
     socket.onclose = event => {
       console.log('WebSocket closed', event);
-      // if (event.code === 1006) {
-      //   // 1006 is a special code that means the connection was closed abnormally (e.g. the server process was killed)
-      //   return;
-      // }
       emit({type: 'SOCKET_CLOSED', event});
     };
 
     socket.onerror = error => {
-      console.log('WebSocket error', error);
-      emit({type: 'SOCKET_CLOSED'});
-      // Bạn có thể phát hành một sự kiện lỗi nếu cần
+      console.error('WebSocket error', error);
+      emit({type: 'SOCKET_ERROR', error});
     };
 
     socket.onmessage = event => {
       try {
         const data = JSON.parse(event.data);
         console.log('Received message:', data);
-        emit({type: 'SOCKET_ON_MESSAGE', data});
+        emit({type: 'SOCKET_MESSAGE', data});
       } catch (err) {
-        console.log('Error parsing message', err);
+        console.error('Error parsing message', err);
       }
     };
 
-    // Hàm hủy: khi channel đóng, đóng socket
-    return () => {
-      socket.close();
-    };
+    // Hàm hủy channel: đóng socket khi channel bị hủy
+    return () => socket.close();
   });
 }
 
-// Xử lý sự kiện khi socket mở
+// Saga xử lý sự kiện khi socket mở
 function* handleSocketOpen(
   socket: WebSocket,
   token: string,
 ): Generator<any, void, any> {
-  // Khởi chạy tác vụ heartbeat
+  // Bắt đầu tác vụ heartbeat
   const heartbeatTask = yield fork(heartbeatSaga, socket, token);
 
-  // Gửi các action khởi tạo dữ liệu
-  yield put({type: 'FETCH_CONVERSATION_DATA', payload: {cursor_time: ''}});
-  yield put({type: 'GET_ONLINE_USERS'});
-
-  // Gửi lại các message chưa gửi từ redux store
+  // Gửi lại các message chưa gửi trong redux store (nếu có)
   const unsentMessages = yield select(state => state.chatSlice.unsentMessages);
   for (const msg of unsentMessages || []) {
     safeSend(socket, msg);
     yield delay(500);
   }
-  // join room
-  const joinedConversation = yield select(
-    state => state.chatSlice.joinedConversation,
-  );
-  if (joinedConversation !== 0) {
-    yield put(
-      yield put({
-        type: 'JOIN_CONVERSATION',
-        payload: {thread_id: joinedConversation},
-      }),
-    );
-  }
-
-  // Gửi các message từ queue
+  // Gửi các message đã lưu trong queue
   while (messageQueue.length > 0) {
     const queuedMsg = messageQueue.shift();
     safeSend(socket, queuedMsg);
@@ -138,48 +110,55 @@ function* handleSocketOpen(
   yield take('SOCKET_CLOSED');
   yield cancel(heartbeatTask);
 }
-function* ensureSocketConnection(
-  token?: string,
-  device_id?: string,
-): Generator<any, void, any> {
-  const socket = yield select(state => state.socketSlice.socket);
 
-  // Nếu socket chưa kết nối hoặc đang đóng, tiến hành kết nối lại
-  if (!socket || socket.readyState !== WebSocket.OPEN) {
-    console.log('Socket is not open. Reconnecting...');
-
-    // Ki���m tra kết nối mạng
-    const netState = yield call(NetInfo.fetch);
-    if (netState.isConnected) {
-      if (!token || !device_id) {
-        token = yield select(state => state.socketSlice.infoUser.token);
-        device_id = yield select(state => state.socketSlice.infoUser.device_id);
-      }
-
-      if (token && device_id) {
-        yield put(setInfoUser({token, device_id}));
-        yield fork(manageWebSocketConnection, token, device_id); // Ensure reconnection
-      }
-    } else {
-      console.log('No network connection. Reconnect postponed.');
-    }
-  }
-}
-// Saga gửi heartbeat mỗi 55 giây
+// Saga heartbeat: gửi heartbeat mỗi 55 giây để duy trì kết nối
 function* heartbeatSaga(
   socket: WebSocket,
   token: string,
 ): Generator<any, void, any> {
   while (true) {
-    yield delay(55000); // heartbeat mỗi 55 giây
-    const params = {token, action: 'set_status'};
-    safeSend(socket, params);
-    console.log('Heartbeat sent', socket, token);
+    yield delay(55000);
+    safeSend(socket, {token, action: 'set_status'});
+    console.log('Heartbeat sent');
   }
 }
 
-// Xử lý các message từ socket
-function* handleDataMessage(data: any): Generator<any, void, any> {
+// Saga lắng nghe các sự kiện của socket qua channel
+function* watchSocketEvents(
+  socket: WebSocket,
+  token: string,
+): Generator<any, void, any> {
+  const channel = yield call(createSocketChannel, socket, token);
+  try {
+    while (true) {
+      const event = yield take(channel);
+      switch (event.type) {
+        case 'SOCKET_OPEN':
+          yield fork(handleSocketOpen, event.socket, event.token);
+          break;
+        case 'SOCKET_CLOSED':
+          yield put({type: 'RECONNECT_SOCKET'});
+          break;
+        case 'SOCKET_MESSAGE':
+          yield call(handleSocketMessage, event.data);
+          break;
+        case 'SOCKET_ERROR':
+          yield put({type: 'SOCKET_CLOSED'});
+          break;
+        default:
+          console.warn('Unhandled event type:', event.type);
+          break;
+      }
+    }
+  } finally {
+    channel.close();
+  }
+}
+
+// Hàm xử lý các message nhận được từ server (có thể bổ sung thêm các case tùy theo action)
+function* handleSocketMessage(data: any): Generator<any, void, any> {
+  console.log('socket message', data);
+
   if (data?.error === 'disconnect') {
     yield put({type: 'RECONNECT_SOCKET'});
   }
@@ -247,13 +226,7 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
       break;
     }
     case MessageAction.SET_JOIN_THREAD:
-      const idUser = yield select(state => state.accountSlice?.userInfo?.id);
-      if (data?.recipient_info !== idUser) {
-        yield put(readAllMessagesWithRoom({thread_id: data.thread_id}));
-      } else {
-        yield put(readAllMessagesConversions({thread_id: data.thread_id}));
-      }
-
+      yield put(readAllMessages({thread_id: data.thread_id}));
       break;
     case MessageAction.NEW_MESSAGE:
       yield put(updateNewMessage(data));
@@ -302,85 +275,79 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
   }
 }
 
-// Lắng nghe các sự kiện của socket từ eventChannel
-function* watchSocketEvents(
-  socket: WebSocket,
-  token: string,
-): Generator<any, void, any> {
-  const socketChannel = yield call(createSocketChannel, socket, token);
-  try {
-    while (true) {
-      const event = yield take(socketChannel);
-      if (event.type === 'SOCKET_OPEN') {
-        yield fork(handleSocketOpen, event.socket, event.token);
-      } else if (event.type === 'SOCKET_CLOSED') {
-        yield put({type: 'RECONNECT_SOCKET'});
-        break; // Thoát vòng lặp khi đóng kết nối
-      } else if (event.type === 'SOCKET_ON_MESSAGE') {
-        yield call(handleDataMessage, event.data);
-      } else {
-        yield put(event);
-      }
-    }
-  } finally {
-    socketChannel.close();
-  }
-}
-
-// Quản lý kết nối WebSocket với cơ chế tái kết nối theo lùi mũ
+// Hàm quản lý kết nối WebSocket với cơ chế tái kết nối theo lùi mũ
 function* manageWebSocketConnection(
   token: string,
   device_id: string,
 ): Generator<any, void, any> {
-  let reconnectDelay = 1000; // Bắt đầu với 1 giây
+  let reconnectDelay = 1000; // bắt đầu với 1 giây
   while (true) {
     if (!token) {
-      console.log('No token available. Stopping reconnection attempts.');
+      console.log('Token không hợp lệ. Dừng kết nối.');
       break;
     }
     try {
-      console.log('Attempting to connect WebSocket...');
+      console.log('Khởi tạo kết nối WebSocket...');
       const socket: WebSocket = new WebSocket(
         `${WEBSOCKET_URL}?token=${token}&device_id=${device_id}`,
       );
-      console.log('Socket created:', socket);
-
       yield put(setSocket({socket}));
-      // Race giữa việc lắng nghe sự kiện và trường hợp timeout (nếu cần)
-      yield race([
-        call(watchSocketEvents, socket, token),
-        // Bạn có thể thêm timeout nếu cần
-      ]);
+      // Sử dụng race để chạy lắng nghe socket
+      yield race([call(watchSocketEvents, socket, token)]);
     } catch (error) {
-      console.error('WebSocket connection error:', error);
+      console.error('Lỗi kết nối WebSocket:', error);
     }
-
+    console.log(`Tái kết nối sau ${reconnectDelay / 1000} giây...`);
     yield delay(reconnectDelay);
-    // Tăng dần thời gian delay cho đến tối đa 30 giây
-    reconnectDelay = Math.min(reconnectDelay * 2, 30000);
+    reconnectDelay = Math.min(reconnectDelay * 2, 30000); // tối đa 30 giây
   }
 }
 
-// Lắng nghe action setInfoUser để bắt đầu kết nối socket
-function* watchSetSocket(): Generator<any, void, any> {
-  yield takeLatest(
-    setInfoUser.type,
-    function* (action: PayloadAction<{token: string; device_id: string}>) {
-      const {token, device_id} = action.payload;
-      // Cancel any existing socket connection
-      console.log('Setting up new socket connection...', token, device_id);
+/* ==== Các saga quản lý hành động thông qua action ==== */
 
-      const existingSocket = yield select(state => state.socketSlice.socket);
-      if (existingSocket) {
-        existingSocket.close();
-        yield put(setSocket({socket: null}));
-      }
-      // Khởi chạy saga quản lý kết nối. Nếu có kết nối cũ đang chạy, nó sẽ bị hủy bỏ bởi takeLatest
-      yield fork(manageWebSocketConnection, token, device_id);
-    },
-  );
+// 1. INIT_SOCKET: khởi tạo kết nối với token và device_id được truyền vào
+function* initSocketSaga(
+  action: PayloadAction<{token: string; device_id: string}>,
+): Generator<any, void, any> {
+  const {token, device_id} = action.payload;
+  // Lưu lại thông tin người dùng
+  yield put(setInfoUser({token, device_id}));
+  // Nếu có kết nối hiện có, đóng nó trước khi khởi tạo mới
+  const existingSocket = yield select(state => state.socketSlice.socket);
+  if (existingSocket) {
+    existingSocket.close();
+    yield put(setSocket({socket: null}));
+  }
+  yield fork(manageWebSocketConnection, token, device_id);
 }
 
+// 2. RECONNECT_SOCKET: kiểm tra kết nối mạng và tái khởi tạo kết nối nếu có
+function* reconnectSocketSaga(): Generator<any, void, any> {
+  const netState = yield call(NetInfo.fetch);
+  if (netState.isConnected) {
+    const token: string = yield select(
+      state => state.socketSlice.infoUser.token,
+    );
+    const device_id: string = yield select(
+      state => state.socketSlice.infoUser.device_id,
+    );
+    if (token && device_id) {
+      yield put({type: 'INIT_SOCKET', payload: {token, device_id}});
+    }
+  } else {
+    console.log('Không có kết nối mạng. Tái kết nối bị hoãn lại.');
+  }
+}
+
+// 3. CLEAR_SOCKET: đóng kết nối socket khi logout và reset lại trạng thái
+function* clearSocketConnectionSaga(): Generator<any, void, any> {
+  const socket: WebSocket = yield select(state => state.socketSlice.socket);
+  if (socket) {
+    socket.close();
+  }
+  yield put(setSocket({socket: null}));
+  console.log('Socket đã được đóng cho mục đích logout.');
+}
 // Các saga xử lý các hành động liên quan đến conversation
 function* watchConversationActions(): Generator<any, void, any> {
   yield takeLatest('FETCH_CONVERSATION_DATA', fetchConversationsSaga);
@@ -404,6 +371,13 @@ function* watchConversationActions(): Generator<any, void, any> {
   yield takeLatest('RECONNECT_SOCKET', reconnectSocketSaga);
   yield takeLatest('GET_ONLINE_USERS', fetchUserOnline);
   yield takeLatest('USER_LOGOUT', handleLogout);
+}
+
+// Watcher các action liên quan đến socket
+function* watchSocketActions(): Generator<any, void, any> {
+  yield takeLatest('INIT_SOCKET', initSocketSaga);
+  yield takeLatest('RECONNECT_SOCKET', reconnectSocketSaga);
+  yield takeLatest('CLEAR_SOCKET', clearSocketConnectionSaga);
 }
 
 // Các hàm saga gửi message thông qua safeSend
@@ -584,36 +558,18 @@ function* fetchUserOnline(): Generator<any, void, any> {
   });
 }
 
-// Saga tái kết nối: kiểm tra trạng thái mạng trước khi kích hoạt kết nối mới
-function* reconnectSocketSaga(): Generator<any, void, any> {
-  const netState = yield call(NetInfo.fetch);
-  if (netState.isConnected) {
-    const token = yield select(state => state.socketSlice.infoUser.token);
-    const device_id = yield select(
-      state => state.socketSlice.infoUser.device_id,
-    );
-    if (token && device_id) {
-      // Kích hoạt lại kết nối
-      yield put(setInfoUser({token, device_id}));
-    }
-  } else {
-    console.log('No network connection. Reconnect postponed.');
-  }
-}
-
 // New saga to handle logout and close socket
 function* handleLogout(): Generator<any, void, any> {
   const socket = yield select(state => state.socketSlice.socket);
   if (socket) {
     socket.close();
-    yield put(clearSocketInfoUser());
+    yield put(setSocket({socket: null}));
   }
   // Cancel the heartbeat saga if it's running
   yield put({type: 'SOCKET_CLOSED'});
 }
 
-// Root saga của socket
+// Root saga export
 export default function* socketSaga(): Generator<any, void, any> {
-  yield all([fork(watchSetSocket), fork(watchConversationActions)]);
+  yield all([fork(watchSocketActions)]);
 }
-//

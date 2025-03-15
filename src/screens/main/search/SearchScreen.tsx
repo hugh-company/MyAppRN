@@ -36,7 +36,7 @@ const SearchScreen = () => {
   return (
     <View style={styles.container}>
       <AppSearchInput
-        placeholder={t('message.searchMessage')}
+        placeholder={t('search.search')}
         onSearch={onSearch}
         searchText={search}
         onClear={onClear} />

@@ -9,6 +9,8 @@ export const showModalChapter = (visible: boolean, data: any[] | string) => {
   });
 };
 export const goToDetail = ({item, type}: {item: any; type?: PostTypeKey}) => {
+  console.log('goToDetail', item, type);
+
   switch (type) {
     case PostTypeKey.GAMES:
       return push(SCREEN_ROUTE.GAME_DETAIL, {game: item});

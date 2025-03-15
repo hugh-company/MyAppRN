@@ -1,5 +1,4 @@
 import { AppEpisodes, AppHeader, AppInfoContent, HorizontalList } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { PostTypeKey } from '@types';
 import React from 'react';
 import { RefreshControl, View } from 'react-native';
@@ -8,17 +7,12 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, readChapter, scrollHandler, onSelectChapter, onNavigateDetail, isRefetching, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
-
-  if (!detail) {
-    return null;
-  }
+  const { styles, detail, readChapter, scrollHandler, onNavigateDetail, isRefetching, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
   console.log({ detail });
 
   return (
     <View style={styles.container}>
       <Animated.ScrollView
-        // refetch data
         ref={refList}
         refreshControl={<RefreshControl refreshing={isRefetching} onRefresh={onRefresh} tintColor={themeColors.text} />}
         showsVerticalScrollIndicator={false}
@@ -30,39 +24,32 @@ const ChapterDetail = () => {
           typeData={'series'}
           type={PostTypeKey.COMIC}
           views={detail?.views}
+          noChapter={!detail?.chapter_total || detail?.chapter_total === 0 && type === PostTypeKey.COMIC}
           likes={detail?.like_count}
           poster={detail?.feature?.path}
-          totalEpisodes={detail?.chapters?.length || 0}
+          totalEpisodes={detail?.chapter_total || 0}
           onPlay={() => {
-            if (detail?.chapters?.length) {
-              readChapter();
+            if (detail?.chapter_total) {
+              readChapter(1);
             }
           }}
           onNewChapter={() => {
-            if (detail?.chapters?.length) {
-              navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-                chapter: {
-                  ...detail?.chapters?.[detail?.chapters?.length - 1],
-                  name: detail.title,
-                }, chapters: detail?.chapters, type,
-              });
-
-            }
+            readChapter(detail?.chapter_total);
           }}
         />
-        <AppEpisodes
-          episodes={detail?.chapters}
-          style={styles.episodes}
-
-          onSelectChapter={(item) => {
-            console.log({ item });
-            onSelectChapter(item);
-            //
-          }} />
+        {detail?.chapter_total > 0 &&
+          <AppEpisodes
+            chapter_total={detail?.chapter_total}
+            type={type}
+            idPost={detail?.id}
+            style={styles.episodes}
+            goToDetail={(item) => {
+              console.log({ item });
+              readChapter(item);
+            }} />}
 
         <AppInfoContent
           type={type}
-          // isLiked={data?.isLiked
           isPlaying={true}
           style={styles.infoRow}
           detail={detail}
@@ -80,9 +67,6 @@ const ChapterDetail = () => {
       </Animated.ScrollView>
       <AppHeader
         style={[styles.header, headerBackgroundColorStyle]}
-      // rightComponent={<TouchableOpacity
-      //   // onPress={() => setShowRating(true)}
-      //   style={styles.btnDots}><DotsIcon /></TouchableOpacity>}
       />
 
     </View>

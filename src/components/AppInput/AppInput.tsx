@@ -28,6 +28,11 @@ const AppInput = forwardRef<TextInput, AppInputProps<any>>((props, ref) => {
     ...inputProps
   } = props;
 
+  const validateInput = (text: string) => {
+    const regex = /^[a-zA-ZÀ-ỹ\s]*$/u; // Allow Vietnamese and English characters
+    return regex.test(text);
+  };
+
   if (control && name) {
     return (
       <Controller
@@ -39,7 +44,13 @@ const AppInput = forwardRef<TextInput, AppInputProps<any>>((props, ref) => {
             {...inputProps}
             label={label}
             value={value}
-            onChangeText={onChange}
+            onChangeText={(text) => {
+              if (name === 'fullname' && validateInput(text)) {
+                onChange(text);
+              } else if (name !== 'fullname') {
+                onChange(text);
+              }
+            }}
             error={fieldError?.message}
             secureTextEntry={secureTextEntry}
           />
@@ -48,9 +59,21 @@ const AppInput = forwardRef<TextInput, AppInputProps<any>>((props, ref) => {
     );
   }
 
-  return <InputDefault ref={ref} label={label} secureTextEntry={secureTextEntry} {...inputProps} />;
+  return (
+    <InputDefault
+      ref={ref}
+      label={label}
+      secureTextEntry={secureTextEntry}
+      {...inputProps}
+      onChangeText={(text) => {
+        if (name === 'name' && validateInput(text)) {
+          inputProps.onChangeText?.(text);
+        } else if (name !== 'name') {
+          inputProps.onChangeText?.(text);
+        }
+      }}
+    />
+  );
 });
-
-
 
 export default AppInput;

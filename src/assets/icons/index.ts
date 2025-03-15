@@ -93,3 +93,4 @@ export { default as ScrollTopIcon } from './ScrollTopIcon';
 export { default as SettingVideoIcon } from './SettingVideoIcon';
 export { default as SkipNextIcon } from './SkipNextIcon';
 export { default as SkipPreviousIcon } from './SkipPreviousIcon';
+export { default as IconFilter } from './IconFilter';

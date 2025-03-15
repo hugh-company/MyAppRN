@@ -1,4 +1,4 @@
-import { AppText } from '@components';
+import { apiService } from '@api';
 import {
   AuthStackComponent,
   MainStackComponent,
@@ -12,11 +12,11 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
+import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating } from '@redux';
 import { PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
-import { Linking, Platform, View } from 'react-native';
+import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -93,12 +93,15 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     const isConnectedRef = useRef(false);
     const userInfo = useSelector(getUserInfo);
     const location = useSelector(getLocations);
+
+
+
     const callApiProfile = async () => {
       try {
         const responseUser: any = await getUserProfileApi();
         console.log({ responseUser });
 
-        dispatch(setUserInfo(responseUser?.data?.me));
+        // dispatch(setUserInfo(responseUser?.data?.me));
       } catch (error) { }
     };
     useEffect(() => {
@@ -111,6 +114,8 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     }, [userInfo]);
     const connectSocket = async (tokenData: string) => {
       try {
+        console.log({ tokenData });
+
         const device_id = await DeviceInfo.getUniqueId();
         dispatch(setInfoUser({ token: tokenData, device_id }));
       } catch (error) {
@@ -118,26 +123,33 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
 
       }
     };
+
+    const onHandleCallInit = async () => {
+      await apiService.reset();
+      apiService.setToken(token);
+      apiService.setTokenWithoutSaveLocal(token);
+      setTimeout(() => {
+        callApiProfile();
+      }, 5000);
+    };
     // check network
     useEffect(() => {
       if (token) {
-        callApiProfile();
+        onHandleCallInit();
 
         const unsubscribe = NetInfo.addEventListener((state) => {
+          console.log('Connection type', state.type);
+
           if (state.isConnected && !isConnectedRef.current) {
             console.log('Internet connection');
             isConnectedRef.current = true;
-            if (Platform.OS === 'android') {
-              connectSocket(token);
-            }
+            connectSocket(token); // Ensure reconnection for both platforms
           } else if (!state.isConnected) {
             isConnectedRef.current = false;
             console.log('No internet connection');
           } else if (state.isConnected && isConnectedRef.current) {
             console.log('Reconnected to the internet');
-            if (Platform.OS === 'ios') {
-              connectSocket(token);
-            }
+            connectSocket(token); // Ensure reconnection for both platforms
           }
         });
 
@@ -146,12 +158,13 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
         };
       }
     }, [token]);
+
     const { top, bottom } = useSafeAreaInsets();
     return (
       <>
-        <View style={{ position: 'absolute', top: top, left: 0, right: 0, zIndex: 9999 }}>
+        {/* <View style={{ position: 'absolute', top: top, left: 0, right: 0, zIndex: 9999 }}>
           <AppText>{`location:${location?.latitude} - ${location?.longitude}`}</AppText>
-        </View>
+        </View> */}
         <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>
           <Stack.Navigator screenOptions={{
             // detachPreviousScreen: true,

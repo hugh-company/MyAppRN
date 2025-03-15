@@ -76,7 +76,14 @@ export function BannerInfoMovie(props: BannerInfoMovieProps) {
         style={styles.gradient}
       />
       <View style={styles.control}>
-        <AppText style={styles.txtName}>{movie?.title}</AppText>
+        <LinearGradient
+          colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.2)', 'rgba(0, 0, 0, 0)']}
+          start={{ x: 0.5, y: 0 }}
+          end={{ x: 0.5, y: 1 }}
+          style={styles.gradientHeader}
+        >
+          <AppText style={styles.txtName}>{movie?.title}</AppText>
+        </LinearGradient>
 
         {renderButtonPlay()}
 
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
   },
   control: {
     position: 'absolute',
-    top: Spacing.height50,
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,
@@ -129,6 +136,11 @@ const styles = StyleSheet.create({
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,
+  },
+  gradientHeader: {
+    width: '100%',
+    minHeight: Spacing.height100,
+    alignItems: 'center',
   },
   txtPlay: {
     fontSize: FontSize.FontSize16,
@@ -143,6 +155,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '90%',
 
+    paddingTop: Spacing.height50,
 
   },
   info: {

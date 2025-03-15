@@ -1,6 +1,5 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {useDetailPostApi, viewsPostApi} from '@services';
-import {useQuery} from '@tanstack/react-query';
+import {useDetailPostApi, useListEpisodeApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
@@ -37,6 +36,8 @@ export const useMovieDetailScreen = () => {
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const [showRating, setShowRating] = useState(false);
+
+  const {data: dataEpisodes} = useListEpisodeApi(PostTypeKey.MOVIES, movie?.id);
   //
   const [serverMovie, setServerMovie] = useState<
     SourceVideoInterface | undefined
@@ -45,18 +46,16 @@ export const useMovieDetailScreen = () => {
   const {data, isSuccess, refetch, error, isLoading, isFetching} =
     useDetailPostApi(movieId, PostTypeKey.MOVIES);
 
-  console.log({isLoading}, isFetching);
-
-  const {} = useQuery({
-    queryKey: ['viewMoves', movie.id],
-    queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
-  });
+  // const {} = useQuery({
+  //   queryKey: ['viewMoves', movie.id],
+  //   queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
+  // });
 
   useEffect(() => {
     if (isSuccess && data) {
       setDetailMovie({
         ...data?.data,
-        index: 0,
+        index: 1,
       });
     }
     return () => {
@@ -69,7 +68,7 @@ export const useMovieDetailScreen = () => {
   useEffect(() => {
     if (detailMovie) {
       setServerMovie(
-        data?.data?.chapters?.[detailMovie?.index || 0]?.source?.[0],
+        data?.data?.chapters?.[(detailMovie?.index || 1) - 1]?.source?.[0],
       );
     }
   }, [detailMovie, data?.data?.chapters]);
@@ -100,10 +99,9 @@ export const useMovieDetailScreen = () => {
       }
       return {
         ...prev,
-        index: (chapter.index || 1) - 1,
+        index: chapter.index || 1,
       };
     });
-    setIsPlaying(true);
   };
 
   const onNavigateDetail = (post: detailPostInterface) => {
@@ -175,5 +173,6 @@ export const useMovieDetailScreen = () => {
     isLoading,
     onSkipNext,
     onSkipPrevious,
+    listChapter: dataEpisodes?.data?.data || [],
   };
 };

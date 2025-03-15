@@ -66,7 +66,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       flexDirection: 'row',
       gap: Spacing.width16,
-      width: '48%',
     },
     txtBtnStatus: {
       fontSize: FontSize.FontSize14,
@@ -120,8 +119,6 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderRadius: Spacing.width88,
       paddingHorizontal: Spacing.width16,
       paddingVertical: Spacing.width12,
-      // maxWidth: Spacing.width178,
-      width: '48%',
     },
     txtChat: {
       fontSize: FontSize.FontSize14,

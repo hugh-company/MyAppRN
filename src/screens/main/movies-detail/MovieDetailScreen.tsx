@@ -1,9 +1,10 @@
 import { AppEpisodes, AppHeader, AppInfoContent, AppServerList, CustomVideoPlayer, HorizontalList } from '@components';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { View } from 'react-native';
-import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
+import { FlatList } from 'react-native-gesture-handler';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useMovieDetailScreen } from './MovieDetailScreen.hook';
 import { BannerInfoMovie } from './components/BannerInfoMovie';
@@ -12,13 +13,14 @@ import { StatusInfoMovie } from './components/StatusInfoMovie';
 export const MovieDetailScreen = () => {
   const { styles, isFullScreenVisible, setIsFullScreenVisible,
     detailMovie, onSelectedChapter, onNavigateDetail, serverMovie, setIsPlaying,
-    isPlaying, scrollHandler,
+    isPlaying, listChapter,
     isLoading,
     onSelectServer,
     onSkipNext,
     onSkipPrevious } = useMovieDetailScreen();
   const { top } = useSafeAreaInsets();
   const opacity = useSharedValue(1);
+  const flatListRef = useRef<FlatList>(null);
 
   useEffect(() => {
     opacity.value = withTiming(isFullScreenVisible ? 0 : 1, { duration: 300 });
@@ -27,53 +29,66 @@ export const MovieDetailScreen = () => {
     };
   }, [isFullScreenVisible, opacity]);
 
+  useEffect(() => {
+    if (flatListRef?.current) {
+      flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+    }
+  }, [serverMovie]);
+
 
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
-      <Animated.FlatList
+      <FlatList
+        ref={flatListRef}
         key={detailMovie?.id}
         showsVerticalScrollIndicator={false}
-        onScroll={scrollHandler}
+        // onScroll={scrollHandler}
         data={[detailMovie]}
         renderItem={({ item }: any) => (
           <>
             <View >
-              {isPlaying ? <CustomVideoPlayer
-                uri={serverMovie?.link || ''}
-                setIsFullScreenVisible={setIsFullScreenVisible}
-                isFullScreenVisible={isFullScreenVisible}
-                typeMovie={item?.movie_type}
-                valueChapter={detailMovie?.index || 0}
-                episodes={item?.chapters || []}
-                onSkipNext={() => {
-                  onSkipNext();
-                }}
-                onSkipPrevious={() => {
-                  onSkipPrevious();
-                }}
-              /> : <BannerInfoMovie
-                movie={item}
-                disabledVideo={!serverMovie?.link}
-                isPlaying={isPlaying}
-                loading={isLoading}
-                onPlay={() => setIsPlaying(true)}
-              />}
+              {isPlaying ?
+                <CustomVideoPlayer
+                  uri={serverMovie?.link || ''}
+                  setIsFullScreenVisible={setIsFullScreenVisible}
+                  isFullScreenVisible={isFullScreenVisible}
+                  typeMovie={item?.movie_type}
+                  valueChapter={detailMovie?.index || 0}
+                  episodes={listChapter || []}
+                  onSkipNext={() => {
+                    onSkipNext();
+                  }}
+                  onSkipPrevious={() => {
+                    onSkipPrevious();
+                  }}
+                /> : <BannerInfoMovie
+                  movie={item}
+                  disabledVideo={!serverMovie?.link}
+                  isPlaying={isPlaying}
+                  loading={isLoading}
+                  onPlay={() => setIsPlaying(true)}
+                />}
 
             </View>
             <StatusInfoMovie movie={item} isPlaying={isPlaying} />
             {serverMovie && !isLoading &&
               <AppServerList
-                list={detailMovie?.chapters?.[detailMovie?.index || 0].source || []}
+                list={listChapter?.[(detailMovie?.index || 1) - 1]?.source || []}
                 value={serverMovie?.link}
                 onSelectServer={onSelectServer} />
             }
-            {item?.movie_type === 'tvseries' && item?.chapters?.length > 0 && (
+            {item?.movie_type === 'tvseries' && item?.chapter_total > 0 && (
               <AppEpisodes
-                episodes={item?.chapters}
+                chapter_total={item?.chapter_total || 0}
+                type={PostTypeKey.MOVIES}
                 style={styles.episodes}
-                value={detailMovie?.chapters?.[detailMovie?.index || 0]?.id}
+                value={detailMovie?.index || 1}
                 title={t('movie.list_chapters')}
+                loading={isLoading}
                 onSelectChapter={onSelectedChapter}
+                idPost={item?.id}
+                onPlayVideo={() => setIsPlaying(true)}
+                episodes={listChapter}
 
               />
             )}

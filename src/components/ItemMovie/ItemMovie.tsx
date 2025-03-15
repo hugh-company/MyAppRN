@@ -27,14 +27,14 @@ const ItemMovie = ({ item, onPress, type }: ItemMovieProps) => {
         navigate(SCREEN_ROUTE.MOVIE_DETAIL, { movie: item });
       }
     }} style={styles.container}>
-      <View>
-        <AppImage uri={image} style={styles.image} />
+      <AppImage uri={image} style={styles.image} />
+      <View style={styles.viewName}>
         <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>
       </View>
       <View style={styles.viewOption}>
         <View style={styles.viewRow}>
           <LikeActiveIcon size={Spacing.width16} color={themeColors.star} />
-          <AppText style={styles.txtView}>
+          <AppText style={styles.txtView} >
             {getPrettyNumberString(item.like_count)}
           </AppText>
         </View>
@@ -62,10 +62,18 @@ const createStyles = (themeColors: ThemeColors) =>
       height: Spacing.width280,
       borderRadius: Spacing.width4,
     },
-    name: {
+    viewName: {
+
+      height: Spacing.height50,
+      justifyContent: 'center',
       marginVertical: Spacing.width8,
+    },
+    name: {
+
       fontSize: FontSize.FontSize20,
       ...FontWithFamily.FontWithFamily_600,
+
+
     },
     director: {
       fontSize: FontSize.FontSize10,
@@ -79,9 +87,11 @@ const createStyles = (themeColors: ThemeColors) =>
     viewOption: {
       gap: 4,
       flexDirection: 'row',
+
     },
     txtView: {
       fontSize: FontSize.FontSize14,
+
     },
     txtLike: {
       fontSize: FontSize.FontSize14,

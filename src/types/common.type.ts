@@ -30,6 +30,7 @@ export enum TypeKeyListApi {
   TYPE_TABS = 'type_tabs',
   POST_TYPE = 'posttype_slider',
   LIST_VERTICAL = 'itemslist',
+  ITEM_GRID = 'itemgrid',
 }
 export enum PostTypeKey {
   MOVIES = 'movie',

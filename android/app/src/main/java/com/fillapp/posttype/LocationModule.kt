@@ -1,4 +1,4 @@
-package com.myapprn
+package com.fillapp.posttype
 
 import android.Manifest
 import android.content.pm.PackageManager

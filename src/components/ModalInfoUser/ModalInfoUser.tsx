@@ -1,5 +1,5 @@
 import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, HeadIcon, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
-import { AppImage, AppText, BannerUser, ItemGame } from '@components';
+import { AppImage, AppText, BannerUser } from '@components';
 import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { HeightScreen, Spacing, useTheme } from '@theme';
@@ -14,15 +14,9 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { data, games, getDistanceLocation, refModal } = useInfoUser(props);
-  // const { bottom } = useSafeAreaInsets();
-
-
-
-  const renderItem = ({ item }) => {
-    return <ItemGame item={item} />;
-  };
 
   const goToScreenMessage = () => {
+    refModal?.current?.dismiss();
     navigate(SCREEN_ROUTE.CHAT, {
       message: {
         other_user: {
@@ -33,14 +27,13 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
       },
     });
   };
-  console.log({ data });
+
 
   return (
     <BottomSheetModal
       ref={refModal}
-
       backgroundStyle={styles.modalContainer}
-      snapPoints={[0.7 * HeightScreen, 1 * HeightScreen]}
+      snapPoints={[HeightScreen, 1 * HeightScreen]}
       onAnimate={(fromIndex, toIndex) => {
         if (toIndex === -1) {
           setTimeout(() => refModal?.current?.dismiss(), 0);
@@ -59,9 +52,8 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
         renderItem={() => (
           <>
             <View>
-              {data?.galleries?.length > 0 &&
-                <BannerUser
-                  data={data.galleries} />}
+              <BannerUser
+                data={data.galleries?.length > 0 ? data?.galleries : [data?.avatar]} />
               <View style={styles.info}>
                 <AppText style={styles.name}>{[data?.fullname, getAge(data?.birthday)].join(', ')}</AppText>
                 {data?.job && <AppText style={styles.profession}>{data?.job}</AppText>}
@@ -74,14 +66,14 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
 
 
             </View>
-            <View style={[styles.viewRow, { marginVertical: Spacing.width16 }]}>
+            <View style={[{ padding: Spacing.width16, gap: Spacing.width16 }]}>
               <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
                 <AppText style={styles.txtChat} numberOfLines={1}>{t('chatWith')} {data?.fullname}</AppText>
                 <ChatIcon />
               </TouchableOpacity>
               <View style={[styles.btnStatus, { flex: 1 }]}>
                 <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
-                <AppText style={styles.txtBtnStatus}>Đang độc thân</AppText>
+                <AppText style={styles.txtBtnStatus}>{t('message.single')}</AppText>
               </View>
             </View>
 

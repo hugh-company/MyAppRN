@@ -170,11 +170,26 @@ const chatSlice = createSlice({
 
       //  update message list
       // check message
-
-      state.message.messages = [
-        action.payload.message,
-        ...state.message.messages,
-      ];
+      const index = state.message.messages.findIndex(
+        item => item.id === action.payload?.message.temp_id,
+      );
+      if (index >= 0) {
+        state.message.messages[index] = {
+          ...state.message.messages[index],
+          ...action.payload,
+          id: action.payload.message.message_id,
+          content: {
+            ...state.message.messages[index].content,
+            created_at: action.payload.message.created_at,
+            status: action.payload.message.status,
+          },
+        };
+      } else {
+        state.message.messages = [
+          action.payload.message,
+          ...state.message.messages,
+        ];
+      }
 
       if (!action.payload?.message.created_at) {
         action.payload.message.content.created_at = dayjs().format(
@@ -291,7 +306,7 @@ const chatSlice = createSlice({
       }
     },
     // read all messages in conversation
-    readAllMessages(state, action) {
+    readAllMessagesConversions(state, action) {
       state.joinedConversation = action.payload?.thread_id;
       const index = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.thread_id,
@@ -300,6 +315,23 @@ const chatSlice = createSlice({
         state.conversation.conversations[index].last_message.content.status =
           MessageStatus.READ;
       }
+    },
+
+    readAllMessagesWithRoom(state, action) {
+      state.joinedConversation = action.payload?.thread_id;
+
+      state.message.messages = state.message?.messages.map(message => {
+        if (message.thread_id === action.payload?.thread_id) {
+          return {
+            ...message,
+            content: {
+              ...message.content,
+              status: MessageStatus.READ,
+            },
+          };
+        }
+        return message;
+      });
     },
     // ...other reducers...
     setJoinedConversation(state, action) {
@@ -316,6 +348,7 @@ const chatSlice = createSlice({
     clearAllUnSentMessage(state) {
       state.unsentMessages = [];
     },
+
     clearAllChat(state) {
       state.conversation = {
         conversations: [],
@@ -392,7 +425,8 @@ export const {
   setMessageLoadMore,
   setMessageError,
   updateNewMessage,
-  readAllMessages,
+  readAllMessagesConversions,
+  readAllMessagesWithRoom,
   updateMessageSent,
   addNewConversation,
   addUnsentMessage,

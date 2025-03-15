@@ -24,7 +24,7 @@ const newAsyncStorage = {
 const persistConfig = {
   key: 'root',
   storage: newAsyncStorage,
-  whitelist: ['accountSlice', 'chatSlice', 'settingSlice'],
+  whitelist: ['accountSlice', 'chatSlice', 'settingSlice', 'savedPostSlice'],
   // blacklist: ['taskSlice'],
   // blacklist : là các reducer mà không muốn lưu vào storage
   // whitelist : là các reducer muốn lưu vào storage

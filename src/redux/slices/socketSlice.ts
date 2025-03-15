@@ -38,6 +38,10 @@ const socketSlice = createSlice({
     ) {
       state.socket = action.payload.socket;
     },
+    clearSocketInfoUser(state) {
+      state.socket = null;
+      state.infoUser = null;
+    },
   },
 });
 
@@ -45,6 +49,7 @@ export const {
   setSocket,
 
   setInfoUser,
+  clearSocketInfoUser,
 } = socketSlice.actions;
 
 export default socketSlice.reducer;

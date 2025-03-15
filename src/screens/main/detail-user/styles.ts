@@ -41,8 +41,16 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: '#fff',
       ...FontWithFamily.FontWithFamily_600,
     },
+    viewRow: {
+      flex: 1,
+
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      paddingHorizontal: Spacing.width16,
+      gap: Spacing.width8,
+    },
     btnStatus: {
-      width: Spacing.width181,
       height: Spacing.width48,
       borderRadius: Spacing.width90,
       backgroundColor: themeColors.btnSocial,
@@ -50,11 +58,9 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       flexDirection: 'row',
       gap: Spacing.width16,
-      alignSelf: 'center',
-      marginVertical: Spacing.width16,
     },
     txtBtnStatus: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize14,
       ...FontWithFamily.FontWithFamily_600,
     },
     viewAbout_me: {
@@ -99,15 +105,14 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: Spacing.width8,
+      gap: Spacing.width4,
       backgroundColor: themeColors.primary,
       borderRadius: Spacing.width88,
       paddingHorizontal: Spacing.width16,
       paddingVertical: Spacing.width12,
-      maxWidth: Spacing.width178,
     },
     txtChat: {
-      fontSize: FontSize.FontSize16,
+      fontSize: FontSize.FontSize14,
       ...FontWithFamily.FontWithFamily_600,
     },
     viewListInfo: {

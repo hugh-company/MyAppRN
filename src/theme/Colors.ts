@@ -36,6 +36,7 @@ export const lightColors = {
   onSurface: '#EDEDED',
   buttonHover: '#FF1F44',
   active: '#13E398',
+  transparent: 'transparent',
 };
 
 export const darkColors = {

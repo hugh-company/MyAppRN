@@ -17,6 +17,7 @@ interface AppHeaderProps {
   titleStyle?: StyleProp<TextStyle>;
   backgroundColor?: string;
   onBack?: () => void;
+  styleBack?: StyleProp<ViewStyle>;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -27,7 +28,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onRightPress,
   style,
   titleStyle,
-  onBack,
+  onBack, styleBack,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -37,7 +38,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
     <>
       <Animated.View style={[styles.container, { paddingTop: top + Spacing.height8 || Spacing.width16 }, style]}>
         <View style={styles.flex1}>
-          {leftComponent ? leftComponent : <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={styles.btnBack}>
+          {leftComponent ? leftComponent : <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={[styles.btnBack, styleBack]}>
             <LeftIcon />
           </TouchableOpacity>}
           {title && <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>}

@@ -5,7 +5,7 @@ import { Spacing, useTheme, WidthScreen } from '@theme';
 import { UserFindInterface } from '@types';
 import { getAge } from '@utils';
 import { t } from 'i18next';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useImperativeHandle, useRef } from 'react';
 import { View } from 'react-native';
 import { FlatList, PanGestureHandler, TouchableOpacity } from 'react-native-gesture-handler';
 import Animated, { runOnJS, useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
@@ -20,29 +20,26 @@ export interface AppSwipeProfileProps {
   items: UserFindInterface[];
   onSwipe: (type: 'like' | 'dislike' | 'superlike', user: UserFindInterface) => void;
   onDetailUser?: (user: UserFindInterface) => void; // added callback for detail view
+  setProfiles: React.Dispatch<React.SetStateAction<UserFindInterface[]>>;
 }
 
-const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipeProfileProps, ref) => {
+const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser, setProfiles }: AppSwipeProfileProps, ref) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
 
   const { getDistanceLocation } = useLocation();
-  const [profiles, setProfiles] = useState(items as UserFindInterface[]);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
   const rotation = useSharedValue(0);
 
   const flatListRef = useRef<FlatList>(null);
   const isRemoving = useRef(false);
-  useEffect(() => {
-    setProfiles(items || []);
-  }, [items]);
-  // Hàm xóa profile đầu tiên khỏi danh sách
+
   const removeTopProfile = (action: 'like' | 'dislike' | 'superlike') => {
     if (isRemoving.current) { return; }
     isRemoving.current = true;
 
-    const currentProfile = profiles[0];
+    const currentProfile = items[0];
     setProfiles((prev) => prev.slice(1));
     console.log({ currentProfile });
 
@@ -58,7 +55,7 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
 
   useImperativeHandle(ref, () => ({
     triggerSwipe: (action: 'like' | 'dislike' | 'superlike') => {
-      if (profiles.length === 0) { return; }
+      if (items.length === 0) { return; }
       if (action === 'dislike') {
         translateX.value = withSpring(-width * 1.5, SPRING_CONFIG, (finished) => {
           if (finished) { runOnJS(removeTopProfile)(action); }
@@ -76,17 +73,19 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
   }));
 
   const callDetail = () => {
-    if (onDetailUser && profiles.length > 0) {
-      onDetailUser(profiles[0]);
+    if (onDetailUser && items.length > 0) {
+      onDetailUser(items[0]);
     }
   };
 
   const gestureHandler = useAnimatedGestureHandler({
     onStart: (_, ctx) => {
+      if (items.length === 0) { return; }
       ctx.startX = translateX.value;
       ctx.startY = translateY.value;
     },
     onActive: (event, ctx) => {
+      if (items.length === 0) { return; }
       // Cập nhật vị trí thẻ theo tay kéo
       translateX.value = ctx.startX + event.translationX;
       translateY.value = ctx.startY + event.translationY;
@@ -94,6 +93,7 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
       rotation.value = translateX.value * 0.0015;  // tùy chỉnh hệ số xoay
     },
     onEnd: (event) => {
+      if (items.length === 0) { return; }
       // Check upward swipe for detail action: swipe up with minimal horizontal movement
       if (translateY.value < -SWIPE_THRESHOLD && Math.abs(translateX.value) < 50) {
         runOnJS(callDetail)();
@@ -106,7 +106,7 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
         const action = traveledX > 0 ? 'dislike' : 'like';
         translateX.value = withSpring(toX, {
           ...SPRING_CONFIG,
-          velocity: event.velocityX,  // dùng vận tốc vuốt hiện tại cho tự nhiên
+          velocity: event.velocityX,  // dùng vận tốc vuốt hiện t���i cho tự nhiên
         }, (isFinished) => {
           if (isFinished) {
             // Xóa item khỏi danh sách ngay khi animation kết thúc
@@ -163,13 +163,12 @@ const AppSwipeProfile = forwardRef(({ items, onSwipe, onDetailUser }: AppSwipePr
       </View>
     </TouchableOpacity>
   ), [getDistanceLocation, styles]);
-
   return (
-    <PanGestureHandler onGestureEvent={profiles.length > 0 ? gestureHandler : undefined}>
+    <PanGestureHandler onGestureEvent={gestureHandler}>
       <Animated.View style={[styles.card, cardStyle]}>
         <FlatList
           ref={flatListRef}
-          data={profiles}
+          data={items}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={<EmptyUser />}
           renderItem={renderItem}

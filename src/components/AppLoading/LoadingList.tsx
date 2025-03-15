@@ -48,7 +48,7 @@ const LoadingList = ({ numColumns }: LoadingHomeProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+
     paddingHorizontal: Spacing.width16,
     overflow: 'hidden',
   },

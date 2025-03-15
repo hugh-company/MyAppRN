@@ -19,7 +19,7 @@ interface HeaderDetailProps {
   poster?: string;
 
   totalEpisodes?: number;
-
+  noChapter?: boolean;
   onPlay?: () => void;
   onNewChapter?: () => void;
   children?: React.ReactNode;
@@ -36,7 +36,7 @@ export const PosterDetail = ({
   poster,
   totalEpisodes = 0,
   onNewChapter,
-  onPlay,
+  onPlay, noChapter,
 }: HeaderDetailProps) => {
   const { themeColors } = useTheme();
 
@@ -64,6 +64,13 @@ export const PosterDetail = ({
         </>;
       case PostTypeKey.COMIC:
       case PostTypeKey.NOVEL:
+        if (noChapter) {
+          return <View style={styles.noChapter}>
+            <AppText style={[styles.txtPlay, styles.txtNoChapter]}>{t('chapter.noChapter')}</AppText>
+
+
+          </View>;
+        }
         return <View style={styles.viewChapter}>
           <TouchableOpacity onPress={() => onPlay?.()} style={styles.btnPlay}>
             <PlayIcon />
@@ -159,6 +166,17 @@ const createStyles = (themeColors: ThemeColors) =>
 
       gap: Spacing.width16,
 
+    },
+    noChapter: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: Spacing.width44,
+      paddingHorizontal: Spacing.width16,
+      borderRadius: Spacing.width88,
+      backgroundColor: themeColors.colorDisable,
+    },
+    txtNoChapter: {
+      color: themeColors.textTertiary,
     },
     viewInfo: {
       position: 'absolute',

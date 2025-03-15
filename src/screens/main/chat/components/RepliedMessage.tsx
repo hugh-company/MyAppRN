@@ -27,9 +27,9 @@ export function RepliedMessage(props: RepliedMessageProps) {
       case 'text':
         return message.content.data?.text;
       case 'image':
-        return t('message.repliedGame');
-      case 'game':
         return t('message.repliedImage');
+      case 'game':
+        return t('message.repliedGame');
       default:
         return '';
     }

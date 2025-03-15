@@ -81,7 +81,8 @@
     "package_member": "Membership package",
     "rank_membership": "Membership rank",
     "rank_gold": "Gold rank",
-    "rank_diamond": "Diamond rank"
+    "rank_diamond": "Diamond rank",
+    "totalPriceAccount": "Total price"
   },
   "home": {
     "datingTitle": "Find your other half",
@@ -149,7 +150,8 @@
   "chapter": {
     "title": "Comics",
     "readChapter": "Read comics",
-    "newChapter": "New chapter"
+    "newChapter": "New chapter",
+    "noChapter": "No chapter"
   },
   "games": {
     "title": "Online games",
@@ -294,6 +296,7 @@
     "userSendSticker": "USER sent a sticker",
     "repliedSticker": "Replying to sticker",
     "template_message_chat_game": "Let's play the game GAME together ❤️!",
-    "minutes_ago": "minutes ago"
+    "minutes_ago": "minutes ago",
+    "single": "Single"
   }
 }

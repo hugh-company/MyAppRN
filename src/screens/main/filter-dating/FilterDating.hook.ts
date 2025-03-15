@@ -1,7 +1,6 @@
-import {GlobalService} from '@components';
 import {useLocation} from '@hooks';
 import {getLocations, sendMatchSaga} from '@redux';
-import {useFindUserApi} from '@services';
+import {getFindUserApi} from '@services';
 import {useTheme} from '@theme';
 import {genderInterface, UserFindInterface} from '@types';
 import {useEffect, useRef, useState} from 'react';
@@ -22,21 +21,36 @@ export const useFilterDating = () => {
     distance: [50],
     gender: genderInterface.OTHER,
   });
-  //
-  const {data, isLoading, refetch} = useFindUserApi(
-    {
+  const [page, setPage] = useState(1);
+  const [users, setUsers] = useState<UserFindInterface[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isNext, setNext] = useState(false);
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    const response = await getFindUserApi({
       age: filter.age.join('-'),
       distance: filter.distance[0],
-      gender: filter.gender,
+      gender: filter.gender === genderInterface.OTHER ? null : filter.gender,
       location: {
         latitude: location?.latitude ?? 0,
         longitude: location?.longitude ?? 0,
       },
-    },
-    false,
-  );
+      paged: page,
+    });
+    console.log({response});
+    // setNext(response.isNext);
+    setNext(response?.data?.is_next);
+    setUsers(prevUsers => [...prevUsers, ...(response.data?.data || [])]);
+    setIsLoading(false);
+  };
 
-  //
+  useEffect(() => {
+    if (page > 1) {
+      console.log({page});
+
+      fetchUsers();
+    }
+  }, [page]);
 
   useEffect(() => {
     checkLocation();
@@ -61,13 +75,16 @@ export const useFilterDating = () => {
       ...value,
       location: {...location},
     });
-    GlobalService.showLoading();
-    await refetch();
-    GlobalService.hideLoading();
+    fetchUsers();
   };
 
+  const onLoadMore = () => {
+    if (isNext) {
+      setPage(prev => prev + 1);
+    }
+  };
   return {
-    data: data?.data || [],
+    data: users,
     themeColors,
     styles,
     isFilter,
@@ -75,11 +92,14 @@ export const useFilterDating = () => {
     filter,
     setFilter,
     onFilterApi,
-
     swipeRef,
     handleSwipe,
     loading: isLoading,
     matchUser,
     setMatchUser,
+    setPage,
+    setUsers,
+    page,
+    onLoadMore,
   };
 };

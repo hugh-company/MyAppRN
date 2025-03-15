@@ -1,5 +1,5 @@
 import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { getToken, isDashboardDatingSelector } from '@redux';
+import { getToken, getUserInfo } from '@redux';
 import { ComicScreen, DashboardCreateProfile, DatingScreen, GameScreen, HomeScreen, MovieScreen } from '@screens';
 
 import React from 'react';
@@ -8,7 +8,7 @@ import { SCREEN_ROUTE } from '../router';
 import { CustomTabBar } from './CustomTabBar';
 const Tab = createBottomTabNavigator();
 const TabBarNavigation = React.memo(() => {
-  const isDashboardDating = useSelector(isDashboardDatingSelector);
+  const userInfo = useSelector(getUserInfo);
   const token = useSelector(getToken);
   // const isUpdateProfile =
   return (
@@ -23,7 +23,7 @@ const TabBarNavigation = React.memo(() => {
       <Tab.Screen name={SCREEN_ROUTE.MOVIES} component={MovieScreen} />
       <Tab.Screen name={SCREEN_ROUTE.GAMES} component={GameScreen} />
       <Tab.Screen name={SCREEN_ROUTE.COMIC} component={ComicScreen} />
-      {isDashboardDating && token ? <Tab.Screen name={SCREEN_ROUTE.DATING} component={DatingScreen} /> : <Tab.Screen name={SCREEN_ROUTE.DATING} component={DashboardCreateProfile} />}
+      {userInfo?.display === 1 && token ? <Tab.Screen name={SCREEN_ROUTE.DATING} component={DatingScreen} /> : <Tab.Screen name={SCREEN_ROUTE.DATING} component={DashboardCreateProfile} />}
     </Tab.Navigator>
   );
 });

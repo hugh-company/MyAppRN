@@ -1,4 +1,4 @@
-package com.myapprn
+package com.fillapp.posttype
 
 import com.facebook.react.ReactPackage
 import com.facebook.react.bridge.NativeModule

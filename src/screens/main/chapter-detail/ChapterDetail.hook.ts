@@ -1,13 +1,8 @@
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
-import {useDetailPostApi, viewsPostApi} from '@services';
-import {useQuery} from '@tanstack/react-query';
+import {useDetailPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {
-  chapterEpisodeInterface,
-  detailPostInterface,
-  PostTypeKey,
-} from '@types';
+import {detailPostInterface, PostTypeKey} from '@types';
 import React, {useEffect, useState} from 'react';
 import {
   interpolateColor,
@@ -32,18 +27,19 @@ export const useChapterDetail = () => {
   const scrollY = useSharedValue(0);
   // call api
   const {data, isSuccess, refetch, isFetching, isRefetching, error} =
-    useDetailPostApi(idPost, PostTypeKey.COMIC);
+    useDetailPostApi(idPost, type);
   console.log({data}, error);
 
-  useQuery({
-    queryKey: ['viewChapter', idPost],
-    queryFn: () => viewsPostApi(chapter?.id, type),
-  });
+  // useQuery({
+  //   queryKey: ['viewChapter', idPost],
+  //   queryFn: () => viewsPostApi(chapter?.id, type),
+  // });
   useEffect(() => {
     if (isSuccess && data) {
       setDetail(data?.data);
     }
   }, [isSuccess, data]);
+
   const onRefresh = () => {
     refetch();
   };
@@ -59,39 +55,12 @@ export const useChapterDetail = () => {
     ),
   }));
 
-  const onSelectChapter = (chapter: chapterEpisodeInterface) => {
+  const readChapter = (index: number) => {
     navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-      chapter: {
-        ...chapter,
-        name: detail.title,
-      },
-
-      chapters: detail?.chapters,
+      indexChapter: index,
+      detailPost: detail,
       type,
     });
-  };
-  const readChapter = () => {
-    const index = detail?.index;
-    if (index) {
-      navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-        chapter: {
-          ...detail?.chapters?.[index - 1],
-          name: detail.title,
-        },
-
-        chapters: detail?.chapters,
-        type,
-      });
-    } else {
-      navigate(SCREEN_ROUTE.PREVIEW_CHAPTER, {
-        chapter: {
-          ...detail?.chapters?.[0],
-          name: detail.title,
-        },
-        chapters: detail?.chapters,
-        type,
-      });
-    }
   };
   //
   const onNavigateDetail = (post: detailPostInterface) => {
@@ -114,7 +83,7 @@ export const useChapterDetail = () => {
     readChapter,
     themeColors,
     type,
-    onSelectChapter,
+
     refList,
     isRefetching,
   };

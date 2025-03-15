@@ -1,10 +1,4 @@
-import {
-  FontSize,
-  FontWithFamily,
-  Spacing,
-  ThemeColors,
-  WidthScreen,
-} from '@theme';
+import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -12,6 +6,13 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       flex: 1,
       backgroundColor: themeColors.background,
+    },
+    contentContainer: {
+      gap: Spacing.height8,
+      backgroundColor: 'red',
+    },
+    columnWrapper: {
+      gap: Spacing.height8,
     },
     title: {
       color: themeColors.subtile,
@@ -30,13 +31,13 @@ export const createStyles = (themeColors: ThemeColors) =>
     listChapter: {
       flexWrap: 'wrap',
       flexDirection: 'row',
-      gap: Spacing.height8,
+      gap: Spacing.width8,
       overflow: 'hidden',
     },
     btnChapter: {
       borderRadius: Spacing.height6,
       backgroundColor: themeColors.btnSocial,
-      width: WidthScreen / 5 - Spacing.width16,
+
       height: Spacing.height32,
       alignItems: 'center',
       justifyContent: 'center',

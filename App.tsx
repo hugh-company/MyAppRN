@@ -29,18 +29,9 @@ import { persistor, store } from './src/redux/store';
 
 enableScreens();
 enableFreeze(true);
-// Ask for consent first if necessary
-// Possibly only do this for iOS if no need to handle a GDPR-type flow
 Settings.initializeSDK();
-// GoogleSignin.configure({
-//   scopes: ['email'],
-//   webClientId: Platform.OS === 'ios' ?
-//     '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com' :
-//     '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com',
-// });
-// connect apollo client
 GoogleSignin.configure({
-  webClientId: Platform.OS === 'android' ? '215589107688-hn52i6mnr89rfo4ov57bsqlibljo5iut.apps.googleusercontent.com' : '215589107688-bcn6h0es0jot0hj4jg8har3a1njh689m.apps.googleusercontent.com',
+  webClientId: Platform.OS === 'android' ? '862326056116-v7qqpe1flnrpn85lrsvrm33k4hn5v0ju.apps.googleusercontent.com' : '862326056116-v7qqpe1flnrpn85lrsvrm33k4hn5v0ju.apps.googleusercontent.com',
   offlineAccess: true, // added to help resolve DEVELOPER_ERROR
 });
 initI18n();
@@ -59,6 +50,7 @@ const queryClient = new QueryClient({
 
 function App(): React.JSX.Element {
 
+
   useEffect(() => {
     SplashScreen.hide();
     Orientation.lockToPortrait(); // Ensure it locks to portrait mode when the component unmounts
@@ -68,7 +60,9 @@ function App(): React.JSX.Element {
     // Request notification permissions and get the token
     initNotifications();
 
+
   }, []);
+
   LogBox.ignoreLogs([
     /Support for defaultProps will be removed/,
     'Open debug',

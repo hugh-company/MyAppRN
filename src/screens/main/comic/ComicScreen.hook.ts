@@ -22,6 +22,7 @@ export const useComicScreen = () => {
     refetch,
     isLoading,
     isFetching,
+    error,
     isSuccess,
   } = useComicsDashboard({
     filter: tabSelect ? `${tabSelect.type}__${tabSelect.id}` : '',
@@ -31,7 +32,7 @@ export const useComicScreen = () => {
         elm => elm.type !== TypeKeyListApi.TYPE_TABS,
       ) || []
     : [];
-  console.log({dataDashboard}, {isFetching}, {isLoading}, {isSuccess});
+  console.log({dataDashboard}, {isFetching}, {isLoading}, {isSuccess}, {error});
   // const categories=dataDashboard?.data?.modules.find(
   //   item => item.type === TypeKeyListApi.TYPE_TABS,
   // );

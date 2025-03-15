@@ -1,6 +1,5 @@
-import { BriefcaseIcon, CalenderIcon, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
+import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { PostTypeKey } from '@types';
 import { formatDate, getAge } from '@utils';
@@ -12,23 +11,15 @@ import { useDetailUser } from './DetailUser.hook';
 import ItemGame from './components/ItemGame';
 
 export const DetailUser = () => {
-  const { data, themeColors, styles, games, getDistanceLocation } = useDetailUser();
+  const { data, themeColors, styles, games, getDistanceLocation, onSelectGame, goToScreenMessage } = useDetailUser();
   const { bottom } = useSafeAreaInsets();
   const renderItem = ({ item }) => {
-    return <ItemGame item={item} />;
+    return <ItemGame item={item} onPress={() => onSelectGame(item)} />;
   };
 
-  const goToScreenMessage = () => {
-    navigate(SCREEN_ROUTE.CHAT, {
-      message: {
-        other_user: {
-          id: data?.id,
-          fullname: data?.fullname,
-          avatar: data?.avatar,
-        },
-      },
-    });
-  };
+
+
+
   return (
 
     <View style={styles.container}>
@@ -41,9 +32,9 @@ export const DetailUser = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={() => (
           <>
-            <View>
-              {data.galleries?.length > 0 && <BannerUser
-                data={data.galleries} />}
+            <View style={{ minHeight: 200 }}>
+              <BannerUser
+                data={data.galleries?.length > 0 ? data?.galleries : [data?.avatar]} />
               <View style={styles.info}>
                 <AppText style={styles.name}>{[data?.fullname, getAge(data?.birthday)].join(', ')}</AppText>
                 {data?.job && <AppText style={styles.profession}>{data?.job}</AppText>}
@@ -56,9 +47,15 @@ export const DetailUser = () => {
 
 
             </View>
-            <View style={styles.btnStatus}>
-              <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
-              <AppText style={styles.txtBtnStatus}>Đang độc thân</AppText>
+            <View style={[{ padding: Spacing.width16, gap: Spacing.width16 }]}>
+              <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
+                <AppText style={styles.txtChat} numberOfLines={1}>{t('chatWith')} {data?.fullname}</AppText>
+                <ChatIcon />
+              </TouchableOpacity>
+              <View style={[styles.btnStatus, { flex: 1 }]}>
+                <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
+                <AppText style={styles.txtBtnStatus}>{t('message.single')}</AppText>
+              </View>
             </View>
 
             <View style={styles.viewAbout_me}>

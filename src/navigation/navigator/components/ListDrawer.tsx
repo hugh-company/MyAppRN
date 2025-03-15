@@ -1,7 +1,9 @@
+import { apiService } from '@api';
 import { VipIcon } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
 import { navigate, navigateToStack, reset, SCREEN_ROUTE } from '@navigation';
-import { getToken, logout } from '@redux';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { clearAllChat, clearSavedPost, clearSearchThreads, clearSocketInfoUser, getToken, getUserInfo, logout } from '@redux';
 import { useDashboardHome } from '@services';
 import { FontSize, FontWithFamily, sizeWidth, Spacing, ThemeColors, useTheme } from '@theme';
 import { menuNavigationInterface, PostTypeKey } from '@types';
@@ -25,12 +27,27 @@ export function ListDrawer(props: ListDrawerProps) {
   const { bottom, top } = useSafeAreaInsets();
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
+  const infoUser = useSelector(getUserInfo);
   const { data, isSuccess } =
     useDashboardHome();
   const styles = createStyles(themeColors);
   const dataMenus = useMemo(() => (isSuccess ? data?.data?.menus ?? [] : []), [isSuccess, data]);
 
   const dispatch = useDispatch();
+
+  const onLogoutAccount = () => {
+    GoogleSignin.signOut();
+    apiService.reset();
+    dispatch(logout());
+    apiService.clear();
+    dispatch(clearAllChat());
+    dispatch(clearSavedPost());
+    dispatch(clearSearchThreads());
+    dispatch(clearSocketInfoUser());
+    reset(SCREEN_ROUTE.MAIN_STACK);
+    dispatch({ type: 'USER_LOGOUT' });
+  };
+
   const gotoScreen = useCallback((screen: string, params?: any) => {
     props?.navigation?.closeDrawer();
     setTimeout(() => {
@@ -60,17 +77,18 @@ export function ListDrawer(props: ListDrawerProps) {
     return (
       <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.WEBVIEW)} style={styles.viewRank} >
         <View>
-          <AppImage uri={item?.icon} style={styles.package} />
+          <AppImage uri={infoUser?.avatar} style={styles.package} />
           <View style={styles.iconVip}>
             <VipIcon />
           </View>
         </View>
         <View style={{ gap: Spacing.width4 }}>
           <AppText style={styles.txtRank}>
-            {t('drawer.package_member')}
+            {item?.items?.[infoUser?.package_name || 'membership'].label}
           </AppText>
           <AppText style={styles.txtDesRank}>
-            {t('drawer.rank_membership')}
+            {t('drawer.totalPriceAccount')}
+            <AppText style={styles.txtTotal}>{infoUser?.coin || 0}</AppText>
           </AppText>
         </View>
       </TouchableOpacity>
@@ -134,8 +152,7 @@ export function ListDrawer(props: ListDrawerProps) {
           title: t('drawer.logout'),
           message: t('drawer.logoutMessage'),
           onConfirm: () => {
-            dispatch(logout());
-            reset(SCREEN_ROUTE.MAIN_STACK);
+            onLogoutAccount();
           },
           onCancel: () => { },
 
@@ -303,13 +320,19 @@ const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.onSurface,
     },
     txtDesRank: {
-      fontSize: FontSize.FontSize18,
+      fontSize: FontSize.FontSize14,
+      ...FontWithFamily.FontWithFamily_400,
+      color: themeColors.whiteColor,
+    },
+    txtTotal: {
+      fontSize: FontSize.FontSize14,
       ...FontWithFamily.FontWithFamily_600,
-      color: themeColors.onSurface,
+      color: themeColors.whiteColor,
     },
     package: {
       width: Spacing.width40,
       height: Spacing.width40,
+      borderRadius: Spacing.width20,
     },
     iconVip: {
       position: 'absolute',

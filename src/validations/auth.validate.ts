@@ -6,6 +6,13 @@ const usernameValidation = z
   .regex(/^[a-zA-Z0-9_]+$/, {message: t('validate.validate_username')})
   .min(1, {message: t('validate.validate_username')});
 
+const loginUsernameValidation = z
+  .string()
+  .regex(/^[a-zA-Z0-9_]+$|^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
+    message: t('validate.validate_username'),
+  })
+  .min(1, {message: t('validate.validate_username')});
+
 const passwordValidation = z
   .string()
   .min(6, {message: t('validate.password_req')});
@@ -16,7 +23,7 @@ const fullnameValidation = z
   .min(1, {message: t('validate.validate_fullname')});
 
 export const loginSchema = z.object({
-  username: usernameValidation,
+  username: loginUsernameValidation,
   password: passwordValidation,
 });
 export type loginFormData = z.infer<typeof loginSchema>;

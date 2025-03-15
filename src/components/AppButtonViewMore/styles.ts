@@ -12,12 +12,15 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.text,
       ...FontWithFamily.FontWithFamily_600,
     },
+    btnIcon: {},
     containerSizeSmall: {
       justifyContent: 'center',
       alignItems: 'center',
       gap: Spacing.width24,
-      backgroundColor: themeColors.backgroundPlaceholder,
+      backgroundColor: themeColors.btnSocial,
       padding: Spacing.width16,
       borderRadius: Spacing.width100,
+      width: '100%',
+      height: '100%',
     },
   });

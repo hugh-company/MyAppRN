@@ -1,3 +1,4 @@
+import {apiService} from '@api';
 import {createSlice} from '@reduxjs/toolkit';
 import {UserInterface} from '@types';
 import {APP_SLICE} from '../type';
@@ -16,6 +17,11 @@ const accountSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
+      console.log('setToken', action.payload);
+
+      apiService.setToken(action.payload);
+      apiService.setTokenWithoutSaveLocal(action.payload);
+
       state.token = action.payload;
     },
     setUserInfo: (state, action) => {
