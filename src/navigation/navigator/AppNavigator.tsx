@@ -13,7 +13,7 @@ import {
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
-import { PreviewImages } from '@screens';
+import { HistoryContentScreen, NotificationDetailScreen, NotificationScreen, PreviewImages, SavedPost } from '@screens';
 import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
@@ -186,6 +186,12 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
               component={PreviewImages}
               options={{ presentation: 'modal' }}
             />
+            <Stack.Screen name={SCREEN_ROUTE.SAVED_CONTENTS} component={SavedPost} />
+            <Stack.Screen name={SCREEN_ROUTE.HISTORY_CONTENTS} component={HistoryContentScreen} />
+            <Stack.Screen name={SCREEN_ROUTE.SAVED_POST} component={SavedPost} />
+            <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION} component={NotificationScreen} />
+            <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION_DETAIL} component={NotificationDetailScreen} />
+
           </Stack.Navigator>
         </NavigationContainer>
       </>

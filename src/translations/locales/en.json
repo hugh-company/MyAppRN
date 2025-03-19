@@ -59,7 +59,11 @@
     "movies": "Movies",
     "chapters": "Chapters",
     "dating": "Dating",
-    "games": "Games"
+    "games": "Games",
+    "movie": "Movie",
+    "comic": "Comic",
+    "game": "Game",
+    "novel": "Novel"
   },
   "drawer": {
     "title": "filmAPP",

@@ -1,4 +1,4 @@
-import { DotsIcon, LikeActiveIcon } from '@assets';
+import { LikeActiveIcon } from '@assets';
 import { AppHeader, AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme } from '@theme';
 import { getPrettyNumberString } from '@utils';
@@ -125,7 +125,10 @@ export const HeaderGame = ({
         {children}
         <View style={styles.bottom} />
       </Animated.ScrollView>
-      <AppHeader style={[styles.header, backgroundStyle]} rightComponent={<TouchableOpacity style={styles.btnDots}><DotsIcon /></TouchableOpacity>} />
+      <AppHeader style={[styles.header, backgroundStyle]}
+
+      // rightComponent={<TouchableOpacity style={styles.btnDots}><DotsIcon /></TouchableOpacity>}
+      />
     </>
   );
 };

@@ -64,7 +64,13 @@
     "movies": "Phim",
     "chapters": "Truyện",
     "dating": "Hẹn hò",
-    "games": "Chơi game"
+    "games": "Chơi game",
+    "search": "Tìm kiếm",
+    "movie": "Phim",
+    "chapter": "Truyện",
+    "game": "Game",
+    "comic": "Truyện tranh",
+    "novel": "Truyện chữ"
   },
   "drawer": {
     "title": "filmAPP",
@@ -179,7 +185,7 @@
     "title": "Đánh giá trải nghiệm",
     "content": "Nội dung đánh giá...",
     "sendRating": "Gửi đánh giá",
-    "description": "Bộ phim này xứng đáng bao nhiêu điểm?",
+    "description": "POST này xứng đáng bao nhiêu điểm?",
     "ratingSuccess": "Đánh giá thành công",
     "successMessage": "Cảm ơn bạn đã đánh giá",
 

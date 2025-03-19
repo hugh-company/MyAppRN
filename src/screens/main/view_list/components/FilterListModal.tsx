@@ -19,10 +19,11 @@ export interface ModalFilterProps {
   onSelect?: (item: {
     key?: PostTypeKey | FilterKey,
     value?: string,
-  }) => void
+  }) => void;
+  disableReset?: boolean; // New prop
 }
 
-export const FilterListModal = memo(({ refBottomSheet, styleContainer, data, label, onSelect, value }: ModalFilterProps) => {
+export const FilterListModal = memo(({ refBottomSheet, styleContainer, data, label, onSelect, value, disableReset }: ModalFilterProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { bottom } = useSafeAreaInsets();
@@ -45,10 +46,13 @@ export const FilterListModal = memo(({ refBottomSheet, styleContainer, data, lab
             <AppText style={styles.title}>{label}</AppText>
             <TouchableOpacity
               onPress={() => {
-                refBottomSheet?.current?.close();
-                onSelect?.({ key: '', value: '' });
+                if (!disableReset) {
+                  refBottomSheet?.current?.close();
+                  onSelect?.({ key: '', value: '' });
+                }
               }}
-              style={[styles.done]}
+              style={[styles.done, disableReset && { opacity: 0.5 }]} // Disable button style
+              disabled={disableReset} // Disable button interaction
             >
               <AppText style={[styles.title, { ...FontWithFamily.FontWithFamily_400 }]}>{t('reset')}</AppText>
             </TouchableOpacity>

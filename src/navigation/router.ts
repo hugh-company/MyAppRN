@@ -55,4 +55,11 @@ export enum SCREEN_ROUTE {
   IMAGE_MODAL = 'ImageModal',
   // webview
   WEBVIEW = 'Webview',
+
+  //
+  SAVED_CONTENTS = 'SavedContents',
+  HISTORY_CONTENTS = 'HistoryContents',
+  //notification detail
+  NOTIFICATION_DETAIL = 'NotificationDetail',
+  NOTIFICATION = 'Notification',
 }

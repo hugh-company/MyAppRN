@@ -1,3 +1,4 @@
+import { BASE_IMAGE_URL } from '@api';
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
 import { getToken, isComicSaved, isMovieSaved, isNovelSaved, RootState, toggleItemSaved } from '@redux';
@@ -5,7 +6,7 @@ import { likePostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { detailPostInterface, PostTypeKey } from '@types';
 import { onShareInfo, showModalRating } from '@utils';
-import { t } from 'i18next';
+import i18next, { t } from 'i18next';
 import React, { useState } from 'react';
 import { StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
@@ -40,14 +41,19 @@ const AppInfoContent = ({
     try {
       const response = await likePostApi(detail?.id, type, { like: 1 });
       console.log({ response });
-      onRefresh && onRefresh();
+      // onRefresh && onRefresh();
       setLike(true);
     } catch (error) {
+      console.log({ error });
+
       setLike(false);
     }
   };
   const onShare = async () => {
-    onShareInfo(detail?.seo_title || '', detail?.seo_title);
+    const language = i18next.language;
+
+    const message = detail?.url?.startsWith('https:') ? detail?.url : `${BASE_IMAGE_URL}${language}/${detail?.url}`;
+    onShareInfo(detail?.seo_title || '', message);
   };
   const updateSavedPost = async () => {
     dispatch(toggleItemSaved({ type: type === PostTypeKey.MOVIES ? 'movie' : type === PostTypeKey.COMIC ? 'comic' : 'novel', item: detail }));
@@ -70,6 +76,7 @@ const AppInfoContent = ({
       case PostTypeKey.COMIC:
       case PostTypeKey.NOVEL:
       case PostTypeKey.MOVIES:
+      case PostTypeKey.GAMES:
         return (
           <View style={[styles.viewOption, !token && { justifyContent: 'center', gap: Spacing.width32 }]} >
             {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
@@ -82,13 +89,14 @@ const AppInfoContent = ({
             {renderItem(<SendIcon />, t('share'), () => onShare())}
           </View>
         );
-      case PostTypeKey.GAMES:
-        return (
-          <View style={[styles.viewOption, { justifyContent: 'center', gap: Spacing.width32 }]} >
-            {renderItem(<SendIcon />, t('share'), () => onShare())}
-            {renderItem(<LikeIcon />, t(isLiked ? 'liked' : 'like'), () => callApiLike())}
-          </View>
-        );
+      // case PostTypeKey.GAMES:
+      //   return (
+      //     <View style={[styles.viewOption, { justifyContent: 'center', gap: Spacing.width32 }]} >
+      //       {renderItem(like ? <LikeActiveIcon /> : <LikeIcon />, t(like ? 'liked' : 'like'), () => callApiLike())}
+      //       {renderItem(<SendIcon />, t('share'), () => onShare())}
+
+      //     </View>
+      //   );
     }
   };
   const renderInfo = () => {

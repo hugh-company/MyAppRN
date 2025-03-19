@@ -11,7 +11,7 @@ interface savedPostInterface {
 
 export const useSavedPost = () => {
   const {params} = useRoute();
-  const {type} = params as savedPostInterface;
+  const {type, title} = params as savedPostInterface;
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
 
@@ -29,5 +29,5 @@ export const useSavedPost = () => {
   });
   console.log({data});
 
-  return {data, themeColors, styles, type};
+  return {data, themeColors, styles, type, title};
 };

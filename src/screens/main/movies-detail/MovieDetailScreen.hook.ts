@@ -1,5 +1,5 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {useDetailPostApi, useListEpisodeApi} from '@services';
+import {useDetailPostApi, useListEpisodeApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {
   chapterEpisodeInterface,
@@ -50,7 +50,11 @@ export const useMovieDetailScreen = () => {
   //   queryKey: ['viewMoves', movie.id],
   //   queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
   // });
-
+  useEffect(() => {
+    if (movie?.id) {
+      viewsPostApi(movie?.id, PostTypeKey.MOVIES);
+    }
+  }, [movie?.id]);
   useEffect(() => {
     if (isSuccess && data) {
       setDetailMovie({

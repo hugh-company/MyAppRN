@@ -1,6 +1,6 @@
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
-import {useDetailPostApi} from '@services';
+import {useDetailPostApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {detailPostInterface, PostTypeKey} from '@types';
 import React, {useEffect, useState} from 'react';
@@ -34,6 +34,11 @@ export const useChapterDetail = () => {
   //   queryKey: ['viewChapter', idPost],
   //   queryFn: () => viewsPostApi(chapter?.id, type),
   // });
+  useEffect(() => {
+    if (detail?.id) {
+      viewsPostApi(detail?.id, type);
+    }
+  }, [detail?.id]);
   useEffect(() => {
     if (isSuccess && data) {
       setDetail(data?.data);

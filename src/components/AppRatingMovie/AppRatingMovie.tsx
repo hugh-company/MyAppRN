@@ -87,7 +87,9 @@ const AppRatingMovie = ({ }: AppRatingMovieProps) => {
       <View style={styles.modalContainer}>
         <AppImage defaultSource={renderIcon(type)} style={styles.image} />
         <AppText style={styles.title}>{t('ratings.title')}</AppText>
-        <AppText style={styles.description}>{t('ratings.description')}</AppText>
+        <AppText style={styles.description}>
+          {t('ratings.description').replace('POST', t(`navigation.${type.toLocaleLowerCase()}`))}
+        </AppText>
         <View style={styles.viewStar}>
           {Array(10).fill(0).map((_, index) => {
             return (

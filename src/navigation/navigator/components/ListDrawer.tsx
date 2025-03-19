@@ -132,6 +132,12 @@ export function ListDrawer(props: ListDrawerProps) {
       case 'chat':
         gotoScreen(SCREEN_ROUTE.DATING);
         break;
+      case 'savedContents':
+        gotoScreen(SCREEN_ROUTE.SAVED_CONTENTS, { title: item?.label });
+        break;
+      case 'historyContents':
+        gotoScreen(SCREEN_ROUTE.HISTORY_CONTENTS, { title: item?.label });
+        break;
       case 'languages':
         showModalLanguage(true);
         break;

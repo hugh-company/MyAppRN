@@ -19,9 +19,13 @@ export * from './preview-game';
 export * from './search';
 export * from './setting-favorite';
 
+export * from './history-content';
 export * from './preview-images';
 export * from './saved';
 export * from './search-message';
 export * from './VideoScreen';
 export * from './view_list';
 export * from './webview';
+
+export * from './notification-detail';
+export * from './notifications';

@@ -161,10 +161,17 @@ export const useViewListScreen = () => {
     setPage(prev => prev + 1);
   };
   const filterBySort = (item: any) => {
+    if (item?.key === '') {
+      setSort(sortby); // Reset to the initial sortby value
+      setPage(1);
+      setIsNext(true);
+      setLoading(true);
+      setIsFilter(false);
+      return;
+    }
     setSort(item.key);
     setPage(1);
     setIsNext(true);
-
     setLoading(true);
     setIsFilter(false);
   };
@@ -190,5 +197,6 @@ export const useViewListScreen = () => {
     menuSort,
     filterBySort,
     sort,
+    sortby,
   };
 };

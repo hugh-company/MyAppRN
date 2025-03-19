@@ -13,7 +13,7 @@ const ViewListScreen = () => {
   const { data, refFlatList, styles, type, slugCategory, onSelectedCategory,
     categoriesList, loading, list,
     onLoadMore, menuSort,
-    filterBySort, sort,
+    filterBySort, sort, sortby,
   } = useViewListScreen();
   const refModal = useRef<any>(null);
   const renderTitle = () => {
@@ -65,6 +65,7 @@ const ViewListScreen = () => {
         label={`${t('view_list.sort')}`}
         onSelect={filterBySort}
         data={menuSort}
+        disableReset={sort === sortby} // Pass disableReset prop
       />
     </View>
   );

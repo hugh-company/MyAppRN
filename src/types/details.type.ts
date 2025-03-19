@@ -154,6 +154,7 @@ export interface detailPostInterface {
     name: string;
     posttype: PostTypeKey;
   };
+  url: string;
 }
 //
 export interface detailPostResponseInterface {

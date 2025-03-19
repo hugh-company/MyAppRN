@@ -56,6 +56,8 @@ export enum ItemListDashboard {
   SAVE_GAMES = 'savedGames',
   SAVE_COMIC = 'savedComics',
   LOGOUT = 'logout',
+  SAVED_CONTENTS = 'savedContents',
+  HISTORY_CONTENTS = 'historyContents',
 }
 export enum FilterKey {
   // 'views__desc' | 'likes__desc'
