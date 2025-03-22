@@ -1,12 +1,14 @@
 import {GlobalService} from '@components';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {navigate, SCREEN_ROUTE} from '@navigation';
+import {setToken, setUserInfo} from '@redux';
 import {registerApi} from '@services';
 import {useTheme} from '@theme';
 import {errorFormUtils, showNotificationSuccess} from '@utils';
 import {registerFormData, registerSchema} from '@validations';
 import {t} from 'i18next';
 import {useForm} from 'react-hook-form';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
 const defaultForm = {
   fullname: '',
@@ -28,7 +30,7 @@ export const useRegisterScreen = () => {
   });
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
-
+  const dispatch = useDispatch();
   const onSubmit = handleSubmit(async (form: registerFormData) => {
     try {
       GlobalService.showLoading();
@@ -40,6 +42,9 @@ export const useRegisterScreen = () => {
         fullname: form.fullname,
       };
       const res = await registerApi(params);
+      console.log({res});
+      dispatch(setToken(res?.data?.access_token));
+      dispatch(setUserInfo(res?.data?.me));
       showNotificationSuccess(t('register.registerSuccess'), res?.message);
       reset();
       navigate(SCREEN_ROUTE.LOGIN);

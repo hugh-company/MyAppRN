@@ -1,5 +1,6 @@
 import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { PostTypeKey } from '@types';
 import { formatDate, getAge } from '@utils';
@@ -11,7 +12,7 @@ import { useDetailUser } from './DetailUser.hook';
 import ItemGame from './components/ItemGame';
 
 export const DetailUser = () => {
-  const { data, themeColors, styles, games, getDistanceLocation, onSelectGame, goToScreenMessage } = useDetailUser();
+  const { data, themeColors, styles, games, isMyProfile, getDistanceLocation, onSelectGame, goToScreenMessage } = useDetailUser();
   const { bottom } = useSafeAreaInsets();
   const renderItem = ({ item }) => {
     return <ItemGame item={item} onPress={() => onSelectGame(item)} />;
@@ -23,8 +24,14 @@ export const DetailUser = () => {
   return (
 
     <View style={styles.container}>
-      <AppHeader rightComponent={<TouchableOpacity onPress={goToScreenMessage}>
-        <IconMessager width={Spacing.width30} height={Spacing.width30} color="white" />
+      <AppHeader rightComponent={<TouchableOpacity onPress={() => {
+        if (isMyProfile) {
+          navigate(SCREEN_ROUTE.CREATE_PROFILE);
+        } else {
+          goToScreenMessage();
+        }
+      }}>
+        {isMyProfile ? <ProfileIcon /> : <IconMessager width={Spacing.width30} height={Spacing.width30} color="white" />}
       </TouchableOpacity>} />
 
       <FlatList
@@ -48,13 +55,22 @@ export const DetailUser = () => {
 
             </View>
             <View style={[{ padding: Spacing.width16, gap: Spacing.width16 }]}>
-              <TouchableOpacity onPress={() => goToScreenMessage()} style={styles.btnChat}>
-                <AppText style={styles.txtChat} numberOfLines={1}>{t('chatWith')} {data?.fullname}</AppText>
+              <TouchableOpacity
+                onPress={() => {
+                  if (!isMyProfile) {
+                    goToScreenMessage();
+                  }
+                }}
+                style={[styles.btnChat]}
+                disabled={isMyProfile}>
+                <AppText style={styles.txtChat} numberOfLines={1}>
+                  {t('chatWith')} {data?.fullname}
+                </AppText>
                 <ChatIcon />
               </TouchableOpacity>
               <View style={[styles.btnStatus, { flex: 1 }]}>
                 <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
-                <AppText style={styles.txtBtnStatus}>{t('message.single')}</AppText>
+                <AppText style={styles.txtBtnStatus}>{t(`${data?.rel_status}`)}</AppText>
               </View>
             </View>
 
@@ -65,7 +81,7 @@ export const DetailUser = () => {
             <View style={styles.valueAbout_me}>
               <AppText  >{data?.about_me}</AppText>
             </View>
-            <HorizontalList data={games} type={PostTypeKey.GAMES} title={'Game chơi cùng'} renderItem={renderItem} />
+            {!isMyProfile && <HorizontalList data={games} type={PostTypeKey.GAMES} title={'Game chơi cùng'} renderItem={renderItem} />}
 
             <View style={styles.viewInfo} >
               <View style={styles.view_contact}>

@@ -4,6 +4,7 @@ import {
   MainStackComponent,
   SCREEN_ROUTE,
 } from '@navigation';
+import { handleNavigateNotification, initNotifications } from '@notifications';
 import NetInfo from '@react-native-community/netinfo';
 import messaging from '@react-native-firebase/messaging';
 import {
@@ -13,7 +14,7 @@ import {
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
-import { HistoryContentScreen, NotificationDetailScreen, NotificationScreen, PreviewImages, SavedPost } from '@screens';
+import { NotificationDetailScreen, NotificationScreen, PreviewImages } from '@screens';
 import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
@@ -23,23 +24,11 @@ import { useDispatch, useSelector } from 'react-redux';
 const Stack = createStackNavigator();
 const NAVIGATION_IDS = ['home', 'post', 'settings'];
 
-function buildDeepLinkFromNotificationData(data): string | null {
-  const navigationId = data?.navigationId;
-  if (!NAVIGATION_IDS.includes(navigationId)) {
-    console.warn('Unverified navigationId', navigationId);
-    return null;
-  }
-  if (navigationId === 'home') {
-    return 'myapp://home';
-  }
-  if (navigationId === 'settings') {
-    return 'myapp://settings';
-  }
-  const postId = data?.postId;
-  if (typeof postId === 'string') {
-    return `myapp://post/${postId}`;
-  }
-  console.warn('Missing postId');
+function buildDeepLinkFromNotificationData(notification: any): string | null {
+  console.log({ notification });
+  setTimeout(() => {
+    handleNavigateNotification(notification);
+  }, 1000);
   return null;
 }
 
@@ -94,8 +83,6 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     const userInfo = useSelector(getUserInfo);
     const location = useSelector(getLocations);
 
-
-
     const callApiProfile = async () => {
       try {
         const responseUser: any = await getUserProfileApi();
@@ -114,8 +101,6 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     }, [userInfo]);
     const connectSocket = async (tokenData: string) => {
       try {
-        console.log({ tokenData });
-
         const device_id = await DeviceInfo.getUniqueId();
         dispatch(setInfoUser({ token: tokenData, device_id }));
       } catch (error) {
@@ -124,13 +109,16 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
       }
     };
 
+
+
     const onHandleCallInit = async () => {
+      initNotifications();
+
       await apiService.reset();
       apiService.setToken(token);
       apiService.setTokenWithoutSaveLocal(token);
-      setTimeout(() => {
-        callApiProfile();
-      }, 5000);
+
+      callApiProfile();
     };
     // check network
     useEffect(() => {
@@ -186,9 +174,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
               component={PreviewImages}
               options={{ presentation: 'modal' }}
             />
-            <Stack.Screen name={SCREEN_ROUTE.SAVED_CONTENTS} component={SavedPost} />
-            <Stack.Screen name={SCREEN_ROUTE.HISTORY_CONTENTS} component={HistoryContentScreen} />
-            <Stack.Screen name={SCREEN_ROUTE.SAVED_POST} component={SavedPost} />
+
             <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION} component={NotificationScreen} />
             <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION_DETAIL} component={NotificationDetailScreen} />
 

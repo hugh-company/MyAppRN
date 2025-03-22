@@ -37,6 +37,7 @@ const defaultForm = {
   fullname: '',
   galleries: [] as string[],
   job: '',
+  rel_status: '',
 };
 export const useCreateProfileScreen = () => {
   const [jobs, setJobs] = useState<{id: string; name: string}[]>([]);
@@ -52,6 +53,7 @@ export const useCreateProfileScreen = () => {
     defaultValues: defaultForm,
     resolver: zodResolver(createProfileSchema),
   });
+
   useEffect(() => {
     checkInfoUserWithForm();
     callApiJobs();
@@ -83,6 +85,7 @@ export const useCreateProfileScreen = () => {
       const gender = userInfo?.gender || '';
       const job = userInfo?.personal?.job || '';
       const galleries = userInfo?.personal?.galleries || [];
+      const rel_status = userInfo?.rel_status || '';
       reset({
         avatar,
         phone: {
@@ -95,6 +98,7 @@ export const useCreateProfileScreen = () => {
         gender,
         galleries,
         job,
+        rel_status,
       });
     }
   };
@@ -126,6 +130,7 @@ export const useCreateProfileScreen = () => {
       gender: formData.gender as genderInterface,
       galleries: formData.galleries || [],
       birthday: formatDate(formData.birthday, 'YYYY-MM-DD') || '',
+      rel_status: formData.rel_status,
     };
     console.log({params});
 

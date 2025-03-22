@@ -30,6 +30,8 @@ interface chatState {
   joinedConversation: number;
   unsentMessages: any[];
   listUserOnline: OtherUser[];
+
+  threadDetail: ConversationInterface | null;
 }
 
 const initialState: chatState = {
@@ -52,6 +54,7 @@ const initialState: chatState = {
   joinedConversation: 0,
   unsentMessages: [],
   listUserOnline: [],
+  threadDetail: null,
 };
 
 const chatSlice = createSlice({
@@ -405,6 +408,11 @@ const chatSlice = createSlice({
           false;
       }
     },
+
+    //
+    setDetailThread(state, action) {
+      state.threadDetail = action.payload;
+    },
   },
 });
 
@@ -438,6 +446,7 @@ export const {
   userOnline,
   userOffline,
   setLoadMoreMessage,
+  setDetailThread,
   // ...other actions...
 } = chatSlice.actions;
 
@@ -463,6 +472,10 @@ export const sendMessageSaga = (params?: any) => ({
 });
 export const fetchMessagesSaga = (params?: any) => ({
   type: 'FETCH_MESSAGES_DATA',
+  payload: params,
+});
+export const fetchDetailThreadSaga = (params?: any) => ({
+  type: 'FETCH_DETAIL_THREAD',
   payload: params,
 });
 export const loadMoreMessagesSaga = (params?: any) => ({

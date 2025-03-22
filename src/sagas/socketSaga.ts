@@ -21,9 +21,9 @@ import {
   userOffline,
   userOnline,
 } from '@redux';
-import {PayloadAction} from '@reduxjs/toolkit';
-import {MessageAction} from '@types';
-import {eventChannel, EventChannel} from 'redux-saga';
+import { PayloadAction } from '@reduxjs/toolkit';
+import { MessageAction } from '@types';
+import { eventChannel, EventChannel } from 'redux-saga';
 import {
   all,
   call,
@@ -246,6 +246,11 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
       }
       break;
     }
+    case MessageAction.GET_THREAD_DETAIL:
+      console.log({GET_THREAD_DETAIL: data});
+
+      break;
+
     case MessageAction.SET_JOIN_THREAD:
       const idUser = yield select(state => state.accountSlice?.userInfo?.id);
       if (data?.recipient_info !== idUser) {
@@ -392,6 +397,7 @@ function* watchConversationActions(): Generator<any, void, any> {
   yield takeLatest('MARK_MESSAGE_AS_READ', markMessageAsReadSaga);
   yield takeLatest('SEND_TYPING_INDICATOR', sendTypingIndicatorSaga);
   yield takeLatest('JOIN_CONVERSATION', joinConversationSaga);
+  yield takeLatest('FETCH_DETAIL_THREAD', fetchDetailThreadSaga);
   yield takeLatest('LOAD_MORE_CONVERSATIONS', loadMoreConversationsSaga);
   yield takeLatest('LOAD_MORE_MESSAGES', loadMoreMessagesSaga);
   yield takeLatest('REFRESH_CONVERSATIONS', refreshConversationsSaga);
@@ -517,6 +523,18 @@ function* joinConversationSaga(
     params.recipient_id = action.payload.recipient_id;
   }
   safeSend(socket, params);
+}
+
+function* fetchDetailThreadSaga(
+  action: PayloadAction<{thread_id: string}>,
+): Generator<any, void, any> {
+  const token = yield select(state => state.socketSlice.infoUser.token);
+  const socket = yield select(state => state.socketSlice.socket);
+  safeSend(socket, {
+    action: 'get_thread',
+    token,
+    thread_id: action.payload.thread_id,
+  });
 }
 
 function* loadMoreConversationsSaga(

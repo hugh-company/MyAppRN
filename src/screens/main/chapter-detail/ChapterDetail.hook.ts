@@ -1,5 +1,6 @@
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
+import {addHistoryItem} from '@redux';
 import {useDetailPostApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {detailPostInterface, PostTypeKey} from '@types';
@@ -10,13 +11,16 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
+
 interface ChapterDetailInterface {
   chapter: detailPostInterface;
   type: PostTypeKey;
 }
 export const useChapterDetail = () => {
   const router = useRoute();
+  const dispatch = useDispatch();
   const {chapter, type = PostTypeKey.COMIC} =
     router.params as ChapterDetailInterface;
   const [detail, setDetail] = useState<detailPostInterface>(chapter);
@@ -44,6 +48,18 @@ export const useChapterDetail = () => {
       setDetail(data?.data);
     }
   }, [isSuccess, data]);
+
+  useEffect(() => {
+    console.log('Entered ChapterDetailScreen');
+  }, []);
+
+  useEffect(() => {
+    if (chapter) {
+      dispatch(
+        addHistoryItem({...chapter, posttype: type, timestamp: Date.now()}),
+      );
+    }
+  }, [chapter]);
 
   const onRefresh = () => {
     refetch();

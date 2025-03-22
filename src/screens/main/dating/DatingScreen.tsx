@@ -56,7 +56,7 @@ export const DatingScreen = () => {
             <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.FILTER_DATING)} style={styles.btnMessage}>
               <FilterIcon size={Spacing.width28} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CREATE_PROFILE)} style={styles.btnMessage}>
+            <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER)} style={styles.btnMessage}>
               <ProfileIcon />
             </TouchableOpacity>
 

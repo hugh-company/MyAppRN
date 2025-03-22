@@ -5,7 +5,7 @@ import { PostTypeKey } from '@types';
 import { getPrettyNumberString, goToDetail } from '@utils';
 import { t } from 'i18next';
 import React, { forwardRef } from 'react';
-import { FlatList, NativeScrollEvent, NativeSyntheticEvent, TouchableOpacity, View } from 'react-native';
+import { FlatList, NativeScrollEvent, NativeSyntheticEvent, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { createStyles } from './styles';
 export interface AppListMoviesProps {
   data: any[];
@@ -18,10 +18,13 @@ export interface AppListMoviesProps {
   keyExtractor?: ((item: any, index: number) => string) | undefined;
   isLoadMore?: boolean;
   isLoading?: boolean;
+  ListEmptyComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
+  ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
+  contentContainerStyle?: StyleProp<ViewStyle>
 }
 
 const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.ForwardedRef<FlatList<any>> | undefined) => {
-  const { data, scrollEventThrottle, isLoading, type, keyExtractor, numColumns = 2, onScroll, onLoadMore } = props;
+  const { data, contentContainerStyle, scrollEventThrottle, isLoading, type, keyExtractor, numColumns = 2, onScroll, onLoadMore, ListHeaderComponent } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
@@ -70,11 +73,12 @@ const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.Forwarde
       scrollEventThrottle={scrollEventThrottle}
       data={data}
       horizontal={numColumns === 1}
-      contentContainerStyle={styles.container}
+      contentContainerStyle={[styles.container, contentContainerStyle]}
       keyExtractor={keyExtractor || keyExtractorList}
       numColumns={numColumns}
       renderItem={renderItem}
       ListEmptyComponent={ListEmptyComponentBase}
+      ListHeaderComponent={ListHeaderComponent}
       onLoadMore={onLoadMore}
       isLoading={props.isLoadMore}
       columnWrapperStyle={numColumns !== 1 ? styles.columnWrapper : undefined}

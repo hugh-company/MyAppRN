@@ -40,6 +40,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       maxHeight: Spacing.height48 * 3,
       paddingTop: Platform.OS === 'android' ? undefined : Spacing.width16,
       paddingVertical: Spacing.width8,
+      lineHeight: Spacing.width24,
     },
     inputFocused: {
       marginLeft: 0,

@@ -1,8 +1,8 @@
 import { BASE_IMAGE_URL } from '@api';
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
-import { getToken, isComicSaved, isMovieSaved, isNovelSaved, RootState, toggleItemSaved } from '@redux';
-import { likePostApi } from '@services';
+import { addSavedItem, getToken, removeSavedItem } from '@redux';
+import { likePostApi, savePostApi, useSavedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { detailPostInterface, PostTypeKey } from '@types';
 import { onShareInfo, showModalRating } from '@utils';
@@ -28,14 +28,17 @@ const AppInfoContent = ({
   typeGame,
   style, onRefresh, detail, isPlaying,
 }: AppInfoContentProps) => {
+  const { data, isFetching, isLoading, refetch } = useSavedPostApi(type);
+  const saved = React.useMemo(
+    () => (isFetching ? [] : data?.data?.data),
+    [isFetching, data],
+  );
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const [like, setLike] = useState(false);
   const token = useSelector(getToken);
   const dispatch = useDispatch();
-  const isFavorite = useSelector((state: RootState) =>
-    type === PostTypeKey.MOVIES ? isMovieSaved(state, detail?.id) : type === PostTypeKey.COMIC ? isComicSaved(state, detail?.id) : isNovelSaved(state, detail?.id)
-  );
+  const isFavorite = saved?.some((item) => item.id === detail?.id);
   // call api
   const callApiLike = async () => {
     try {
@@ -56,7 +59,29 @@ const AppInfoContent = ({
     onShareInfo(detail?.seo_title || '', message);
   };
   const updateSavedPost = async () => {
-    dispatch(toggleItemSaved({ type: type === PostTypeKey.MOVIES ? 'movie' : type === PostTypeKey.COMIC ? 'comic' : 'novel', item: detail }));
+    try {
+      console.log({ isFavorite });
+      if (isFavorite) {
+        dispatch(removeSavedItem(detail?.id));
+      } else {
+        dispatch(addSavedItem(detail));
+      }
+
+      const res = await savePostApi(type, [detail?.id]);
+      console.log({ res });
+
+      if (res?.status === 'success' && res?.data?.action) {
+        const action = res.data.action[detail?.id];
+        refetch();
+        if (action === 'add') {
+          dispatch(addSavedItem(detail));
+        } else if (action === 'remove') {
+          dispatch(removeSavedItem(detail?.id));
+        }
+      }
+    } catch (error) {
+      console.log({ errorSave: error });
+    }
   };
   //
   const renderItem = (icon: any, title: string, onPress?: () => void) => {

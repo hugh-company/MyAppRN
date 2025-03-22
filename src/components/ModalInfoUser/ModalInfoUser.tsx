@@ -73,7 +73,7 @@ export const ModalInfoUser = (props: ModalUserInfoProps) => {
               </TouchableOpacity>
               <View style={[styles.btnStatus, { flex: 1 }]}>
                 <HeadIcon width={Spacing.width32} height={Spacing.width32} color={themeColors.primary} />
-                <AppText style={styles.txtBtnStatus}>{t('message.single')}</AppText>
+                <AppText style={styles.txtBtnStatus}>{t(`${data?.rel_status}`)}</AppText>
               </View>
             </View>
 

@@ -85,6 +85,12 @@ export const API_ENDPOINTS = {
   GET_IMAGE_CHAT: '/uploads/chats',
   //
   GET_STICKER: '/sticker/index',
+
+  // SEND_FCM_TOKEN
+  SEND_FCM_TOKEN: '/users/fcmtoken',
+  // Save post
+  GET_SAVE_POST: '/posts/action/save/',
+  SAVE_POST: '/posts/action/save/',
 };
 // Key Query
 export const KeyQueryApi = {
@@ -99,4 +105,5 @@ export const KeyQueryApi = {
   FIND_LIST_USER: 'findListUser',
   GET_LIST_EPISODE: 'getListEpisode',
   GET_DETAIL_EPISODE: 'getDetailEpisode',
+  GET_SAVED_POST: 'getSavedPost',
 };

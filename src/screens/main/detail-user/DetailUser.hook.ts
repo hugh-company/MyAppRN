@@ -1,7 +1,7 @@
 import {useLocation} from '@hooks';
 import {goBack, navigate, SCREEN_ROUTE} from '@navigation';
 import {useNavigationState, useRoute} from '@react-navigation/native';
-import {getGameTrendingLocal} from '@redux';
+import {getGameTrendingLocal, getUserInfo} from '@redux';
 import {getDetailUserApi} from '@services';
 import {useTheme} from '@theme';
 import {UserItemInterface} from '@types';
@@ -10,23 +10,24 @@ import {DeviceEventEmitter} from 'react-native';
 import {useSelector} from 'react-redux';
 import {createStyles} from './styles';
 interface DetailUserInterface {
-  user: UserItemInterface;
+  user?: UserItemInterface;
 }
 export const useDetailUser = () => {
   const router = useRoute();
-  const {user} = router.params as DetailUserInterface;
-  const [data, setData] = useState(user);
+  const {user} = (router.params as DetailUserInterface) || {};
+  const profile = useSelector(getUserInfo);
+  const [data, setData] = useState(user || profile);
+  const isMyProfile = data?.id === profile?.id; // Check if the user is the logged-in user
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
   const {getDistanceLocation} = useLocation();
   const games = useSelector(getGameTrendingLocal);
   const navigationState = useNavigationState(state => state);
-
   useEffect(() => {
     callApiDetailUser();
   }, []);
   const callApiDetailUser = async () => {
-    const response = await getDetailUserApi(user.id);
+    const response = await getDetailUserApi(data.id);
     console.log({response});
     setData(response?.data);
   };
@@ -54,6 +55,7 @@ export const useDetailUser = () => {
   };
   return {
     data,
+    isMyProfile, // Expose the check result
     themeColors,
     styles,
     games,

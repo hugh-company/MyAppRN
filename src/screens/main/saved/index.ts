@@ -1,1 +1,1 @@
-export { default as SavedPost } from './SavedPost';
+export * from './SavedPost';

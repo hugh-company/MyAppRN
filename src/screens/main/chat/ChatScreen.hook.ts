@@ -1,6 +1,8 @@
 import {useRoute} from '@react-navigation/native';
 import {
+  fetchDetailThreadSaga,
   fetchMessagesSaga,
+  getDetailThread,
   getJoinedConversation,
   getMessage,
   getToken,
@@ -9,6 +11,7 @@ import {
   loadMoreMessagesSaga,
   markMessageAsReadSaga,
   sendMessageSaga,
+  setDetailThread,
   setLoadMoreMessage,
   updateNewMessage,
 } from '@redux';
@@ -41,28 +44,38 @@ export const useChatScreen = () => {
     useSelector(getMessage);
   const flatListRef = useRef<FlatList>(null);
   const joinThread = useSelector(getJoinedConversation);
+  const detailThread = useSelector(getDetailThread);
+
+  // other user
+  const thread = message || detailThread;
+  const otherUser = thread?.other_user || detailThread?.other_user;
   useEffect(() => {
+    dispatch(setDetailThread(thread));
+    if (thread.thread_id) {
+      dispatch(fetchDetailThreadSaga({thread_id: thread.thread_id}));
+    }
     dispatch(
       fetchMessagesSaga({
-        thread_id: message?.thread_id,
-        recipient_id: message.other_user?.id,
+        thread_id: thread?.thread_id,
+        recipient_id: thread.other_user?.id || thread?.recipient_id,
       }),
     );
 
     return () => {
       dispatch(joinConversationSaga({thread_id: '0'}));
+      dispatch(setDetailThread(null));
     };
   }, []);
   useEffect(() => {
     const interactionHandle = InteractionManager.runAfterInteractions(() => {
       dispatch(
         joinConversationSaga({
-          thread_id: message?.thread_id,
-          recipient_id: message?.other_user?.id,
+          thread_id: thread?.thread_id,
+          recipient_id: thread?.other_user?.id,
         }),
       );
-      if (!message?.isread && message?.thread_id) {
-        dispatch(markMessageAsReadSaga({message_id: message?.last_message.id}));
+      if (!thread?.isread && thread?.thread_id) {
+        dispatch(markMessageAsReadSaga({message_id: thread?.last_message.id}));
       }
     });
 
@@ -87,7 +100,7 @@ export const useChatScreen = () => {
       id: `temp_${new Date().getTime()}`,
       token: token,
 
-      recipient_id: message.other_user?.id,
+      recipient_id: thread.other_user?.id,
       sender_id: userInfo?.id,
       temp_id: `temp_${new Date().getTime()}`,
       content: {
@@ -103,8 +116,8 @@ export const useChatScreen = () => {
         created_at: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       },
     };
-    if (message.thread_id) {
-      params.thread_id = message.thread_id;
+    if (thread.thread_id) {
+      params.thread_id = thread.thread_id;
     }
     if (repliedMessage) {
       params.content.replyto = repliedMessage;
@@ -138,11 +151,11 @@ export const useChatScreen = () => {
   const handleLoadMoreMessages = () => {
     if (is_next && !isLoadMore) {
       dispatch(setLoadMoreMessage());
-      dispatch(loadMoreMessagesSaga({thread_id: message.thread_id, cursor_id}));
+      dispatch(loadMoreMessagesSaga({thread_id: thread.thread_id, cursor_id}));
     }
   };
   const onRefreshMessages = () => {
-    dispatch(fetchMessagesSaga({thread_id: message.thread_id}));
+    dispatch(fetchMessagesSaga({thread_id: thread.thread_id}));
   };
   const handleMarkMessageAsRead = (message_id: number) => {
     dispatch(markMessageAsReadSaga({message_id}));
@@ -174,7 +187,7 @@ export const useChatScreen = () => {
     try {
       const responseImage = await uploadImages({
         images,
-        path: `chats/${message.thread_id || joinThread}`,
+        path: `chats/${thread.thread_id || joinThread}`,
         token,
       });
       return responseImage?.data?.uploaded_files?.map(
@@ -191,7 +204,7 @@ export const useChatScreen = () => {
     handleSend,
     repliedMessage,
     setRepliedMessage,
-    message,
+    thread,
     userInfo,
     handleSwipeToReply,
     handleLoadMoreMessages,
@@ -203,5 +216,6 @@ export const useChatScreen = () => {
     loading,
     is_next,
     isLoadMore,
+    otherUser,
   };
 };

@@ -1,5 +1,5 @@
-import {t} from 'i18next';
-import {z} from 'zod';
+import { t } from 'i18next';
+import { z } from 'zod';
 
 export const createProfileSchema = z.object({
   fullname: z.string().min(1, {message: t('validate.validate_fullname')}),
@@ -12,6 +12,7 @@ export const createProfileSchema = z.object({
     code: z.string().min(1, {message: t('validate.validate_country')}),
     number: z.string().min(1, {message: t('validate.validate_phone_min')}),
   }),
+  rel_status: z.string().optional(),
   galleries: z
     .array(z.string())
     .min(1, {message: t('validate.validate_galleries')}),

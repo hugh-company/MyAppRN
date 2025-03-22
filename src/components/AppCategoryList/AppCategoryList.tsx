@@ -8,7 +8,7 @@ import { createStyles } from './styles';
 
 export interface AppCategoryListProps {
   data: TabInterface[] | undefined;
-  categoryId?: number;
+  categoryId?: number | string;
   onSelectedCategory: (item: TabInterface) => void;
   style?: StyleProp<ViewStyle>;
   listStyle?: StyleProp<ViewStyle>;

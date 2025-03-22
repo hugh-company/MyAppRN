@@ -19,6 +19,7 @@ const SearchMessages = () => {
       <AppSearchInput
         placeholder={t('message.searchMessage')}
         onSearch={searchMessage}
+        onCancel={() => searchMessage('')}
         onClear={() => {
           onClear();
         }} />

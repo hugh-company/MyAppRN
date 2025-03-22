@@ -26,6 +26,7 @@ export enum MessageAction {
   GET_USER_STATUS = 'get_user_status',
   SET_STATUS = 'set_status',
   SET_JOIN_THREAD = 'set_join_thread',
+  GET_THREAD_DETAIL = 'get_thread',
   SEND_NOTICE_READ = 'send_notice_read',
   SET_NOTICE_TYPING = 'set_notice_typing',
   SEND_MATCH_ACTION = 'send_match_action',

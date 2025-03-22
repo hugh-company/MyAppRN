@@ -14,7 +14,6 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
-import { HeaderDrawer } from './HeaderDrawer';
 import { ItemRow } from './ItemRow';
 
 export interface ListDrawerProps {
@@ -203,7 +202,7 @@ export function ListDrawer(props: ListDrawerProps) {
         <FlatList
           data={dataSettings}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={<HeaderDrawer />}
+          // ListHeaderComponent={<HeaderDrawer />}
           style={{ marginTop: top, marginBottom: bottom, marginHorizontal: Spacing.width16 }}
           keyExtractor={(item, index) => `drawer_${index}`}
           renderItem={renderItem}

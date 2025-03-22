@@ -17,3 +17,6 @@ export const getDatingModuleLocal = (state: RootState) =>
 
 export const getSearchModuleLocal = (state: RootState) =>
   state.dataLocalSlide.search;
+
+export const isSavedPost = (state: RootState, postId: number) =>
+  state.dataLocalSlide.savedItems.some(item => item.id === postId);

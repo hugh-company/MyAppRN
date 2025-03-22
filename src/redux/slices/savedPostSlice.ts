@@ -1,17 +1,23 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {ItemListProduct} from '@types';
-import {APP_SLICE} from '../type';
+import { createSlice } from '@reduxjs/toolkit';
+import { ItemListProduct } from '@types';
+import { APP_SLICE } from '../type';
 
 interface initDataInterface {
   movies: ItemListProduct[];
   comics: ItemListProduct[];
   novels: ItemListProduct[];
+
+  histories?: ItemListProduct[];
+  savedPost?: ItemListProduct[];
 }
 
 const initialState: initDataInterface = {
   movies: [],
   comics: [],
   novels: [],
+  //
+  histories: [],
+  savedPost: [],
 };
 
 const savedPostSlice = createSlice({

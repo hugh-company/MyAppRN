@@ -1,33 +1,119 @@
 import {useRoute} from '@react-navigation/native';
-import {RootState} from '@redux/store';
+import {getSavedPostApi, savePostApi, useSavedPostApi} from '@services';
 import {useTheme} from '@theme';
 import {PostTypeKey} from '@types';
-import {useSelector} from 'react-redux';
-import {createStyles} from './styles';
-
-interface savedPostInterface {
-  type: PostTypeKey;
-}
+import React, {useEffect} from 'react';
 
 export const useSavedPost = () => {
-  const {params} = useRoute();
-  const {type, title} = params as savedPostInterface;
+  const [keyPost, setKeyPost] = React.useState(PostTypeKey.MOVIES);
+  const [search, setSearch] = React.useState('');
+  const [isSelect, setIsSelect] = React.useState(false);
+  const [idsSelect, setIdsSelect] = React.useState<number[]>([]);
+
+  const {data, isFetching, isLoading, refetch} = useSavedPostApi(keyPost);
+
+  const saved = React.useMemo(
+    () => (isFetching ? [] : data?.data?.data),
+    [isFetching, data],
+  );
+  const params = useRoute().params as any;
+
   const {themeColors} = useTheme();
-  const styles = createStyles(themeColors);
 
-  const data = useSelector((state: RootState) => {
-    if (type === 'movie') {
-      return state.savedPostSlice.movies;
+  useEffect(() => {
+    if (keyPost) {
+      getListSaved(keyPost);
     }
-    if (type === 'comic') {
-      return state.savedPostSlice.comics;
+  }, [keyPost]);
+  // call api
+  const getListSaved = async (type: PostTypeKey) => {
+    try {
+      const response: any = await getSavedPostApi(type);
+      console.log('ResponseSave', response);
+    } catch (error) {
+      console.log({errorSaved: error});
     }
-    if (type === 'novel') {
-      return state.savedPostSlice.novels;
-    }
-    return [];
-  });
-  console.log({data});
+  };
 
-  return {data, themeColors, styles, type, title};
+  //
+
+  const handleRemoveSavedItem = (id: number) => {
+    // dispatch(removeSavedItem(id));
+    handleSaveApi([id]);
+    setIdsSelect(idsSelect.filter(item => item !== id));
+  };
+
+  const handleClearSaved = () => {
+    if (idsSelect?.length === filteredSaved.length) {
+      // dispatch(clearSavedItems());
+
+      handleSaveApi(saved.map(item => item.id));
+      setIdsSelect([]);
+      setIsSelect(false);
+    } else {
+      // dispatch(removeSavedItems(idsSelect))
+      handleSaveApi(idsSelect);
+
+      const newIds = idsSelect.filter(item => !idsSelect.includes(item));
+      setIdsSelect(newIds);
+    }
+  };
+  const onSearch = (text: string) => {
+    setSearch(text);
+  };
+
+  const filteredSaved = React.useMemo(() => {
+    return saved?.filter(item => {
+      const matchesType = item.posttype === keyPost;
+      const matchesSearch = search
+        ? item.title.toLowerCase().includes(search.toLowerCase())
+        : true;
+      return matchesType && matchesSearch;
+    });
+  }, [saved, keyPost, search]);
+  const onSelectOption = () => {
+    setIsSelect(!isSelect);
+    if (!isSelect) {
+      setIdsSelect([]);
+    }
+  };
+  const handleSelectId = (id: number) => {
+    if (idsSelect.includes(id)) {
+      setIdsSelect(idsSelect.filter(item => item !== id));
+    } else {
+      setIdsSelect([...idsSelect, id]);
+    }
+  };
+  // callApi save ,remove
+
+  const handleSaveApi = async (ids: number[]) => {
+    try {
+      const response: any = await savePostApi(keyPost, ids);
+      console.log({response});
+      refetch();
+    } catch (error) {
+      console.log({errorSave: error});
+    }
+  };
+  return {
+    themeColors,
+
+    params,
+    saved,
+    handleRemoveSavedItem,
+    handleClearSaved,
+    keyPost,
+    setKeyPost,
+    search,
+    setSearch,
+    onSearch,
+    filteredSaved,
+    onSelectOption,
+    isSelect,
+    idsSelect,
+    handleSelectId,
+    setIdsSelect,
+    loading: isLoading || isFetching,
+    refetch,
+  };
 };

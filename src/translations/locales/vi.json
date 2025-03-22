@@ -292,6 +292,7 @@
   "job": "Nghề nghiệp",
   "selectJob": "Chọn nghề nghiệp",
   "apply": "Áp dụng",
+  "notification": "Thông báo",
   "profile": "Trang cá nhân",
   "searchStart": "Bắt đầu tìm kiếm",
   "styleText": "Kiểu chữ",
@@ -303,6 +304,7 @@
   "background": "Màu nền",
   "today": "Hôm nay",
   "done": "Xong",
+  "gigbyte": "Dung lượng",
   "permission": {
     "locationNotFound": "Không tìm thấy vị trí của bạn",
     "locationError": "Không thể lấy vị trí của bạn",
@@ -338,8 +340,7 @@
     "coversation": "Trò chuyện",
     "template_message_chat_game": "Cùng chơi game GAME với tôi nhé ❤️!",
     "minutes_ago": "phút trước",
-    "just_now": "vừa xong",
-    "single": "Đang độc thân"
+    "just_now": "vừa xong"
   },
   "location": {
     "title": "Vị trí của bạn",
@@ -355,5 +356,21 @@
     "withRaring": "Theo đánh giá",
 
     "withLike": "Theo lượt thích"
-  }
+  },
+  "not_found": {
+    "title": "Chưa có dữ liệu",
+    "description": "Nhấn vào nút bên dưới để khám phá các bộ phim, truyện, game khác nhau",
+    "description_history": "Chưa có phim, truyện, game hãy khám phá ngay"
+  },
+  "select": "Chọn",
+  "delete": "Xóa",
+  "unSelect": "Bỏ chọn",
+  "selectRelStatus": "Chọn tình trạng mối quan hệ",
+  "single": "Đang độc thân",
+  "in_relationship": "Đang trong mối quan hệ",
+  "engaged": "Đã đính hôn",
+  "married": "Đã kết hôn",
+  "separated": "Ly thân",
+  "divorced": "Đã ly hôn",
+  "widowed": "Góa"
 }

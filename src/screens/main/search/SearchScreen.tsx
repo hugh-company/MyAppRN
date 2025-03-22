@@ -39,6 +39,7 @@ const SearchScreen = () => {
         placeholder={t('search.search')}
         onSearch={onSearch}
         searchText={search}
+        onCancel={() => onSearch('')}
         onClear={onClear} />
 
       <View style={styles.filter}>

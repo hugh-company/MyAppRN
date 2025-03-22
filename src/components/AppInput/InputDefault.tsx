@@ -47,9 +47,9 @@ const InputDefault = forwardRef<TextInput, InputDefaultProps>((props, ref) => {
       <View style={styles.inputContainer}>
         <TextInput
           ref={ref}
-          onPressIn={() => {
-            setIsFocus(true);
-          }}
+          // onPressIn={() => {
+          //   setIsFocus(true);
+          // }}
           onFocus={() => {
             setIsFocus(true);
           }}

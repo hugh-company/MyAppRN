@@ -1,11 +1,19 @@
-import { useTheme } from '@theme';
-import { useState } from 'react';
-import { createStyles } from './styles';
+import {useRoute} from '@react-navigation/native';
+import {useTheme} from '@theme';
+import {createStyles} from './styles';
+interface notificationInterface {
+  data: {
+    title: string;
+    description: any;
+  };
+}
 
 export const useNotificationDetailScreen = () => {
-  const [data, setData] = useState([]);
-  const { themeColors } = useTheme();
+  const {themeColors} = useTheme();
+  const {params} = useRoute();
+  const {description, title} = params?.data as any;
+
   const styles = createStyles(themeColors);
 
-  return { data, themeColors, styles };
+  return {title, styles, description, themeColors};
 };

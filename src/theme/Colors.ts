@@ -37,6 +37,7 @@ export const lightColors = {
   buttonHover: '#FF1F44',
   active: '#13E398',
   transparent: 'transparent',
+  text50: '#FFFFFF80',
 };
 
 export const darkColors = {
@@ -77,6 +78,7 @@ export const darkColors = {
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
   active: '#13E398',
+  text50: '#FFFFFF80',
 };
 export const ColorsApp = {
   colorMain4: '#D11030',

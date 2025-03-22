@@ -1,4 +1,5 @@
 import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {addHistoryItem} from '@redux';
 import {useDetailPostApi, useListEpisodeApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {
@@ -16,11 +17,14 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
+import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
+
 interface MovieDetailScreenProps {
   movie: detailPostInterface;
 }
 export const useMovieDetailScreen = () => {
+  const dispatch = useDispatch();
   const router = useRoute();
   const {movie} = (router?.params as unknown as MovieDetailScreenProps) || {
     type: undefined,
@@ -46,15 +50,22 @@ export const useMovieDetailScreen = () => {
   const {data, isSuccess, refetch, error, isLoading, isFetching} =
     useDetailPostApi(movieId, PostTypeKey.MOVIES);
 
-  // const {} = useQuery({
-  //   queryKey: ['viewMoves', movie.id],
-  //   queryFn: () => viewsPostApi(movie?.id, PostTypeKey.MOVIES),
-  // });
   useEffect(() => {
     if (movie?.id) {
       viewsPostApi(movie?.id, PostTypeKey.MOVIES);
     }
   }, [movie?.id]);
+  useEffect(() => {
+    if (movie) {
+      dispatch(
+        addHistoryItem({
+          ...movie,
+          posttype: PostTypeKey.MOVIES,
+          timestamp: Date.now(),
+        }),
+      );
+    }
+  }, [movie]);
   useEffect(() => {
     if (isSuccess && data) {
       setDetailMovie({
@@ -153,6 +164,9 @@ export const useMovieDetailScreen = () => {
       });
     }
   };
+  useEffect(() => {
+    console.log('Entered MovieDetailScreen');
+  }, []);
   return {
     themeColors,
     styles,

@@ -4,7 +4,7 @@ import { useTheme } from '@theme';
 import { t } from 'i18next';
 import { debounce } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
-import { TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleProp, TextInput, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createStyles } from './styles';
 export interface AppSearchInputProps {
@@ -12,8 +12,10 @@ export interface AppSearchInputProps {
   placeholder?: string;
   onClear?: () => void;
   searchText?: string; // New prop
+  onCancel?: () => void;
+  style?: StyleProp<ViewStyle>
 }
-const AppSearchInput = ({ onSearch, placeholder, onClear, searchText }: AppSearchInputProps) => {
+const AppSearchInput = ({ onSearch, placeholder, onClear, searchText, style, onCancel }: AppSearchInputProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const refSearch = useRef<TextInput>(null);
@@ -42,10 +44,10 @@ const AppSearchInput = ({ onSearch, placeholder, onClear, searchText }: AppSearc
   }, [searchText]); // Update search state when searchText prop changes
 
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
-      <TouchableOpacity style={styles.btnCancel} onPress={() => goBack()}>
+    <View style={[styles.container, { paddingTop: top }, style]}>
+      {onCancel && <TouchableOpacity style={styles.btnCancel} onPress={() => goBack()}>
         <AppText style={styles.txtCancel}>{t('cancel')}</AppText>
-      </TouchableOpacity>
+      </TouchableOpacity>}
       <AppInputSearch
         value={search}
         ref={refSearch}

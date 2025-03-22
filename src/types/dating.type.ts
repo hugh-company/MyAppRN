@@ -18,6 +18,7 @@ export enum StatusAccount {
 export interface UserItemInterface {
   id: number;
   username: string;
+  rel_status: string;
   email: string;
   fullname: string;
   avatar: string;

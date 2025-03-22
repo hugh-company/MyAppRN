@@ -13,7 +13,7 @@ import Orientation from 'react-native-orientation-locker';
 import { AppRatingMovie, GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
-import { initNotifications } from '@notifications';
+import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
@@ -58,9 +58,13 @@ function App(): React.JSX.Element {
     // getAllApiStartApp(); // Prefetch all dashboard data
 
     // Request notification permissions and get the token
-    initNotifications();
 
-
+    messaging().onNotificationOpenedApp(async (_remoteMessage) => {
+      console.log('Notification opened from background or terminated state:', _remoteMessage);
+      if (_remoteMessage?.data) {
+        // Navigate to the relevant screen or take an action based on the notification
+      }
+    });
   }, []);
 
   LogBox.ignoreLogs([

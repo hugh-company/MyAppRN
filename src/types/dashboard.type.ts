@@ -26,7 +26,7 @@ export interface CategoryItem {
   items: ItemListProduct[];
 }
 export interface TabInterface {
-  id?: number;
+  id?: number | string;
   type?: string;
   label?: string;
   name?: string;
@@ -36,7 +36,9 @@ export interface TabInterface {
   items?: ItemListProduct[];
 }
 //
-
+export interface HistoryInterface extends ItemListProduct {
+  timestamp: number;
+}
 //
 export interface ModuleItemInterface {
   id: number;

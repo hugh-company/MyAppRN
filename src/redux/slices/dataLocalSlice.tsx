@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ModuleItemInterface } from '@types';
+import { HistoryInterface, ModuleItemInterface } from '@types';
 import { APP_SLICE } from '../type';
 
 const initialState = {
@@ -9,7 +9,8 @@ const initialState = {
   games: [],
   dating: [],
   search: [],
-
+  savedItems: [] as HistoryInterface[], // Max 100 items with timestamp
+  history: [] as HistoryInterface[], // Max 50 items with timestamp
   loading: true,
 } as {
   home: ModuleItemInterface[];
@@ -18,8 +19,9 @@ const initialState = {
   games: ModuleItemInterface[];
   dating: ModuleItemInterface[];
   search: ModuleItemInterface[];
+  savedItems: HistoryInterface[];
+  history: HistoryInterface[];
   loading: boolean;
-
 };
 
 const dataLocalSlide = createSlice({
@@ -59,7 +61,51 @@ const dataLocalSlide = createSlice({
         (state as any)[type] = data;
       }
     },
+    addSavedItem: (state, action) => {
 
+      if (state.savedItems.length < 100) {
+        // Remove any existing entry with the same ID
+        state.savedItems = state.savedItems.filter(item => item.id !== action.payload.id);
+        // Add the new entry to the top
+        state.savedItems = [
+          action.payload, // Save the entire detail object
+          ...state.savedItems,
+        ];
+
+      }
+    },
+    removeSavedItem: (state, action) => {
+      state.savedItems = state.savedItems.filter(item => item.id !== action.payload);
+    },
+    clearSavedItems: (state) => {
+      state.savedItems = [];
+    },
+    // remove array of history items
+    removeSavedItems: (state, action) => {
+      state.savedItems = state.savedItems.filter(item => !action.payload.includes(item.id));
+    },
+    addHistoryItem: (state, action) => {
+      // Remove any existing entry with the same ID
+      state.history = state.history.filter(item => item.id !== action.payload.id);
+      // Add the new entry to the top
+      state.history = [
+        action.payload, // Save the entire detail object
+        ...state.history,
+      ];
+      if (state.history.length > 50) {
+        state.history.pop(); // Remove the oldest item if the limit is exceeded
+      }
+    },
+    removeHistoryItem: (state, action) => {
+      state.history = state.history.filter(item => item.id !== action.payload);
+    },
+    // remove array of history items
+    removeHistoryItems: (state, action) => {
+      state.history = state.history.filter(item => !action.payload.includes(item.id));
+    },
+    clearHistory: (state) => {
+      state.history = [];
+    },
   },
 });
 
@@ -72,7 +118,12 @@ export const {
   setSearch,
   setLoadingDashboard,
   refreshData,
-
+  addSavedItem,
+  removeSavedItem,
+  clearSavedItems,
+  addHistoryItem,
+  removeHistoryItem,
+  clearHistory, removeHistoryItems, removeSavedItems,
 } = dataLocalSlide.actions;
 
 export const fetchHomeData = () => ({ type: 'FETCH_HOME_DATA' });

@@ -25,6 +25,16 @@ export const CreateProfileScreen = () => {
     },
   ];
 
+  const relStatus = [
+    { label: t('single'), value: 'single' },
+    { label: t('in_relationship'), value: 'in_relationship' },
+    { label: t('engaged'), value: 'engaged' },
+    { label: t('married'), value: 'married' },
+    { label: t('separated'), value: 'separated' },
+    { label: t('divorced'), value: 'divorced' },
+    { label: t('widowed'), value: 'widowed' },
+  ];
+
   return (
     <View style={styles.container}>
       <AppHeader />
@@ -68,6 +78,12 @@ export const CreateProfileScreen = () => {
           name={'gender'}
           data={gender}
           placeholder={t('selectGender')}
+        />
+        <AppInputDropdown
+          control={control}
+          name={'rel_status'}
+          data={relStatus}
+          placeholder={t('selectRelStatus')}
         />
 
         <AppInput

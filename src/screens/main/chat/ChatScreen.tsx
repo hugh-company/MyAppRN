@@ -11,9 +11,9 @@ import { ItemChat } from './components/ItemChat';
 // KeyboardController.setInputMode(1);
 export const ChatScreen = () => {
   const { messages, handleSwipeToReply, repliedMessage,
-    setRepliedMessage, themeColors, flatListRef, message,
+    setRepliedMessage, themeColors, flatListRef, thread,
     styles, handleSend, userInfo, scrollToRepliedMessage, loading,
-    handleLoadMoreMessages, is_next, isLoadMore } = useChatScreen();
+    handleLoadMoreMessages, is_next, isLoadMore, otherUser } = useChatScreen();
   const [showScrollToTop, setShowScrollToTop] = React.useState(false);
 
   const renderMessage = ({ item }: { item: MessageItemInterface }) => {
@@ -23,7 +23,7 @@ export const ChatScreen = () => {
         isMe={item.recipient_id !== userInfo?.id}
         userSent={userInfo}
         onGoToRepliedMessage={(vale) => scrollToRepliedMessage(vale)}
-        userReceived={message.other_user}
+        userReceived={otherUser}
         onSwipeToReply={handleSwipeToReply}
       />
     );
@@ -43,18 +43,18 @@ export const ChatScreen = () => {
       <ImageBackground source={BackgroundChat} style={styles.background} >
         <AppHeader
           style={[styles.header, { backgroundColor: themeColors.primary }]}
-          title={message?.other_user?.fullname || ''}
+          title={otherUser?.fullname || ''}
           titleStyle={styles.title}
           rightComponent={
             <TouchableOpacity
               onPress={() => navigate(SCREEN_ROUTE.DETAIL_USER, {
                 user: {
-                  ...message?.other_user,
+                  ...otherUser,
                 },
               })} style={styles.iconProfile}>
 
-              <AppImage uri={message?.other_user?.avatar} style={styles.avatar} />
-              {message.other_user.online && <View style={styles.status} />}
+              <AppImage uri={otherUser?.avatar} style={styles.avatar} />
+              {thread.other_user.online && <View style={styles.status} />}
             </TouchableOpacity>}
         />
         <KeyboardAvoidingView
@@ -75,7 +75,7 @@ export const ChatScreen = () => {
             contentContainerStyle={styles.chatContainer}
             inverted
             onEndReached={() => {
-              if (loading || !message?.thread_id || !is_next) { return; }
+              if (loading || !thread?.thread_id || !is_next) { return; }
               handleLoadMoreMessages();
             }}
             ItemSeparatorComponent={() => <View style={{ height: Spacing.width16 }} />} // Add spacing between items
@@ -100,7 +100,7 @@ export const ChatScreen = () => {
               id: userInfo?.id || '',
               avatar: userInfo?.avatar || '',
             }}
-            userReceived={message.other_user}
+            userReceived={thread.other_user}
             onClearRepliedMessage={() => setRepliedMessage(null)}
           />}
         </KeyboardAvoidingView>

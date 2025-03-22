@@ -46,8 +46,6 @@ class AxiosClass {
 
   interceptorRequests = async (config: any): Promise<any> => {
     const token = await store.getState().accountSlice.token;
-    console.log({token});
-
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -63,8 +61,6 @@ class AxiosClass {
   };
 
   setToken = async (token: string) => {
-    console.log('setToken Api', token);
-
     this.token = `Bearer ${token}`;
     this.api.defaults.headers.common.Authorization = `Bearer ${token}`;
     storage.set('token', this.token); // Save token to storage

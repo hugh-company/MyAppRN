@@ -35,10 +35,7 @@ export const useHomeScreen = () => {
   const {} = useSearchDashboard();
   useEffect(() => {
     if (data && isSuccess) {
-      console.log('Data', data);
       setBaseURLApi();
-
-      // dispatch()
     }
   }, [data, isSuccess]);
   useEffect(() => {
@@ -48,7 +45,6 @@ export const useHomeScreen = () => {
   const getSticker = async () => {
     try {
       const response: any = await getStickerApi();
-      console.log('Response', response);
       dispatch(setStickers(response.data?.data));
     } catch (error) {
       console.log({error});
@@ -57,7 +53,6 @@ export const useHomeScreen = () => {
   const getGameTrending = async () => {
     try {
       const response: any = await getListGamesTrendingApi();
-      console.log('Response', response);
       dispatch(setGamesTrending(response.data?.data));
     } catch (error) {
       console.log({error});

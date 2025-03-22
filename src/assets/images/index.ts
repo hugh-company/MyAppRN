@@ -11,6 +11,7 @@ const ImagePackage = require('./ImagePackage.png');
 const BtnDislike = require('./dislike.png');
 const BackgroundChat = require('./backgroundChat.png');
 const ZaloIcon = require('./zaloIcon.png');
+const NotFoundPost = require('./notfoundPost.png');
 export {
   Background,
   BackgroundChat,
@@ -24,5 +25,6 @@ export {
   NoAvatarImage,
   NoImage,
   NoSearchImage,
+  NotFoundPost,
   ZaloIcon,
 };
