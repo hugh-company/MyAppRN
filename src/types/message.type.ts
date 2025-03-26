@@ -35,6 +35,9 @@ export enum MessageAction {
   USER_ONLINE = 'get_online_list',
   NOITE_ONLINE = 'notice_online',
   NOTICE_OFFLINE = 'notice_offline',
+
+  //
+  NOTIFICATION = 'notification',
 }
 export interface ChatInterface {
   id: number;

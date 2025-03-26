@@ -413,6 +413,7 @@ const chatSlice = createSlice({
     setDetailThread(state, action) {
       state.threadDetail = action.payload;
     },
+    //
   },
 });
 

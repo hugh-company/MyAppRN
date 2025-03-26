@@ -26,9 +26,10 @@ export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieP
   }, []);
 
 
+
   const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
     <TouchableOpacity activeOpacity={1} onPress={() => navigateBanner(item)} style={styles.banner}>
-      <AppImage uri={item.banner.path} style={styles.image} />
+      <AppImage uri={item?.banner?.path || item?.feature?.path} style={styles.image} />
       <LinearGradient
         colors={['rgba(0, 0, 0, 0)', 'black']}
         style={styles.gradient}

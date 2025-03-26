@@ -21,9 +21,9 @@ import {
   userOffline,
   userOnline,
 } from '@redux';
-import { PayloadAction } from '@reduxjs/toolkit';
-import { MessageAction } from '@types';
-import { eventChannel, EventChannel } from 'redux-saga';
+import {PayloadAction} from '@reduxjs/toolkit';
+import {MessageAction} from '@types';
+import {eventChannel, EventChannel} from 'redux-saga';
 import {
   all,
   call,

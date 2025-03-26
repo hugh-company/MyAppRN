@@ -1,23 +1,34 @@
 import {useRoute} from '@react-navigation/native';
+import {
+  clearSavedItems,
+  getToken,
+  removeSavedItem,
+  removeSavedItems,
+  RootState,
+} from '@redux';
 import {getSavedPostApi, savePostApi, useSavedPostApi} from '@services';
 import {useTheme} from '@theme';
 import {PostTypeKey} from '@types';
 import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 export const useSavedPost = () => {
   const [keyPost, setKeyPost] = React.useState(PostTypeKey.MOVIES);
   const [search, setSearch] = React.useState('');
   const [isSelect, setIsSelect] = React.useState(false);
   const [idsSelect, setIdsSelect] = React.useState<number[]>([]);
-
+  const savedLocal = useSelector(
+    (state: RootState) => state.dataLocalSlide.savedItems,
+  );
+  const token = useSelector(getToken);
   const {data, isFetching, isLoading, refetch} = useSavedPostApi(keyPost);
 
   const saved = React.useMemo(
-    () => (isFetching ? [] : data?.data?.data),
-    [isFetching, data],
+    () => (token ? savedLocal : isFetching ? [] : data?.data?.data),
+    [isFetching, token, data, savedLocal],
   );
   const params = useRoute().params as any;
-
+  const dispatch = useDispatch();
   const {themeColors} = useTheme();
 
   useEffect(() => {
@@ -38,21 +49,31 @@ export const useSavedPost = () => {
   //
 
   const handleRemoveSavedItem = (id: number) => {
-    // dispatch(removeSavedItem(id));
-    handleSaveApi([id]);
+    if (!token) {
+      dispatch(removeSavedItem(id));
+    } else {
+      handleSaveApi([id]);
+    }
+
     setIdsSelect(idsSelect.filter(item => item !== id));
   };
 
   const handleClearSaved = () => {
     if (idsSelect?.length === filteredSaved.length) {
-      // dispatch(clearSavedItems());
+      if (!token) {
+        dispatch(clearSavedItems());
+      } else {
+        handleSaveApi(saved.map(item => item.id));
+      }
 
-      handleSaveApi(saved.map(item => item.id));
       setIdsSelect([]);
       setIsSelect(false);
     } else {
-      // dispatch(removeSavedItems(idsSelect))
-      handleSaveApi(idsSelect);
+      if (!token) {
+        dispatch(removeSavedItems(idsSelect));
+      } else {
+        handleSaveApi(idsSelect);
+      }
 
       const newIds = idsSelect.filter(item => !idsSelect.includes(item));
       setIdsSelect(newIds);
@@ -87,12 +108,15 @@ export const useSavedPost = () => {
   // callApi save ,remove
 
   const handleSaveApi = async (ids: number[]) => {
-    try {
-      const response: any = await savePostApi(keyPost, ids);
-      console.log({response});
-      refetch();
-    } catch (error) {
-      console.log({errorSave: error});
+    if (token) {
+      try {
+        const response: any = await savePostApi(keyPost, ids);
+        console.log({response});
+        refetch();
+      } catch (error) {
+        console.log({errorSave: error});
+      }
+    } else {
     }
   };
   return {

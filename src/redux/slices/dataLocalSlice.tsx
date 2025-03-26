@@ -72,6 +72,8 @@ const dataLocalSlide = createSlice({
           ...state.savedItems,
         ];
 
+      } {
+        state.savedItems.pop();
       }
     },
     removeSavedItem: (state, action) => {

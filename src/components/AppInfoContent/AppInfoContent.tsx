@@ -1,7 +1,7 @@
 import { BASE_IMAGE_URL } from '@api';
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
-import { addSavedItem, getToken, removeSavedItem } from '@redux';
+import { addSavedItem, getToken, removeSavedItem, RootState } from '@redux';
 import { likePostApi, savePostApi, useSavedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { detailPostInterface, PostTypeKey } from '@types';
@@ -37,8 +37,11 @@ const AppInfoContent = ({
   const styles = createStyles(themeColors);
   const [like, setLike] = useState(false);
   const token = useSelector(getToken);
+  const savedLocal = useSelector((state: RootState) => state.dataLocalSlide.savedItems);
   const dispatch = useDispatch();
-  const isFavorite = saved?.some((item) => item.id === detail?.id);
+  const isFavorite = (token ? saved : savedLocal)?.some((item) => item.id === detail?.id);
+  console.log({ isFavorite });
+
   // call api
   const callApiLike = async () => {
     try {
@@ -66,19 +69,21 @@ const AppInfoContent = ({
       } else {
         dispatch(addSavedItem(detail));
       }
+      if (token) {
+        const res = await savePostApi(type, [detail?.id]);
+        console.log({ res });
 
-      const res = await savePostApi(type, [detail?.id]);
-      console.log({ res });
-
-      if (res?.status === 'success' && res?.data?.action) {
-        const action = res.data.action[detail?.id];
-        refetch();
-        if (action === 'add') {
-          dispatch(addSavedItem(detail));
-        } else if (action === 'remove') {
-          dispatch(removeSavedItem(detail?.id));
+        if (res?.status === 'success' && res?.data?.action) {
+          const action = res.data.action[detail?.id];
+          refetch();
+          if (action === 'add') {
+            dispatch(addSavedItem(detail));
+          } else if (action === 'remove') {
+            dispatch(removeSavedItem(detail?.id));
+          }
         }
       }
+
     } catch (error) {
       console.log({ errorSave: error });
     }
@@ -108,7 +113,7 @@ const AppInfoContent = ({
             {token && renderItem(<StarIcon color="#EDEDED" />, t('rating'), () => {
               showModalRating(true, detail?.id, type);
             })}
-            {token && renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t(isFavorite ? 'saved' : 'saveMovie'), () => {
+            {renderItem(isFavorite ? <SavedIcon color="#0AE80D" /> : <AddIcon size={Spacing.width16} />, t(isFavorite ? 'unFollow' : 'follow'), () => {
               updateSavedPost();
             })}
             {renderItem(<SendIcon />, t('share'), () => onShare())}

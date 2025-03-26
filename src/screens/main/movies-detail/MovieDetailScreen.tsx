@@ -89,7 +89,6 @@ export const MovieDetailScreen = () => {
                 idPost={item?.id}
                 onPlayVideo={() => setIsPlaying(true)}
                 episodes={listChapter}
-
               />
             )}
             <AppInfoContent
