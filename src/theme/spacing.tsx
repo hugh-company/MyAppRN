@@ -1,12 +1,29 @@
 import { Dimensions } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
-const DW = 375;
-const DH = 812;
-const vh = height / DH;
-const vw = width / DW;
-export const sizeWidth = (number: number) => number * (width < height ? vw : vh);
-export const sizeHeight = (number: number) => number * (width > height ? vw : vh);
+const isTablet = Math.min(width, height) >= 600;
+const DW_PHONE = 375;
+const DH_PHONE = 812;
+const DW_TABLET = 768;
+const DH_TABLET = 1024;
+const phoneVh = height / DH_PHONE;
+const phoneVw = width / DW_PHONE;
+const tabletVh = height / DH_TABLET;
+const tabletVw = width / DW_TABLET;
+
+export const sizeWidth = (number: number) => {
+  if (isTablet) {
+    return number * (width < height ? tabletVw : tabletVh);
+  }
+  return number * (width < height ? phoneVw : phoneVh);
+};
+
+export const sizeHeight = (number: number) => {
+  if (isTablet) {
+    return number * (width > height ? tabletVw : tabletVh);
+  }
+  return number * (width > height ? phoneVw : phoneVh);
+};
 
 export const Spacing = {
   width1: sizeWidth(1),

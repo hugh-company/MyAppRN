@@ -20,6 +20,7 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
 
   const navigation = useNavigation();
 
+  console.log({ top });
 
   return (
     <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: Spacing.height92 }, styleHeader]}>
@@ -59,6 +60,7 @@ const createStyles = (themeColors: ThemeColors) =>
       right: 0,
       zIndex: 1,
       height: Spacing.height50,
+
     },
     btnMenu: {
       width: Spacing.width32,

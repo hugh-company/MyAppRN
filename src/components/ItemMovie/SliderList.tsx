@@ -21,32 +21,26 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const flatListRef = useRef<FlatList>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 50, minimumViewTime: 300 });
   const scrollX = useSharedValue(0);
-
+  const filteredData = useMemo(() => {
+    return data.filter((item) => (item?.items || []).length > 0);
+  }, [data]);
   const onScroll = useAnimatedScrollHandler((event) => {
-    scrollX.value = data?.length > 1 ? event.contentOffset.x : 0;
+    scrollX.value = filteredData?.length > 1 ? event.contentOffset.x : 0;
   });
 
-  const onViewRef = useCallback(({ viewableItems }: any) => {
-    if (viewableItems.length > 0 && flatListRef) {
-      const index = viewableItems[0].index;
-      setCurrentIndex(index);
-      flatListRef.current?.scrollToIndex({
-        index,
-        animated: true,
-        viewPosition: 0.5, // Center the item
-      });
-    }
+  const handleMomentumScrollEnd = useCallback((event: any) => {
+    const offset = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offset / widthItem);
+    setCurrentIndex(index);
   }, []);
 
-
   const renderItem = useCallback(({ item }: { item: TabInterface }) => {
-    if (item?.items.length === 0) { return null; }
+    if ((item?.items || []).length === 0) { return null; }
     return (
       <View style={styles.itemType}>
         <View style={styles.listMovie}>
-          {item?.items.map((movieItem, index) => (
+          {(item?.items || []).map((movieItem, index) => (
             <TouchableOpacity
               key={movieItem.id.toString()}
               onPress={() => {
@@ -75,6 +69,9 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
     );
   }, [styles, button, title, type]);
 
+  if (!filteredData || filteredData.length === 0) {
+    return null;
+  }
   return (
     <View style={[styles.container, style]}>
       <View style={styles.header}>
@@ -90,15 +87,13 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
       </View>
       <Animated.FlatList
         ref={flatListRef}
-        data={data}
+        data={filteredData}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.containerStyle}
         renderItem={renderItem}
         keyExtractor={(item, index) => `list_item_slider_${index}`}
         // initialNumToRender={3}
-        onViewableItemsChanged={onViewRef}
-        viewabilityConfig={viewConfigRef.current}
         getItemLayout={(data, index) => ({
           length: widthItem,
           offset: widthItem * index,
@@ -106,11 +101,13 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
         })}
         initialScrollIndex={currentIndex}
         onScroll={onScroll}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
+        decelerationRate="fast"
         scrollEventThrottle={16}
       />
-      {data.length > 1 && (
+      {filteredData.length > 1 && (
         <View style={styles.dotsContainer}>
-          {data.map((_, index) => (
+          {filteredData.map((_, index) => (
             <Animated.View
               key={index}
               style={[

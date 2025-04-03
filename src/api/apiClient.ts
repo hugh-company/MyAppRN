@@ -61,6 +61,8 @@ export const getRequestBaseUrlOther = async <T>(
     '{language}',
     language,
   );
+  console.log({response});
+
   return response.data;
 };
 export const getRequest = async <T>(

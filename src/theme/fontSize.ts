@@ -1,8 +1,9 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
 
-const {width: SCREEN_WIDTH} = Dimensions.get('window');
-
-const scale = SCREEN_WIDTH / 375;
+const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+const isTablet = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) >= 600;
+const baseWidth = isTablet ? 768 : 375;
+const scale = SCREEN_WIDTH / baseWidth;
 
 export function normalize(size: number) {
   const newSize = size * scale;

@@ -18,6 +18,10 @@ export function CategoryListItem(props: CategoryListItemProps) {
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
   const [categoryIdSelected, setCategoryIdSelected] = React.useState(data[0]?.id);
   const refFlatList = React.useRef<FlatList<ItemListProduct>>(null);
+  const selectedCategory = useMemo(
+    () => data.find((item) => item.id === categoryIdSelected),
+    [data, categoryIdSelected]
+  );
   useEffect(() => {
 
     if (refFlatList.current) {
@@ -51,20 +55,20 @@ export function CategoryListItem(props: CategoryListItemProps) {
         onSelectedCategory={onSelectedCategory} />
       <AppFlatListAnimated
         ref={refFlatList}
-        data={data.find((item) => item.id === categoryIdSelected)?.items || []}
+        data={selectedCategory?.items || []}
         horizontal keyExtractor={(item) => `item_movie_${item.id}`}
         contentContainerStyle={styles.contentContainerStyle}
-        ListFooterComponent={data?.length > 0 ? <AppButtonViewMore
-          type={type}
-          onPress={() => {
-            const dataCategory = data?.find((item) => item.id === categoryIdSelected);
-            goToListView({
-              ...dataCategory?.button,
-              keyCategory: dataCategory?.slug,
-              label: '',
-            });
-
-          }} /> : null}
+        ListFooterComponent={(selectedCategory?.items?.length || 0) > 0 ?
+          <AppButtonViewMore
+            type={type}
+            onPress={() => {
+              goToListView({
+                ...selectedCategory?.button,
+                keyCategory: selectedCategory?.slug,
+                label: '',
+              });
+            }} />
+          : null}
         renderItem={renderItem} />
     </View>
   );
