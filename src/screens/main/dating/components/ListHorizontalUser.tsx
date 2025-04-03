@@ -128,16 +128,10 @@ const createStyles = (themeColors: ThemeColors) =>
       borderColor: themeColors.whiteColor,
     },
     viewImageNearYou: {
-      shadowColor: themeColors.primary,
-      // backgroundColor: themeColors.primary,
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.27,
-      shadowRadius: 0.65,
+
       borderRadius: Spacing.width56,
-      elevation: 1,
+
+
       //
 
     },

@@ -414,10 +414,24 @@ const chatSlice = createSlice({
       state.threadDetail = action.payload;
     },
     //
+    removeMessageByTempId(state, action) {
+      state.message.messages = state.message.messages.filter(
+        message => message.id !== action.payload.temp_id,
+      );
+      // remove message from conversation
+      const indexConversation = state.conversation.conversations.findIndex(
+        item => item.thread_id === action.payload.thread_id,
+      );
+      if (indexConversation >= 0) {
+        state.conversation.conversations[indexConversation].last_message =
+          state.message.messages[0];
+      }
+    },
   },
 });
 
 export const {
+  removeMessageByTempId,
   setConversation,
   setJoinedConversation,
   setConversationLoading,

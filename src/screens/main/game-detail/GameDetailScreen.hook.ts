@@ -22,12 +22,21 @@ export const useGameDetailScreen = () => {
     game?.id,
     PostTypeKey.GAMES,
   );
+  console.log({data}, {error});
+
   useEffect(() => {
     if (game?.id) {
-      viewsPostApi(game?.id, PostTypeKey.GAMES);
+      callApiView();
     }
   }, [game?.id]);
-
+  const callApiView = async () => {
+    try {
+      const res = await viewsPostApi(game?.id, PostTypeKey.GAMES);
+      console.log({res});
+    } catch (error) {
+      console.log('error', error);
+    }
+  };
   useEffect(() => {
     if (game) {
       dispatch(

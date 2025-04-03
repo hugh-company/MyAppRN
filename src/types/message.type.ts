@@ -38,6 +38,9 @@ export enum MessageAction {
 
   //
   NOTIFICATION = 'notification',
+  //reason action
+  BLOCK_SPAM_MESSAGE = 'block_spam_message',
+  DISCONNECT = 'disconnect',
 }
 export interface ChatInterface {
   id: number;

@@ -319,6 +319,7 @@
     "viewMonth": "Views this month",
     "viewAll": "All",
     "withRaring": "By rating",
-    "withLike": "By likes"
+    "withLike": "By likes",
+    "sendMessageError": "Send message failed"
   }
 }

@@ -1,5 +1,5 @@
-import { t } from 'i18next';
-import { z } from 'zod';
+import {t} from 'i18next';
+import {z} from 'zod';
 
 export const createProfileSchema = z.object({
   fullname: z.string().min(1, {message: t('validate.validate_fullname')}),
@@ -17,5 +17,8 @@ export const createProfileSchema = z.object({
     .array(z.string())
     .min(1, {message: t('validate.validate_galleries')}),
   job: z.string().optional(),
+  zalo: z.string().optional(),
+  facebook: z.string().optional(),
+  instagram: z.string().optional(),
 });
 export type createProfileFormData = z.infer<typeof createProfileSchema>;

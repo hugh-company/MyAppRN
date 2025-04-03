@@ -67,6 +67,7 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       <TouchableWithoutFeedback onPress={handlePress}>
         <View style={[styles.container, style, isFullScreenVisible && { ...styles.fullScreen }]}>
           <Video
+            // key={`${uri}-${valueChapter}-${isFullScreenVisible}`}
             source={{ uri: quality ? quality : uri }}
             controls={false}
             ref={videoRef}

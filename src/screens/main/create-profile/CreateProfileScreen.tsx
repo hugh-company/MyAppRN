@@ -1,4 +1,4 @@
-import { AppButton, AppDate, AppHeader, AppInput, AppInputDropdown, AppInputPhone, AppText, UploadImage, UploadListImage } from '@components';
+import { AppButton, AppDate, AppHeader, AppInput, AppInputDropdown, AppInputPhone, AppInputSocial, AppText, UploadImage, UploadListImage } from '@components';
 import { genderInterface } from '@types';
 import { t } from 'i18next';
 import React from 'react';
@@ -91,6 +91,24 @@ export const CreateProfileScreen = () => {
           name="about_me"
           placeholder={t('about_me')}
           error={errors.about_me?.message} />
+        <AppInputSocial
+          control={control}
+          name="zalo"
+          placeholder={t('zalo')}
+          error={errors.zalo?.message}
+        />
+        <AppInputSocial
+          control={control}
+          name="facebook"
+          placeholder={t('facebook')}
+          error={errors.facebook?.message}
+        />
+        <AppInputSocial
+          control={control}
+          name="instagram"
+          placeholder={t('instagram')}
+          error={errors.instagram?.message}
+        />
         <AppInputDropdown
           control={control}
           name={'job'}

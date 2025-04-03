@@ -5,6 +5,7 @@ import { getPrettyNumberString, goToDetail, goToListView } from '@utils';
 import { t } from 'i18next';
 import React, { JSX, useCallback, useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { AppButtonViewMore } from '../AppButtonViewMore';
 import { AppImage } from '../AppImage';
 import { AppText } from '../AppText';
 interface HorizontalListProps {
@@ -22,7 +23,7 @@ interface HorizontalListProps {
 
 export const HorizontalList: React.FC<HorizontalListProps> = ({
   title,
-  data,
+  data = [],
   style,
   titleViewMore = t('home.viewMore'),
   onViewMore, type = PostTypeKey.GAMES,
@@ -88,6 +89,16 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
         contentContainerStyle={styles.containerStyle}
         keyExtractor={(item) => `child_horizontal_${item.slug}${item?.id?.toString()}`}
         renderItem={renderItem || renderItemList}
+        ListFooterComponent={data?.length > 0 ? <AppButtonViewMore
+          type={type}
+          size="small"
+          onPress={() => {
+            onViewMore ? onViewMore?.() : goToListView({
+              ...button,
+              label: title,
+            });
+
+          }} /> : null}
       />
 
     </View>

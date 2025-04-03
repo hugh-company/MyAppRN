@@ -1,14 +1,13 @@
-import { AppListMovies, LoadingList, ModalFilter } from '@components';
+import { AppListMovies, LoadingList } from '@components';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { memo, useRef } from 'react';
+import React, { useRef } from 'react';
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useViewListScreen } from './ViewListScreen.hook';
 import { FilterListModal } from './components/FilterListModal';
 import { HeaderListScreen } from './components/HeaderListScreen';
-const MemoizedModalFilter = memo(ModalFilter);
 const ViewListScreen = () => {
   const { data, refFlatList, styles, type, slugCategory, onSelectedCategory,
     categoriesList, loading, list,

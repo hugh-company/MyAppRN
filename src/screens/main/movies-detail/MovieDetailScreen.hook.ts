@@ -75,6 +75,7 @@ export const useMovieDetailScreen = () => {
     }
     return () => {
       setDetailMovie(undefined);
+      Orientation.lockToPortrait();
       setIsFullScreenVisible(false);
     };
   }, [isSuccess, data]);
@@ -122,6 +123,8 @@ export const useMovieDetailScreen = () => {
   const onNavigateDetail = (post: detailPostInterface) => {
     setMovieId(post.id);
     setDetailMovie(post);
+    setIsFullScreenVisible(false);
+
     setIsPlaying(false);
     refetch();
   };

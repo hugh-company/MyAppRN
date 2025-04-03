@@ -22,6 +22,7 @@ export * from './AppInputDate';
 export * from './AppInputDropdown';
 export * from './AppInputPhone';
 export * from './AppInputSearch';
+export * from './AppInputSocial';
 export * from './AppLessMore';
 export * from './AppListChat';
 export * from './AppListDashboard';

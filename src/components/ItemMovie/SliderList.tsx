@@ -54,7 +54,7 @@ const SliderList = ({ style, title, data, onViewMore, type, button }: Props) => 
               }}
               style={[styles.btnMovie, index % 2 === 0 && { marginRight: Spacing.width16 }]}
             >
-              <AppImage uri={movieItem?.feature?.square} style={styles.image} />
+              <AppImage uri={movieItem?.feature?.square || movieItem?.feature?.path} style={styles.image} />
             </TouchableOpacity>
           ))}
         </View>

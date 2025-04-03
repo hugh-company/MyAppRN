@@ -17,7 +17,9 @@ export interface paramsUpdateProfile {
   gender: genderInterface;
   rel_status?: string;
   galleries: string[];
-
+  zalo?: string;
+  facebook?: string;
+  instagram?: string;
 }
 
 
@@ -66,11 +68,17 @@ export const createFormData = (profileData: {
   job?: string;
   display?: string;
   rel_status?: string;
+  zalo?: string;
+  facebook?: string;
+  instagram?: string;
 }) => {
   const data = new FormData();
   data.append('fullname', profileData.fullname);
   data.append('phone', profileData.phone);
   data.append('rel_status', profileData.rel_status);
+  data.append('zalo', profileData.zalo);
+  data.append('facebook', profileData.facebook);
+  data.append('instagram', profileData.instagram);
   if (profileData.avatar.startsWith('file://')) {
     try {
       const fileType = profileData.avatar.split('.').pop();

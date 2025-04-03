@@ -24,6 +24,7 @@ export interface UserInterface {
     latitude: number;
     longitude: number;
   };
+
   about_me?: string;
   display?: number; // Considered as a flag or visibility indicator
   coin?: number | null;
@@ -33,6 +34,11 @@ export interface UserInterface {
     job: string;
     favorites: string[];
     galleries: string[];
+    social: {
+      facebook: string;
+      zalo: string;
+      instagram: string;
+    };
   };
 }
 export interface UserFindInterface {

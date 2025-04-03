@@ -9,26 +9,16 @@ import LinearGradient from 'react-native-linear-gradient';
 import Animated, { useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 interface HeaderGameProps {
-  name: string;
-  logo?: string;
-  likes?: number;
-  poster?: string;
+  detail: any;
   children?: React.ReactNode;
   onPlay?: () => void;
   onRefresh?: () => void;
   refreshing?: boolean;
 }
 
-export const HeaderGame = ({
-  name,
-  likes = 0,
-  poster = '',
-  logo = '',
-  children,
-  onPlay,
-  onRefresh,
-  refreshing = false }: HeaderGameProps) => {
-  console.log({ logo });
+export const HeaderGame = ({ detail, children, onPlay, onRefresh, refreshing = false }: HeaderGameProps) => {
+  // Extract values from detail
+  const { title, feature, like_count, banner } = detail || {};
 
   const { themeColors } = useTheme();
   const scrollY = useSharedValue(0);
@@ -70,7 +60,7 @@ export const HeaderGame = ({
 
   return (
     <>
-      <Animated.ScrollView
+      {detail && <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
         refreshControl={
@@ -87,12 +77,9 @@ export const HeaderGame = ({
         style={{ backgroundColor: themeColors.background }}
       >
         <Animated.View style={[styles.container]}>
-          <AppImage resizeMode={'stretch'} uri={poster} style={styles.banner} />
+          <AppImage resizeMode={'stretch'} uri={banner?.path} style={styles.banner} />
           <View style={styles.control}>
-            <TouchableOpacity onPress={() => {
-              onPlay?.();
-
-            }} style={styles.btnPlay}>
+            <TouchableOpacity onPress={onPlay} style={styles.btnPlay}>
               <AppText style={styles.txtPlay}>{t('games.playGame')}</AppText>
             </TouchableOpacity>
           </View>
@@ -109,14 +96,15 @@ export const HeaderGame = ({
                 {/* info game */}
                 <View style={styles.info}>
                   <View style={styles.viewLogo}>
-                    <AppImage uri={logo} style={styles.logo} />
-
+                    <AppImage uri={feature?.path} style={styles.logo} />
                   </View>
                   <View style={styles.viewName}>
-                    <AppText numberOfLines={3} style={styles.txtName}>{name}</AppText>
-                    {renderItem(<LikeActiveIcon color={themeColors.star} />, `${getPrettyNumberString(likes || 0, '1.234k')} ${t('home.likes')}`)}
+                    <AppText numberOfLines={3} style={styles.txtName}>{title}</AppText>
+                    {renderItem(
+                      <LikeActiveIcon color={themeColors.star} />,
+                      `${getPrettyNumberString(like_count || 0, '1.234k')} ${t('home.likes')}`
+                    )}
                   </View>
-
                 </View>
               </View>
             </LinearGradient>
@@ -124,11 +112,8 @@ export const HeaderGame = ({
         </Animated.View>
         {children}
         <View style={styles.bottom} />
-      </Animated.ScrollView>
-      <AppHeader style={[styles.header, backgroundStyle]}
-
-      // rightComponent={<TouchableOpacity style={styles.btnDots}><DotsIcon /></TouchableOpacity>}
-      />
+      </Animated.ScrollView>}
+      <AppHeader style={[styles.header, backgroundStyle]} />
     </>
   );
 };

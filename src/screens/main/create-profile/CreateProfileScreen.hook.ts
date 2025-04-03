@@ -38,6 +38,9 @@ const defaultForm = {
   galleries: [] as string[],
   job: '',
   rel_status: '',
+  zalo: '',
+  facebook: '',
+  instagram: '',
 };
 export const useCreateProfileScreen = () => {
   const [jobs, setJobs] = useState<{id: string; name: string}[]>([]);
@@ -86,6 +89,9 @@ export const useCreateProfileScreen = () => {
       const job = userInfo?.personal?.job || '';
       const galleries = userInfo?.personal?.galleries || [];
       const rel_status = userInfo?.rel_status || '';
+      const zalo = userInfo?.personal?.social?.zalo || '';
+      const facebook = userInfo?.personal?.social?.facebook || '';
+      const instagram = userInfo?.personal?.social?.instagram || '';
       reset({
         avatar,
         phone: {
@@ -99,6 +105,9 @@ export const useCreateProfileScreen = () => {
         galleries,
         job,
         rel_status,
+        zalo, // socials
+        facebook,
+        instagram,
       });
     }
   };
@@ -131,6 +140,9 @@ export const useCreateProfileScreen = () => {
       galleries: formData.galleries || [],
       birthday: formatDate(formData.birthday, 'YYYY-MM-DD') || '',
       rel_status: formData.rel_status,
+      zalo: formData.zalo || '',
+      facebook: formData.facebook || '',
+      instagram: formData.instagram || '',
     };
     console.log({params});
 

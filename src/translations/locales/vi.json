@@ -374,5 +374,7 @@
   "divorced": "Đã ly hôn",
   "widowed": "Góa",
   "follow": "Theo dõi",
-  "unFollow": "Bỏ theo dõi"
+  "unFollow": "Bỏ theo dõi",
+  "sendMessageError": "Gửi tin nhắn thất bại",
+  "titleViewMore": "Tìm hiểu nhiều POST hay hơn"
 }

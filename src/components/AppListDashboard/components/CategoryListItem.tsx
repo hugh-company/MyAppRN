@@ -54,16 +54,17 @@ export function CategoryListItem(props: CategoryListItemProps) {
         data={data.find((item) => item.id === categoryIdSelected)?.items || []}
         horizontal keyExtractor={(item) => `item_movie_${item.id}`}
         contentContainerStyle={styles.contentContainerStyle}
-        ListFooterComponent={<AppButtonViewMore onPress={() => {
-          console.log('categoryIdSelected', data.find((item) => item.id === categoryIdSelected));
-          const dataCategory = data?.find((item) => item.id === categoryIdSelected);
-          goToListView({
-            ...dataCategory?.button,
-            keyCategory: dataCategory?.slug,
-            label: '',
-          });
+        ListFooterComponent={data?.length > 0 ? <AppButtonViewMore
+          type={type}
+          onPress={() => {
+            const dataCategory = data?.find((item) => item.id === categoryIdSelected);
+            goToListView({
+              ...dataCategory?.button,
+              keyCategory: dataCategory?.slug,
+              label: '',
+            });
 
-        }} />}
+          }} /> : null}
         renderItem={renderItem} />
     </View>
   );

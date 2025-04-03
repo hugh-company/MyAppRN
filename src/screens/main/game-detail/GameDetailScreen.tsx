@@ -10,16 +10,11 @@ export const GameDetailScreen = () => {
   const { dataGame, isSuccess, styles, refetch,
     isRefetching } = useGameDetailScreen();
 
-  if (!dataGame) {
-    return null;
-  }
+
   return (
     <View style={styles.container}>
       <HeaderGame
-        name={dataGame?.title}
-        logo={dataGame?.feature?.path}
-        likes={dataGame?.like_count}
-        poster={dataGame?.banner?.path}
+        detail={dataGame}
         onRefresh={refetch}
         refreshing={isRefetching}
         onPlay={() => { navigate(SCREEN_ROUTE.PREVIEW_GAME, { link: dataGame?.iframe_game }); }}
@@ -33,10 +28,10 @@ export const GameDetailScreen = () => {
           isPlaying={true}
         />
         <HorizontalList
-          data={dataGame.related_post?.items}
+          data={dataGame?.related_post?.items}
           type={PostTypeKey.GAMES}
-          button={dataGame.related_post?.button}
-          title={dataGame.related_post?.label}
+          button={dataGame?.related_post?.button}
+          title={dataGame?.related_post?.label}
           itemStyle={styles.itemImage}
 
         />

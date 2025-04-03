@@ -134,7 +134,10 @@ export const useViewListScreen = () => {
 
       setIsNext(response?.data?.is_next || false);
       //
-      const newList = [...list, ...response?.data?.data];
+      const newList =
+        response?.data?.page === 1
+          ? response?.data?.data
+          : [...list, ...response?.data?.data];
 
       setList(newList);
       setLoading(false);
@@ -162,6 +165,7 @@ export const useViewListScreen = () => {
   };
   const filterBySort = (item: any) => {
     if (item?.key === '') {
+      setSlugCategory(keyCategory || '');
       setSort(sortby); // Reset to the initial sortby value
       setPage(1);
       setIsNext(true);

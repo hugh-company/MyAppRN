@@ -9,6 +9,7 @@ import {
   readAllMessagesWithRoom,
   refreshConversations,
   refreshMessages,
+  removeMessageByTempId,
   searchThreadsSuccess,
   setConversation,
   setInfoUser,
@@ -23,6 +24,9 @@ import {
 } from '@redux';
 import {PayloadAction} from '@reduxjs/toolkit';
 import {MessageAction} from '@types';
+import {showNotificationError} from '@utils';
+import {t} from 'i18next';
+import {showMessage} from 'react-native-flash-message';
 import {eventChannel, EventChannel} from 'redux-saga';
 import {
   all,
@@ -44,7 +48,7 @@ let messageQueue: any[] = [];
 
 // Hàm gửi message an toàn: nếu socket mở thì gửi ngay, nếu không đưa vào hàng đợi
 function safeSend(socket: WebSocket, message: any) {
-  console.log('Sending message:', message, socket);
+  console.log('Sending message:', message);
 
   if (socket.readyState === WebSocket.OPEN) {
     socket.send(JSON.stringify(message));
@@ -183,6 +187,14 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
   if (data?.error === 'disconnect') {
     yield put({type: 'RECONNECT_SOCKET'});
   }
+  if (data?.error) {
+    showMessage({
+      message: data?.error,
+
+      type: 'danger',
+    });
+    return;
+  }
   switch (data?.action) {
     case MessageAction.GET_THREAD: {
       const {isLoadMore, isRefreshing} = yield select(
@@ -300,6 +312,15 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
       break;
     case MessageAction.NOTICE_OFFLINE:
       yield put(userOffline(data.user_id));
+      break;
+    case MessageAction.NOTIFICATION:
+      console.log('NOTIFICATION', data);
+
+      if (data?.reason === MessageAction.BLOCK_SPAM_MESSAGE) {
+        showNotificationError(t('sendMessageError'), data?.message);
+        yield put(removeMessageByTempId({temp_id: data.temp_id}));
+        // toast.error("Your message was blocked due to spam."); // Show notification
+      }
       break;
     default:
       console.warn('Unhandled socket message action:', data.action);

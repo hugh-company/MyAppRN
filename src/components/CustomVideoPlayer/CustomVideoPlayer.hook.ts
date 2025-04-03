@@ -45,8 +45,6 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
   const [quality, setQuality] = useState('');
   const [listQuality, setListQuality] = React.useState<ItemQualityProps[]>([]);
   useEffect(() => {
-    console.log({uri});
-
     getListQuality();
   }, [uri]);
   const getListQuality = async () => {
@@ -94,8 +92,9 @@ export const useCustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     const {width, height} = Dimensions.get('window');
     const isLandscape = width > height;
     const videoDimensions = calculateVideoDimensions(widthVideo, heightVideo);
+    console.log({videoDimensions, isFullScreenVisible}, width, height);
 
-    if (isFullScreenVisible) {
+    if (isLandscape) {
       videoHeight.value = withTiming(isLandscape ? height : screenHeight);
       videoWidth.value = withTiming(isLandscape ? width : screenWidth);
     } else {

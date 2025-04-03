@@ -17,9 +17,11 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <AppHeader />
       <KeyboardAwareScrollView
-        keyboardShouldPersistTaps="always"
-        style={styles.body}>
-
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ flexGrow: 1 }}
+        extraScrollHeight={100}
+        style={styles.body}
+      >
         <View style={styles.viewInfo}>
           <AppText style={styles.title}>
             {t('register.title')}
@@ -27,7 +29,6 @@ const RegisterScreen = () => {
           <AppText style={styles.descripstion}>
             {t('register.descripstion')}
           </AppText>
-
         </View>
 
         <AppInput
@@ -40,7 +41,6 @@ const RegisterScreen = () => {
           ref={fullnameRef}
           onSubmitEditing={() => usernameRef.current.focus()}
         />
-
 
         <AppInput
           key={'username'}
