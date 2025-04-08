@@ -10,6 +10,7 @@ import { useDatingScreen } from './DatingScreen.hook';
 import AppListDating from './components/AppListDating';
 import { ButtonSearch } from './components/ButtonSearch';
 import { ListHorizontalUser } from './components/ListHorizontalUser';
+import { UsersGoldList } from './components/UsersGoldList';
 
 export const DatingScreen = () => {
   const { data, loading, styles, tab,
@@ -35,10 +36,12 @@ export const DatingScreen = () => {
         {dataHeader?.button && <ButtonSearch label={dataHeader?.button.label} style={styles.search} onPress={() => {
           navigate(SCREEN_ROUTE.FILTER_DATING);
         }} />}
+        <UsersGoldList />
         {dataHeader?.infoDating && <View style={styles.label}>
           <AppText style={styles.title}>{dataHeader?.infoDating?.label}</AppText>
-          <AppText style={[styles.total]}>{dataHeader?.infoDating?.total}</AppText>
         </View>}
+
+
       </View>
     );
   };

@@ -117,6 +117,7 @@ export interface detailPostInterface {
   feature: MediaInterface;
   banner: MediaInterface;
   author: number;
+  rating_avg: number;
   rating_count: number;
   rating_total: number;
   views_day: number;

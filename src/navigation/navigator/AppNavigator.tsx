@@ -13,9 +13,9 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo } from '@redux';
+import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo, setUserPremium } from '@redux';
 import { NotificationDetailScreen, NotificationScreen, PreviewImages } from '@screens';
-import { getUserProfileApi } from '@services';
+import { getListUserPremium, getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
@@ -91,6 +91,16 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
         dispatch(setUserInfo(responseUser?.data?.me));
       } catch (error) { }
     };
+    const callApiGetPremium = async () => {
+      try {
+        const responseUserPremium: any = await getListUserPremium();
+        console.log({ responseUserPremium });
+        dispatch(setUserPremium(responseUserPremium?.data?.data));
+
+      } catch (error) {
+        console.log({ error });
+      }
+    };
     useEffect(() => {
       if (userInfo) {
         const isShowDating =
@@ -117,7 +127,7 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
       await apiService.reset();
       apiService.setToken(token);
       apiService.setTokenWithoutSaveLocal(token);
-
+      callApiGetPremium();
       callApiProfile();
     };
     // check network

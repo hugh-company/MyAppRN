@@ -13,14 +13,16 @@ export const createStyles = (themeColors: ThemeColors) =>
       flex: 1,
       backgroundColor: themeColors.background,
     },
-    header: {},
+    header: {
+      gap: Spacing.width16,
+    },
     optionHeader: {
       flexDirection: 'row',
       alignItems: 'center',
       gap: 8,
     },
     search: {
-      marginVertical: Spacing.width16,
+      marginTop: Spacing.width16,
     },
     title: {
       fontSize: FontSize.FontSize16,

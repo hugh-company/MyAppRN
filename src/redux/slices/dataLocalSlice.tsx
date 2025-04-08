@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HistoryInterface, ModuleItemInterface } from '@types';
+import { HistoryInterface, ModuleItemInterface, UserItemInterface } from '@types';
 import { APP_SLICE } from '../type';
 
 const initialState = {
@@ -12,6 +12,7 @@ const initialState = {
   savedItems: [] as HistoryInterface[], // Max 100 items with timestamp
   history: [] as HistoryInterface[], // Max 50 items with timestamp
   loading: true,
+  userPremium: [],
 } as {
   home: ModuleItemInterface[];
   movies: ModuleItemInterface[];
@@ -21,6 +22,7 @@ const initialState = {
   search: ModuleItemInterface[];
   savedItems: HistoryInterface[];
   history: HistoryInterface[];
+  userPremium: UserItemInterface[]
   loading: boolean;
 };
 
@@ -108,10 +110,15 @@ const dataLocalSlide = createSlice({
     clearHistory: (state) => {
       state.history = [];
     },
+
+    setUserPremium: (state, action) => {
+      state.userPremium = action.payload;
+    },
   },
 });
 
 export const {
+  setUserPremium,
   setHome,
   setMovies,
   setComics,

@@ -91,6 +91,7 @@ export const API_ENDPOINTS = {
   // Save post
   GET_SAVE_POST: '/posts/action/save/',
   SAVE_POST: '/posts/action/save/',
+  LIST_USER_PREMIUM: '/finder/package/gold/',
 };
 // Key Query
 export const KeyQueryApi = {

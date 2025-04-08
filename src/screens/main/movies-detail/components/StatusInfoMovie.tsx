@@ -30,7 +30,7 @@ export function StatusInfoMovie(props: StatusInfoMovieProps) {
       <View style={styles.viewOption}>
         {renderItem(<PlayStackedIcon color={ColorsApp.success} />, `${`${movie?.chapter_total || 0} ${t('home.episodes')}`}`)}
         {renderItem(<LikeActiveIcon />, `${getPrettyNumberString(movie?.like_count || 0, '1.234k')} ${t('home.likes')}`)}
-        {renderItem(<StarIcon isActive={true} />, `${getPrettyNumberString(movie?.rating_count || 0, '1.234k')}/10`)}
+        {renderItem(<StarIcon isActive={true} />, `${getPrettyNumberString((movie?.rating_avg || 0) / 10 || (movie?.rating_total || 0) / (movie?.rating_count || 1), '1.234k')}/10`)}
       </View>
     </View>
   );

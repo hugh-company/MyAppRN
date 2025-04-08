@@ -64,3 +64,9 @@ export const getFindUserApi = async (params: UserFindInterface) => {
   }
   return apiService.get(API_ENDPOINTS.FIND_DATING, newParams);
 };
+
+
+export const getListUserPremium = async () => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  return apiService.get(API_ENDPOINTS.LIST_USER_PREMIUM);
+};
