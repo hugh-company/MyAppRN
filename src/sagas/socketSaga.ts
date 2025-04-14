@@ -26,7 +26,6 @@ import {PayloadAction} from '@reduxjs/toolkit';
 import {MessageAction} from '@types';
 import {showNotificationError} from '@utils';
 import {t} from 'i18next';
-import {showMessage} from 'react-native-flash-message';
 import {eventChannel, EventChannel} from 'redux-saga';
 import {
   all,
@@ -188,11 +187,11 @@ function* handleDataMessage(data: any): Generator<any, void, any> {
     yield put({type: 'RECONNECT_SOCKET'});
   }
   if (data?.error) {
-    showMessage({
-      message: data?.error,
+    // showMessage({
+    //   message: data?.error,
 
-      type: 'danger',
-    });
+    //   type: 'danger',
+    // });
     return;
   }
   switch (data?.action) {

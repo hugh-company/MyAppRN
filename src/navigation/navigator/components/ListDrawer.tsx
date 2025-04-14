@@ -4,13 +4,14 @@ import { AppButton, AppImage, AppText } from '@components';
 import { navigate, navigateToStack, reset, SCREEN_ROUTE } from '@navigation';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { clearAllChat, clearSavedPost, clearSearchThreads, clearSocketInfoUser, getToken, getUserInfo, logout } from '@redux';
-import { useDashboardHome } from '@services';
+import { callApiLogout, useDashboardHome } from '@services';
 import { FontSize, FontWithFamily, sizeWidth, Spacing, ThemeColors, useTheme } from '@theme';
 import { menuNavigationInterface, PostTypeKey } from '@types';
 import { showModalConfirmation, showModalLanguage } from '@utils';
 import { t } from 'i18next';
 import React, { useCallback, useMemo } from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 import LinearGradient from 'react-native-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,6 +28,7 @@ export function ListDrawer(props: ListDrawerProps) {
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
   const infoUser = useSelector(getUserInfo);
+
   const { data, isSuccess } =
     useDashboardHome();
   const styles = createStyles(themeColors);
@@ -34,18 +36,29 @@ export function ListDrawer(props: ListDrawerProps) {
 
   const dispatch = useDispatch();
 
-  const onLogoutAccount = () => {
-    GoogleSignin.signOut();
-    apiService.reset();
-    dispatch(logout());
-    apiService.clear();
-    dispatch(clearAllChat());
-    dispatch(clearSavedPost());
-    dispatch(clearSearchThreads());
-    dispatch(clearSocketInfoUser());
-    reset(SCREEN_ROUTE.MAIN_STACK);
-    dispatch({ type: 'USER_LOGOUT' });
+  const onLogoutAccount = async () => {
+    try {
+      const device_id = await DeviceInfo.getUniqueId();
+
+      const res = await callApiLogout(device_id);
+      console.log({ res });
+
+      GoogleSignin.signOut();
+      apiService.reset();
+      dispatch(logout());
+      apiService.clear();
+      dispatch(clearAllChat());
+      dispatch(clearSavedPost());
+      dispatch(clearSearchThreads());
+      dispatch(clearSocketInfoUser());
+      reset(SCREEN_ROUTE.MAIN_STACK);
+      dispatch({ type: 'USER_LOGOUT' });
+    } catch (error) {
+
+    }
   };
+
+
 
   const gotoScreen = useCallback((screen: string, params?: any) => {
     props?.navigation?.closeDrawer();

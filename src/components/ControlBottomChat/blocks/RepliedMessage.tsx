@@ -1,10 +1,11 @@
 import { CloseIcon } from '@assets';
-import { AppText } from '@components';
+import { AppImage, AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { MessageItemInterface } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { getStickerIconWithMessage } from '../../../utils/getSticker';
 export interface RepliedMessageProps {
   message: MessageItemInterface | null;
   onClose?: () => void;
@@ -31,15 +32,19 @@ export function RepliedMessage(props: RepliedMessageProps) {
       case 'game':
         return t('message.repliedImage');
       case 'sticker':
-        return t('message.repliedSticker');
+        return 'Sticker';
       default:
         return '';
     }
   };
   return <View style={styles.container} >
     <AppText style={styles.title}>{isMe ? t('message.repliedMe') : t('message.repliedOther').replace('USER', userReceived?.fullname)}</AppText>
-    <AppText style={styles.txt}>{renderText()}</AppText>
 
+    <View style={styles.viewSticker}>
+      <AppImage uri={getStickerIconWithMessage(message?.content?.data?.sticker)} style={{ width: Spacing.width30, height: Spacing.width30 }} isBase={false} />
+
+      <AppText style={styles.txt}>{renderText()}</AppText>
+    </View>
     <TouchableOpacity onPress={() => onClose?.()} style={styles.btnClose}>
       <CloseIcon size={Spacing.width16} color="white" />
     </TouchableOpacity>
@@ -50,6 +55,12 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     paddingHorizontal: Spacing.width16,
     gap: Spacing.width8,
     width: '100%',
+  },
+  viewSticker: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.width4,
+
   },
   title: {
     ...FontWithFamily.FontWithFamily_400,

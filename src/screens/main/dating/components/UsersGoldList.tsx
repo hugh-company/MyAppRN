@@ -1,9 +1,10 @@
 import { AppImage, AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { RootState } from '@redux';
 import { ColorsApp, FontSize, FontWithFamily, Spacing } from '@theme';
 import { UserItemInterface } from '@types';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 export interface ListUserOnlineProps { }
 
@@ -13,12 +14,14 @@ export function UsersGoldList(props: ListUserOnlineProps) {
   console.log({ list });
 
   const renderItem = ({ item }: { item: UserItemInterface }) => (
-    <View style={styles.userContainer}>
+    <TouchableOpacity onPress={() => {
+      navigate(SCREEN_ROUTE.DETAIL_USER, { user: item });
+    }} style={styles.userContainer}>
       <AppImage uri={item.avatar} style={styles.avatar} />
-      <AppText style={styles.txt}>
+      <AppText numberOfLines={1} style={styles.txt}>
         {item.fullname}
       </AppText>
-    </View>
+    </TouchableOpacity>
   );
 
   if (list.length === 0) {
@@ -27,7 +30,7 @@ export function UsersGoldList(props: ListUserOnlineProps) {
   return (
     <View style={styles.container}>
       <AppText style={styles.title}>
-        VIP
+        Premium Account
       </AppText>
       <FlatList
         data={list}
@@ -47,6 +50,9 @@ const styles = StyleSheet.create({
   },
   userContainer: {
     gap: Spacing.width8,
+    maxWidth: Spacing.width80,
+    alignItems: 'center',
+
   },
   avatar: {
     width: Spacing.width50,
@@ -67,10 +73,12 @@ const styles = StyleSheet.create({
   },
   txt: {
     fontSize: FontSize.FontSize12,
+    textAlign: 'center',
   },
   title: {
     fontSize: FontSize.FontSize16,
     ...FontWithFamily.FontWithFamily_600,
     marginBottom: Spacing.width16,
+
   },
 });

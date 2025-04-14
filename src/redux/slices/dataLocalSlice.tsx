@@ -65,18 +65,14 @@ const dataLocalSlide = createSlice({
     },
     addSavedItem: (state, action) => {
 
-      if (state.savedItems.length < 100) {
-        // Remove any existing entry with the same ID
-        state.savedItems = state.savedItems.filter(item => item.id !== action.payload.id);
-        // Add the new entry to the top
-        state.savedItems = [
-          action.payload, // Save the entire detail object
-          ...state.savedItems,
-        ];
+      // Remove any existing entry with the same ID
+      state.savedItems = state.savedItems.filter(item => item.id !== action.payload.id);
+      // Add the new entry to the top
+      state.savedItems = [
+        action.payload, // Save the entire detail object
+        ...state.savedItems,
+      ];
 
-      } {
-        state.savedItems.pop();
-      }
     },
     removeSavedItem: (state, action) => {
       state.savedItems = state.savedItems.filter(item => item.id !== action.payload);

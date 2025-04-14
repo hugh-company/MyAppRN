@@ -1,7 +1,7 @@
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {addHistoryItem} from '@redux';
-import {useDetailPostApi, viewsPostApi} from '@services';
+import {useDetailPostApi, useListEpisodeApi, viewsPostApi} from '@services';
 import {Spacing, useTheme} from '@theme';
 import {detailPostInterface, PostTypeKey} from '@types';
 import React, {useEffect, useState} from 'react';
@@ -33,11 +33,16 @@ export const useChapterDetail = () => {
   const {data, isSuccess, refetch, isFetching, isRefetching, error} =
     useDetailPostApi(idPost, type);
   console.log({data}, error);
-
+  const {data: dataEpisodes, refetch: refetchEpisodes} = useListEpisodeApi(
+    type,
+    idPost,
+  );
   // useQuery({
   //   queryKey: ['viewChapter', idPost],
   //   queryFn: () => viewsPostApi(chapter?.id, type),
   // });
+  console.log({dataEpisodes});
+
   useEffect(() => {
     if (detail?.id) {
       viewsPostApi(detail?.id, type);
@@ -107,5 +112,6 @@ export const useChapterDetail = () => {
 
     refList,
     isRefetching,
+    listChapter: dataEpisodes?.data?.data || [],
   };
 };

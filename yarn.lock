@@ -7126,6 +7126,11 @@ react-native-select-dropdown@^4.0.1:
   resolved "https://registry.yarnpkg.com/react-native-select-dropdown/-/react-native-select-dropdown-4.0.1.tgz#5789bdf60742f8ca881391e6f47a5b285ee407d8"
   integrity sha512-t4se17kALFcPb9wMbxig5dS1BE3pWRC6HPuFlM0J2Y6yhB1GsLqboy6an6R9rML8pRuGIJIxL29cbwEvPQwKxQ==
 
+react-native-share@^12.0.9:
+  version "12.0.9"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-12.0.9.tgz#771640136114de6179aa42269a9e45135ac1a9cf"
+  integrity sha512-vSuz/9aF+/AZS3I5NC19MrB56h1Yivk2Yz8lf2d8Szv3KuRw2BnDI/AfCTjMWByJLVYr6xgzfkTkAfvbDGzxLQ==
+
 react-native-splash-screen@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/react-native-splash-screen/-/react-native-splash-screen-3.3.0.tgz#3af71ed17afe50fee69590a45aec399d071ead02"

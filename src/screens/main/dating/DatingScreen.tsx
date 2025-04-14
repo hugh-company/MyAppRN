@@ -72,7 +72,6 @@ export const DatingScreen = () => {
             onSelectTab(item.type as any);
           }}
           style={styles.tab}
-
         />
       </LinearGradient>
       <AppListDating

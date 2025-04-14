@@ -56,7 +56,7 @@ export function useLocation() {
     console.log({ hasPermission });
 
     try {
-      await Geolocation.getCurrentPosition(
+      return await Geolocation.getCurrentPosition(
         async position => {
           console.log({ position });
           const { latitude, longitude } = position.coords;
@@ -67,6 +67,7 @@ export function useLocation() {
             });
             console.log({ responseLocation });
             dispatch(setLocation({ latitude: latitude, longitude: longitude }));
+
           } catch (error) {
             showNotificationError(t('location.title'), error?.message);
           }

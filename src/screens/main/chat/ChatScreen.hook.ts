@@ -94,15 +94,15 @@ export const useChatScreen = () => {
       : newMessage.sticker?.length
       ? 'sticker'
       : 'text';
-
+    const temp_id_time = `temp_${new Date().getTime()}`;
     const params: any = {
       action: 'send_message',
-      id: `temp_${new Date().getTime()}`,
+      id: temp_id_time,
       token: token,
 
       recipient_id: thread.other_user?.id,
       sender_id: userInfo?.id,
-      temp_id: `temp_${new Date().getTime()}`,
+      temp_id: temp_id_time,
       content: {
         type: typeMessage,
         status: MessageStatus.SENDING,

@@ -40,7 +40,7 @@ export function ItemMessage(props: ItemMessageProps) {
     }}>
       <View>
         <AppImage uri={item.other_user?.avatar} style={styles.avatar} />
-        {item?.other_user?.online && <View style={styles.status} />}
+        {!!item?.other_user?.online && <View style={styles.status} />}
       </View>
 
       <View style={{ flex: 1, gap: Spacing.width8 }}>

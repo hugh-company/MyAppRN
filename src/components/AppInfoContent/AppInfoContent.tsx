@@ -2,7 +2,7 @@ import { BASE_IMAGE_URL } from '@api';
 import { AddIcon, LikeActiveIcon, LikeIcon, SavedIcon, SendIcon, StarIcon } from '@assets';
 import { AppLessMore, AppText } from '@components';
 import { addSavedItem, getToken, removeSavedItem, RootState } from '@redux';
-import { likePostApi, savePostApi, useSavedPostApi } from '@services';
+import { likePostApi, useSavedPostApi } from '@services';
 import { Spacing, useTheme } from '@theme';
 import { detailPostInterface, PostTypeKey } from '@types';
 import { onShareInfo, showModalRating } from '@utils';
@@ -24,7 +24,7 @@ export interface AppInfoContentProps {
 }
 const AppInfoContent = ({
   type,
-  isLiked,
+
   typeGame,
   style, onRefresh, detail, isPlaying,
 }: AppInfoContentProps) => {
@@ -39,7 +39,7 @@ const AppInfoContent = ({
   const token = useSelector(getToken);
   const savedLocal = useSelector((state: RootState) => state.dataLocalSlide.savedItems);
   const dispatch = useDispatch();
-  const isFavorite = (token ? saved : savedLocal)?.some((item) => item.id === detail?.id);
+  const isFavorite = (savedLocal)?.some((item) => item.id === detail?.id);
   console.log({ isFavorite });
 
   // call api
@@ -63,26 +63,26 @@ const AppInfoContent = ({
   };
   const updateSavedPost = async () => {
     try {
-      console.log({ isFavorite });
+      console.log({ isFavorite }, detail);
       if (isFavorite) {
         dispatch(removeSavedItem(detail?.id));
       } else {
         dispatch(addSavedItem(detail));
       }
-      if (token) {
-        const res = await savePostApi(type, [detail?.id]);
-        console.log({ res });
+      // if (token) {
+      //   const res = await savePostApi(type, [detail?.id]);
+      //   console.log({ res });
 
-        if (res?.status === 'success' && res?.data?.action) {
-          const action = res.data.action[detail?.id];
-          refetch();
-          if (action === 'add') {
-            dispatch(addSavedItem(detail));
-          } else if (action === 'remove') {
-            dispatch(removeSavedItem(detail?.id));
-          }
-        }
-      }
+      //   if (res?.status === 'success' && res?.data?.action) {
+      //     const action = res.data.action[detail?.id];
+      //     refetch();
+      //     if (action === 'add') {
+      //       dispatch(addSavedItem(detail));
+      //     } else if (action === 'remove') {
+      //       dispatch(removeSavedItem(detail?.id));
+      //     }
+      //   }
+      // }
 
     } catch (error) {
       console.log({ errorSave: error });

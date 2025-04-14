@@ -3,7 +3,7 @@ import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@compo
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
 import { PostTypeKey } from '@types';
-import { formatDate, getAge } from '@utils';
+import { formatDate, getAge, goToListView } from '@utils';
 import { t } from 'i18next';
 import React from 'react';
 import { FlatList, Linking, TouchableOpacity, View } from 'react-native';
@@ -81,7 +81,32 @@ export const DetailUser = () => {
             <View style={styles.valueAbout_me}>
               <AppText  >{data?.about_me}</AppText>
             </View>
-            {!isMyProfile && <HorizontalList data={games} type={PostTypeKey.GAMES} title={'Game chơi cùng'} renderItem={renderItem} />}
+            {!isMyProfile && <HorizontalList data={games} type={PostTypeKey.GAMES} title={'Game chơi cùng'} renderItem={renderItem} onViewMore={() => {
+              //   {
+              //     "label": "Game thịnh hành",
+              //     "type": "linkpage",
+              //     "data": {
+              //         "title": "Game phổ biến",
+              //         "type": "lists",
+              //         "posttype": "game",
+              //         "api": "/posts/lists/game/"
+              //     },
+              //     "paged": 1,
+              //     "sortby": "views_day__desc"
+              // }
+              goToListView({
+                label: 'Game thịnh hành',
+                type: 'linkpage',
+                data: {
+                  title: 'Game phổ biến',
+                  type: 'lists',
+                  posttype: PostTypeKey.GAMES,
+                  api: '/posts/lists/game/',
+                },
+                paged: 1,
+                sortby: 'views_day__desc',
+              });
+            }} />}
 
             <View style={styles.viewInfo} >
               <View style={styles.view_contact}>

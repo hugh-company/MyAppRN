@@ -20,7 +20,7 @@ export const ChatScreen = () => {
     return (
       <ItemChat
         item={item}
-        isMe={item.recipient_id !== userInfo?.id}
+        isMe={item?.sender_id === userInfo?.id}
         userSent={userInfo}
         onGoToRepliedMessage={(vale) => scrollToRepliedMessage(vale)}
         userReceived={otherUser}
@@ -54,7 +54,7 @@ export const ChatScreen = () => {
               })} style={styles.iconProfile}>
 
               <AppImage uri={otherUser?.avatar} style={styles.avatar} />
-              {thread.other_user.online && <View style={styles.status} />}
+              {!!thread.other_user.online && <View style={styles.status} />}
             </TouchableOpacity>}
         />
         <KeyboardAvoidingView

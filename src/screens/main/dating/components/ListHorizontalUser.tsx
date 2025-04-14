@@ -1,9 +1,9 @@
 import { IconMessager } from '@assets';
 import { AppImage, AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { getConversation } from '@redux';
+import { getConversation, getUserInfo } from '@redux';
 import { ColorsApp, FontSize, Spacing, ThemeColors, useTheme } from '@theme';
-import { navHorizontalInterface, TypeTabDatingApi } from '@types';
+import { ConversationInterface, MessageStatus, navHorizontalInterface, TypeTabDatingApi } from '@types';
 import { t } from 'i18next';
 import React, { useMemo } from 'react';
 import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
@@ -21,7 +21,9 @@ export function ListHorizontalUser(props: ListHorizontalUserProps) {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { conversations } = useSelector(getConversation);
-  const countMessage = useMemo(() => conversations?.filter(elm => !elm.isread), [conversations]);
+  const profile = useSelector(getUserInfo);
+  const countMessage = useMemo(() => conversations?.filter((conversation: ConversationInterface) => conversation?.last_message?.content?.status !== MessageStatus.READ &&
+    conversation?.last_message?.recipient_id === profile?.id), [conversations]);
 
 
 

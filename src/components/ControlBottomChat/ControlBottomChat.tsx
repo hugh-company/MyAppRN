@@ -113,7 +113,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
     });
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: any) => (
     <TouchableOpacity onPress={() => handleSelectGame(item)} style={{ marginLeft: Spacing.width16 }}>
       <AppImage uri={item.feature?.path} style={styles.itemImageGame} />
       <View style={styles.viewName}>
@@ -151,6 +151,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
   );
 
   return (
+
     <View style={[styles.container, !isShowStickers && { paddingBottom: Spacing.width16 }]}>
       {repliedMessage && renderRepliedMessage()}
       {isShowGame && renderGame()}
@@ -180,11 +181,10 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
         {(message?.length > 0 || gameSelected) && <TouchableOpacity style={styles.iconButton} onPress={() => handleSend()}>
           <SendMessageIcon />
         </TouchableOpacity>}
-
       </View>
       {isShowStickers && <ListStickers isVisible={isShowStickers} onSelectSticker={(sticker) => { handleSend({ sticker: sticker }); }} />}
-
     </View>
+
   );
 }
 

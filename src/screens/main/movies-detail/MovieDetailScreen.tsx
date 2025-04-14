@@ -35,6 +35,7 @@ export const MovieDetailScreen = () => {
     }
   }, [serverMovie]);
 
+  console.log({ serverMovie });
 
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
@@ -77,7 +78,7 @@ export const MovieDetailScreen = () => {
                 value={serverMovie?.link}
                 onSelectServer={onSelectServer} />
             }
-            {item?.movie_type === 'tvseries' && item?.chapter_total > 0 && (
+            {item?.movie_type === 'tvseries' && item?.chapter_total > 0 && listChapter?.length > 0 && (
               <AppEpisodes
                 chapter_total={item?.chapter_total || 0}
                 type={PostTypeKey.MOVIES}

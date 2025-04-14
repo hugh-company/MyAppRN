@@ -34,6 +34,8 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
     valueChapter = 0, episodes = [],
     onSkipNext, onSkipPrevious,
   } = props;
+  console.log({ valueChapter }, episodes);
+
   const styles = createStyles(themeColors);
   const {
     videoRef,
@@ -67,12 +69,13 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
       <TouchableWithoutFeedback onPress={handlePress}>
         <View style={[styles.container, style, isFullScreenVisible && { ...styles.fullScreen }]}>
           <Video
-            // key={`${uri}-${valueChapter}-${isFullScreenVisible}`}
             source={{ uri: quality ? quality : uri }}
             controls={false}
             ref={videoRef}
             resizeMode={'contain'}
             style={[styleVideo, styles.video]}
+            // playInBackground={true}
+            // playWhenInactive={true}
             onError={(e) => {
               console.log({ e });
               setError(true);
@@ -96,8 +99,6 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
             }}
             {...(Platform.OS === 'android' && {
               ignoreSilentSwitch: 'ignore',
-              playInBackground: true,
-              playWhenInactive: true,
             })}
           />
 
@@ -139,8 +140,8 @@ const CustomVideoPlayer = (props: CustomVideoPlayerProps) => {
                   onSkipNext={onSkipNext}
                   onSkipPrevious={onSkipPrevious}
                   typeMovie={typeMovie}
-                  isSkipNext={valueChapter < episodes?.length - 1}
-                  isSkipPrevious={valueChapter > 0}
+                  isSkipNext={valueChapter < episodes?.length}
+                  isSkipPrevious={((valueChapter || 1) - 1) > 0}
                 />
                 <MemoizedAppControlBottom
                   isFullScreenVisible={isFullScreenVisible}

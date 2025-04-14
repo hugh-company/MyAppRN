@@ -14,7 +14,6 @@ export const FilterDating: React.FC = () => {
     handleSwipe, loading, onLoadMore, setUsers, page,
   } = useFilterDating();
   const navigationState = useNavigationState(state => state);
-  console.log({ data }, page);
 
   return (
     <View style={styles.container}>

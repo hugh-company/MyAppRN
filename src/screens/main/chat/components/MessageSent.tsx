@@ -6,6 +6,7 @@ import { checkMessageTime } from '@utils';
 import React from 'react';
 import { ActivityIndicator, Animated, StyleSheet, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
+import { getStickerIconWithMessage } from '../../../../utils/getSticker';
 import { MessageGame } from './MessageGame';
 import { MessageImages } from './MessageImages';
 import { MessageRelied } from './MessageReplied';
@@ -85,7 +86,7 @@ export function MessageSent(props: MessageSentProps) {
               thread_id={item.thread_id} id={item.id} />}
             {item?.content?.type === MessageType.GAME && item?.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
             {item?.content?.data?.text?.length > 0 && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
-            {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
+            {item?.content?.data?.sticker && <AppImage uri={getStickerIconWithMessage(item?.content?.data?.sticker)} style={styles.sticker} isBase={false} />}
             <View style={styles.viewRead}>
               <AppText style={styles.timestamp}>{checkMessageTime(item.content?.created_at)}</AppText>
               {renderStatusMessage()}

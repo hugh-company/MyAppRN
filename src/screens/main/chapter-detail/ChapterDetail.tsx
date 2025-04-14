@@ -7,8 +7,8 @@ import { PosterDetail } from '../movies-detail/components/PosterDetail';
 import { useChapterDetail } from './ChapterDetail.hook';
 
 const ChapterDetail = () => {
-  const { styles, detail, readChapter, scrollHandler, onNavigateDetail, isRefetching, headerBackgroundColorStyle, onRefresh, themeColors, type, refList } = useChapterDetail();
-  console.log({ detail });
+  const { styles, detail, readChapter, scrollHandler, onNavigateDetail, isRefetching, headerBackgroundColorStyle, onRefresh, themeColors, type, refList, listChapter } = useChapterDetail();
+  console.log({ detail }, listChapter);
 
   return (
     <View style={styles.container}>
@@ -37,12 +37,13 @@ const ChapterDetail = () => {
             readChapter(detail?.chapter_total);
           }}
         />
-        {detail?.chapter_total > 0 &&
+        {detail?.chapter_current > 0 &&
           <AppEpisodes
-            chapter_total={detail?.chapter_total}
+            chapter_current={detail?.chapter_current}
             type={type}
             idPost={detail?.id}
             style={styles.episodes}
+
             goToDetail={(item) => {
               console.log({ item });
               readChapter(item);

@@ -12,4 +12,12 @@ export const createStyles = (themeColors: ThemeColors) =>
       paddingHorizontal: Spacing.width16,
       marginVertical: Spacing.width8,
     },
+    btnSearch: {
+      width: Spacing.width35,
+      height: Spacing.width35,
+      borderRadius: Spacing.height24,
+      backgroundColor: themeColors.btnSocial,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });

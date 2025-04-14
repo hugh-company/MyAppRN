@@ -6,6 +6,8 @@ const END_POINT = {
     BASE_URL: 'https://oninapp.com',
   },
 };
+export const BASE_STICKER_URL = 'https://oninapp.com/uploads/stickers/'; // adjust as needed
+
 export const ACCESS_TOKEN = '';
 export const API_URL = '';
 const ENV_ENVIRONMENT = 'staging' as keyof typeof END_POINT;

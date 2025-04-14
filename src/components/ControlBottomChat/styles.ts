@@ -1,5 +1,5 @@
 import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
-import {Platform, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
@@ -38,7 +38,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       marginLeft: Spacing.width16,
       color: themeColors.whiteColor,
       maxHeight: Spacing.height48 * 3,
-      paddingTop: Platform.OS === 'android' ? undefined : Spacing.width16,
+      // paddingTop: Platform.OS === 'android' ? undefined : Spacing.width16,
       paddingVertical: Spacing.width8,
       lineHeight: Spacing.width24,
     },

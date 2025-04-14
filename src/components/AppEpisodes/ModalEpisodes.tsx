@@ -1,8 +1,7 @@
 import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { HeightScreen, useTheme } from '@theme';
 import { t } from 'i18next';
-import { debounce } from 'lodash';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { TouchableOpacity, View } from 'react-native';
 import { AppInputSearch } from '../AppInputSearch';
 import { AppText } from '../AppText';
@@ -24,49 +23,63 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
     selectEpisodes,
     onSelectChapter,
     refModal,
-    setSelectEpisodes, height = 0.5, minHeight = 0.5,
-
-
+    setSelectEpisodes,
     totalChapter, // New prop
   } = props;
   const { themeColors } = useTheme();
   const [search, setSearch] = useState('');
   const [filteredEpisodes, setFilteredEpisodes] = useState<string[]>([]);
+  const [allEpisodes, setAllEpisodes] = useState<string[]>([]); // Store all episodes
   const [page, setPage] = useState(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
   const itemsPerPage = 10;
   const styles = createStyles(themeColors);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null); // Ref to track debounce timeout
 
   useEffect(() => {
-    const initialEpisodes = Array.from({ length: Math.min(totalChapter, itemsPerPage) }, (_, index) => (index + 1).toString());
-    setFilteredEpisodes(initialEpisodes);
+    const initialEpisodes = Array.from({ length: totalChapter }, (_, index) => (index + 1).toString());
+    setAllEpisodes(initialEpisodes);
+    setFilteredEpisodes(initialEpisodes.slice(0, itemsPerPage));
   }, [totalChapter]);
 
-  const handleSearch = debounce((text: string) => {
-    if (text === '') {
-      const initialEpisodes = Array.from({ length: Math.min(totalChapter, itemsPerPage) }, (_, index) => (index + 1).toString());
-      setFilteredEpisodes(initialEpisodes);
-    } else {
-      const filtered = filteredEpisodes.filter((episode) =>
-        episode.includes(text)
-      );
-      setFilteredEpisodes(filtered);
-    }
-  }, 300); // Debounce with 300ms delay
+  const handleSearch = useCallback((text: string) => {
 
-  const handleLoadMore = () => {
-    if (!isFetchingMore && filteredEpisodes.length < totalChapter) {
+
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current); // Clear previous debounce timeout
+    }
+    debounceRef.current = setTimeout(() => {
+      console.log({ text });
+      if (text === '') {
+        const initialEpisodes = allEpisodes.slice(0, itemsPerPage);
+        if (JSON.stringify(filteredEpisodes) !== JSON.stringify(initialEpisodes)) {
+          setFilteredEpisodes(initialEpisodes);
+          setPage(1); // Reset pagination
+        }
+      } else {
+        const filtered = allEpisodes.filter((episode) => episode.includes(text));
+        const slicedFiltered = filtered.slice(0, itemsPerPage);
+        if (JSON.stringify(filteredEpisodes) !== JSON.stringify(slicedFiltered)) {
+          setFilteredEpisodes(slicedFiltered);
+          setPage(1); // Reset pagination
+        }
+      }
+    }, 300); // Debounce with 300ms delay
+  }, [allEpisodes, filteredEpisodes, itemsPerPage]);
+
+  const handleLoadMore = useCallback(() => {
+    if (!isFetchingMore && filteredEpisodes.length < allEpisodes.length) {
       setIsFetchingMore(true);
       const nextPage = page + 1;
-      const newEpisodes = Array.from(
-        { length: Math.min(totalChapter - filteredEpisodes.length, itemsPerPage) },
-        (_, index) => (filteredEpisodes.length + index + 1).toString()
+      const newEpisodes = allEpisodes.slice(
+        filteredEpisodes.length,
+        filteredEpisodes.length + itemsPerPage
       );
       setFilteredEpisodes((prevEpisodes) => [...prevEpisodes, ...newEpisodes]);
       setPage(nextPage);
       setIsFetchingMore(false);
     }
-  };
+  }, [isFetchingMore, filteredEpisodes, allEpisodes, page, itemsPerPage]);
 
   const renderItem = ({ item }: { item: string }) => {
     return (
@@ -84,7 +97,7 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
     <BottomSheetModal
       ref={refModal}
       backgroundStyle={[styles.modalContainer]}
-      snapPoints={[minHeight * HeightScreen, height * HeightScreen]}
+      snapPoints={[HeightScreen / 2, HeightScreen]}
     >
       <View style={styles.headerModal}>
         <View style={styles.viewTitle}>
@@ -102,26 +115,31 @@ export function ModalEpisodes(props: ModalEpisodesProps) {
           style={styles.viewSearch}
           inputStyle={styles.inputSearch}
           value={search}
-          onChangeText={
-            (text) => {
-              setSearch(text);
-              handleSearch(text);
-            }
-          }
+          onChangeText={(text) => {
+            setSearch(text);
+            handleSearch(text);
+          }}
         />
       </View>
       <BottomSheetFlatList
         data={filteredEpisodes}
+
         keyExtractor={(item) => `list_chapter_${item}`}
         renderItem={renderItem}
         removeClippedSubviews
-        style={styles.listModal}
-        contentContainerStyle={[styles.contentContainerStyle, { minHeight: HeightScreen * minHeight }]}
-        ListEmptyComponent={<AppText style={styles.emptyText}>{t('movie.no_chapters')}</AppText>}
+        style={[styles.listModal, { height: HeightScreen }]} // Fixed height
+        contentContainerStyle={[
+          styles.contentContainerStyle,
+          { minHeight: HeightScreen }, // Ensure consistent height
+        ]}
+        ListEmptyComponent={
+          <View style={{ height: HeightScreen, justifyContent: 'center', alignItems: 'center' }}>
+            <AppText style={styles.emptyText}>{t('movie.no_chapters')}</AppText>
+          </View>
+        }
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
       />
     </BottomSheetModal>
   );
-
 }

@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import {
+  genderInterface,
   ItemListProduct,
   menuNavigationInterface,
   NotificationInterface,
@@ -16,6 +17,11 @@ const initialState = {
   // new
   stickers: [],
   games_trending: [],
+  filterCache: {
+    age: [18, 30],
+    distance: [50],
+    gender: genderInterface.OTHER,
+  },
 } as {
   isCloseNotice: boolean;
   notices: NotificationInterface[];
@@ -27,6 +33,12 @@ const initialState = {
   stickers: StickerInterface[];
 
   games_trending: ItemListProduct[];
+
+  filterCache: {
+    age: number[];
+    distance: number[];
+    gender: genderInterface;
+  };
 };
 
 const settingSlice = createSlice({
@@ -58,6 +70,9 @@ const settingSlice = createSlice({
     setGamesTrending(state, action) {
       state.games_trending = action.payload;
     },
+    setFilterCache: (state, action) => {
+      state.filterCache = action.payload;
+    },
   },
 });
 
@@ -69,5 +84,6 @@ export const {
   setIsDashboardDating,
   setStickers,
   setGamesTrending,
+  setFilterCache,
 } = settingSlice.actions;
 export default settingSlice.reducer;

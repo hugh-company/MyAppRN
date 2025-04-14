@@ -70,12 +70,12 @@ export const checkMessageTime = (date: Date | string): string => {
   if (messageDate.isSame(today, 'day')) {
     const diffMinutes = today.diff(messageDate, 'minute');
     // if less than 1 minute
-    if (diffMinutes < 1) {
-      return t('message.just_now');
-    }
-    if (diffMinutes < 60) {
-      return `${diffMinutes} ${t('message.minutes_ago')}`;
-    }
+    // if (diffMinutes < 1) {
+    //   return t('message.just_now');
+    // }
+    // if (diffMinutes < 60) {
+    //   return `${diffMinutes} ${t('message.minutes_ago')}`;
+    // }
     return messageDate.format('HH:mm');
   }
 

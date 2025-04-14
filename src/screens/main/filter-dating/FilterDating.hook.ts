@@ -1,6 +1,6 @@
 import {GlobalService} from '@components';
 import {useLocation} from '@hooks';
-import {getLocations, sendMatchSaga} from '@redux';
+import {getLocations, RootState, sendMatchSaga, setFilterCache} from '@redux';
 import {getFindUserApi} from '@services';
 import {useTheme} from '@theme';
 import {genderInterface, UserFindInterface} from '@types';
@@ -13,15 +13,14 @@ export const useFilterDating = () => {
   const styles = createStyles(themeColors);
   const [isFilter, setIsFilter] = useState(true);
   const location = useSelector(getLocations);
+  const filterCache = useSelector(
+    (state: RootState) => state.settingSlice.filterCache,
+  );
   const [matchUser, setMatchUser] = useState<UserFindInterface | null>(null);
   const swipeRef = useRef<{triggerSwipe: (action: string) => void}>(null);
   const dispatch = useDispatch();
   const {checkLocation} = useLocation();
-  const [filter, setFilter] = useState<any>({
-    age: [18, 30],
-    distance: [50],
-    gender: genderInterface.OTHER,
-  });
+
   const [page, setPage] = useState(1);
   const [users, setUsers] = useState<UserFindInterface[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,10 +28,12 @@ export const useFilterDating = () => {
   const fetchUsers = async (newFilter?: any) => {
     try {
       let params: any = {
-        age: filter.age.join('-'),
-        distance: filter.distance[0],
+        age: filterCache.age.join('-'),
+        distance: filterCache.distance[0],
         gender:
-          filter?.gender === genderInterface.OTHER ? null : filter?.gender,
+          filterCache?.gender === genderInterface.OTHER
+            ? null
+            : filterCache?.gender,
         location: {
           latitude: location?.latitude ?? 0,
           longitude: location?.longitude ?? 0,
@@ -53,7 +54,7 @@ export const useFilterDating = () => {
           paged: 1,
         };
       }
-      const response = await getFindUserApi(params);
+      const response: any = await getFindUserApi(params);
       console.log({response});
       // setNext(response.isNext);
       setNext(response?.data?.is_next);
@@ -103,11 +104,9 @@ export const useFilterDating = () => {
     };
     setPage(1);
     setIsLoading(true);
-    await setFilter({
-      ...value,
-      location: {...location},
-    });
+    console.log({value});
 
+    dispatch(setFilterCache(value));
     fetchUsers(params);
   };
   useEffect(() => {
@@ -129,8 +128,7 @@ export const useFilterDating = () => {
     styles,
     isFilter,
     setIsFilter,
-    filter,
-    setFilter,
+    filter: filterCache,
     onFilterApi,
     swipeRef,
     handleSwipe,

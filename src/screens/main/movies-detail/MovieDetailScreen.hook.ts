@@ -41,7 +41,10 @@ export const useMovieDetailScreen = () => {
   const styles = createStyles(themeColors);
   const [showRating, setShowRating] = useState(false);
 
-  const {data: dataEpisodes} = useListEpisodeApi(PostTypeKey.MOVIES, movie?.id);
+  const {data: dataEpisodes, refetch: refetchEpisodes} = useListEpisodeApi(
+    PostTypeKey.MOVIES,
+    movieId,
+  );
   //
   const [serverMovie, setServerMovie] = useState<
     SourceVideoInterface | undefined
@@ -51,10 +54,10 @@ export const useMovieDetailScreen = () => {
     useDetailPostApi(movieId, PostTypeKey.MOVIES);
 
   useEffect(() => {
-    if (movie?.id) {
-      viewsPostApi(movie?.id, PostTypeKey.MOVIES);
+    if (movieId) {
+      viewsPostApi(movieId, PostTypeKey.MOVIES);
     }
-  }, [movie?.id]);
+  }, [movieId]);
   useEffect(() => {
     if (movie) {
       dispatch(
@@ -81,13 +84,17 @@ export const useMovieDetailScreen = () => {
   }, [isSuccess, data]);
 
   //
+  console.log({dataEpisodes});
+
   useEffect(() => {
-    if (detailMovie) {
+    console.log({dataEpisodes});
+
+    if (dataEpisodes?.data?.data) {
       setServerMovie(
-        data?.data?.chapters?.[(detailMovie?.index || 1) - 1]?.source?.[0],
+        dataEpisodes?.data?.data?.[(detailMovie?.index || 1) - 1]?.source?.[0],
       );
     }
-  }, [detailMovie, data?.data?.chapters]);
+  }, [dataEpisodes?.data?.data, detailMovie?.index]);
   //
   useFocusEffect(
     React.useCallback(() => {
@@ -124,7 +131,7 @@ export const useMovieDetailScreen = () => {
     setMovieId(post.id);
     setDetailMovie(post);
     setIsFullScreenVisible(false);
-
+    refetchEpisodes();
     setIsPlaying(false);
     refetch();
   };
@@ -145,8 +152,10 @@ export const useMovieDetailScreen = () => {
 
   const onSkipNext = () => {
     const index = detailMovie?.index || 0;
+    console.log({index}, dataEpisodes);
+
     // next chapter video
-    if (index < detailMovie?.chapters?.length - 1) {
+    if (index < dataEpisodes?.data?.data?.length) {
       setDetailMovie(prev => {
         return {
           ...prev,
@@ -170,6 +179,8 @@ export const useMovieDetailScreen = () => {
   useEffect(() => {
     console.log('Entered MovieDetailScreen');
   }, []);
+  console.log({dataEpisodes});
+
   return {
     themeColors,
     styles,

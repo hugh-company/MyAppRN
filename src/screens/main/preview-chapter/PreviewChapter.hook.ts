@@ -123,8 +123,20 @@ export const usePreviewChapter = () => {
       chapter?.content &&
       Array.isArray(chapter.content)
     ) {
-      const prefetchImages = chapter?.content.map(uri => ({uri}));
-      FastImage.preload(prefetchImages);
+      const prefetchImages = chapter.content.map(uri => ({uri}));
+
+      const batchSize = 5; // số ảnh mỗi batch
+      const delay = 100; // thời gian giữa các batch (ms)
+
+      async function prefetchInBatches(images: {uri: string}[]) {
+        for (let i = 0; i < images.length; i += batchSize) {
+          const batch = images.slice(i, i + batchSize);
+          FastImage.preload(batch);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+
+      prefetchInBatches(prefetchImages);
     }
     if (type !== PostTypeKey.COMIC && chapter?.content) {
       let arrayText: {text: string}[] = [];

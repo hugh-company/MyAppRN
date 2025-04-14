@@ -2,7 +2,7 @@ import { AppText } from '@components';
 import { normalize, Spacing } from '@theme';
 import { PostTypeKey } from '@types';
 import React, { useCallback } from 'react';
-import { Animated, InteractionManager, View } from 'react-native';
+import { Animated, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ModalEpisodes } from '../../../components/AppEpisodes/ModalEpisodes';
 import { usePreviewChapter } from './PreviewChapter.hook';
@@ -22,7 +22,6 @@ const PreviewChapter = () => {
   const currentChapter = (indexChapter || 1) - 1;
   const canGoToNextChapter = currentChapter < detailPost.chapter_total - 1;
   const canGoToPrevChapter = currentChapter > 0;
-
 
   const renderItem = useCallback(({ item }: { item: any }) => {
     if (type === PostTypeKey.COMIC) {
@@ -45,40 +44,31 @@ const PreviewChapter = () => {
       );
     }
   }, [filterText, type, data]);
-  const [shouldRenderList, setShouldRenderList] = React.useState(false);
-
-  React.useEffect(() => {
-    const interactionHandle = InteractionManager.runAfterInteractions(() => {
-      setShouldRenderList(true);
-    });
-
-    return () => interactionHandle.cancel();
-  }, []);
 
   return (
     <View style={styles.container}>
-      {shouldRenderList && (
-        <Animated.FlatList
-          data={data}
-          renderItem={renderItem}
-          ref={scrollRef}
-          removeClippedSubviews={true}
-          ListHeaderComponent={
-            <View style={[styles.headerTitle, { height: Spacing.height70 + top, paddingTop: top }]}>
-              <AppText style={styles.titleChapter}>{chapter?.title}</AppText>
-            </View>
-          }
-          style={[type === PostTypeKey.NOVEL && styles.containerList]}
-          keyExtractor={(item, index) => index.toString()}
-          onScroll={scrollHandler}
-          scrollEventThrottle={16}
-          initialNumToRender={type === PostTypeKey.COMIC ? 2 : 10}
-          maxToRenderPerBatch={100}
-          windowSize={100}
 
-          ListFooterComponent={<View style={[styles.bottom, { height: bottom + Spacing.height70 }]} />}
-        />
-      )}
+      <Animated.FlatList
+        data={data}
+        renderItem={renderItem}
+        ref={scrollRef}
+        numColumns={1}
+
+        ListHeaderComponent={
+          <View style={[styles.headerTitle, { height: Spacing.height70 + top, paddingTop: top }]}>
+            <AppText style={styles.titleChapter}>{chapter?.title}</AppText>
+          </View>
+        }
+        style={[type === PostTypeKey.NOVEL && styles.containerList]}
+        keyExtractor={(item, index) => index.toString()}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        initialNumToRender={type === PostTypeKey.COMIC ? 2 : 10}
+        maxToRenderPerBatch={10}
+        windowSize={100}
+        removeClippedSubviews={true}
+        ListFooterComponent={<View style={[styles.bottom, { height: bottom + Spacing.height70 }]} />}
+      />
 
       <Animated.View style={[styles.bottomStep, bottomStyle]}>
         <ControlBottom
@@ -109,7 +99,7 @@ const PreviewChapter = () => {
         minHeight={0.7}
         onSelectChapter={onSelectChapter}
         selectEpisodes={chapter?.id}
-        totalChapter={detailPost?.chapter_total || 0}
+        totalChapter={detailPost?.chapter_current || 0}
 
       />
     </View>

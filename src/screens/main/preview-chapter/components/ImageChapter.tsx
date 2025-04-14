@@ -46,6 +46,7 @@ const ImageChapter = ({ uri, onPress }: ImageChapterProps) => {
       />
     );
   }
+
   return (
     <AppZoomImage>
       <FastImage

@@ -1,9 +1,10 @@
-import { AppImage } from '@components';
+import { AppImage, AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { getListUserOnline } from '@redux';
 import { ColorsApp, Spacing } from '@theme';
 import { OtherUser } from '@types';
 import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSelector } from 'react-redux';
 export interface ListUserOnlineProps { }
 
@@ -13,10 +14,13 @@ export function ListUserOnline(props: ListUserOnlineProps) {
   console.log({ list });
 
   const renderItem = ({ item }: { item: OtherUser }) => (
-    <View style={styles.userContainer}>
+    <TouchableOpacity onPress={() => {
+      navigate(SCREEN_ROUTE.DETAIL_USER, { user: item });
+    }} style={styles.userContainer}>
       <AppImage uri={item.avatar} style={styles.avatar} />
       <View style={styles.status} />
-    </View>
+      <AppText style={styles.txtName} numberOfLines={1}>{item?.fullname}</AppText>
+    </TouchableOpacity>
   );
 
   return (
@@ -38,13 +42,20 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.width8,
   },
   userContainer: {
-
+    gap: Spacing.width8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    maxWidth: Spacing.width80,
   },
   avatar: {
-    width: Spacing.width60,
-    height: Spacing.width60,
+    width: Spacing.width48,
+    height: Spacing.width48,
     borderRadius: Spacing.width30,
 
+  },
+  txtName: {
+    fontSize: Spacing.width12,
+    color: ColorsApp.whiteColor,
   },
   status: {
     width: Spacing.width15,

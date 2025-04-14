@@ -5,6 +5,7 @@ import { checkMessageTime } from '@utils';
 import React from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
+import { getStickerIconWithMessage } from '../../../../utils/getSticker';
 import { MessageGame } from './MessageGame';
 import { MessageImages } from './MessageImages';
 import { MessageRelied } from './MessageReplied';
@@ -49,7 +50,7 @@ export function MessageReceived(props: MessageReceivedProps) {
       <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
         <View>
           <AppImage style={styles.avatar} uri={userReceived?.avatar} />
-          <View style={styles.status} />
+          {!!userReceived.online && <View style={styles.status} />}
         </View>
         <View style={[styles.message, item?.content?.data?.sticker && { backgroundColor: 'transparent' }]}>
           {item.content?.replyto && (
@@ -65,7 +66,7 @@ export function MessageReceived(props: MessageReceivedProps) {
           }}
             thread_id={item.thread_id} id={item.id} />}
           {item?.content?.type === MessageType.GAME && item.content?.data?.games?.length > 0 && <MessageGame list={item.content?.data?.games} />}
-          {item?.content?.data?.sticker && <AppImage uri={item?.content?.data?.sticker} style={styles.sticker} isBase={false} />}
+          {item?.content?.data?.sticker && <AppImage uri={getStickerIconWithMessage(item?.content?.data?.sticker)} style={styles.sticker} isBase={false} />}
 
           {item?.content?.data?.text?.length > 0 && <AppText style={styles.txtMessage}>{item?.content?.data?.text}</AppText>}
           <View style={styles.viewRead}>

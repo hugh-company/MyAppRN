@@ -132,6 +132,7 @@ export interface detailPostInterface {
   trailer: string;
   cinema: string;
   movie_type: 'movie' | 'tvseries';
+  chapter_current: number;
   chapter_total: number;
   quality: string;
   showtimes: string;
@@ -144,7 +145,7 @@ export interface detailPostInterface {
   country: Array<TabInterface>;
   actors: Array<PersonInterface>;
   directors: Array<PersonInterface>;
-  chapters: Array<chapterEpisodeInterface>;
+  // chapters: Array<chapterEpisodeInterface>;
   creators: Array<PersonInterface>;
   // game
   iframe_game?: string;

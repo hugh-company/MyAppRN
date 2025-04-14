@@ -226,16 +226,17 @@ const chatSlice = createSlice({
 
       //  update message list
       // check message
+      if (state.joinedConversation === action.payload?.message.thread_id) {
+        state.message.messages = [
+          action.payload.message,
+          ...state.message.messages,
+        ];
 
-      state.message.messages = [
-        action.payload.message,
-        ...state.message.messages,
-      ];
-
-      if (!action.payload?.message.created_at) {
-        action.payload.message.content.created_at = dayjs().format(
-          'YYYY-MM-DD HH:mm:ss',
-        );
+        if (!action.payload?.message.created_at) {
+          action.payload.message.content.created_at = dayjs().format(
+            'YYYY-MM-DD HH:mm:ss',
+          );
+        }
       }
     },
     addNewConversation(state, action) {
@@ -310,6 +311,8 @@ const chatSlice = createSlice({
     },
     // read all messages in conversation
     readAllMessagesConversions(state, action) {
+      console.log('readAllMessagesConversions', action.payload);
+
       state.joinedConversation = action.payload?.thread_id;
       const index = state.conversation.conversations.findIndex(
         item => item.thread_id === action.payload?.thread_id,
@@ -318,11 +321,39 @@ const chatSlice = createSlice({
         state.conversation.conversations[index].last_message.content.status =
           MessageStatus.READ;
       }
+      // update message list
+      state.message.messages = state.message.messages.map(message => {
+        console.log(
+          {
+            dasdadas: message.thread_id,
+          },
+          action.payload?.thread_id,
+        );
+
+        if (message.thread_id === action.payload?.thread_id) {
+          return {
+            ...message,
+            content: {
+              ...message.content,
+              status: MessageStatus.READ,
+            },
+          };
+        }
+        return message;
+      });
     },
 
     readAllMessagesWithRoom(state, action) {
       state.joinedConversation = action.payload?.thread_id;
+      const index = state.conversation.conversations.findIndex(
+        item => item.thread_id === action.payload?.thread_id,
+      );
+      console.log({index}, action.payload?.thread_id);
 
+      if (index >= 0) {
+        state.conversation.conversations[index].last_message.content.status =
+          MessageStatus.READ;
+      }
       state.message.messages = state.message?.messages.map(message => {
         if (message.thread_id === action.payload?.thread_id) {
           return {

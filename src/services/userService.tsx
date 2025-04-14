@@ -170,3 +170,11 @@ export const useSavedPostApi = (type: PostTypeKey, paged?: number) => {
     { paged },
   );
 };
+export const callApiLogout = (device_id: string) => {
+  apiService.setBaseURL(ApiConfigs.baseURL);
+  const formData = new FormData();
+  formData.append('device_id', device_id);
+  return apiService.postNormal(API_ENDPOINTS.LOGOUT, formData, {
+    'Content-Type': 'multipart/form-data',
+  });
+};

@@ -10,7 +10,7 @@ export interface ButtonNavigationInterface {
   data?: {
     title: string | undefined;
     api: string | undefined;
-    type: 'list' | 'category';
+    type: 'list' | 'lists' | 'category';
     posttype: PostTypeKey;
   };
   paged?: number | 1;

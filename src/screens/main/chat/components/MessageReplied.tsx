@@ -1,9 +1,10 @@
-import { AppText } from '@components';
+import { AppImage, AppText } from '@components';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import { MessageItemInterface, OtherUser } from '@types';
 import { t } from 'i18next';
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { getStickerIconWithMessage } from '../../../../utils/getSticker';
 export interface MessageReliedProps {
   repliedMessage: MessageItemInterface,
   userReceived: OtherUser,
@@ -23,23 +24,32 @@ export function MessageRelied(props: MessageReliedProps) {
         return t('message.repliedGame');
       case 'game':
         return t('message.repliedImage');
+      case 'sticker':
+        return 'Sticker';
       default:
         return '';
     }
   };
+
   return <TouchableOpacity style={styles.viewRelied} onPress={() => {
     onPress && onPress();
   }}>
-    <AppText style={styles.titleRelied}>{repliedMessage.content?.replyto?.recipient_id !== userSent.id ? userReceived.fullname : userSent.fullname}</AppText>
-    <AppText style={styles.repliedText}>{renderText()}</AppText>
+    <AppText style={styles.titleRelied}>{repliedMessage?.recipient_id !== userSent.id ? userReceived.fullname : userSent.fullname}</AppText>
+    <View style={styles.viewSticker}>
+      <AppImage uri={getStickerIconWithMessage(repliedMessage?.content?.data?.sticker)} style={{ width: Spacing.width30, height: Spacing.width30 }} isBase={false} />
+      <AppText style={styles.repliedText}>{renderText()}</AppText>
+    </View>
   </TouchableOpacity>;
 }
 
 const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
+  viewSticker: {
+
+  },
   viewRelied: {
     borderLeftColor: themeColors.whiteColor,
     borderLeftWidth: 2,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(0,0,0,0.2)',
     padding: Spacing.width8,
     gap: Spacing.width4,
   },
@@ -50,6 +60,6 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   repliedText: {
     color: themeColors.subtile,
     fontSize: FontSize.FontSize14,
-    marginBottom: Spacing.width8,
+
   },
 });

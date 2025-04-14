@@ -9,7 +9,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { createStyles } from './styles';
 
 export interface AppEpisodesProps {
-  chapter_total: number;
+  chapter_current: number;
   type: PostTypeKey;
   title?: string;
   style?: StyleProp<ViewStyle>;
@@ -25,12 +25,11 @@ export interface AppEpisodesProps {
 
 const AppEpisodes = ({
   style,
-  chapter_total,
+  chapter_current,
   type,
   onSelectChapter,
-  title, value = 0, onPlayVideo, idPost, episodes, goToDetail,
+  title, value = 0, onPlayVideo, idPost, episodes = [], goToDetail,
 }: AppEpisodesProps) => {
-  console.log({ value });
 
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
@@ -46,9 +45,12 @@ const AppEpisodes = ({
   const expandedChaptersToShow = expandedRowsToShow * chaptersPerRow; // Total chapters to show when expanded
 
   useEffect(() => {
-    const chapters = Array.from({ length: chapter_total }, (_, i) => i + 1);
+    const chapters = Array.from(
+      { length: type === 'movie' ? episodes.length : chapter_current }, // Adjusted logic for 'movie'
+      (_, i) => i + 1
+    );
     setDisplayedChapters(chapters.slice(0, initialChaptersToShow));
-  }, [chapter_total]);
+  }, [episodes.length, chapter_current, type]);
 
   useEffect(() => {
     if (value) {
@@ -58,12 +60,11 @@ const AppEpisodes = ({
 
   const handleLoadMore = () => {
     setIsShowMore(!isShowMore);
-    setDisplayedChapters(isShowMore ? displayedChapters.slice(0, initialChaptersToShow) : Array.from({ length: chapter_total }, (_, i) => i + 1));
+    setDisplayedChapters(isShowMore ? displayedChapters.slice(0, initialChaptersToShow) : Array.from({ length: (type === 'movie' ? episodes.length : chapter_current) }, (_, i) => i + 1));
   };
 
   const handleSelectChapter = async (chapter: number) => {
     onPlayVideo?.();
-
 
     if (goToDetail) {
       goToDetail(chapter);
@@ -77,7 +78,6 @@ const AppEpisodes = ({
       return;
     }
 
-
     setSelectEpisodes(chapter);
     const response: any = await getDetailEpisodeApi(type, idPost, chapter);
     console.log({ response });
@@ -85,10 +85,9 @@ const AppEpisodes = ({
     onSelectChapter?.(response.data);
   };
 
-  if (!chapter_total) { return null; }
+  if (!displayedChapters.length) { return null; }
 
   return (
-
     <View style={[styles.container, style]}>
       <AppText style={styles.title}>{title}</AppText>
       {isShowMore ? (
@@ -122,13 +121,12 @@ const AppEpisodes = ({
           })}
         </View>
       )}
-      {chapter_total > 10 && (
+      {(type === 'movie' ? episodes.length : chapter_current) > 10 && (
         <TouchableOpacity style={styles.btnMore} onPress={handleLoadMore}>
           <AppText style={styles.txtMore}>{isShowMore ? t('movie.show_less') : t('movie.more')}</AppText>
         </TouchableOpacity>
       )}
     </View>
-
   );
 };
 
