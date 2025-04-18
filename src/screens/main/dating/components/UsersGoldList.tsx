@@ -1,17 +1,22 @@
+import { EyeIcon } from '@assets';
 import { AppImage, AppText } from '@components';
+import { usePremiumUsers } from '@hooks';
 import { navigate, SCREEN_ROUTE } from '@navigation';
-import { RootState } from '@redux';
 import { ColorsApp, FontSize, FontWithFamily, Spacing } from '@theme';
 import { UserItemInterface } from '@types';
+import { t } from 'i18next';
 import React from 'react';
 import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useSelector } from 'react-redux';
+
 export interface ListUserOnlineProps { }
 
 export function UsersGoldList(props: ListUserOnlineProps) {
-  const list = useSelector((state: RootState) => state.dataLocalSlide.userPremium);
+  const { data: list = [], isLoading } = usePremiumUsers();
   const { } = props;
-  console.log({ list });
+
+  if (isLoading || list.length === 0) {
+    return null;
+  }
 
   const renderItem = ({ item }: { item: UserItemInterface }) => (
     <TouchableOpacity onPress={() => {
@@ -24,22 +29,28 @@ export function UsersGoldList(props: ListUserOnlineProps) {
     </TouchableOpacity>
   );
 
-  if (list.length === 0) {
-    return null;
-  }
   return (
     <View style={styles.container}>
       <AppText style={styles.title}>
         Premium Account
       </AppText>
       <FlatList
-        data={list}
+        data={list.slice(0, 5)} // Show only the first 5 users
         renderItem={renderItem}
         keyExtractor={(item) => `${item.id}`}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ gap: Spacing.width16 }}
+        ListFooterComponent={<TouchableOpacity style={[styles.userContainer]} onPress={() => {
+          navigate(SCREEN_ROUTE.VIEW_ALL_PREMIUM);
+        }}>
+          <View style={styles.viewIconSizeSmall}>
+            <EyeIcon color={'white'} />
+          </View>
+          <AppText style={styles.txt}>{t('home.viewMore')} </AppText>
+        </TouchableOpacity>}
       />
+
     </View>
   );
 }
@@ -54,9 +65,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
 
   },
+
+  viewIconSizeSmall: {
+    width: Spacing.width60,
+    height: Spacing.width60,
+    borderRadius: Spacing.width30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: ColorsApp.primary,
+
+  },
+  viewMore: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.width8,
+    marginLeft: Spacing.width8,
+    paddingVertical: Spacing.width8,
+    paddingHorizontal: Spacing.width16,
+    borderRadius: Spacing.width30,
+    backgroundColor: ColorsApp.primary,
+  },
   avatar: {
-    width: Spacing.width50,
-    height: Spacing.width50,
+    width: Spacing.width60,
+    height: Spacing.width60,
     borderRadius: Spacing.width30,
 
   },
@@ -80,5 +111,11 @@ const styles = StyleSheet.create({
     ...FontWithFamily.FontWithFamily_600,
     marginBottom: Spacing.width16,
 
+  },
+  viewAllText: {
+    fontSize: FontSize.FontSize14,
+    color: ColorsApp.primary,
+    textAlign: 'center',
+    marginTop: Spacing.width8,
   },
 });

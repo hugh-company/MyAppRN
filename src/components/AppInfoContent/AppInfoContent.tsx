@@ -58,7 +58,7 @@ const AppInfoContent = ({
   const onShare = async () => {
     const language = i18next.language;
 
-    const message = detail?.url?.startsWith('https:') ? detail?.url : `${BASE_IMAGE_URL}${language}/${detail?.url}`;
+    const message = detail?.url?.startsWith('https:') ? detail?.url : `${BASE_IMAGE_URL}${language}${detail?.url}`;
     onShareInfo(detail?.seo_title || '', message);
   };
   const updateSavedPost = async () => {

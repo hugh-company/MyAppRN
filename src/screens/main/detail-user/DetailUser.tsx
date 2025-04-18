@@ -1,4 +1,4 @@
-import { BriefcaseIcon, CalenderIcon, ChatIcon, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
+import { BriefcaseIcon, CalenderIcon, ChatIcon, EditUser, FacebookIcon, HeadIcon, IconMessager, InstagramIcon, LocationIcon, PhoneIcon, ProfileIcon, ShapeIcon, ZaloIcon } from '@assets';
 import { AppHeader, AppImage, AppText, BannerUser, HorizontalList } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { Spacing } from '@theme';
@@ -19,8 +19,9 @@ export const DetailUser = () => {
   };
 
 
+  console.log('data', data);
 
-
+  const dataSosial = isMyProfile ? data?.personal?.socials : data?.socials;
   return (
 
     <View style={styles.container}>
@@ -31,7 +32,7 @@ export const DetailUser = () => {
           goToScreenMessage();
         }
       }}>
-        {isMyProfile ? <ProfileIcon /> : <IconMessager width={Spacing.width30} height={Spacing.width30} color="white" />}
+        {isMyProfile ? <EditUser /> : <IconMessager width={Spacing.width30} height={Spacing.width30} color="white" />}
       </TouchableOpacity>} />
 
       <FlatList
@@ -111,13 +112,13 @@ export const DetailUser = () => {
             <View style={styles.viewInfo} >
               <View style={styles.view_contact}>
                 <View style={styles.viewIcon}>
-                  {data?.socials?.facebook && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.facebook)}>
+                  {dataSosial?.facebook && <TouchableOpacity onPress={() => Linking.openURL(`https://www.facebook.com/${data?.socials?.facebook}`)}>
                     <FacebookIcon size={Spacing.width32} />
                   </TouchableOpacity>}
-                  {data?.socials?.instagram && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.instagram)}>
+                  {dataSosial?.instagram && <TouchableOpacity onPress={() => Linking.openURL(`https://www.instagram.com/${data?.socials?.instagram}`)}>
                     <InstagramIcon />
                   </TouchableOpacity>}
-                  {data?.socials?.zalo && <TouchableOpacity onPress={() => Linking.openURL(data?.socials?.zalo)}>
+                  {dataSosial?.zalo && <TouchableOpacity onPress={() => Linking.openURL(`https://zalo.me/${data?.socials?.zalo}`)}>
                     <AppImage defaultSource={ZaloIcon} style={{ width: Spacing.width32, height: Spacing.width32 }} />
                   </TouchableOpacity>}
 

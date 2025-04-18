@@ -14,14 +14,15 @@ import {
   formatDate,
   getInfoPhoneNumber,
   getPhoneNumber,
+  showNotificationError,
   showNotificationSuccess,
   validatePhoneNumber,
 } from '@utils';
 import {createProfileFormData, createProfileSchema} from '@validations';
 import {t} from 'i18next';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import {PermissionsAndroid, Platform} from 'react-native';
+import {LayoutRectangle, PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -46,12 +47,17 @@ export const useCreateProfileScreen = () => {
   const [jobs, setJobs] = useState<{id: string; name: string}[]>([]);
   const userInfo = useSelector(getUserInfo);
   const dispatch = useDispatch();
+  const scrollRef = useRef<any>(null); // Reference for scrolling
+  const [fieldLayouts, setFieldLayouts] = useState<
+    Record<string, LayoutRectangle>
+  >({});
   const {
     control,
     handleSubmit,
     formState: {errors, isDirty},
     setError,
     reset,
+    setFocus,
   } = useForm({
     defaultValues: defaultForm,
     resolver: zodResolver(createProfileSchema),
@@ -112,7 +118,19 @@ export const useCreateProfileScreen = () => {
     }
   };
 
-  const onSubmit = handleSubmit(async (formData: createProfileFormData) => {
+  const scrollToError = (errors: any) => {
+    const errorMessages = Object.values(errors).map(
+      (error: any) => error.message,
+    );
+    const combinedMessage = errorMessages.join('\n'); // Combine all error messages
+    showNotificationError(t('validate.errorTitle'), combinedMessage); // Show all errors
+  };
+
+  const handleFieldLayout = (fieldName: string, layout: LayoutRectangle) => {
+    setFieldLayouts(prev => ({...prev, [fieldName]: layout}));
+  };
+
+  const onSubmit = async (formData: createProfileFormData) => {
     const isValidatePhone = await validatePhoneNumber(
       formData.phone.code,
       formData.phone.number,
@@ -123,6 +141,7 @@ export const useCreateProfileScreen = () => {
       setError('phone.number', {
         message: t('validate.validate_phone_number'),
       });
+      scrollToError(errors); // Scroll to the first error
       return;
     }
 
@@ -162,7 +181,15 @@ export const useCreateProfileScreen = () => {
     } finally {
       GlobalService.hideLoading();
     }
-  });
+  };
+
+  const onError = (errors: any) => {
+    console.log('Validation errors:', errors);
+    scrollToError(errors); // Scroll to the first error
+  };
+
+  const handleFormSubmit = handleSubmit(onSubmit, onError);
+
   const goToFavorites = () => {
     navigate(SCREEN_ROUTE.SETTING_FAVORITE);
   };
@@ -217,5 +244,12 @@ export const useCreateProfileScreen = () => {
     }
   };
 
-  return {control, errors, onSubmit, jobs};
+  return {
+    control,
+    errors,
+    handleFormSubmit,
+    jobs,
+    scrollRef,
+    handleFieldLayout,
+  };
 };

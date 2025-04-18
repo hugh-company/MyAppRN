@@ -62,4 +62,5 @@ export enum SCREEN_ROUTE {
   //notification detail
   NOTIFICATION_DETAIL = 'NotificationDetail',
   NOTIFICATION = 'Notification',
+  VIEW_ALL_PREMIUM = 'ViewAllPremium',
 }

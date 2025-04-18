@@ -52,6 +52,7 @@ export function ListStickers(props: ListStickersProps) {
   }, [selectedTab, stickers]);
 
   const renderSticker = ({ item }: { item: string }) => {
+
     return (
       <TouchableOpacity
         onPress={() => {

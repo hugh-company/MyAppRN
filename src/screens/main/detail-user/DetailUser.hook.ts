@@ -54,7 +54,7 @@ export const useDetailUser = () => {
     goToScreenMessage();
   };
   return {
-    data,
+    data: isMyProfile ? profile : data, // Use the user data or the logged-in user's data
     isMyProfile, // Expose the check result
     themeColors,
     styles,

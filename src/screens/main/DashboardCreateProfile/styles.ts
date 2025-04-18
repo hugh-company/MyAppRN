@@ -20,6 +20,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       fontSize: FontSize.FontSize24,
       ...FontWithFamily.FontWithFamily_600,
       textAlign: 'center',
+      maxWidth: '80%',
     },
     images: {
       width: WidthScreen - Spacing.width100,

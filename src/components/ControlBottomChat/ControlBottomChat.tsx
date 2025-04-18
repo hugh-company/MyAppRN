@@ -160,6 +160,7 @@ export function ControlBottomChat(props: ControlBottomChatProps) {
           onSticker={() => {
             handleShowStickers();
           }}
+          isStiker={gameSelected ? (message?.length === 0 && !gameSelected) : true}
           onGame={() => { setIsShowGame(!isShowGame); }}
           onImage={() => { handleSelectImage(); }}
           isShowGame={isShowGame}

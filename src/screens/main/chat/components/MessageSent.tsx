@@ -68,7 +68,7 @@ export function MessageSent(props: MessageSentProps) {
     >
       <Animated.View style={[styles.container, { transform: [{ translateX }] }]}>
 
-        <View style={[styles.containerMessage, item?.content?.data?.sticker && { backgroundColor: 'transparent' }]}>
+        <View style={[styles.containerMessage, (item?.content?.data?.sticker && !item?.content?.data?.games) && { backgroundColor: 'transparent' }]}>
 
           <View style={[styles.message]}>
 
@@ -142,6 +142,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     marginRight: Spacing.width16,
     backgroundColor: '#77051F',
     maxWidth: '80%',
+    overflow: 'hidden',
   },
 
   images: {
@@ -152,7 +153,7 @@ const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   sticker: {
     width: Spacing.width100,
     height: Spacing.width100,
-
+    alignSelf: 'flex-end',
   },
   message: {
     padding: Spacing.width16,

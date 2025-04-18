@@ -36,7 +36,7 @@
     "validate_min_password": "Mật khẩu phải ít nhất 6 ký tự",
     "validate_name": "Vui lòng nhập tên của bạn",
     "validate_max_name": "Tên không được dài quá 50 ký tự",
-
+    "errorTitle": "Lỗi",
     "check_password": "Mật khẩu không khớp",
 
     "password_req": "Mật khẩu phải ít nhất 6 ký tự",
@@ -57,7 +57,8 @@
     "validate_birthday": "Vui lòng chọn ngày sinh",
     "validate_gender": "Vui lòng chọn giới tính",
     "validate_galleries": "Vui lòng chọn ảnh",
-    "validate_job": "Vui lòng nhập nghề nghiệp"
+    "validate_job": "Vui lòng nhập nghề nghiệp",
+    "no_url_prefix": "Vui lòng chỉ nhập tên người dùng hoặc ID, không nhập URL đầy đủ"
   },
   "navigation": {
     "home": "Trang chủ",
@@ -203,7 +204,8 @@
     "favorite": "Sở thích",
     "descriptionFavorite": "Bạn muốn hẹn hò voiws...",
     "libraryImage": "Thư viện ảnh",
-    "loginNow": "Đăng nhập ngay"
+    "loginNow": "Đăng nhập ngay",
+    "socialMediaUsername": "Nnhập tên người dùng"
   },
   "favorite": {
     "photography": "Nhiếp ảnh",

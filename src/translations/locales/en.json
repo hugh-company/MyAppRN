@@ -52,7 +52,8 @@
     "validate_gender": "Please select a gender",
     "validate_galleries": "Please select images",
     "validate_job": "Please enter a job",
-    "validate_min_password": "Password must be at least 6 characters"
+    "validate_min_password": "Password must be at least 6 characters",
+    "no_url_prefix": "Please enter only your username or ID, not the full URL"
   },
   "navigation": {
     "home": "Home",
@@ -187,7 +188,8 @@
     "favorite": "Favorite",
     "descriptionFavorite": "You want to date with...",
     "libraryImage": "Image library",
-    "loginNow": "Login now"
+    "loginNow": "Login now",
+    "socialMediaUsername": "Enter your username"
   },
   "favorite": {
     "photography": "Photography",

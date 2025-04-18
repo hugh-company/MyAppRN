@@ -17,6 +17,7 @@ interface AppInputProps<T extends FieldValues> extends Omit<TextInputProps, 'val
   secureTextEntry?: boolean;
   control?: Control<T>;
   name?: Path<T>;
+  baseUrl?: string
 }
 
 const AppInputSocial = forwardRef<TextInput, AppInputProps<any>>((props, ref) => {
@@ -44,6 +45,7 @@ const AppInputSocial = forwardRef<TextInput, AppInputProps<any>>((props, ref) =>
             {...inputProps}
             label={label}
             value={value}
+
             onChangeText={(text) => {
               if (name === 'fullname' && validateInput(text)) {
                 onChange(text);

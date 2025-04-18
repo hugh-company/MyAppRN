@@ -17,8 +17,23 @@ export const createProfileSchema = z.object({
     .array(z.string())
     .min(1, {message: t('validate.validate_galleries')}),
   job: z.string().optional(),
-  zalo: z.string().optional(),
-  facebook: z.string().optional(),
-  instagram: z.string().optional(),
+  zalo: z
+    .string()
+    .optional()
+    .refine(val => !val || !val.includes('https://'), {
+      message: t('validate.no_url_prefix'),
+    }),
+  facebook: z
+    .string()
+    .optional()
+    .refine(val => !val || !val.includes('https://'), {
+      message: t('validate.no_url_prefix'),
+    }),
+  instagram: z
+    .string()
+    .optional()
+    .refine(val => !val || !val.includes('https://'), {
+      message: t('validate.no_url_prefix'),
+    }),
 });
 export type createProfileFormData = z.infer<typeof createProfileSchema>;

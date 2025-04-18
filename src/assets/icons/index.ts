@@ -95,3 +95,4 @@ export { default as SkipNextIcon } from './SkipNextIcon';
 export { default as SkipPreviousIcon } from './SkipPreviousIcon';
 export { default as IconFilter } from './IconFilter';
 export { default as IconPaste } from './IconPaste';
+export { default as EditUser } from './EditUser';

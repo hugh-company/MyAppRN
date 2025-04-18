@@ -1,4 +1,3 @@
-import { IconPaste } from '@assets';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { forwardRef, useMemo, useState } from 'react';
 import {
@@ -7,7 +6,6 @@ import {
   TextInput,
   TextInputProps,
   TextStyle,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
@@ -19,6 +17,7 @@ interface InputDefaultProps extends TextInputProps {
   containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
   errorStyle?: TextStyle;
+  baseUrl: string;
   secureTextEntry?: boolean;
 }
 
@@ -30,7 +29,7 @@ const InputSocialDefault = forwardRef<TextInput, InputDefaultProps>((props, ref)
     style,
     labelStyle,
     errorStyle,
-
+    baseUrl,
     ...inputProps
   } = props;
 
@@ -49,6 +48,11 @@ const InputSocialDefault = forwardRef<TextInput, InputDefaultProps>((props, ref)
     <View style={[styles.container, containerStyle]}>
       {label && <AppText style={[styles.label, labelStyle]}>{label}</AppText>}
       <View style={styles.inputContainer}>
+        <View style={styles.viewBaseUrl}>
+          <AppText style={styles.txtBaseUrl}>
+            {baseUrl}
+          </AppText>
+        </View>
         <TextInput
           ref={ref}
           // onPressIn={() => {
@@ -62,7 +66,6 @@ const InputSocialDefault = forwardRef<TextInput, InputDefaultProps>((props, ref)
           }}
           style={[
             styles.input,
-            { paddingRight: Spacing.width45 },
             style,
             error ? styles.inputError : null,
             isFocus && styles.inputFocus,
@@ -72,12 +75,12 @@ const InputSocialDefault = forwardRef<TextInput, InputDefaultProps>((props, ref)
           {...inputProps}
         />
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.iconContainer}
           onPress={handlePaste}
         >
           <IconPaste />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
       </View>
       {error && <AppText style={[styles.error, errorStyle]}>{error}</AppText>}
@@ -99,17 +102,21 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     inputContainer: {
       position: 'relative',
-
-    },
-    input: {
-      height: Spacing.height48,
+      flexDirection: 'row',
+      alignItems: 'center',
       borderWidth: 1,
       borderColor: themeColors.inputBorder,
       borderRadius: 8,
+      backgroundColor: themeColors.inputBackground,
+      overflow: 'hidden',
+    },
+    input: {
+      height: Spacing.height48,
+
       paddingHorizontal: Spacing.width12,
       fontSize: FontSize.FontSize14,
       color: themeColors.inputText,
-      backgroundColor: themeColors.inputBackground,
+      flex: 1,
     },
     inputError: {
       borderColor: themeColors.error,
@@ -123,11 +130,21 @@ const createStyles = (themeColors: ThemeColors) =>
       marginTop: Spacing.height4,
     },
     iconContainer: {
-      position: 'absolute',
-      right: Spacing.width12,
-      height: '100%',
       justifyContent: 'center',
-
+    },
+    viewBaseUrl: {
+      backgroundColor: 'black',
+      borderRightWidth: 1,
+      borderRightColor: themeColors.inputBorder,
+      width: Spacing.width120,
+      height: Spacing.height48,
+      justifyContent: 'center',
+      paddingHorizontal: Spacing.width8,
+    },
+    txtBaseUrl: {
+      ...FontWithFamily.FontWithFamily_400,
+      fontSize: FontSize.FontSize9,
+      color: themeColors.inputText,
     },
   });
 

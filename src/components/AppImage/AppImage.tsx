@@ -15,7 +15,7 @@ interface PropsImage {
   isBase?: boolean;
   tintColor?: string;
   disableCache?: boolean; // mới: bật tùy chọn không cache
-  uri: string;
+  uri?: string;
 }
 
 const AppImageComponent = (props: PropsImage) => {
@@ -54,7 +54,7 @@ const AppImageComponent = (props: PropsImage) => {
   return (
     <Box justifyContent="center" alignItems="center">
       <FastImage
-        source={source}
+        source={defaultSource ? defaultSource : source}
         style={[styles.image, style]}
         resizeMode={resizeMode}
         onLoadStart={() => setIsLoading(true)}
