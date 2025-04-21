@@ -1,20 +1,27 @@
 import { AppListMovies, LoadingList } from '@components';
 import { PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { useRef } from 'react';
+import React, { useEffect } from 'react';
 import { View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 import { useViewListScreen } from './ViewListScreen.hook';
 import { FilterListModal } from './components/FilterListModal';
 import { HeaderListScreen } from './components/HeaderListScreen';
+
 const ViewListScreen = () => {
   const { data, refFlatList, styles, type, slugCategory, onSelectedCategory,
     categoriesList, loading, list,
-    onLoadMore, menuSort,
+    onLoadMore, menuSort, refModal,
     filterBySort, sort, sortby,
   } = useViewListScreen();
-  const refModal = useRef<any>(null);
+
+  useEffect(() => {
+    return () => {
+      refModal.current?.close();
+    };
+  }, []);
+
   const renderTitle = () => {
     const title = categoriesList?.find((item) => item?.slug === (slugCategory || 0))?.name || '';
     switch (data?.posttype) {
@@ -28,6 +35,7 @@ const ViewListScreen = () => {
         return `${title}`;
     }
   };
+
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -47,6 +55,9 @@ const ViewListScreen = () => {
       />
       {loading ? <LoadingList numColumns={2} /> : <Animated.View style={styles.listContainer}>
         <AppListMovies
+          onClickDetail={() => {
+            refModal.current?.close();
+          }}
           ref={refFlatList}
           numColumns={2}
           scrollEventThrottle={16}
@@ -54,9 +65,7 @@ const ViewListScreen = () => {
           type={data?.posttype}
           onLoadMore={onLoadMore}
           keyExtractor={(item, index) => `view_list_${item?.id || index}`}
-
         />
-
       </Animated.View>}
       <FilterListModal
         refBottomSheet={refModal}
@@ -64,7 +73,7 @@ const ViewListScreen = () => {
         label={`${t('view_list.sort')}`}
         onSelect={filterBySort}
         data={menuSort}
-        disableReset={sort === sortby} // Pass disableReset prop
+        disableReset={sort === sortby}
       />
     </View>
   );

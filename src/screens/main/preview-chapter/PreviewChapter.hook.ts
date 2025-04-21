@@ -3,10 +3,11 @@ import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {navigate} from '@navigation';
 import {useRoute} from '@react-navigation/native';
 import {useDetailEpisodeApi} from '@services';
+import {FlashList} from '@shopify/flash-list';
 import {useTheme} from '@theme';
 import {detailPostInterface, PostTypeKey} from '@types';
 import React, {useCallback, useRef, useState} from 'react';
-import {Animated, FlatList} from 'react-native';
+import {Animated} from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {createStyles} from './styles';
 
@@ -23,7 +24,7 @@ export const usePreviewChapter = () => {
   const [data, setData] = useState<{url: string}[] | {text: string}[]>([]);
   const refModal = useRef<BottomSheetModal>(null);
   const [showModalFilter, setShowModalFilter] = useState(false);
-  const scrollRef = useRef<FlatList>(null);
+  const scrollRef = useRef<FlashList<any>>(null);
 
   const {themeColors} = useTheme();
   const styles = createStyles(themeColors);
@@ -50,16 +51,18 @@ export const usePreviewChapter = () => {
       useNativeDriver: true,
       listener: (event: any) => {
         const currentY = event.nativeEvent.contentOffset.y;
-        const distance = Math.abs(currentY - prevScrollY.current);
+        const distanceThreshold = 50; // Smaller threshold for more responsive UI
+
+        // Check if scroll position has changed significantly or if we're at the boundaries
         if (
-          distance > 300 ||
+          Math.abs(currentY - prevScrollY.current) > distanceThreshold ||
           currentY <= 0 ||
           currentY >=
             event.nativeEvent.contentSize.height -
               event.nativeEvent.layoutMeasurement.height
         ) {
           if (currentY > prevScrollY.current && currentY > 0) {
-            // Scrolling down
+            // Scrolling down - hide controls
             Animated.timing(headerTranslateY, {
               toValue: -150,
               duration: 300,
@@ -70,13 +73,8 @@ export const usePreviewChapter = () => {
               duration: 300,
               useNativeDriver: true,
             }).start();
-          } else if (
-            currentY < prevScrollY.current &&
-            currentY <
-              event.nativeEvent.contentSize.height -
-                event.nativeEvent.layoutMeasurement.height
-          ) {
-            // Scrolling up and not at the bottom
+          } else if (currentY < prevScrollY.current || currentY <= 0) {
+            // Scrolling up or at the top - show controls
             Animated.timing(headerTranslateY, {
               toValue: 0,
               duration: 300,
@@ -88,11 +86,13 @@ export const usePreviewChapter = () => {
               useNativeDriver: true,
             }).start();
           }
-          // check if the user is at the bottom of the list
+
+          // Also show controls if we're at the bottom of the content
           if (
             currentY >=
             event.nativeEvent.contentSize.height -
-              event.nativeEvent.layoutMeasurement.height
+              event.nativeEvent.layoutMeasurement.height -
+              5
           ) {
             Animated.timing(headerTranslateY, {
               toValue: 0,
@@ -151,30 +151,29 @@ export const usePreviewChapter = () => {
 
   const goToNextChapter = useCallback(() => {
     GlobalService.showLoading();
+    // Reset scroll position tracking before navigating
+    prevScrollY.current = 0;
     navigate('PreviewChapter', {
       detailPost: detailPost,
       indexChapter: indexChapter + 1,
       type,
     });
-    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    scrollRef.current?.scrollToOffset({offset: 0, animated: false});
     GlobalService.hideLoading();
   }, [type, indexChapter, detailPost]);
 
   const goToPrevChapter = useCallback(() => {
-    console.log({indexChapter});
     GlobalService.showLoading();
+    // Reset scroll position tracking before navigating
+    prevScrollY.current = 0;
     navigate('PreviewChapter', {
       detailPost: detailPost,
       indexChapter: indexChapter - 1,
       type,
     });
-    scrollRef.current?.scrollToOffset({animated: true, offset: 0});
+    scrollRef.current?.scrollToOffset({offset: 0, animated: false});
     GlobalService.hideLoading();
   }, [type, indexChapter, detailPost]);
-
-  // useEffect(() => {
-  //   fetchData();
-  // }, [fetchData]);
 
   const onApplyFilter = useCallback(item => {
     setFilterText({

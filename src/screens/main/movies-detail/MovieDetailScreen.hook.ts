@@ -52,7 +52,9 @@ export const useMovieDetailScreen = () => {
   //
   const {data, isSuccess, refetch, error, isLoading, isFetching} =
     useDetailPostApi(movieId, PostTypeKey.MOVIES);
-
+  console.log('====================================');
+  console.log({isFetching});
+  console.log('====================================');
   useEffect(() => {
     if (movieId) {
       viewsPostApi(movieId, PostTypeKey.MOVIES);
@@ -188,7 +190,7 @@ export const useMovieDetailScreen = () => {
     scrollHandler,
     headerBackgroundColorStyle,
     onRefresh: refetch,
-
+    isSuccess,
     showRating,
     setShowRating,
 

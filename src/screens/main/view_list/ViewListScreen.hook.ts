@@ -14,6 +14,7 @@ export const useViewListScreen = () => {
     router?.params as unknown as navigateViewListProps;
   //
   console.log({label, keyCategory, type, data, paged, sortby});
+  const refModal = useRef<any>(null);
 
   //
   const [loading, setLoading] = useState(true);
@@ -93,7 +94,6 @@ export const useViewListScreen = () => {
   useEffect(() => {
     // if (data?.type === TypeList.CATEGORY) {
     callApiCategory();
-    // }
   }, []);
   const callApiCategory = async () => {
     const responseCategory: any = await getCategoryApi(
@@ -202,5 +202,6 @@ export const useViewListScreen = () => {
     filterBySort,
     sort,
     sortby,
+    refModal,
   };
 };

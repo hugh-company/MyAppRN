@@ -38,7 +38,7 @@ export function BannerInfoMovie(props: BannerInfoMovieProps) {
     if (!shouldRenderList) {
       return <ActivityIndicator color={ColorsApp.text} />;
     }
-    if (disabledVideo) {
+    if (disabledVideo && !loading) {
       return (
         <TouchableOpacity
           disabled={disabledVideo}

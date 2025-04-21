@@ -16,7 +16,7 @@ export const MovieDetailScreen = () => {
     isPlaying, listChapter,
     isLoading,
     onSelectServer,
-    onSkipNext,
+    onSkipNext, isSuccess,
     onSkipPrevious } = useMovieDetailScreen();
   const { top } = useSafeAreaInsets();
   const opacity = useSharedValue(1);
@@ -35,7 +35,6 @@ export const MovieDetailScreen = () => {
     }
   }, [serverMovie]);
 
-  console.log({ serverMovie });
 
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
@@ -66,7 +65,7 @@ export const MovieDetailScreen = () => {
                   movie={item}
                   disabledVideo={!serverMovie?.link}
                   isPlaying={isPlaying}
-                  loading={isLoading}
+                  loading={!!detailMovie}
                   onPlay={() => setIsPlaying(true)}
                 />}
 

@@ -1,4 +1,5 @@
 import { AppText } from '@components';
+import { FlashList } from '@shopify/flash-list';
 import { normalize, Spacing } from '@theme';
 import { PostTypeKey } from '@types';
 import React, { useCallback } from 'react';
@@ -10,6 +11,9 @@ import { ControlBottom } from './components/ControlBottom';
 import { ControlHeader } from './components/ControlHeader';
 import ImageChapter from './components/ImageChapter';
 import { ModalFilterChapter } from './components/ModalFilterChapter';
+
+// Create animated FlashList component outside the main component
+const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
 
 const PreviewChapter = () => {
   const { data, chapter, styles, type, headerStyle,
@@ -47,26 +51,27 @@ const PreviewChapter = () => {
 
   return (
     <View style={styles.container}>
-
-      <Animated.FlatList
-        data={data}
+      <AnimatedFlashList
+        data={data || []}
         renderItem={renderItem}
         ref={scrollRef}
-        numColumns={1}
-
+        estimatedItemSize={type === PostTypeKey.COMIC ? 400 : 50}
         ListHeaderComponent={
           <View style={[styles.headerTitle, { height: Spacing.height70 + top, paddingTop: top }]}>
             <AppText style={styles.titleChapter}>{chapter?.title}</AppText>
           </View>
         }
-        style={[type === PostTypeKey.NOVEL && styles.containerList]}
-        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={[type === PostTypeKey.NOVEL && styles.containerList]}
+        keyExtractor={(item, index) => `item-chapter-${index}-${item?.text || index}`}
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        initialNumToRender={type === PostTypeKey.COMIC ? 2 : 10}
-        maxToRenderPerBatch={10}
-        windowSize={100}
-        removeClippedSubviews={true}
+        overrideItemLayout={(layout, item) => {
+          if (type === PostTypeKey.COMIC) {
+            layout.size = 400; // Estimate comic image height
+          } else {
+            layout.size = 50; // Estimate text height
+          }
+        }}
         ListFooterComponent={<View style={[styles.bottom, { height: bottom + Spacing.height70 }]} />}
       />
 
@@ -100,7 +105,6 @@ const PreviewChapter = () => {
         onSelectChapter={onSelectChapter}
         selectEpisodes={chapter?.id}
         totalChapter={detailPost?.chapter_current || 0}
-
       />
     </View>
   );

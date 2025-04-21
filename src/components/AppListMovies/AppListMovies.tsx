@@ -20,17 +20,26 @@ export interface AppListMoviesProps {
   isLoading?: boolean;
   ListEmptyComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
   ListHeaderComponent?: React.ComponentType<any> | React.ReactElement | null | undefined;
-  contentContainerStyle?: StyleProp<ViewStyle>
+  contentContainerStyle?: StyleProp<ViewStyle>;
+  onClickDetail?: (item: any) => void;
 }
 
 const AppListMovies = forwardRef((props: AppListMoviesProps, ref: React.ForwardedRef<FlatList<any>> | undefined) => {
-  const { data, contentContainerStyle, scrollEventThrottle, isLoading, type, keyExtractor, numColumns = 2, onScroll, onLoadMore, ListHeaderComponent } = props;
+  const { data, contentContainerStyle, scrollEventThrottle, isLoading, type, keyExtractor, numColumns = 2, onScroll, onLoadMore, ListHeaderComponent, onClickDetail } = props;
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const renderItem = ({ item }: { item: any }) => {
     if (numColumns !== 1) {
       return (
-        <TouchableOpacity onPress={() => goToDetail({ item, type: type || item?.posttype })} style={styles.item}>
+        <TouchableOpacity onPress={() => {
+          goToDetail({
+            item, type: type || item?.posttype,
+          });
+
+          onClickDetail?.(item);
+
+        }
+        } style={styles.item}>
           <AppImage uri={item.feature?.path} style={styles.image} />
           <View style={styles.viewInfo}>
             <AppText numberOfLines={2} style={styles.name}>{item.title}</AppText>

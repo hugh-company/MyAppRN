@@ -3,7 +3,7 @@ import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { FilterKey, PostTypeKey } from '@types';
 import { t } from 'i18next';
-import React, { memo } from 'react';
+import React, { memo, useEffect } from 'react';
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -28,13 +28,20 @@ export const FilterListModal = memo(({ refBottomSheet, styleContainer, data, lab
   const styles = createStyles(themeColors);
   const { bottom } = useSafeAreaInsets();
 
+  useEffect(() => {
 
+    return () => {
+      refBottomSheet?.current?.close();
+    };
+  }, [refBottomSheet]);
 
   return (
     <BottomSheetModal
       ref={refBottomSheet}
       backgroundStyle={[styles.modalContainer]}
       snapPoints={[Spacing.height302, Spacing.height302]}
+      dismissOnOverlayPress={true} // Ensure modal closes on tapping outside
+      enablePanDownToClose={true} // Allow closing the modal by dragging down
       onDismiss={() => {
         refBottomSheet?.current?.close();
       }}
