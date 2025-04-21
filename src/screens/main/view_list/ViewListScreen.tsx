@@ -73,7 +73,7 @@ const ViewListScreen = () => {
         label={`${t('view_list.sort')}`}
         onSelect={filterBySort}
         data={menuSort}
-        disableReset={sort === sortby}
+        disableReset={sort === (sortby)}
       />
     </View>
   );

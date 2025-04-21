@@ -35,7 +35,7 @@ export function UsersGoldList(props: ListUserOnlineProps) {
         Premium Account
       </AppText>
       <FlatList
-        data={list.slice(0, 5)} // Show only the first 5 users
+        data={list} // Show only the first 5 users
         renderItem={renderItem}
         keyExtractor={(item) => `${item.id}`}
         horizontal
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
   },
 
   viewIconSizeSmall: {
-    width: Spacing.width60,
-    height: Spacing.width60,
-    borderRadius: Spacing.width30,
+    width: Spacing.width70,
+    height: Spacing.width70,
+    borderRadius: Spacing.width70,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: ColorsApp.primary,
@@ -86,9 +86,9 @@ const styles = StyleSheet.create({
     backgroundColor: ColorsApp.primary,
   },
   avatar: {
-    width: Spacing.width60,
-    height: Spacing.width60,
-    borderRadius: Spacing.width30,
+    width: Spacing.width70,
+    height: Spacing.width70,
+    borderRadius: Spacing.width70,
 
   },
   status: {

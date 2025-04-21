@@ -10,8 +10,15 @@ import {createStyles} from './styles';
 export const useViewListScreen = () => {
   // router name , type, params
   const router = useRoute();
-  const {label, keyCategory, type, data, paged, sortby} =
-    router?.params as unknown as navigateViewListProps;
+  const {
+    label,
+    keyCategory,
+    type,
+    data,
+    paged,
+    sortby = 'updated_at__desc',
+  } = router?.params as unknown as navigateViewListProps;
+
   //
   console.log({label, keyCategory, type, data, paged, sortby});
   const refModal = useRef<any>(null);
@@ -35,6 +42,7 @@ export const useViewListScreen = () => {
   // newest
   // likes
   // views
+
   const menuSort = [
     {
       key: 'views_day__desc',
@@ -166,18 +174,21 @@ export const useViewListScreen = () => {
   const filterBySort = (item: any) => {
     if (item?.key === '') {
       setSlugCategory(keyCategory || '');
-      setSort(sortby); // Reset to the initial sortby value
+      setSort(sortby); // Reset to initial sortby or default value
       setPage(1);
       setIsNext(true);
       setLoading(true);
       setIsFilter(false);
       return;
     }
-    setSort(item.key);
-    setPage(1);
-    setIsNext(true);
-    setLoading(true);
-    setIsFilter(false);
+
+    if (item.key !== sortby) {
+      setIsNext(true);
+      setLoading(true);
+      setIsFilter(false);
+      setSort(item.key);
+      setPage(1);
+    }
   };
   return {
     data,
