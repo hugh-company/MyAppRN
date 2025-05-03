@@ -1,4 +1,4 @@
-import { ColorsApp, Spacing } from '@theme';
+import { Spacing } from '@theme';
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 export interface LoadingHomeProps { }
@@ -52,17 +52,15 @@ const LoadingHome = ({ }: LoadingHomeProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
-
+    backgroundColor: '#FFFFFF', // Changed to white
   },
   banner: {
     width: '100%',
     height: Spacing.height302,
     borderBottomRightRadius: Spacing.width32,
     borderBottomLeftRadius: Spacing.width32,
-    backgroundColor: ColorsApp.skeleton,
+    backgroundColor: '#F5F5F5', // Lighter skeleton color
   },
-
   dating: {
 
   },
@@ -110,31 +108,30 @@ const styles = StyleSheet.create({
     marginVertical: Spacing.height32,
     paddingLeft: 16,
     gap: Spacing.width16,
-
   },
   libraryTitle: {
     width: '60%',
     height: Spacing.height32,
     marginBottom: 8,
-    backgroundColor: ColorsApp.skeleton,
+    backgroundColor: '#F5F5F5', // Lighter skeleton color
+    borderRadius: Spacing.width4,
   },
   movieItem: {
     width: Spacing.width240,
     height: Spacing.width320,
     borderRadius: 8,
     marginRight: 16,
-    backgroundColor: ColorsApp.skeleton,
+    backgroundColor: '#F5F5F5', // Lighter skeleton color
   },
   categorySection: {
     flexDirection: 'row',
     gap: Spacing.width16,
-
   },
   itemCategory: {
     width: Spacing.width70,
     height: Spacing.width40,
     borderRadius: 8,
-    backgroundColor: ColorsApp.skeleton,
+    backgroundColor: '#F5F5F5', // Lighter skeleton color
   },
 });
 export default LoadingHome;

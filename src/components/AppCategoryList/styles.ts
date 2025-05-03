@@ -21,7 +21,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       paddingHorizontal: Spacing.width16,
     },
     btnActiveCategory: {
-      backgroundColor: themeColors.whiteColor,
+      backgroundColor: themeColors.primary,
     },
     txtCategory: {
       fontSize: FontSize.FontSize16,
@@ -29,7 +29,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     },
     txtActiveCategory: {
       fontSize: FontSize.FontSize16,
-      color: themeColors.primary,
+      color: themeColors.whiteColor,
       ...FontWithFamily.FontWithFamily_600,
     },
   });

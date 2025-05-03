@@ -22,7 +22,7 @@ interface ThemeContextType {
 
 const storage = new MMKV();
 const THEME_KEY = '@theme_type';
-const defaultThemeType: ThemeType = 'dark';
+const defaultThemeType: ThemeType = 'light';
 
 export const ThemeContext = createContext<ThemeContextType>({
   themeType: defaultThemeType,
@@ -54,7 +54,8 @@ export const useTheme = () => useContext(ThemeContext);
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemColorScheme = useColorScheme();
   const [themeType, setThemeType] = useState<ThemeType>(() => {
-    const savedTheme = storage.getString(THEME_KEY);
+    // const savedTheme = storage.getString(THEME_KEY);
+    const savedTheme = 'light'; // For testing purposes, set default to 'light'ßß
     return (savedTheme as ThemeType) || defaultThemeType;
   });
 
@@ -65,7 +66,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return themeType === 'dark';
   }, [themeType, systemColorScheme]);
 
-  const themeColors = isDarkMode() ? darkColors : lightColors;
+  const themeColors = lightColors;
 
   const handleSetThemeType = useCallback((newTheme: ThemeType) => {
     setThemeType(newTheme);

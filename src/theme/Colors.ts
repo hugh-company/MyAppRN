@@ -1,6 +1,8 @@
 export const lightColors = {
-  colorMain4: '#D11030',
-  primary: '#D11030',
+  // background: #E84F8A;
+
+  colorMain4: '#E84F8A',
+  primary: '#E84F8A',
   secondary: '#5856D6',
   tertiary: '#34C759',
   quaternary: '#FF2D55',
@@ -41,8 +43,8 @@ export const lightColors = {
 };
 
 export const darkColors = {
-  colorMain4: '#D11030',
-  primary: '#D11030',
+  colorMain4: '#E84F8A',
+  primary: '#E84F8A',
   secondary: '#5E5CE6',
   tertiary: '#30D158',
   quaternary: '#FF375F',
@@ -81,8 +83,8 @@ export const darkColors = {
   text50: '#FFFFFF80',
 };
 export const ColorsApp = {
-  colorMain4: '#D11030',
-  primary: '#D11030',
+  colorMain4: '#E84F8A',
+  primary: '#E84F8A',
   secondary: '#5E5CE6',
   tertiary: '#30D158',
   quaternary: '#FF375F',
@@ -118,7 +120,7 @@ export const ColorsApp = {
   backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
   onSurface: '#EDEDED',
   active: '#13E398',
-  skeleton: '#292929',
+  skeleton: '#F5F5F5',
 };
 export type ThemeColors = typeof lightColors;
 
@@ -127,7 +129,7 @@ export const Colors = {
   dark: darkColors,
   buttonConfirm: '',
   buttonCancel: '',
-  primary: '#D11030',
+  primary: '#E84F8A',
 };
 
 export default Colors;

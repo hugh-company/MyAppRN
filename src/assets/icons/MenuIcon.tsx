@@ -1,12 +1,15 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const MenuIcon = ({ size = 28, color = '#EDEDED' }: { size?: number, color?: string }) => {
+const MenuIcon = ({ size = 28, color = '#818080' }: { size?: number, color?: string }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 28 28" fill="none">
 
       <Path
-        d="M4.667 21a1.167 1.167 0 00-.137 2.325l.137.008h18.666a1.167 1.167 0 00.137-2.325L23.333 21H4.667zm0-8.167a1.167 1.167 0 100 2.334h18.666a1.167 1.167 0 100-2.334H4.667zm0-8.166a1.167 1.167 0 100 2.333h18.666a1.167 1.167 0 100-2.333H4.667z"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M2.334 7c0-.644.522-1.166 1.167-1.166h21a1.167 1.167 0 010 2.333h-21a1.167 1.167 0 01-1.167-1.166zm0 7c0-.644.522-1.166 1.167-1.166h21a1.167 1.167 0 010 2.333h-21a1.167 1.167 0 01-1.167-1.166zm0 7c0-.644.522-1.166 1.167-1.166h14a1.167 1.167 0 010 2.333h-14a1.167 1.167 0 01-1.167-1.166z"
+
         fill={color}
       />
     </Svg>

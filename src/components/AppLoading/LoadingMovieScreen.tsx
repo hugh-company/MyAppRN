@@ -45,7 +45,7 @@ const LoadingMovieScreen = ({ }: LoadingHomeProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#FFFFFF',
 
   },
   banner: {
@@ -77,13 +77,13 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#E1E9EE',
+    backgroundColor: '#F5F5F5',
   },
   headerTitle: {
     width: '50%',
     height: 20,
     marginLeft: 16,
-    backgroundColor: '#E1E9EE',
+    backgroundColor: '#F5F5F5',
   },
   section: {
     padding: 16,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     width: '70%',
     height: 20,
     marginBottom: 8,
-    backgroundColor: '#E1E9EE',
+    backgroundColor: '#F5F5F5',
   },
   appSubtitle: {
     width: '50%',

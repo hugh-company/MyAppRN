@@ -1,10 +1,9 @@
-import { AppCategoryList, AppInputSearch, AppListDashboard, HeaderMain } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
+import { AppCategoryList, AppListDashboard, HeaderMain } from '@components';
+import { Spacing } from '@theme';
 import { ItemListDashboard, PostTypeKey } from '@types';
 import { t } from 'i18next';
 import React from 'react';
 import { InteractionManager, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import { useComicScreen } from './ComicScreen.hook';
 
 const MemoizedAppListDashboard = React.memo(AppListDashboard);
@@ -26,21 +25,12 @@ const ComicScreen = () => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['rgba(209, 16, 48, 0.72)', 'rgba(1, 1, 1, 0.72)']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-      >
-        <HeaderMain title={t('chapter.title')} type={PostTypeKey.COMIC} />
-        <AppInputSearch
-          onClickSearch={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN, { type: PostTypeKey.COMIC })}
-          editable={false}
-          style={styles.inputSearch}
-          placeholder={t('search.chapters')}
-        />
 
-        <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} />
-      </LinearGradient>
+      <HeaderMain title={t('chapter.title')} type={PostTypeKey.COMIC} />
+
+
+      <AppCategoryList data={categories} categoryId={tabSelect?.id} onSelectedCategory={handleCategorySelect} listStyle={{ marginVertical: 0, marginBottom: Spacing.width16 }} />
+
       {shouldRenderList && (
         <MemoizedAppListDashboard
           data={comics}

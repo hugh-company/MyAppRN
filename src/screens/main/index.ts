@@ -29,3 +29,4 @@ export * from './webview';
 
 export * from './notification-detail';
 export * from './notifications';
+export * from './profile';

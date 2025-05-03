@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
 
-const RightIcon = ({ size = 24, color = '#EDEDED' }: { size?: number, color?: string }) => {
+const RightIcon = ({ size = 24, color = '#818080' }: { size?: number, color?: string }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path

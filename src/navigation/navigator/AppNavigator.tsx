@@ -13,7 +13,7 @@ import {
   NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo, setUserPremium } from '@redux';
+import { getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo, setUserPremium } from '@redux';
 import { NotificationDetailScreen, NotificationScreen, PreviewImages } from '@screens';
 import { getListUserPremium, getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
@@ -81,7 +81,6 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
     const dispatch = useDispatch();
     const isConnectedRef = useRef(false);
     const userInfo = useSelector(getUserInfo);
-    const location = useSelector(getLocations);
 
     const callApiProfile = async () => {
       try {

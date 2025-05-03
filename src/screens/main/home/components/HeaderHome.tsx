@@ -20,8 +20,6 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
 
   const navigation = useNavigation();
 
-  console.log({ top });
-
   return (
     <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: Spacing.height92 }, styleHeader]}>
       {/* open drawer */}

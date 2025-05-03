@@ -76,9 +76,9 @@ export const HorizontalList: React.FC<HorizontalListProps> = ({
             label: title,
           });
         }} style={styles.btnViewMore}>
-          <AppText style={styles.txtViewMore}>
+          {/* <AppText style={styles.txtViewMore}>
             {button?.label || titleViewMore}
-          </AppText>
+          </AppText> */}
           <RightIcon />
         </TouchableOpacity>
       </View>
@@ -123,7 +123,7 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     title: {
       fontSize: FontSize.FontSize16,
-      color: '#EDEDED',
+      color: themeColors.text,
       ...FontWithFamily.FontWithFamily_600,
     },
     image: {
@@ -165,9 +165,11 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     txtView: {
       fontSize: FontSize.FontSize10,
+      color: '#818080',
     },
     txtLike: {
       fontSize: FontSize.FontSize10,
+      color: '#818080',
     },
     viewRow: {
       flexDirection: 'row',

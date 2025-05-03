@@ -1,12 +1,12 @@
-import { LikeActiveIcon, PlayIcon, PlayStackedIcon } from '@assets';
-import { AppBanners, AppImage, AppText } from '@components';
+import { LikeActiveIcon, PlayStackedIcon } from '@assets';
+import { AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
-import { ItemListProduct, PostTypeKey } from '@types';
-import { getPrettyNumberString, goToDetail } from '@utils';
+import { ItemListProduct } from '@types';
+import { getPrettyNumberString } from '@utils';
 import { t } from 'i18next';
 import React, { useCallback } from 'react';
-import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import { Animated, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { StackedImageSwiper } from '../../../../components/StackedImageSwiper';
 
 interface BannerMovieProps {
   data: ItemListProduct[];
@@ -14,61 +14,110 @@ interface BannerMovieProps {
   title?: string;
   isGame?: boolean;
 }
+
 export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
+  // Shared Animated.Value for syncing scroll
+  const sharedScrollX = React.useRef(new Animated.Value(0)).current;
+  const imageUrl = title?.startsWith('https') ? title : data[0]?.feature?.path;
+  const renderDots = useCallback(() => (
+    <View style={styles.dotsContainer}>
+      {data.map((_, index) => {
+        const inputRange = [
+          (index - 1) * WidthScreen,
+          index * WidthScreen,
+          (index + 1) * WidthScreen,
+        ];
+        const dotScale = sharedScrollX.interpolate({
+          inputRange,
+          outputRange: [0.8, 1.2, 0.8],
+          extrapolate: 'clamp',
+        });
 
-  const navigateBanner = useCallback((item: ItemListProduct) => {
-    goToDetail({
-      item,
-      type: item?.posttype,
-    });
-  }, []);
+        return (
+          <Animated.View
+            key={index}
+            style={[
+              styles.dot,
+              { transform: [{ scale: dotScale }] },
+            ]}
+          />
+        );
+      })}
+    </View>
+  ), [data, sharedScrollX]);
 
-
-
-  const renderItemBanner = useCallback(({ item }: { item: ItemListProduct }) => (
-    <TouchableOpacity activeOpacity={1} onPress={() => navigateBanner(item)} style={styles.banner}>
-      <AppImage uri={item?.banner?.path || item?.feature?.path} style={styles.image} />
-      <LinearGradient
-        colors={['rgba(0, 0, 0, 0)', 'black']}
-        style={styles.gradient}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-      >
-        <View style={styles.body}>
-          <View style={styles.viewInfo}>
-            <AppText style={styles.nameMovie} numberOfLines={2}>{item.title}</AppText>
+  const renderItemInfo = useCallback(() => (
+    <>
+      <Animated.FlatList
+        data={data}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { x: sharedScrollX } } }],
+          { useNativeDriver: true }
+        )}
+        keyExtractor={(_, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View style={styles.infoCard}>
+            <AppText style={styles.nameMovie}>{item?.title}</AppText>
             <View style={styles.viewOption}>
-              {!isGame && <View style={styles.viewRow}>
-                <PlayStackedIcon />
-                <AppText style={styles.txtView}>
-                  {getPrettyNumberString(item.episode_total ?? 0)}/{getPrettyNumberString(item.episode_total ?? 0)} {t('home.episodes')}
-                </AppText>
-              </View>}
+              {!isGame && (
+                <View style={styles.viewRow}>
+                  <PlayStackedIcon />
+                  <AppText style={styles.txtView}>
+                    {getPrettyNumberString(item?.episode_total ?? 0)}/{getPrettyNumberString(item?.episode_total ?? 0)} {t('home.episodes')}
+                  </AppText>
+                </View>
+              )}
               <View style={styles.viewRow}>
                 <LikeActiveIcon size={Spacing.width16} color={themeColors.star} />
-                <AppText style={styles.txtLike}>{getPrettyNumberString(item.like_count ?? 0)} {t('home.likes')}</AppText>
+                <AppText style={styles.txtLike}>
+                  {getPrettyNumberString(item?.like_count ?? 0)} {t('home.likes')}
+                </AppText>
               </View>
             </View>
           </View>
-          {item?.posttype === PostTypeKey.MOVIES && <View style={styles.btnPlay}>
-            <PlayIcon />
-          </View>}
-        </View>
-      </LinearGradient>
-    </TouchableOpacity>
-  ), [navigateBanner, themeColors, isGame]);
-
+        )}
+      />
+      <View style={styles.infoDotsContainer}>
+        {data.map((_, index) => {
+          const inputRange = [
+            (index - 1) * WidthScreen,
+            index * WidthScreen,
+            (index + 1) * WidthScreen,
+          ];
+          const dotScale = sharedScrollX.interpolate({
+            inputRange,
+            outputRange: [0.8, 1.2, 0.8],
+            extrapolate: 'clamp',
+          });
+          return (
+            <Animated.View
+              key={index}
+              style={[
+                styles.dot,
+                { transform: [{ scale: dotScale }] },
+              ]}
+            />
+          );
+        })}
+      </View>
+    </>
+  ), [data, sharedScrollX, isGame, themeColors]);
 
   return (
     <View style={[styles.container, style]}>
-      <AppBanners
-        width={WidthScreen}
-        label={title}
-        data={data}
-        labelStyle={styles.title}
-        renderItem={renderItemBanner} />
+      {/* Part 1: Stacked images – pass the sharedScrollX to sync scroll */}
+      <StackedImageSwiper
+        data={data.map(item => ({ uri: item?.feature?.path }))}
+        scrollX={sharedScrollX}
+      />
+      {/* Part 2: Info list with horizontal scroll and dots */}
+      {renderItemInfo()}
+      {renderDots()}
     </View>
   );
 };
@@ -76,70 +125,54 @@ export const BannerMovie = ({ data, style, title, isGame = false }: BannerMovieP
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-
-    },
-    title: {
-      marginBottom: Spacing.width16,
-      paddingHorizontal: Spacing.width16,
-    },
-    btn: {
-      width: '100%',
-      height: Spacing.height315,
-    },
-    banner: {
-      width: WidthScreen,
-      height: Spacing.height240,
-      paddingHorizontal: Spacing.width16,
-    },
-    image: {
-      borderWidth: 1,
-      borderColor: themeColors.btnSocial,
-      borderRadius: Spacing.width16,
-      overflow: 'hidden',
-
-    },
-    gradient: {
-      position: 'absolute',
-      bottom: 0,
-      width: '100%',
-      height: '50%',
-      left: Spacing.width16,
-      right: Spacing.width16,
-      paddingTop: Spacing.height12,
-
-    },
-    body: {
-      paddingHorizontal: Spacing.width16,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-
-      gap: Spacing.width16,
-
-    },
-    viewInfo: {
       flex: 1,
-      gap: Spacing.width8,
-
     },
-    btnPlay: {
-      backgroundColor: themeColors.primary,
-      width: Spacing.width48,
-      height: Spacing.width48,
-      borderRadius: Spacing.width40,
+    bannerContainer: {
+      height: Spacing.height315, // Tăng chiều cao container để phù hợp với ảnh
+      marginBottom: Spacing.width16,
+    },
+    bannerItem: {
+      width: WidthScreen, // Đảm bảo chiều rộng bằng màn hình
+      height: '100%', // Chiều cao bằng container
       justifyContent: 'center',
       alignItems: 'center',
+    },
+    bannerImage: {
+      width: 300, // fixed width in pixels
+      height: 200, // fixed height in pixels
+      borderRadius: Spacing.width16,
+      overflow: 'hidden',
+      backgroundColor: themeColors.background, // Thêm màu nền để kiểm tra
+    },
+    dotsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: Spacing.width8,
+    },
+    dot: {
+      width: Spacing.width8,
+      height: Spacing.width8,
+      borderRadius: Spacing.width4,
+      backgroundColor: themeColors.btnSocial,
+      marginHorizontal: Spacing.width4,
+    },
+    infoContainer: {
+      paddingHorizontal: Spacing.width16,
     },
     nameMovie: {
       fontSize: FontSize.FontSize18,
       ...FontWithFamily.FontWithFamily_600,
+      marginBottom: Spacing.width8,
     },
-
     viewOption: {
       flexDirection: 'row',
       alignItems: 'center',
-
       gap: Spacing.width16,
-
+    },
+    viewRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: Spacing.width4,
     },
     txtView: {
       fontSize: FontSize.FontSize14,
@@ -147,10 +180,14 @@ const createStyles = (themeColors: ThemeColors) =>
     txtLike: {
       fontSize: FontSize.FontSize12,
     },
-    viewRow: {
+    infoCard: {
+      width: WidthScreen, // Adjust as needed
+      paddingHorizontal: Spacing.width16,
+      paddingVertical: Spacing.width16,
+    },
+    infoDotsContainer: {
       flexDirection: 'row',
-      alignItems: 'center',
       justifyContent: 'center',
-      gap: 4,
+      marginTop: Spacing.width8,
     },
   });

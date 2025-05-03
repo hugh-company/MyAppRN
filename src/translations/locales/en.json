@@ -64,7 +64,8 @@
     "movie": "Movie",
     "comic": "Comic",
     "game": "Game",
-    "novel": "Novel"
+    "novel": "Novel",
+    "account": "Account"
   },
   "drawer": {
     "title": "filmAPP",
