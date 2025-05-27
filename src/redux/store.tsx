@@ -2,9 +2,8 @@ import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { AsyncStorage } from '@utils';
 import { persistReducer, persistStore } from 'redux-persist';
-import createSagaMiddleware from 'redux-saga';
-import rootSaga from '../sagas/rootSaga';
 import rootReducer from './rootReducer';
+
 
 const newAsyncStorage = {
   getItem: async (key: string) => {
@@ -25,13 +24,10 @@ const persistConfig = {
   key: 'root',
   storage: newAsyncStorage,
   whitelist: ['accountSlice', 'chatSlice', 'settingSlice', 'savedPostSlice', 'dataLocalSlide'],
-  // blacklist: ['taskSlice'],
-  // blacklist : là các reducer mà không muốn lưu vào storage
-  // whitelist : là các reducer muốn lưu vào storage
 };
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const sagaMiddleware = createSagaMiddleware();
+// const sagaMiddleware = createSagaMiddleware();
 
 export const store = configureStore({
   reducer: persistedReducer,
@@ -40,10 +36,12 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
       immutableCheck: false, // Disable ImmutableStateInvariantMiddleware
-    }).concat(sagaMiddleware),
+    })
+  // .concat(sagaMiddleware),
 });
-// run saga
-sagaMiddleware.run(rootSaga);
+
+console.log('Running rootSaga');
+// sagaMiddleware.run(rootSaga);
 
 setupListeners(store.dispatch);
 export const persistor = persistStore(store);

@@ -15,6 +15,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import { persistor, store } from '@redux';
 import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import {
@@ -25,7 +26,6 @@ import { enableFreeze, enableScreens } from 'react-native-screens';
 import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import { persistor, store } from './src/redux/store';
 
 enableScreens();
 enableFreeze(true);

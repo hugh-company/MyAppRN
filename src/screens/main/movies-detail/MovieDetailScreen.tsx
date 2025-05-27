@@ -34,7 +34,7 @@ export const MovieDetailScreen = () => {
       flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
     }
   }, [serverMovie]);
-
+  console.log('isSuccess', serverMovie);
 
   return (
     <View style={[styles.container, !isFullScreenVisible && { paddingTop: top }]}>
@@ -65,7 +65,7 @@ export const MovieDetailScreen = () => {
                   movie={item}
                   disabledVideo={!serverMovie?.link}
                   isPlaying={isPlaying}
-                  loading={!!detailMovie}
+                  loading={!!isSuccess && isLoading}
                   onPlay={() => setIsPlaying(true)}
                 />}
 

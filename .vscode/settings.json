@@ -58,5 +58,6 @@
   },
   "editor.formatOnPaste": false,
   "editor.formatOnType": false,
-  "cSpell.words": ["descripton"]
+  "cSpell.words": ["descripton"],
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

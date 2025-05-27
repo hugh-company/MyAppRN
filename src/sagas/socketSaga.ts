@@ -650,8 +650,11 @@ function* handleLogout(): Generator<any, void, any> {
   yield put({type: 'SOCKET_CLOSED'});
 }
 
+function* handleSocket() {
+  // Your socket handling logic here
+}
+
 // Root saga của socket
 export default function* socketSaga(): Generator<any, void, any> {
   yield all([fork(watchSetSocket), fork(watchConversationActions)]);
 }
-//
