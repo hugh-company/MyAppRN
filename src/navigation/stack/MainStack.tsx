@@ -1,7 +1,7 @@
 import { SCREEN_ROUTE } from '@navigation';
 
 import { createStackNavigator } from '@react-navigation/stack';
-import { ChapterDetail, ChatScreen, CreateProfileScreen, DetailUser, FavoriteScreen, FilterDating, GameDetailScreen, HistoryContentScreen, MessageScreen, MovieDetailScreen, PreviewChapter, PreviewGame, PreviewWebview, SavedPost, SearchMessages, SearchScreen, SettingFavorite, VideoScreen, ViewAllPremiumScreen, ViewListScreen } from '@screens';
+
 import React, { memo } from 'react';
 import { DrawerNavigation } from '../navigator/DrawerNavigation';
 
@@ -17,76 +17,6 @@ const MainStackComponent = memo(() => {
       }}
       initialRouteName={SCREEN_ROUTE.DRAWER_NAVIGATION}>
       <MainStack.Screen name={SCREEN_ROUTE.DRAWER_NAVIGATION} component={DrawerNavigation} />
-
-      <MainStack.Screen name={SCREEN_ROUTE.FAVORITE} component={FavoriteScreen} options={{
-
-      }} />
-
-      {/* Search */}
-      <MainStack.Screen name={SCREEN_ROUTE.SEARCH_SCREEN} component={SearchScreen} />
-      {/* Movies */}
-      <MainStack.Screen name={SCREEN_ROUTE.VIEW_LIST} component={ViewListScreen} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.MOVIE_DETAIL} component={MovieDetailScreen} options={{
-
-
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.VIDEO} component={VideoScreen} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.CHAPTER_DETAIL} component={ChapterDetail} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.PREVIEW_CHAPTER} component={PreviewChapter} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.PREVIEW_GAME} component={PreviewGame} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.GAME_DETAIL} component={GameDetailScreen} options={{
-
-      }} />
-      {/* Dating */}
-      <MainStack.Screen name={SCREEN_ROUTE.CREATE_PROFILE} component={CreateProfileScreen} />
-      <MainStack.Screen name={SCREEN_ROUTE.SETTING_FAVORITE} component={SettingFavorite} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.FILTER_DATING} component={FilterDating} options={{
-
-      }} />
-      {/* chat */}
-      <MainStack.Screen name={SCREEN_ROUTE.MESSAGES} component={MessageScreen} options={{
-
-      }} />
-      <MainStack.Screen name={SCREEN_ROUTE.CHAT} component={ChatScreen} options={{
-
-      }} />
-
-      <MainStack.Screen name={SCREEN_ROUTE.SEARCH_MESSAGE} component={SearchMessages}
-        options={{
-          animationTypeForReplace: 'push',
-          detachPreviousScreen: false,
-        }} />
-      <MainStack.Screen name={SCREEN_ROUTE.DETAIL_USER} component={DetailUser} options={{
-
-      }} />
-      {/* saved */}
-
-      {/* webview */}
-      <MainStack.Screen name={SCREEN_ROUTE.WEBVIEW} component={PreviewWebview} options={{
-
-      }} />
-
-
-      <MainStack.Screen name={SCREEN_ROUTE.SAVED_CONTENTS} component={SavedPost} />
-      <MainStack.Screen name={SCREEN_ROUTE.HISTORY_CONTENTS} component={HistoryContentScreen} />
-      <MainStack.Screen name={SCREEN_ROUTE.SAVED_POST} component={SavedPost} />
-      <MainStack.Screen
-        name={SCREEN_ROUTE.VIEW_ALL_PREMIUM}
-        component={ViewAllPremiumScreen}
-      />
     </MainStack.Navigator>
 
   );

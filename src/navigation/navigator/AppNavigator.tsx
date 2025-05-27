@@ -10,11 +10,9 @@ import messaging from '@react-native-firebase/messaging';
 import {
   DarkTheme,
   NavigationContainer,
-  NavigationContainerRef,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo, setUserPremium } from '@redux';
-import { NotificationDetailScreen, NotificationScreen, PreviewImages } from '@screens';
 import { getListUserPremium, getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
@@ -75,7 +73,7 @@ const linking = {
     };
   },
 };
-const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
+const AppNavigator = React.forwardRef(
   (props, ref) => {
     const token = useSelector(getToken);
     const dispatch = useDispatch();
@@ -159,38 +157,26 @@ const AppNavigator = React.forwardRef<NavigationContainerRef<{}>>(
 
     const { top, bottom } = useSafeAreaInsets();
     return (
-      <>
-        {/* <View style={{ position: 'absolute', top: top, left: 0, right: 0, zIndex: 9999 }}>
-          <AppText>{`location:${location?.latitude} - ${location?.longitude}`}</AppText>
-        </View> */}
-        <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>
-          <Stack.Navigator screenOptions={{
-            // detachPreviousScreen: true,
-            freezeOnBlur: true,
-            animation: 'fade', // Giảm độ phức tạp của animation
-            headerShown: false,
 
-          }}>
-            <Stack.Screen
-              name={SCREEN_ROUTE.MAIN_STACK}
-              component={MainStackComponent}
-            />
-            {!token && <Stack.Screen
-              name={SCREEN_ROUTE.AUTH_STACK}
-              component={AuthStackComponent}
-            />}
-            <Stack.Screen
-              name={SCREEN_ROUTE.IMAGE_MODAL}
-              component={PreviewImages}
-              options={{ presentation: 'modal' }}
-            />
+      <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>
+        <Stack.Navigator screenOptions={{
+          // detachPreviousScreen: true,
+          freezeOnBlur: true,
+          animation: 'fade', // Giảm độ phức tạp của animation
+          headerShown: false,
 
-            <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION} component={NotificationScreen} />
-            <Stack.Screen name={SCREEN_ROUTE.NOTIFICATION_DETAIL} component={NotificationDetailScreen} />
+        }}>
+          <Stack.Screen
+            name={SCREEN_ROUTE.MAIN_STACK}
+            component={MainStackComponent}
+          />
+          {!token && <Stack.Screen
+            name={SCREEN_ROUTE.AUTH_STACK}
+            component={AuthStackComponent}
+          />}
 
-          </Stack.Navigator>
-        </NavigationContainer>
-      </>
+        </Stack.Navigator>
+      </NavigationContainer>
     );
   },
 );
