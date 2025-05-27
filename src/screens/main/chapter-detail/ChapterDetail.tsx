@@ -26,7 +26,7 @@ const ChapterDetail = () => {
           views={detail?.views}
           noChapter={!detail?.chapter_total || detail?.chapter_total === 0 && type === PostTypeKey.COMIC}
           likes={detail?.like_count}
-          poster={detail?.feature?.path}
+          poster={detail?.feature?.path || detail?.banner?.path}
           totalEpisodes={detail?.chapter_total || 0}
           onPlay={() => {
             if (detail?.chapter_total) {
@@ -57,10 +57,10 @@ const ChapterDetail = () => {
         />
         <HorizontalList
           onDetail={(post) => onNavigateDetail(post)}
-          data={detail.related_post?.items}
-          button={detail.related_post?.button}
+          data={detail?.related_post?.items}
+          button={detail?.related_post?.button}
           type={type}
-          title={detail.related_post?.label}
+          title={detail?.related_post?.label}
           itemStyle={styles.itemImage}
 
         />

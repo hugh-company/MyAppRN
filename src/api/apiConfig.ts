@@ -3,10 +3,10 @@ const END_POINT = {
     BASE_URL: 'https://serverapiphu.com',
   },
   staging: {
-    BASE_URL: 'https://oninapp.com',
+    BASE_URL: 'https://phim3s.net',
   },
 };
-export const BASE_STICKER_URL = 'https://oninapp.com/uploads/stickers/'; // adjust as needed
+export const BASE_STICKER_URL = 'https://phim3s.net/uploads/stickers/'; // adjust as needed
 
 export const ACCESS_TOKEN = '';
 export const API_URL = '';

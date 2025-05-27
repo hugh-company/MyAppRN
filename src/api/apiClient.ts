@@ -56,14 +56,14 @@ export const getRequestBaseUrlOther = async <T>(
     '{language}',
     language,
   );
-  const response = await apiClient.get<T>(url, config);
+  const response: any = await apiClient.get<T>(url, config);
   apiClient.defaults.baseURL = ApiConfigs.baseURL.replace(
     '{language}',
     language,
   );
   console.log({response});
 
-  return response.data;
+  return response.data.data;
 };
 export const getRequest = async <T>(
   url: string,
