@@ -40,7 +40,7 @@ import {
   takeLatest,
 } from 'redux-saga/effects';
 
-const WEBSOCKET_URL = 'wss://oninapp.com/ws/';
+const WEBSOCKET_URL = 'wss://phim3s.net/ws/';
 
 // Queue chứa các message chưa gửi được khi socket chưa sẵn sàng
 let messageQueue: any[] = [];
