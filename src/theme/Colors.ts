@@ -1,6 +1,6 @@
 export const lightColors = {
-  colorMain4: '#D11030',
-  primary: '#D11030',
+  colorMain4: '#4E58E6FF',
+  primary: '#5761E6',
   secondary: '#5856D6',
   tertiary: '#34C759',
   quaternary: '#FF2D55',
@@ -38,6 +38,11 @@ export const lightColors = {
   active: '#13E398',
   transparent: 'transparent',
   text50: '#FFFFFF80',
+  blue: '#007AFF', // blue
+  indigo: '#5856D6', // indigo
+  violet: '#AF52DE', // violet
+  purple: '#A259FF', // purple
+  combinedBlueIndigoViolet: '#5761E6',
 };
 
 export const darkColors = {
@@ -79,6 +84,11 @@ export const darkColors = {
   onSurface: '#EDEDED',
   active: '#13E398',
   text50: '#FFFFFF80',
+  blue: '#0A84FF', // blue
+  indigo: '#5E5CE6', // indigo
+  violet: '#BF5AF2', // violet
+  purple: '#A259FF', // purple
+  combinedBlueIndigoViolet: '#5761E6',
 };
 export const ColorsApp = {
   colorMain4: '#D11030',

@@ -13,6 +13,10 @@ export enum SCREEN_ROUTE {
 
   // Main
   HOME = 'Home',
+  GIFT = 'Gift',
+  DOMAIN = 'Domain',
+  SUPPORT = 'Support',
+  ACCOUNT = 'Account',
   MOVIES = 'Movies',
   COMIC = 'Comic',
   DATING = 'Dating',
@@ -63,4 +67,13 @@ export enum SCREEN_ROUTE {
   NOTIFICATION_DETAIL = 'NotificationDetail',
   NOTIFICATION = 'Notification',
   VIEW_ALL_PREMIUM = 'ViewAllPremium',
+
+  // NavigationControl
+  TOP_UP = 'TopUp',
+  PROMOTION = 'Promotion',
+  TRANSACTION = 'Transaction',
+
+  DETAIL = 'Detail',
+  NEWS = 'News',
+  NEWS_DETAIL = 'NewsDetail',
 }

@@ -1,23 +1,14 @@
-import {setBaseURLApi} from '@api';
-import {setGamesTrending, setStickers} from '@redux';
-import {
-  getListGamesTrendingApi,
-  getStickerApi,
-  useDashboardHome,
-  useSearchDashboard,
-} from '@services';
 import {Spacing, useTheme} from '@theme';
-import {useEffect} from 'react';
 import {
   Extrapolate,
   interpolate,
-  interpolateColor,
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
+import {useDashboardHomeApi} from '../../../hooks/useHomeApi';
 import {createStyles} from './styles';
 
 export const useHomeScreen = () => {
@@ -31,33 +22,7 @@ export const useHomeScreen = () => {
   });
 
   const {data, isSuccess, isLoading, isRefetching, refetch, isError} =
-    useDashboardHome();
-  const {} = useSearchDashboard();
-  useEffect(() => {
-    if (data && isSuccess) {
-      setBaseURLApi();
-    }
-  }, [data, isSuccess]);
-  useEffect(() => {
-    getSticker();
-    getGameTrending();
-  }, []);
-  const getSticker = async () => {
-    try {
-      const response: any = await getStickerApi();
-      dispatch(setStickers(response.data?.data));
-    } catch (error) {
-      console.log({error});
-    }
-  };
-  const getGameTrending = async () => {
-    try {
-      const response: any = await getListGamesTrendingApi();
-      dispatch(setGamesTrending(response.data?.data));
-    } catch (error) {
-      console.log({error});
-    }
-  };
+    useDashboardHomeApi();
 
   const onRefresh = () => {
     refetch();
@@ -66,17 +31,9 @@ export const useHomeScreen = () => {
   const bannerHeightStyle = useAnimatedStyle(() => ({
     height: interpolate(
       scrollY.value,
-      [0, Spacing.height315],
-      [Spacing.height315, top ? Spacing.height100 : Spacing.height50],
+      [0, Spacing.height215],
+      [Spacing.height215, top ? Spacing.height100 : Spacing.height50],
       Extrapolate.CLAMP,
-    ),
-  }));
-
-  const headerBackgroundColorStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      scrollY.value,
-      [0, Spacing.height315],
-      ['transparent', 'rgba(177, 6, 46, 0.6)'],
     ),
   }));
   return {
@@ -86,7 +43,6 @@ export const useHomeScreen = () => {
     scrollHandler,
     bannerHeightStyle,
     isRefetching,
-    headerBackgroundColorStyle,
     onRefresh,
     isLoading,
     isError,

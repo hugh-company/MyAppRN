@@ -1,11 +1,13 @@
-import { MenuIcon, SearchIcon } from '@assets';
-import { navigate, SCREEN_ROUTE } from '@navigation';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
-import { Spacing, ThemeColors, useTheme } from '@theme';
+import { CartIcon } from '@assets';
+import { AppText } from '@components';
+import { useNavigation } from '@react-navigation/native';
+import { RootState } from '@redux';
+import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 
 interface HeaderHomeProps {
 
@@ -16,35 +18,31 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
   const { top } = useSafeAreaInsets();
-
-
+  const profile = useSelector((state: RootState) => state.accountSlice.userInfo);
+  const token = useSelector((state: RootState) => state.accountSlice.token);
   const navigation = useNavigation();
 
-  console.log({ top });
-
   return (
-    <Animated.View style={[styles.header, { paddingTop: top || Spacing.width16 }, { height: Spacing.height92 }, styleHeader]}>
-      {/* open drawer */}
-      <TouchableOpacity hitSlop={{
-        top: 10, left: 10, bottom: 10, right: 10,
-      }} onPress={() => navigation.dispatch(DrawerActions.openDrawer())} style={styles.btnMenu}>
-        <MenuIcon color={themeColors.text} />
-      </TouchableOpacity>
-      <TouchableOpacity hitSlop={{
-        top: 10, left: 10, bottom: 10, right: 10,
-      }} onPress={() => navigate(SCREEN_ROUTE.SEARCH_SCREEN)} style={styles.btnMenu}>
-        <SearchIcon />
-      </TouchableOpacity>
+    <Animated.View style={[styles.container, styleHeader, { paddingTop: top || Spacing.width16 }]}>
+      <View style={[styles.header]}>
+        <AppText style={styles.txtHello}>
 
+          Xin chào, <AppText style={styles.txtName}>{` ${profile?.fullname || 'Khách'}!`}</AppText>
+
+        </AppText>
+        <TouchableOpacity>
+          <CartIcon />
+        </TouchableOpacity>
+      </View>
     </Animated.View>
-
   );
 };
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
-      // overflow: 'hidden',
+      backgroundColor: themeColors.primary,
+      paddingBottom: Spacing.width16,
     },
     linear: {
       ...StyleSheet.absoluteFillObject,
@@ -54,14 +52,19 @@ const createStyles = (themeColors: ThemeColors) =>
       justifyContent: 'space-between',
       alignItems: 'center',
       paddingHorizontal: Spacing.width16,
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1,
-      height: Spacing.height50,
 
     },
+    //
+    txtHello: {
+      fontSize: FontSize.FontSize16,
+      color: themeColors.whiteColor,
+    },
+    txtName: {
+      fontSize: FontSize.FontSize16,
+      color: themeColors.whiteColor,
+      fontWeight: 'bold',
+    },
+    //
     btnMenu: {
       width: Spacing.width32,
       height: Spacing.width32,

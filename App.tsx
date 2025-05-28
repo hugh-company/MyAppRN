@@ -10,7 +10,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import Orientation from 'react-native-orientation-locker';
 // Removed Host import from 'react-native-portalize'
-import { AppRatingMovie, GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
+import { GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import messaging from '@react-native-firebase/messaging';
@@ -85,7 +85,6 @@ function App(): React.JSX.Element {
                     <View style={styles.container} >
                       <StatusBar translucent backgroundColor="transparent" />
                       <AppNavigator
-
                         ref={(navigatorRef: any) => {
                           NavigationUtils.setTopLevelNavigator(navigatorRef);
                         }}
@@ -93,7 +92,6 @@ function App(): React.JSX.Element {
 
                       <ModalConfirmation />
                       <ModalChangeLanguage />
-                      <AppRatingMovie />
                       <FlashMessage position="top" style={{ paddingTop: Spacing.width24 }} />
                       <GlobalUI ref={GlobalService.globalUIRef} />
 

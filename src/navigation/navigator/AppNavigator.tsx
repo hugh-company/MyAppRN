@@ -12,13 +12,13 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, setInfoUser, setIsDashboardDating, setUserInfo, setUserPremium } from '@redux';
-import { getListUserPremium, getUserProfileApi } from '@services';
+import { getLocations, getToken, getUserInfo, RootState, setUserInfo } from '@redux';
+import { getUserProfileApi } from '@services';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
+import OnboardingScreen from '../../screens/onboarding/OnboardingScreen';
 const Stack = createStackNavigator();
 const NAVIGATION_IDS = ['home', 'post', 'settings'];
 
@@ -80,7 +80,9 @@ const AppNavigator = React.forwardRef(
     const isConnectedRef = useRef(false);
     const userInfo = useSelector(getUserInfo);
     const location = useSelector(getLocations);
-
+    const hasSeenOnboarding = useSelector(
+      (state: RootState) => state.settingSlice.hasSeenOnboarding,
+    );
     const callApiProfile = async () => {
       try {
         const responseUser: any = await getUserProfileApi();
@@ -89,33 +91,7 @@ const AppNavigator = React.forwardRef(
         dispatch(setUserInfo(responseUser?.data?.me));
       } catch (error) { }
     };
-    const callApiGetPremium = async () => {
-      try {
-        const responseUserPremium: any = await getListUserPremium();
-        console.log({ responseUserPremium });
-        dispatch(setUserPremium(responseUserPremium?.data?.data));
 
-      } catch (error) {
-        console.log({ error });
-      }
-    };
-    useEffect(() => {
-      if (userInfo) {
-        const isShowDating =
-          userInfo?.about_me && userInfo?.personal?.favorites && userInfo.personal.favorites.length > 0;
-
-        dispatch(setIsDashboardDating(isShowDating));
-      }
-    }, [userInfo]);
-    const connectSocket = async (tokenData: string) => {
-      try {
-        const device_id = await DeviceInfo.getUniqueId();
-        dispatch(setInfoUser({ token: tokenData, device_id }));
-      } catch (error) {
-        console.log({ error });
-
-      }
-    };
 
 
 
@@ -125,7 +101,6 @@ const AppNavigator = React.forwardRef(
       await apiService.reset();
       apiService.setToken(token);
       apiService.setTokenWithoutSaveLocal(token);
-      callApiGetPremium();
       callApiProfile();
     };
     // check network
@@ -139,13 +114,11 @@ const AppNavigator = React.forwardRef(
           if (state.isConnected && !isConnectedRef.current) {
             console.log('Internet connection');
             isConnectedRef.current = true;
-            connectSocket(token); // Ensure reconnection for both platforms
           } else if (!state.isConnected) {
             isConnectedRef.current = false;
             console.log('No internet connection');
           } else if (state.isConnected && isConnectedRef.current) {
             console.log('Reconnected to the internet');
-            connectSocket(token); // Ensure reconnection for both platforms
           }
         });
 
@@ -160,20 +133,25 @@ const AppNavigator = React.forwardRef(
 
       <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>
         <Stack.Navigator screenOptions={{
-          // detachPreviousScreen: true,
           freezeOnBlur: true,
-          animation: 'fade', // Giảm độ phức tạp của animation
+          animation: 'fade',
           headerShown: false,
 
         }}>
-          <Stack.Screen
-            name={SCREEN_ROUTE.MAIN_STACK}
-            component={MainStackComponent}
-          />
-          {!token && <Stack.Screen
-            name={SCREEN_ROUTE.AUTH_STACK}
-            component={AuthStackComponent}
-          />}
+          {!hasSeenOnboarding ? (
+            <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+          ) : (
+            <>
+              <Stack.Screen
+                name={SCREEN_ROUTE.MAIN_STACK}
+                component={MainStackComponent}
+              />
+              {!token && <Stack.Screen
+                name={SCREEN_ROUTE.AUTH_STACK}
+                component={AuthStackComponent}
+              />}
+            </>
+          )}
 
         </Stack.Navigator>
       </NavigationContainer>

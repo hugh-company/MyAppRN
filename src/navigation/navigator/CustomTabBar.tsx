@@ -1,13 +1,11 @@
-import { ChapterIcon, DatingIcon, GameIcon, HomeIcon, MovieIcon } from '@assets';
+import { ChatIcon, GiftIcon, GlobalIcon, HomeIcon, ProfileIcon } from '@assets';
 import { AppText } from '@components';
 import { FontSize, FontWithFamily, Spacing, useTheme } from '@theme';
 import { t } from 'i18next';
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Colors, { ThemeColors } from '../../theme/Colors';
-import { SCREEN_ROUTE } from '../router';
 
 interface CustomTabBarProps {
   state: any,
@@ -15,155 +13,145 @@ interface CustomTabBarProps {
   navigation: any
 }
 
-interface ButtonTabProps {
-  tabKey: string, // Renamed from key to tabKey
-  name: string,
-  Icon: any,
-  onPress: () => void,
-  styles: any,
-  isFocused: boolean
-}
-const ButtonTab = ({ tabKey, onPress, name, Icon, styles, isFocused }: ButtonTabProps) => {
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ scale: withSpring(isFocused ? 1.1 : 1) }],
-    };
-  });
-
-  return (
-
-    <TouchableOpacity
-      onPress={onPress}
-      style={styles.btn}
-      activeOpacity={1}
-    >
-      {Icon && <Icon color={isFocused ? Colors.primary : '#EDEDED'} />}
-      <AppText
-        style={[isFocused ? styles.txtActive : styles.txtInActive]}
-      >{name}</AppText>
-    </TouchableOpacity>
-
-  );
-};
-const ButtonTabGame = ({ tabKey, onPress, styles, isFocused, name, Icon }: ButtonTabProps) => {
-
-  return (
-    <Animated.View style={[styles.btnGame]}>
-      <TouchableOpacity
-        onPress={onPress}
-        style={styles.btnGame}
-        activeOpacity={1}
-      >
-        {Icon && <Icon />}
-        <AppText
-          style={styles.txtGame}
-        >{name.toLocaleUpperCase()}</AppText>
-      </TouchableOpacity>
-    </Animated.View>
-  );
-};
-const ButtonBottomTab = ({ keyTab, onPress, styles, isFocused }: { keyTab: 'Home' | 'Movies' | 'Games' | 'Comic' | 'Dating', onPress: () => void, styles: any, isFocused: boolean }) => {
-  const menu = {
-    'Home': { name: t('navigation.home'), key: SCREEN_ROUTE.HOME, Icon: HomeIcon },
-    'Movies': { name: t('navigation.movies'), key: SCREEN_ROUTE.MOVIES, Icon: MovieIcon },
-    'Games': { name: t('navigation.games'), key: SCREEN_ROUTE.GAMES, Icon: GameIcon },
-    'Comic': { name: t('navigation.chapters'), key: SCREEN_ROUTE.COMIC, Icon: ChapterIcon },
-    'Dating': { name: t('navigation.dating'), key: SCREEN_ROUTE.DATING, Icon: DatingIcon },
-  };
-  const { key, name, Icon } = menu[keyTab];
-  switch (key) {
-    case SCREEN_ROUTE.MOVIES:
-    case SCREEN_ROUTE.COMIC:
-    case SCREEN_ROUTE.DATING:
-    case SCREEN_ROUTE.HOME:
-      return (
-        <ButtonTab tabKey={key} name={name} Icon={Icon} onPress={onPress} styles={styles} isFocused={isFocused} />
-      );
-    case SCREEN_ROUTE.GAMES:
-      return <ButtonTabGame tabKey={key} name={name} Icon={Icon} onPress={onPress} styles={styles} isFocused={isFocused} />;
-
-    default:
-      return null;
-  }
-};
-
 export function CustomTabBar({ state, navigation }: CustomTabBarProps) {
-  const { themeColors } = useTheme(); // Moved inside the function component
+  const { themeColors } = useTheme();
   const { bottom } = useSafeAreaInsets();
+  const styles = createStyles(themeColors, bottom);
 
-  const styles = createStyles(themeColors);
+  const menu: Record<string, { name: string; Icon: any }> = {
+    'Home': { name: t('navigation.home') || 'Trang chủ', Icon: HomeIcon },
+    'Gift': { name: t('navigation.gift') || 'Quà tặng', Icon: GiftIcon },
+    'Domain': { name: t('navigation.domain') || 'Tên miền', Icon: GlobalIcon },
+    'Support': { name: t('navigation.support') || 'Hỗ trợ', Icon: ChatIcon },
+    'Account': { name: t('navigation.account') || 'Tài khoản', Icon: ProfileIcon },
+  };
+
+  const handlePress = (routeName: string) => {
+    const index = state.routes.findIndex((r: any) => r.name === routeName);
+    navigation.navigate(routeName);
+  };
+
   return (
-    <View style={[styles.container, { paddingBottom: bottom || Spacing.width16 }]}>
-      {state.routes.map((route: any, index: number) => {
-        const isFocused = state.index === index;
-        const onPress = () => {
-          const event = navigation.emit({
-            type: 'tabPress',
-            target: route.key,
-            // canPreventDefault: true,
-          });
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-        return (
-          <ButtonBottomTab keyTab={route.name} onPress={onPress} styles={styles} isFocused={isFocused} key={index.toString()} />
-        );
-      })}
+    <View style={styles.container}>
+      {/* Tabs bên trái */}
+      <View style={styles.sideTabs}>
+        {['Home', 'Gift'].map((routeName) => {
+          const isFocused = state.index === state.routes.findIndex((r: any) => r.name === routeName);
+          const { name, Icon } = menu[routeName];
+          return (
+            <TouchableOpacity
+              key={routeName}
+              style={styles.btn}
+              onPress={() => handlePress(routeName)}
+              activeOpacity={1}
+            >
+              <Icon color={isFocused ? Colors.primary : 'gray'} size={24} />
+              <AppText style={isFocused ? styles.txtActive : styles.txtInActive}>{name}</AppText>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+      {/* FAB ở giữa */}
+      <View style={styles.fabContainer} pointerEvents="box-none">
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() => handlePress('Domain')}
+          activeOpacity={0.8}
+        >
+          <GlobalIcon color={state.index === state.routes.findIndex((r: any) => r.name === 'Domain') ? Colors.primary : 'black'} size={32} />
+        </TouchableOpacity>
+        {/* <AppText style={styles.fabLabel}>{menu['Domain'].name}</AppText> */}
+      </View>
+      {/* Tabs bên phải */}
+      <View style={styles.sideTabs}>
+        {['Support', 'Account'].map((routeName) => {
+          const isFocused = state.index === state.routes.findIndex((r: any) => r.name === routeName);
+          const { name, Icon } = menu[routeName];
+          return (
+            <TouchableOpacity
+              key={routeName}
+              style={styles.btn}
+              onPress={() => handlePress(routeName)}
+              activeOpacity={1}
+            >
+              <Icon color={isFocused ? Colors.primary : 'gray'} size={24} />
+              <AppText style={isFocused ? styles.txtActive : styles.txtInActive}>{name}</AppText>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
     </View>
   );
 }
-const createStyles = (themeColors: ThemeColors) =>
+
+const createStyles = (themeColors: ThemeColors, bottom: number) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
+      alignItems: 'flex-end',
       justifyContent: 'space-between',
       backgroundColor: themeColors.background,
-      borderTopColor: themeColors.btnSocial,
       borderTopWidth: 1,
-
+      borderTopColor: '#E8E8E8',
+      shadowColor: '#E8E8E8',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      elevation: 4,
+      paddingBottom: bottom || Spacing.width16,
+      height: Spacing.height50 + (bottom || Spacing.width16),
+    },
+    sideTabs: {
+      flexDirection: 'row',
+      flex: 1,
+      justifyContent: 'space-evenly',
+      alignItems: 'center',
     },
     btn: {
-      flex: 1,
       alignItems: 'center',
+      justifyContent: 'center',
       paddingTop: Spacing.width4,
       gap: Spacing.width4,
-
+      zIndex: 1,
     },
     txtInActive: {
+      color: themeColors.text,
       fontSize: FontSize.FontSize9,
-
     },
     txtActive: {
       fontSize: FontSize.FontSize9,
       color: themeColors.primary,
       ...FontWithFamily.FontWithFamily_600,
     },
-    btnGame: {
-      width: Spacing.width106,
-      height: Spacing.width50,
-      backgroundColor: themeColors.primary,
-      borderRadius: Spacing.width12,
-      flexDirection: 'row',
-      marginTop: -Spacing.width8,
-      // shadowColor: '#FF3737',
-      // shadowOffset: {
-      //   width: 0,
-      //   height: 1,
-      // },
-      // shadowOpacity: 0.5,
-      // shadowRadius: 2,
-      // elevation: 2,
+    fabContainer: {
+      position: 'absolute',
+      alignItems: 'center',
+      left: '50%',
+      bottom: (bottom || Spacing.width16) + 20,
+      transform: [{ translateX: -35 }],
+      zIndex: 2,
+    },
+    fab: {
+      width: 70,
+      height: 70,
+      borderRadius: 35,
+      backgroundColor: themeColors.background,
       alignItems: 'center',
       justifyContent: 'center',
-      gap: Spacing.width8,
+      shadowColor: '#E8E8E8',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 8,
+      elevation: 8,
+      borderWidth: 4,
+      borderColor: '#E8E8E8',
     },
-    txtGame: {
-      color: themeColors.text,
-      fontSize: FontSize.FontSize15,
+    fabLabel: {
+      color: themeColors.primary,
+      fontSize: FontSize.FontSize10,
       ...FontWithFamily.FontWithFamily_700,
-      width: '50%',
-
+      marginTop: 2,
+      textAlign: 'center',
     },
   });
 

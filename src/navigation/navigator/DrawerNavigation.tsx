@@ -19,7 +19,6 @@ const DrawerNavigation = React.memo(() => {
         overlayColor: 'rgba(0,0,0,0.5)', // Drawer overlay color
         drawerStyle: {
           backgroundColor: 'transparent',
-
         },
       }}
 

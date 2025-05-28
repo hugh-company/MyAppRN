@@ -3,7 +3,8 @@ import { VipIcon } from '@assets';
 import { AppButton, AppImage, AppText } from '@components';
 import { navigate, navigateToStack, reset, SCREEN_ROUTE } from '@navigation';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import { clearAllChat, clearSavedPost, clearSearchThreads, clearSocketInfoUser, getToken, getUserInfo, logout } from '@redux';
+
+import { getToken, getUserInfo, logout } from '@redux';
 import { callApiLogout, useDashboardHome } from '@services';
 import { FontSize, FontWithFamily, sizeWidth, Spacing, ThemeColors, useTheme } from '@theme';
 import { menuNavigationInterface, PostTypeKey } from '@types';
@@ -23,7 +24,7 @@ export interface ListDrawerProps {
   };
 }
 
-export function ListDrawer(props: ListDrawerProps) {
+export function ListDrawer(props: any) {
   const { bottom, top } = useSafeAreaInsets();
   const { themeColors } = useTheme(); // Moved inside the function component
   const token = useSelector(getToken);
@@ -47,10 +48,7 @@ export function ListDrawer(props: ListDrawerProps) {
       apiService.reset();
       dispatch(logout());
       apiService.clear();
-      dispatch(clearAllChat());
-      dispatch(clearSavedPost());
-      dispatch(clearSearchThreads());
-      dispatch(clearSocketInfoUser());
+
       reset(SCREEN_ROUTE.MAIN_STACK);
       dispatch({ type: 'USER_LOGOUT' });
     } catch (error) {
@@ -95,9 +93,6 @@ export function ListDrawer(props: ListDrawerProps) {
           </View>
         </View>
         <View style={{ gap: Spacing.width4 }}>
-          <AppText style={styles.txtRank}>
-            {item?.items?.[infoUser?.package_name || 'membership'].label}
-          </AppText>
           <AppText style={styles.txtDesRank}>
             {t('drawer.totalPriceAccount')}
             <AppText style={styles.txtTotal}>{infoUser?.coin || 0}</AppText>

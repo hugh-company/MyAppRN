@@ -1,4 +1,4 @@
-import { LeftIcon } from '@assets';
+import { CartIcon, LeftIcon } from '@assets';
 import { goBack } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
@@ -43,7 +43,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           </TouchableOpacity>}
           {title && <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>}
         </View>
-        {rightComponent}
+        <TouchableOpacity onPress={onRightPress} style={styles.btnBack}>
+          <CartIcon color='black' />
+        </TouchableOpacity>
       </Animated.View>
     </>
   );
@@ -68,14 +70,14 @@ const createStyles = (themeColors: ThemeColors) =>
       fontSize: FontSize.FontSize18,
       ...FontWithFamily.FontWithFamily_500,
       color: themeColors.text,
-
+      textAlign: 'center',
+      flex: 1,
 
     },
     btnBack: {
       width: Spacing.width35,
       height: Spacing.width35,
-      borderRadius: Spacing.height24,
-      backgroundColor: themeColors.btnSocial,
+
       alignItems: 'center',
       justifyContent: 'center',
     },

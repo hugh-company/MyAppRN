@@ -51,3 +51,6 @@ export * from './ModalChangeLanguage';
 export * from './ModalConfirmation';
 export * from './ModalFilter';
 export * from './ModalInfoUser';
+
+//
+export * from './PhoneCallFloatingButton';

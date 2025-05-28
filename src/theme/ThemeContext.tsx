@@ -26,8 +26,8 @@ const defaultThemeType: ThemeType = 'dark';
 
 export const ThemeContext = createContext<ThemeContextType>({
   themeType: defaultThemeType,
-  themeColors: lightColors,
-  isDarkMode: true,
+  themeColors: lightColors, // Đặt màu chính là light
+  isDarkMode: false, // Light mode mặc định
   setThemeType: () => null,
 });
 const theme = createTheme({
@@ -55,15 +55,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const systemColorScheme = useColorScheme();
   const [themeType, setThemeType] = useState<ThemeType>(() => {
     const savedTheme = storage.getString(THEME_KEY);
-    return (savedTheme as ThemeType) || defaultThemeType;
+    return (savedTheme as ThemeType) || 'light'; // Đặt light là mặc định
   });
 
   const isDarkMode = useCallback(() => {
     if (themeType === 'light') {
-      return systemColorScheme === 'light';
+      return false;
     }
     return themeType === 'dark';
-  }, [themeType, systemColorScheme]);
+  }, [themeType]);
 
   const themeColors = isDarkMode() ? darkColors : lightColors;
 
