@@ -1,7 +1,7 @@
-import { Onboarding1, Onboarding2, Onboarding3 } from '@assets';
+import { BackgroundHeader, LogoTextIcon, Onboarding1, Onboarding2, Onboarding3 } from '@assets';
 import { AppImage } from '@components';
 import { setHasSeenOnboarding } from '@redux';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import React, { useRef, useState } from 'react';
 import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -60,10 +60,12 @@ const OnboardingScreen = ({ navigation }: any) => {
   }).current;
 
   return (
-    <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
+    <View style={[styles.container,]}>
+      <AppImage defaultSource={BackgroundHeader} style={styles.headerBackground} resizeMode="cover" />
       {/* Logo trên header */}
-      <View style={styles.header}>
-        {/* <Image source={Logo} style={styles.logo} /> */}
+      <View style={[styles.header, { paddingTop: top, paddingBottom: bottom }]}>
+
+        <AppImage defaultSource={LogoTextIcon} style={styles.logo} resizeMode='contain' />
       </View>
       {/* Slider */}
       <FlatList
@@ -104,15 +106,16 @@ const OnboardingScreen = ({ navigation }: any) => {
         <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
           <Text style={styles.next}>{currentIndex === DATA.length - 1 ? 'Bắt đầu' : 'Tiếp theo'}</Text>
         </TouchableOpacity>
-      </View>
-    </View>
+      </View >
+    </View >
   );
 };
 
 export const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
   container: { flex: 1, backgroundColor: themeColors.background },
-  header: { alignItems: 'center', marginTop: 40, marginBottom: 10 },
-  logo: { width: 100, height: 40, resizeMode: 'contain' },
+  header: { alignItems: 'center', paddingTop: Spacing.width16, position: 'relative' }, // Added position: 'relative'
+  headerBackground: { ...StyleSheet.absoluteFillObject, width: WidthScreen, height: HeightScreen / 1.2 }, // Added style for background
+  logo: { width: Spacing.width200, height: Spacing.width50, zIndex: 1 }, // Added zIndex to ensure logo is on top
   slide: { width, alignItems: 'center', justifyContent: 'center' },
   image: { width: width * 0.9, height: height * 0.5, marginVertical: 20 },
   title: { fontSize: FontSize.FontSize16, fontWeight: 'bold', textAlign: 'center', marginTop: Spacing.width16, color: '#333' },

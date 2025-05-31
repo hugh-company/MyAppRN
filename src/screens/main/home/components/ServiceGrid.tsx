@@ -106,7 +106,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       borderRadius: 8,
       padding: 6,
-      elevation: 2,
+
       gap: Spacing.width4,
     },
 

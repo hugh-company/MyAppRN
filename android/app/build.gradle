@@ -2,7 +2,6 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: 'com.google.gms.google-services'
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 react {
     autolinkLibrariesWithApp()
@@ -20,16 +19,16 @@ android {
             useLegacyPackaging true
         }
     }
-    namespace "com.fillapp.posttype"
+    namespace "com.gofiber.vn"
     defaultConfig {
-        applicationId "com.fillapp.posttype"
+        applicationId "com.gofiber.vn"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
         resConfigs "en", "xxhdpi"
     }
-      signingConfigs {
+    signingConfigs {
         debug {
             storeFile file(MYAPP_RELEASE_STORE_FILE)
             storePassword MYAPP_RELEASE_STORE_PASSWORD
@@ -46,12 +45,13 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            shrinkResources false
         }
         release {
             signingConfig signingConfigs.debug
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
     splits {
@@ -66,18 +66,11 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
     }
-    implementation project(':react-native-fbsdk-next')
-    implementation 'com.facebook.android:facebook-android-sdk:[5,6)'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.0'
-
-    //
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
-
 }

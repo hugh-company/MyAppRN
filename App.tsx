@@ -15,7 +15,6 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { persistor, store } from '@redux';
-import { Settings } from 'react-native-fbsdk-next';
 import FlashMessage from 'react-native-flash-message';
 import {
   initialWindowMetrics,
@@ -28,7 +27,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 enableScreens();
 enableFreeze(true);
-Settings.initializeSDK();
 GoogleSignin.configure({
   webClientId: Platform.OS === 'android' ? '862326056116-v7qqpe1flnrpn85lrsvrm33k4hn5v0ju.apps.googleusercontent.com' : '862326056116-v7qqpe1flnrpn85lrsvrm33k4hn5v0ju.apps.googleusercontent.com',
   offlineAccess: true, // added to help resolve DEVELOPER_ERROR

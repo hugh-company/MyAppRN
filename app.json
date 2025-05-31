@@ -1,6 +1,6 @@
 {
-  "name": "FillApp",
-  "displayName": "FillApp",
+  "name": "GofiberApp",
+  "displayName": "GofiberApp",
   "androidStatusBar": {
     "translucent": true
   }

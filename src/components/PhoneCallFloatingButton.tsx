@@ -150,11 +150,7 @@ export const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     // backgroundColor: themeColors.primary,
     borderRadius: 32,
     padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 5,
+
     overflow: 'hidden',
   },
 });
