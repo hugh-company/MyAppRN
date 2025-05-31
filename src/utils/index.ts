@@ -8,3 +8,6 @@ export * from './phoneUtils';
 export * from './postUtils';
 export * from './shareUtils';
 export * from './utilities';
+
+export * from './domainStyle';
+export * from './priceFormatter';

@@ -1,7 +1,6 @@
 import { API_ENDPOINTS, ApiConfigs, apiService, KeyQueryApi } from '@api';
 import { useApiQuery } from '@hooks';
 import { genderInterface, PostTypeKey } from '@types';
-import { csrfTokenApi } from './loginService';
 export const getUserProfileApi = () => {
   apiService.setBaseURL(ApiConfigs.baseURL);
   return apiService.get(API_ENDPOINTS.USER_PROFILE);
@@ -135,13 +134,13 @@ export const sendLocationUserApi = (params: { lat: number; lng: number }) => {
 
 
 export const sendFcmTokenApi = (params: { fcm_token: string, device_id: string }) => {
-  apiService.setBaseURL(ApiConfigs.baseURL);
-  const formData = new FormData();
-  formData.append('fcm_token', params.fcm_token);
-  formData.append('device_id', params.device_id);
-  return apiService.postNormal(API_ENDPOINTS.SEND_FCM_TOKEN, formData, {
-    'Content-Type': 'multipart/form-data',
-  });
+  // apiService.setBaseURL(ApiConfigs.baseURL);
+  // const formData = new FormData();
+  // formData.append('fcm_token', params.fcm_token);
+  // formData.append('device_id', params.device_id);
+  // return apiService.postNormal(API_ENDPOINTS.SEND_FCM_TOKEN, formData, {
+  //   'Content-Type': 'multipart/form-data',
+  // });
 };
 // /users/save/
 
@@ -151,17 +150,6 @@ export const getSavedPostApi = (type: PostTypeKey) => {
   return apiService.get(`${API_ENDPOINTS.GET_SAVE_POST}${type}`);
 };
 
-export const savePostApi = async (type: PostTypeKey, ids: number[]) => {
-  apiService.setBaseURL(ApiConfigs.baseURL);
-  const responseToken: any = await csrfTokenApi();
-
-  const formData = new FormData();
-  formData.append('csrf_token', responseToken.data.csrf_token);
-  formData.append('post_ids', `[${ids}]`);
-  return apiService.postNormal(`${API_ENDPOINTS.SAVE_POST}${type}`, formData, {
-    'Content-Type': 'multipart/form-data',
-  });
-};
 // use save post
 export const useSavedPostApi = (type: PostTypeKey, paged?: number) => {
   return useApiQuery<any>(

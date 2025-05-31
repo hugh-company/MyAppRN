@@ -1,10 +1,10 @@
-import { Background } from '@assets';
-import { AppText, LoginSocial } from '@components';
+import { LogoTextIcon } from '@assets';
+import { AppImage } from '@components';
 import { useTheme } from '@theme';
-import { t } from 'i18next';
 import React from 'react';
-import { Animated, StyleProp, View, ViewStyle } from 'react-native';
+import { StyleProp, View, ViewStyle } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createStyles } from './styles';
 
 export interface ContainerAuthProps {
@@ -15,20 +15,19 @@ const ContainerAuth = ({ children, style }: ContainerAuthProps) => {
   const { themeColors } = useTheme();
 
   const styles = createStyles(themeColors);
-
+  const { top } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container]}>
+    <View style={[styles.container, { paddingTop: top }]}>
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-        <View style={[styles.viewBackground]} >
-          <Animated.Image
-            source={Background}  // Your image URL here
-            style={[styles.image]}
-          />
-          <AppText style={styles.txtTitle}>{t('login.title')}</AppText>
+
+        <View style={styles.header}>
+          <View style={styles.logoContainer}>
+            <AppImage defaultSource={LogoTextIcon} style={styles.images} resizeMode='contain' />
+          </View>
         </View>
 
-        <LoginSocial />
+
 
         <View style={style}>
           {children}

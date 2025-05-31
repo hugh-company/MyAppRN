@@ -99,7 +99,7 @@ const createStyles = (themeColors: ThemeColors) =>
 
     },
     input: {
-      height: Spacing.height48,
+      height: Spacing.height40,
       borderWidth: 1,
       borderColor: themeColors.inputBorder,
       borderRadius: 8,

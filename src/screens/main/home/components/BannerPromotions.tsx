@@ -1,20 +1,22 @@
 import { AppImage, AppText } from '@components';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
+import { BannerInterface } from '@types';
 import React from 'react';
 import { Dimensions, FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useBannerData } from '../../../../hooks/useBanner';
 
 interface BannerPromotionsProps {
   title?: string;
-  data: { id: number; img: string; onPress?: () => void }[];
 }
 
 const { width } = Dimensions.get('window');
-const IMAGE_WIDTH = width * 0.6;
-const IMAGE_HEIGHT = Spacing.width125;
+const IMAGE_WIDTH = width * 0.9;
+const IMAGE_HEIGHT = Spacing.width100;
 
-export const BannerPromotions: React.FC<BannerPromotionsProps> = ({ title, data }) => {
+export const BannerPromotions: React.FC<BannerPromotionsProps> = ({ title }) => {
   const { themeColors: ThemeColors } = useTheme();
   const styles = createStyles(ThemeColors);
+  const { data } = useBannerData();
   return (
     <View style={styles.container}>
       {(title) ? (
@@ -27,15 +29,15 @@ export const BannerPromotions: React.FC<BannerPromotionsProps> = ({ title, data 
         data={data}
         horizontal
         showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id.toString()}
-        renderItem={({ item }) => (
+        keyExtractor={item => item._id.toString()}
+        renderItem={({ item }: { item: BannerInterface }) => (
           <TouchableOpacity
             style={styles.imageContainer}
-            onPress={item.onPress}
+            // onPress={item.onPress}
             activeOpacity={0.8}
           >
             <AppImage
-              uri={item.img}
+              uri={item.thumbnail?.url}
               style={styles.image}
               resizeMode="contain"
               isBase={false}

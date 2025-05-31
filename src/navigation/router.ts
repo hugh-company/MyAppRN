@@ -76,4 +76,11 @@ export enum SCREEN_ROUTE {
   DETAIL = 'Detail',
   NEWS = 'News',
   NEWS_DETAIL = 'NewsDetail',
+
+  // Search
+  SEARCH_DOMAIN = 'searchDomain',
+  CART = 'Cart',
+  CHECKOUT = 'Checkout',
+  CHECKOUT_SUCCESS = 'CheckoutSuccess',
+  CHECKOUT_FAILED = 'CheckoutFailed',
 }

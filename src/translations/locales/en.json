@@ -24,13 +24,17 @@
     "confirmPassword": "Confirm password",
     "register": "Register",
     "registerSuccess": "Registration successful",
-    "registerFail": "Registration failed"
+    "registerFail": "Registration failed",
+    "accountType": "Account type",
+    "individual": "Individual",
+    "company": "Company",
+    "companyTax": "Company tax",
+    "companyName": "Company name"
   },
   "validate": {
     "validate_fullname": "Please enter your full name",
-    "validate_username": "Please enter your username",
-    "validate_email": "Invalid email",
-    "email_req": "Please enter email",
+    "validate_email": "Please enter a valid email address",
+    "email_req": "Email is required",
     "validate_password": "Invalid password",
     "validate_name": "Please enter your name",
     "validate_max_name": "Name cannot exceed 50 characters",
@@ -53,7 +57,11 @@
     "validate_galleries": "Please select images",
     "validate_job": "Please enter a job",
     "validate_min_password": "Password must be at least 6 characters",
-    "no_url_prefix": "Please enter only your username or ID, not the full URL"
+    "no_url_prefix": "Please enter only your username or ID, not the full URL",
+    "validate_address": "Please enter your address",
+    "validate_accountType": "Please select an account type",
+    "validate_personalId": "Please enter your personal ID",
+    "validate_company_fields": "Company tax and name are required for company accounts"
   },
   "navigation": {
     "home": "Home",
@@ -317,11 +325,6 @@
   "filters": {
     "time": "By time",
     "viewDay": "Views today",
-    "viewWeek": "Views this week",
-    "viewMonth": "Views this month",
-    "viewAll": "All",
-    "withRaring": "By rating",
-    "withLike": "By likes",
-    "sendMessageError": "Send message failed"
+    "withRaring": "By rating"
   }
 }

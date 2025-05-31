@@ -19,7 +19,8 @@
     "record": "xcrun simctl io booted recordVideo record.mov",
     "fonts": "npx react-native-asset",
     "install-apk": "adb install -r android/app/build/outputs/apk/release/app-release.apk",
-    "check-updates": "npx npm-check-updates -u && npm install"
+    "check-updates": "npx npm-check-updates -u && npm install",
+    "rename": "npx react-native-rename"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^5.1.5",

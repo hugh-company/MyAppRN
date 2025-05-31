@@ -1,4 +1,3 @@
-export * from './dashboardService';
 export * from './datingService';
 export * from './detailService';
 
@@ -9,3 +8,5 @@ export * from './searchService';
 export * from './settingService';
 export * from './uploadService';
 export * from './userService';
+//
+export * from './domainService';

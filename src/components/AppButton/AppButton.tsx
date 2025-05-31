@@ -1,14 +1,16 @@
-
-import { Box, useTheme } from '@theme';
+import { Box, Spacing, useTheme } from '@theme';
 import { debounce } from 'lodash';
 import React, { JSX } from 'react';
 import {
+  ActivityIndicator,
   StyleProp,
+  StyleSheet,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
 import { AppText } from '../AppText';
 import { styles } from './styles';
 
@@ -26,6 +28,7 @@ export interface ButtonProps extends TouchableOpacityProps {
   hideDelay?: boolean;
   backgroundColor?: string;
   marginTop?: number;
+  loading?: boolean; // New prop for loading state
 }
 
 interface WrapContentProps {
@@ -47,8 +50,7 @@ const WrapContent = ({ isWrap, children }: WrapContentProps) => {
 export function AppButton(props: ButtonProps) {
   const {
     label,
-    onPress = () => {
-    },
+    onPress = () => { },
     style,
     Icon,
     labelStyle,
@@ -58,6 +60,7 @@ export function AppButton(props: ButtonProps) {
     hideDelay = false,
     backgroundColor,
     onPressIn = () => { },
+    loading = false, // Default value for loading
   } = props;
 
   const { themeColors } = useTheme();
@@ -74,50 +77,69 @@ export function AppButton(props: ButtonProps) {
   return (
     <WrapContent isWrap={isWrap}>
       <TouchableOpacity
-        disabled={disabled}
+        disabled={disabled || loading} // Disable button when loading
         activeOpacity={1}
         style={[
           styles.button,
           {
             backgroundColor:
-              backgroundColor || disabled
+              backgroundColor || disabled || loading // Adjust background for loading state
                 ? themeColors.colorDisable
                 : themeColors.primary,
           },
           style,
         ]}
         onPress={() => {
-          if (hideDelay) {
-            onPress?.();
-          } else {
-            handler();
+          if (!loading) { // Prevent onPress when loading
+            if (hideDelay) {
+              onPress?.();
+            } else {
+              handler();
+            }
           }
         }}
         onPressIn={() => {
-
-
-          if (hideDelay) {
-            onPressIn?.();
-          } else {
-            handlerOnPressIn();
+          if (!loading) { // Prevent onPressIn when loading
+            if (hideDelay) {
+              onPressIn?.();
+            } else {
+              handlerOnPressIn();
+            }
           }
         }}
       >
-        {!!Icon && <Icon style={styles.icon} />}
-        <AppText
-          style={[
-            styles.label,
-            {
-              color: disabled ? themeColors.whiteColor : themeColors.whiteColor,
-            },
-            isWrap && styles.txtWrap,
-            labelStyle,
-          ]}
-          numberOfLines={numberOfLines}
-
-        >
-          {label}
-        </AppText>
+        <LinearGradient
+          colors={
+            disabled || loading // Adjust gradient for loading state
+              ? [themeColors.colorDisable, themeColors.colorDisable]
+              : ['#4ABAB9', '#5761E6']
+          }
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={[StyleSheet.absoluteFillObject, {
+            borderRadius: Spacing.width8
+          }]}
+        />
+        {loading ? ( // Show loading indicator when loading
+          <ActivityIndicator color={themeColors.primary} />
+        ) : (
+          <>
+            {!!Icon && <Icon style={styles.icon} />}
+            <AppText
+              style={[
+                styles.label,
+                {
+                  color: themeColors.whiteColor,
+                },
+                isWrap && styles.txtWrap,
+                labelStyle,
+              ]}
+              numberOfLines={numberOfLines}
+            >
+              {label}
+            </AppText>
+          </>
+        )}
       </TouchableOpacity>
     </WrapContent>
   );

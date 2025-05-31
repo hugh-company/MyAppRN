@@ -21,16 +21,29 @@ const NotificationIcon = require('./NotificationIcon.png');
 const Onboarding1 = require('../images/onboarding/onboarding1.png');
 const Onboarding2 = require('../images/onboarding/onboarding2.png');
 const Onboarding3 = require('../images/onboarding/onboarding3.png');
+
+const MasCotIcon = require('./mascot.gif');
+const GoDaddyIcon = require('./GoDaddy-icon.png');
+
+const LogoIcon = require('./logo/logo.webp');
+const LogoTextIcon = require('./logo/logo-text.webp');
+
+const BackgroundHeader = require('./background/backgroundHeader.png');
 export {
   Background,
   BackgroundChat,
   BackgroundCreateProfile,
+  BackgroundHeader,
   BtnDislike,
+  GoDaddyIcon,
   ImageBackgroundDating,
   ImageBook,
   ImageGame,
   ImageMovie,
   ImagePackage,
+  LogoIcon,
+  LogoTextIcon,
+  MasCotIcon,
   NoAvatarImage,
   NoImage,
   NoSearchImage,

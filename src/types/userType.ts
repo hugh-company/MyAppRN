@@ -4,43 +4,91 @@ export enum genderInterface {
   OTHER = 'other',
 }
 export interface UserInterface {
-  id?: number;
-  username?: string;
-  email?: string;
-  fullname?: string;
-  avatar?: string;
-  role?: string;
-  status?: string;
-  created_at?: string; // ISO 8601 or date-time string
-  updated_at?: string; // ISO 8601 or date-time string
-  phone?: string;
-  telegram?: string | null;
-  whatsapp?: string | null;
-  skype?: string | null;
-  birthday?: string; // ISO 8601 or date string
-  rel_status?: string;
-  gender?: genderInterface; // Enum-like string
-  location?: {
-    latitude: number;
-    longitude: number;
-  };
-
-  about_me?: string;
-  display?: number; // Considered as a flag or visibility indicator
-  coin?: number | null;
-  package_name?: string;
-  package_exp?: string | null; // ISO 8601 or date-time string if used
-  personal?: {
-    job: string;
-    favorites: string[];
-    galleries: string[];
-    social: {
-      facebook: string;
-      zalo: string;
-      instagram: string;
-    };
-  };
+  apiTokenTelegram: string;
+  trialVPS: any[];
+  companyTax: any;
+  verified_code_zalo: any;
+  phonenumber_zalo: any;
+  accountType: string;
+  personalId: string;
+  user_id_zalo: any;
+  email: string;
+  codeId: string;
+  password: string;
+  status: string;
+  firstname: string;
+  lastname: string;
+  companyName: string;
+  address1: string;
+  address2: string;
+  datecreated: string;
+  country: string;
+  phonenumber: string;
+  notes: string;
+  company: number;
+  credit: number;
+  taxexempt: string;
+  latefeeoveride: number;
+  overideautosusp: string;
+  taxrateoverride: string;
+  taxrate: string;
+  cardtype: string;
+  cardnum: string;
+  expdate: string;
+  overideduenotices: boolean;
+  disableemails: string;
+  client_id: number;
+  currency_id: number;
+  affiliate_id: any;
+  group_name: string;
+  group_color: string;
+  billing_contact_id: number;
+  cardcreated: string;
+  cardupdated: string;
+  countryname: string;
+  assigned_affiliate: boolean;
+  achtype: string;
+  achaccount: string;
+  achrouting: string;
+  access: any[];
+  socketId: any[];
+  verified: boolean;
+  _2fa: boolean;
+  secret: string;
+  isHasSecret: boolean;
+  pwd: string;
+  national: string;
+  city: string;
+  district: string;
+  postCode: string;
+  currency: string;
+  address: string;
+  createdAt: string;
+  updatedAt: string;
+  accesstoken: string;
+  refreshtoken: string;
+  avatar: any;
+  role: Role;
+  affiliateCode: string;
+  myAffiliateCode: string;
+  id: string;
 }
+export interface Role {
+  permissionGofiber: any[];
+  _id: string;
+  roleName: string;
+  permissions: Permission[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface Permission {
+  subject: string;
+  actions: string[];
+  _id: string;
+}
+
 export interface UserFindInterface {
   id: number;
   fullname: string;

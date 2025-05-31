@@ -7,4 +7,6 @@ export * from './post.type';
 export * from './setting.type';
 export * from './userType';
 //
+export * from './banner.type';
+export * from './searchDomain.type';
 export * from './service.type';

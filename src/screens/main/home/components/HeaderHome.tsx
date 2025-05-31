@@ -1,5 +1,6 @@
 import { CartIcon } from '@assets';
 import { AppText } from '@components';
+import { navigate, SCREEN_ROUTE } from '@navigation';
 import { useNavigation } from '@react-navigation/native';
 import { RootState } from '@redux';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
@@ -21,17 +22,23 @@ export const HeaderHome = ({ styleHeader }: HeaderHomeProps) => {
   const profile = useSelector((state: RootState) => state.accountSlice.userInfo);
   const token = useSelector((state: RootState) => state.accountSlice.token);
   const navigation = useNavigation();
+  const cartItems = useSelector((state: RootState) => state.cartSlice.items);
 
   return (
     <Animated.View style={[styles.container, styleHeader, { paddingTop: top || Spacing.width16 }]}>
       <View style={[styles.header]}>
         <AppText style={styles.txtHello}>
 
-          Xin chào, <AppText style={styles.txtName}>{` ${profile?.fullname || 'Khách'}!`}</AppText>
+          Xin chào, <AppText style={styles.txtName}>{` ${token ? [profile?.firstname, profile?.lastname].join(' ') : 'Khách'}!`}</AppText>
 
         </AppText>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CART)} style={styles.btnBack}>
           <CartIcon />
+          {cartItems?.length > 0 && (
+            <View style={styles.cartBadge}>
+              <AppText style={styles.cartBadgeText}>{cartItems?.length}</AppText>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
     </Animated.View>
@@ -73,5 +80,27 @@ const createStyles = (themeColors: ThemeColors) =>
     },
     banner: {
 
+    },
+    btnBack: {
+      width: Spacing.width35,
+      height: Spacing.width35,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cartBadge: {
+      position: 'absolute',
+      top: -4,
+      right: -4,
+      backgroundColor: 'red',
+      borderRadius: 8,
+      width: 16,
+      height: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    cartBadgeText: {
+      color: 'white',
+      fontSize: FontSize.FontSize10,
+      fontWeight: 'bold',
     },
   });

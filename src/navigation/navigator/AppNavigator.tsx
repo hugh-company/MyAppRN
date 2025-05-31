@@ -12,11 +12,9 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { getLocations, getToken, getUserInfo, RootState, setUserInfo } from '@redux';
-import { getUserProfileApi } from '@services';
+import { getLocations, getToken, getUserInfo, RootState } from '@redux';
 import React, { useEffect, useRef } from 'react';
 import { Linking } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import OnboardingScreen from '../../screens/onboarding/OnboardingScreen';
 const Stack = createStackNavigator();
@@ -85,10 +83,10 @@ const AppNavigator = React.forwardRef(
     );
     const callApiProfile = async () => {
       try {
-        const responseUser: any = await getUserProfileApi();
-        console.log({ responseUser });
+        // const responseUser: any = await getUserProfileApi();
+        // console.log({ responseUser });
 
-        dispatch(setUserInfo(responseUser?.data?.me));
+        // dispatch(setUserInfo(responseUser?.data?.me));
       } catch (error) { }
     };
 
@@ -128,7 +126,8 @@ const AppNavigator = React.forwardRef(
       }
     }, [token]);
 
-    const { top, bottom } = useSafeAreaInsets();
+    console.log({ token });
+
     return (
 
       <NavigationContainer linking={linking} theme={DarkTheme} ref={ref}>

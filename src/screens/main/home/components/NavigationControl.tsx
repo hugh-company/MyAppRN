@@ -2,6 +2,7 @@ import { NotificationIcon, PromotionIcon, RightIcon, TopUpIcon, TransactionIcon 
 import { AppImage, AppText } from '@components';
 import { RootState } from '@redux';
 import { FontSize, Shadow, Spacing, ThemeColors, useTheme } from '@theme';
+import { formatPriceVND } from '@utils';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -20,9 +21,8 @@ export function NavigationControl(props: NavigationControlProps) {
   const token = useSelector((state: RootState) => state.accountSlice.token);
   const { themeColors } = useTheme();
   const styles = createStyles(themeColors);
-
+  const profile = useSelector((state: RootState) => state.accountSlice.userInfo);
   // Giả lập số dư và điểm thưởng, bạn có thể lấy từ props hoặc redux nếu cần
-  const balance = '0 đ';
   const points = '0 điểm';
 
   return (
@@ -51,7 +51,7 @@ export function NavigationControl(props: NavigationControlProps) {
                       </View>
                     </View>
                   </View>
-                  <AppText style={styles.priceText}>{balance}</AppText>
+                  <AppText style={styles.priceText}>{formatPriceVND(profile?.credit ?? 0)}</AppText>
                 </View>
               </LinearGradient>
             </View>
@@ -172,6 +172,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     priceText: {
       fontSize: FontSize.FontSize16,
       fontWeight: 'bold',
+      color: '#fff',
     },
     userBottom: {
       flexDirection: 'row',

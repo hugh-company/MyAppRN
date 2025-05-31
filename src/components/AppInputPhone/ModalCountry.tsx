@@ -1,6 +1,5 @@
 import { CloseIcon } from '@assets';
 import { Spacing, ThemeColors, useTheme } from '@theme';
-import { t } from 'i18next';
 import { debounce } from 'lodash';
 import React from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -82,12 +81,12 @@ export const ModalCountry = ({ visible, onClose, value, onSelectCountry }: Modal
         <Animated.View style={[styles.modalContainer, animatedStyle]}>
           <View style={[styles.header, { paddingTop: top || Spacing.width16 }]}>
             <TouchableOpacity onPress={() => onClose?.()}>
-              <CloseIcon color="white" />
+              <CloseIcon color="black" />
             </TouchableOpacity>
             <AppInputSearch
               value={search}
               style={styles.containerInput}
-              placeholder={t('search.searchCountry')}
+              placeholder={"Vui lòng nhập tên quốc gia, mã quốc gia hoặc mã gọi"}
               onChangeText={(text) => onSearch(text)}
             />
           </View>

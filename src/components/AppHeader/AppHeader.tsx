@@ -1,10 +1,13 @@
-import { CartIcon, LeftIcon } from '@assets';
-import { goBack } from '@navigation';
+import { CartIcon, LeftIcon, LogoTextIcon } from '@assets';
+import { AppImage } from '@components';
+import { goBack, navigate, SCREEN_ROUTE } from '@navigation';
+import { RootState } from '@redux';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
 import { AppText } from '../AppText';
 
 interface AppHeaderProps {
@@ -18,6 +21,7 @@ interface AppHeaderProps {
   backgroundColor?: string;
   onBack?: () => void;
   styleBack?: StyleProp<ViewStyle>;
+  isCart?: boolean;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -28,26 +32,37 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onRightPress,
   style,
   titleStyle,
-  onBack, styleBack,
+  onBack,
+  styleBack,
+  isCart = true,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
   const styles = useMemo(() => createStyles(themeColors), [themeColors]);
+  const cartItems = useSelector((state: RootState) => state.cartSlice.items);
 
   return (
-    <>
-      <Animated.View style={[styles.container, { paddingTop: top + Spacing.height8 || Spacing.width16 }, style]}>
-        <View style={styles.flex1}>
-          {leftComponent ? leftComponent : <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={[styles.btnBack, styleBack]}>
+
+    <Animated.View style={[styles.container, { paddingTop: top + Spacing.height8 || Spacing.width16 }, style]}>
+      <View style={styles.flex1}>
+        {leftComponent ? leftComponent :
+          <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={[styles.btnBack, styleBack]}>
             <LeftIcon />
-          </TouchableOpacity>}
-          {title && <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText>}
-        </View>
-        <TouchableOpacity onPress={onRightPress} style={styles.btnBack}>
-          <CartIcon color='black' />
-        </TouchableOpacity>
-      </Animated.View>
-    </>
+          </TouchableOpacity>
+        }
+
+      </View>
+      {title ? <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText> : <AppImage defaultSource={LogoTextIcon} style={styles.images} resizeMode='contain' />}
+      {isCart && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CART)} style={styles.btnBack}>
+        <CartIcon color='black' />
+        {cartItems?.length > 0 && (
+          <View style={styles.cartBadge}>
+            <AppText style={styles.cartBadgeText}>{cartItems?.length}</AppText>
+          </View>
+        )}
+      </TouchableOpacity>}
+    </Animated.View>
+
   );
 };
 
@@ -57,34 +72,54 @@ const createStyles = (themeColors: ThemeColors) =>
       // height: Platform.OS === 'android' ? Spacing.height64 : undefined,
       paddingHorizontal: Spacing.width16,
       backgroundColor: 'transparent',
+      justifyContent: 'space-between',
       alignItems: 'center',
       flexDirection: 'row',
+
       paddingBottom: Spacing.width8,
       top: 0,
       left: 0,
       right: 0,
-
     },
-
     title: {
       fontSize: FontSize.FontSize18,
       ...FontWithFamily.FontWithFamily_500,
       color: themeColors.text,
       textAlign: 'center',
       flex: 1,
+    },
+    images: {
+      width: Spacing.width100,
+      height: Spacing.height32,
+
+      flex: 1,
 
     },
     btnBack: {
       width: Spacing.width35,
       height: Spacing.width35,
-
       alignItems: 'center',
       justifyContent: 'center',
     },
     flex1: {
       flexDirection: 'row',
       alignItems: 'center',
-      flex: 1,
       gap: Spacing.width16,
+    },
+    cartBadge: {
+      position: 'absolute',
+      top: -4,
+      right: -4,
+      backgroundColor: 'red',
+      borderRadius: 8,
+      width: 16,
+      height: 16,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    cartBadgeText: {
+      color: 'white',
+      fontSize: FontSize.FontSize10,
+      fontWeight: 'bold',
     },
   });

@@ -24,13 +24,13 @@ const AppInputSearch = forwardRef<TextInput, AppInputSearchProps>((props, ref) =
           props.onClickSearch && props.onClickSearch();
         }
       }} style={[styles.inputContainer, inputStyle]}>
-        <SearchIcon size={Spacing.width20} color={themeColors.subtile} />
+        <SearchIcon size={Spacing.width20} color={themeColors.text} />
         <TextInput
           ref={ref}
           style={[
             styles.input,
           ]}
-          placeholderTextColor={themeColors.whiteColor}
+          placeholderTextColor={themeColors.subtile}
           placeholder={placeholder || t('search.movies')}
           value={value}
           onChangeText={onChangeText}

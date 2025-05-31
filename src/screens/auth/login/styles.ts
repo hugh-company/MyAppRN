@@ -6,13 +6,20 @@ export const createStyles = (themeColors: ThemeColors) =>
     container: {
       paddingHorizontal: Spacing.width16,
     },
+    txtTitle: {
+      fontSize: FontSize.FontSize24,
+      ...FontWithFamily.FontWithFamily_600,
+      textAlign: 'center',
+      width: '95%',
+      color: themeColors.text,
+      marginBottom: Spacing.height24,
+    },
     btnLogin: {
-      width: Spacing.width145,
-      alignSelf: 'center',
+      marginTop: Spacing.height50,
     },
     btnForgot: {
-      alignSelf: 'center',
-      marginTop: Spacing.width16,
+      alignSelf: 'flex-end',
+      marginBottom: Spacing.width16,
     },
     txtForgot: {
       fontSize: FontSize.FontSize14,
@@ -23,7 +30,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: Spacing.width32,
+      marginTop: Spacing.width16,
     },
     txtAreYouAccount: {
       ...FontWithFamily.FontWithFamily_400,

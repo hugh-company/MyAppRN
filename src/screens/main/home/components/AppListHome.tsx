@@ -2,12 +2,13 @@ import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { BannerPromotions } from './BannerPromotions';
+import { CloudList } from './CloudList';
 import { DomainList } from './DomainList';
 import { ServiceGrid } from './ServiceGrid';
 
 export interface HomeSection {
   id: number;
-  type: 'service' | 'promotions' | 'domain';
+  type: 'service' | 'promotions' | 'domain' | 'Cloud';
   title?: string;
   description?: string; // add description for domain section
   items: any[];
@@ -30,7 +31,7 @@ export function AppListHome(props: AppListHomeProps) {
         );
       case 'promotions':
         return (
-          <BannerPromotions data={section.items} title={section.title} />
+          <BannerPromotions title={section.title} />
         );
       case 'domain':
         return (
@@ -40,6 +41,10 @@ export function AppListHome(props: AppListHomeProps) {
             items={section.items}
             onPressSeeMore={() => { /* TODO: handle see more */ }}
           />
+        );
+      case 'Cloud':
+        return (
+          <CloudList title={section.title || ''} items={section.items} />
         );
       default:
         return null;

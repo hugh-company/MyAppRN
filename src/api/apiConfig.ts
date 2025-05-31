@@ -1,18 +1,20 @@
 const END_POINT = {
   production: {
-    BASE_URL: 'https://serverapiphu.com',
+    BASE_URL: 'https://api.gofiber.vn/api',
+    BASE_URL_SYS: 'https://system.gofiber.vn/api/v1',
   },
   staging: {
-    BASE_URL: 'https://phim3s.net',
+    BASE_URL: 'https://api.gofiber.vn/api',
+    BASE_URL_SYS: 'https://system.gofiber.vn/api/v1',
   },
 };
-export const BASE_STICKER_URL = 'https://phim3s.net/uploads/stickers/'; // adjust as needed
+export const BASE_STICKER_URL = 'https://system.gofiber.vn/api/v1/'; // adjust as needed
 
 export const ACCESS_TOKEN = '';
 export const API_URL = '';
 const ENV_ENVIRONMENT = 'staging' as keyof typeof END_POINT;
 export const ApiConfigs = {
-  baseURL: `${END_POINT[ENV_ENVIRONMENT].BASE_URL}/{language}/api/v1`,
+  baseURL: `${END_POINT[ENV_ENVIRONMENT].BASE_URL}`,
   headers: {
     'X-Requested-With': 'XMLHttpRequest',
     'Content-Type': 'multipart/form-data',
@@ -20,6 +22,16 @@ export const ApiConfigs = {
   },
   timeout: 60000,
 };
+export const ApiConfigsSystem = {
+  baseURL: `${END_POINT[ENV_ENVIRONMENT].BASE_URL_SYS}`,
+  headers: {
+    'X-Requested-With': 'XMLHttpRequest',
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  timeout: 60000,
+};
+
 export const BASE_IMAGE_URL = END_POINT[ENV_ENVIRONMENT].BASE_URL;
 export const ERROR_MESSAGES = {
   NO_INTERNET: 'No internet connection',
@@ -36,8 +48,10 @@ export const REQUEST_METHODS = {
 
 export const API_ENDPOINTS = {
   // auth
-  LOGIN: '/auth/login/',
+  LOGIN: '/auth/login',
   REGISTER: '/auth/register',
+  FORGOT_PASSWORD: '/users/password-reset',
+
   LOGIN_GOOGLE: '/auth/google/',
   LOGOUT: '/auth/logout',
   CSRF_TOKEN: '/auth/csrf_create/',
@@ -94,6 +108,14 @@ export const API_ENDPOINTS = {
   GET_SAVE_POST: '/posts/action/save/',
   SAVE_POST: '/posts/action/save/',
   LIST_USER_PREMIUM: '/finder/package/gold/',
+
+  // new
+  SEARCH_DOMAIN: '/cart-item/get-tail-domains',
+  SEARCH_DOMAIN_NAME_COM: '/cart-item/get-tail-domains-name-com',
+  DOMAIN_REGISTER: '/domains/register/',
+  CHECK_DOMAIN: '/cart-item/check-domain-more',
+
+  GET_LIST_BANNER: '/banners',
 };
 // Key Query
 export const KeyQueryApi = {
@@ -109,4 +131,8 @@ export const KeyQueryApi = {
   GET_LIST_EPISODE: 'getListEpisode',
   GET_DETAIL_EPISODE: 'getDetailEpisode',
   GET_SAVED_POST: 'getSavedPost',
+
+  //
+  GET_SEARCH_DOMAIN: 'getSearchDomain',
+  GET_BANNER: 'getBanner',
 };

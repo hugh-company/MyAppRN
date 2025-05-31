@@ -2,7 +2,6 @@ import {apiService} from '@api';
 import {createSlice} from '@reduxjs/toolkit';
 import {UserInterface} from '@types';
 import {APP_SLICE} from '../type';
-import {setIsDashboardDating} from './settingSlice';
 
 const initialState = {
   token: '',
@@ -27,20 +26,13 @@ const accountSlice = createSlice({
     setUserInfo: (state, action) => {
       state.userInfo = action.payload;
     },
-    setLocation: (state, action) => {
-      state.userInfo = {
-        ...state.userInfo,
-        location: action.payload,
-      };
-    },
+
     logout: state => {
       state.token = '';
       state.userInfo = undefined;
-      setIsDashboardDating(false);
     },
   },
 });
 
-export const {setToken, setUserInfo, logout, setLocation} =
-  accountSlice.actions;
+export const {setToken, setUserInfo, logout} = accountSlice.actions;
 export default accountSlice.reducer;

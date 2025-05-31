@@ -5,10 +5,12 @@ import {
 } from '@react-navigation/native';
 import { DeviceEventEmitter } from 'react-native';
 import Orientation from 'react-native-orientation-locker';
+import { SCREEN_ROUTE } from './router';
 
 type typeNavigation = {
   dispatch: (arg0: CommonActions.Action | StackActionType) => void;
   canGoBack: () => boolean;
+  getCurrentRoute?: () => { name: string } | undefined;
 } | null;
 
 let _navigator: typeNavigation;
@@ -71,6 +73,29 @@ export function navigateToStack(
         },
       }),
     );
+  });
+}
+export function navigateAuth(routeName: string, params?: object | undefined) {
+  debounceNavigation(() => {
+    const isAuthStack =
+      _navigator &&
+      typeof _navigator.getCurrentRoute === 'function' &&
+      (
+        _navigator.getCurrentRoute()?.name === SCREEN_ROUTE.LOGIN ||
+        _navigator.getCurrentRoute()?.name === SCREEN_ROUTE.REGISTER ||
+        _navigator.getCurrentRoute()?.name === SCREEN_ROUTE.FORGOT_PASSWORD
+      );
+
+    if (isAuthStack) {
+      _navigator?.dispatch(
+        CommonActions.navigate({
+          name: routeName,
+          params,
+        }),
+      );
+    } else {
+      navigateToStack(SCREEN_ROUTE.AUTH_STACK, routeName, params);
+    }
   });
 }
 

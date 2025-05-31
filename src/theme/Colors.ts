@@ -1,10 +1,11 @@
 export const lightColors = {
   colorMain4: '#4E58E6FF',
   primary: '#5761E6',
+  primaryBackground: 'rgba(87, 97, 230, 0.3)', // updated to a translucent version of #5761E6
   secondary: '#5856D6',
   tertiary: '#34C759',
   quaternary: '#FF2D55',
-  background: '#FFFFFF',
+  background: 'white',
   surface: '#F2F2F7',
   text: '#000000',
   textSecondary: '#3C3C43',
@@ -21,8 +22,8 @@ export const lightColors = {
   whiteColor: '#FFFFFF',
   colorDisable: '#E5E5EA',
   placeholder: '#8E8E93',
-  inputBackground: '#010101',
-  inputBorder: '#292929',
+  inputBackground: '#FFFFFF',
+  inputBorder: '#d9d9d9',
   inputText: '#000000',
   buttonConfirm: '#FF2D55',
   buttonCancel: '#8E8E93',
@@ -43,6 +44,7 @@ export const lightColors = {
   violet: '#AF52DE', // violet
   purple: '#A259FF', // purple
   combinedBlueIndigoViolet: '#5761E6',
+  highlight: '#FFD700', // Gold color for active button state
 };
 
 export const darkColors = {
@@ -89,46 +91,10 @@ export const darkColors = {
   violet: '#BF5AF2', // violet
   purple: '#A259FF', // purple
   combinedBlueIndigoViolet: '#5761E6',
+  highlight: '#FFD700', // Gold color for active button state
 };
 export const ColorsApp = {
-  colorMain4: '#D11030',
-  primary: '#D11030',
-  secondary: '#5E5CE6',
-  tertiary: '#30D158',
-  quaternary: '#FF375F',
-  buttonHover: '#FF1F44',
-  background: '#000000',
-  surface: '#1C1C1E',
-  text: '#FFFFFF',
-  textSecondary: '#EBEBF5',
-  textTertiary: '#98989F',
-  textQuaternary: '#48484A',
-  border: '#38383A',
-  borderSecondary: '#2C2C2E',
-  borderTertiary: '#383838',
-  borderQuaternary: '#48484A',
-  success: '#30D158',
-  error: '#FF453A',
-  warning: '#FF9F0A',
-  info: '#5E5CE6',
-  whiteColor: '#FFFFFF',
-  colorDisable: '#E5E5EA',
-  placeholder: '#B2B2B2',
-  inputBackground: '#010101',
-  inputBorder: '#292929',
-  inputText: '#FFFFFF',
-  txtLink: '#6B87F9',
-  buttonConfirm: '#FF2D55',
-  buttonCancel: '#8E8E93',
-  btnSocial: '#292929',
-  disable: '#595959',
-  grey: '#737373',
-  subtile: '#B2B2B2',
-  star: '#F4C26C',
-  backgroundPlaceholder: 'rgba(41, 41, 41, 1)',
-  onSurface: '#EDEDED',
-  active: '#13E398',
-  skeleton: '#292929',
+  ...lightColors,
 };
 export type ThemeColors = typeof lightColors;
 

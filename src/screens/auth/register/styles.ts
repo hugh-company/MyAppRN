@@ -29,8 +29,7 @@ export const createStyles = (themeColors: ThemeColors) =>
       textAlign: 'center',
     },
     btnLogin: {
-      width: Spacing.width145,
-      alignSelf: 'center',
+      width: '100%',
       marginTop: Spacing.height16,
     },
     input: {
@@ -43,5 +42,19 @@ export const createStyles = (themeColors: ThemeColors) =>
       color: themeColors.inputText,
       backgroundColor: themeColors.inputBackground,
       marginBottom: Spacing.height16,
+    },
+    viewAreYouAccount: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: Spacing.width16,
+      marginBottom: Spacing.height50,
+    },
+    txtAreYouAccount: {
+      ...FontWithFamily.FontWithFamily_400,
+    },
+    createAccount: {
+      ...FontWithFamily.FontWithFamily_600,
+      color: themeColors.txtLink,
     },
   });

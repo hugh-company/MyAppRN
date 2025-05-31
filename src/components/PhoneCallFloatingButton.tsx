@@ -1,13 +1,11 @@
-import { PhoneNumberIcon } from '@assets';
-import { ThemeColors, useTheme } from '@theme';
+import { MasCotIcon } from '@assets';
+import { AppImage } from '@components';
+import { Spacing, ThemeColors, useTheme } from '@theme';
 import React, { useRef } from 'react';
 import { Animated, Dimensions, PanResponder, StyleSheet, TouchableOpacity, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-
-const AnimatedIcon = Animated.createAnimatedComponent(PhoneNumberIcon);
 
 const BUTTON_SIZE = 64; // iconContainer: borderRadius: 32, padding: 16 => 32*2=64
-const BOTTOM_MARGIN = 80;
+const BOTTOM_MARGIN = 100;
 const RIGHT_MARGIN = 16;
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const initialX = SCREEN_WIDTH - BUTTON_SIZE - RIGHT_MARGIN;
@@ -97,7 +95,7 @@ export const PhoneCallFloatingButton = ({ onPress }: { onPress?: () => void }) =
       {...panResponder.panHandlers}
     >
       {/* Hiệu ứng tần số */}
-      <Animated.View
+      {/* <Animated.View
         pointerEvents="none"
         style={[
           styles.wave,
@@ -116,17 +114,17 @@ export const PhoneCallFloatingButton = ({ onPress }: { onPress?: () => void }) =
             ],
           },
         ]}
-      />
+      /> */}
       <TouchableOpacity onPress={onPress} activeOpacity={0.7}>
         <View style={styles.iconContainer}>
-          <LinearGradient
+          {/* <LinearGradient
             colors={["#4ABAB9", themeColors.primary]}
             start={{ x: 0.5, y: 0 }}
             end={{ x: 0.5, y: 1 }}
             style={StyleSheet.absoluteFillObject}
             pointerEvents="none"
-          />
-          <AnimatedIcon />
+          /> */}
+          <AppImage defaultSource={MasCotIcon} style={{ width: Spacing.width50, height: Spacing.width72 }} />
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -149,7 +147,7 @@ export const createStyles = (themeColors: ThemeColors) => StyleSheet.create({
     alignSelf: 'center',
   },
   iconContainer: {
-    backgroundColor: themeColors.primary,
+    // backgroundColor: themeColors.primary,
     borderRadius: 32,
     padding: 16,
     shadowColor: '#000',

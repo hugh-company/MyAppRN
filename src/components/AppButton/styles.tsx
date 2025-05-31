@@ -6,13 +6,19 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 10,
-    minHeight: Spacing.height48,
+    minHeight: Spacing.height40,
     flexDirection: 'row',
-    borderRadius: Spacing.width84,
+    borderRadius: Spacing.width8,
+    overflow: 'hidden', // Prevent content overflow
+
+  },
+  btnLinear: {
+    borderRadius: Spacing.width8,
+    ...StyleSheet.absoluteFillObject
   },
   label: {
     textAlign: 'center',
-    fontSize: FontSize.FontSize16,
+    fontSize: FontSize.FontSize14,
     ...FontWithFamily.FontWithFamily_600,
     flex: 1,
   },
@@ -20,4 +26,8 @@ export const styles = StyleSheet.create({
     marginLeft: Spacing.width20,
   },
   txtWrap: { flex: 0, paddingHorizontal: Spacing.width15 },
+  touchable: {
+    borderRadius: Spacing.width8, // Match the button's border radius
+    overflow: 'hidden', // Prevent content overflow
+  },
 });

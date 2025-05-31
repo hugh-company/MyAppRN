@@ -1,4 +1,4 @@
-import {FontSize, Spacing, ThemeColors} from '@theme';
+import {FontSize, Shadow, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -9,15 +9,14 @@ export const createStyles = (themeColors: ThemeColors) =>
       alignItems: 'center',
       gap: Spacing.width8,
       height: Spacing.height40,
-      borderWidth: 1,
-      borderColor: themeColors.inputBorder,
+      ...Shadow.normal,
       borderRadius: 8,
       paddingHorizontal: Spacing.width12,
-      backgroundColor: themeColors.borderSecondary,
+      backgroundColor: themeColors.background,
     },
     input: {
       fontSize: FontSize.FontSize14,
-      color: themeColors.whiteColor,
+      color: themeColors.text,
 
       flex: 1,
       height: '100%',

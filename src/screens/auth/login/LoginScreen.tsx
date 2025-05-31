@@ -1,49 +1,8 @@
-import { AppButton, AppInput, AppText, ContainerAuth } from '@components';
-import { navigate, SCREEN_ROUTE } from '@navigation';
-import { t } from 'i18next';
 import React from 'react';
-import { TouchableOpacity, View } from 'react-native';
-import { useLoginScreen } from './LoginScreen.hook';
+import LoginContainer from './LoginContainer';
 
 const LoginScreen = () => {
-  const { styles, control, errors, onSubmit } = useLoginScreen();
-  const usernameRef = React.useRef(null);
-  const passwordRef = React.useRef(null);
-
-  return (
-    <ContainerAuth style={styles.container}>
-      <AppInput
-        name="username"
-        placeholder={t('login.username')}
-        error={errors.username?.message}
-        control={control}
-        keyboardType={'email-address'}
-        autoCapitalize="none"
-        ref={usernameRef}
-        onSubmitEditing={() => passwordRef?.current.focus()}
-      />
-      <AppInput
-        name="password"
-        placeholder={t('login.password')}
-        error={errors.password?.message}
-        control={control}
-        secureTextEntry={true}
-        autoCapitalize="none"
-        ref={passwordRef}
-        onSubmitEditing={() => onSubmit()}
-      />
-      <AppButton onPress={() => onSubmit()} label={t('login.login')} style={styles.btnLogin} />
-      <TouchableOpacity style={styles.btnForgot} onPress={() => navigate(SCREEN_ROUTE.FORGOT_PASSWORD)}>
-        <AppText style={styles.txtForgot}>{t('login.forgotPassword')}</AppText>
-      </TouchableOpacity>
-      <View style={styles.viewAreYouAccount}>
-        <AppText style={styles.txtAreYouAccount}>{t('login.youCanAccount')} </AppText>
-        <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.REGISTER)}>
-          <AppText style={styles.createAccount}>{t('login.createAccountNow')}</AppText>
-        </TouchableOpacity>
-      </View>
-    </ContainerAuth>
-  );
+  return <LoginContainer />;
 };
 
 export default LoginScreen;

@@ -1,17 +1,14 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import { SCREEN_ROUTE } from '../router';
-import CustomDrawer from './CustomDrawer';
 import { TabBarNavigation } from './TabNavigation';
 
 
-const DrawerContent = (props: any) => <CustomDrawer {...props} />;
 const Drawer = createDrawerNavigator();
 const DrawerNavigation = React.memo(() => {
 
   return (
     <Drawer.Navigator
-      drawerContent={DrawerContent}
       screenOptions={{
         headerShown: false,
         drawerType: 'front',

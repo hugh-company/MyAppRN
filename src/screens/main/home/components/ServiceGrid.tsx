@@ -1,3 +1,4 @@
+import { LogoIcon } from '@assets';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
@@ -21,7 +22,12 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({ items, title }) => {
   const styles = createStyles(themeColors)
   return (
     <View style={styles.container}>
-      {title ? <Text style={styles.title}>{title}</Text> : null}
+      <View style={styles.header}>
+        {title ? <Text style={styles.title}>{title}</Text> : null}
+        <AppImage
+          defaultSource={LogoIcon}
+          style={styles.logo} />
+      </View>
       <View style={styles.gridContainer}>
         {items.map((item, idx) => (
           <TouchableOpacity
@@ -56,6 +62,16 @@ export const createStyles = (themeColors: ThemeColors) =>
       paddingHorizontal: Spacing.width16,
       backgroundColor: themeColors.whiteColor,
       paddingTop: Spacing.width16,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      // justifyContent: 'space-between',
+      gap: Spacing.width8,
+    },
+    logo: {
+      width: Spacing.width30,
+      height: Spacing.width30,
     },
     buttonImage: {
       width: Spacing.width50,

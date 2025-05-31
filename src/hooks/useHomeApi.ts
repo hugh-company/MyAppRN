@@ -1,3 +1,4 @@
+import {productClouds} from './data/clouds';
 import {domainsTrend} from './data/domains';
 import {promotions} from './data/promotions';
 import {services} from './data/services';
@@ -8,7 +9,7 @@ export const useDashboardHomeApi = () => {
       {
         id: 1,
         type: 'service',
-        title: 'Dịch vụ của Nhân Hoà',
+        title: 'Dịch vụ',
         items: services,
       },
       {
@@ -19,6 +20,12 @@ export const useDashboardHomeApi = () => {
       },
       {
         id: 3,
+        type: 'Cloud',
+        title: 'Sản phẩm tiêu biểu',
+        items: productClouds,
+      },
+      {
+        id: 4,
         title: 'Tên miền',
         description: 'Giá cập nhật 24h',
         type: 'domain',

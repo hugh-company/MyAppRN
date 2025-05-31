@@ -3,6 +3,8 @@ import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
 import { ServiceType } from '../../../../types/service.type';
 import { HeaderDetail } from './HeaderDetail';
+import { ListDomain } from './ListDomain';
+import { NavControlService } from './NavControlService';
 
 export interface HomeSection {
   id: number;
@@ -25,8 +27,12 @@ export function AppListDetailService(props: AppListDetailServiceProps) {
     switch (section.type as ServiceType) {
       case ServiceType.HEADER_SEARCH:
         return <HeaderDetail data={section} />;
+      case ServiceType.NAV_CONTROL:
+        return <NavControlService title={section.title} items={section.items} />;
+      case ServiceType.LIST_DOMAIN:
+        return <ListDomain data={section} />;
       default:
-        return null;
+        return <></>;
     }
   };
 

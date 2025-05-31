@@ -13,7 +13,6 @@ import Orientation from 'react-native-orientation-locker';
 import { GlobalService, GlobalUI, ModalChangeLanguage, ModalConfirmation } from '@components';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { AppNavigator, NavigationUtils } from '@navigation';
-import messaging from '@react-native-firebase/messaging';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { persistor, store } from '@redux';
 import { Settings } from 'react-native-fbsdk-next';
@@ -59,12 +58,12 @@ function App(): React.JSX.Element {
 
     // Request notification permissions and get the token
 
-    messaging().onNotificationOpenedApp(async (_remoteMessage) => {
-      console.log('Notification opened from background or terminated state:', _remoteMessage);
-      if (_remoteMessage?.data) {
-        // Navigate to the relevant screen or take an action based on the notification
-      }
-    });
+    // messaging().onNotificationOpenedApp(async (_remoteMessage) => {
+    //   console.log('Notification opened from background or terminated state:', _remoteMessage);
+    //   if (_remoteMessage?.data) {
+    //     // Navigate to the relevant screen or take an action based on the notification
+    //   }
+    // });
   }, []);
 
   LogBox.ignoreLogs([

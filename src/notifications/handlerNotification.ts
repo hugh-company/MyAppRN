@@ -4,7 +4,6 @@ import {PermissionsAndroid, Platform} from 'react-native';
 
 import {navigate, SCREEN_ROUTE} from '@navigation';
 import notifee, {AndroidImportance, EventType} from '@notifee/react-native';
-import {sendFcmTokenApi} from '@services';
 import {PostTypeKey} from '@types';
 import {goToDetail} from '@utils';
 import DeviceInfo from 'react-native-device-info';
@@ -39,11 +38,11 @@ export const setupNotifications = async () => {
       if (token) {
         fcmToken = token;
         console.log('FCM Token', token);
-        const responseSendFcmToken = await sendFcmTokenApi({
-          fcm_token: token,
-          device_id: device_id?.toString(),
-        });
-        console.log({responseSendFcmToken});
+        // const responseSendFcmToken = await sendFcmTokenApi({
+        //   fcm_token: token,
+        //   device_id: device_id?.toString(),
+        // });
+        // console.log({responseSendFcmToken});
 
         // Update your Redux store or local state
       } else {

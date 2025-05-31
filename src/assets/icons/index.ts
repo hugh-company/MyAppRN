@@ -101,3 +101,6 @@ export {default as CartIcon} from './CartIcon';
 export {default as GiftIcon} from './nav/GiftIcon';
 export {default as SupportIcon} from './nav/SupportIcon';
 export {default as PhoneNumberIcon} from './PhoneNumberIcon';
+
+export {default as InfoIcon} from './InfoIcon';
+export {default as NameComLogo} from './NameComLogo';

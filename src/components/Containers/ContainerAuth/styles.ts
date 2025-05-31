@@ -1,10 +1,4 @@
-import {
-  FontSize,
-  FontWithFamily,
-  HeightScreen,
-  Spacing,
-  ThemeColors,
-} from '@theme';
+import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -18,10 +12,14 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderBottomLeftRadius: Spacing.height40,
       overflow: 'hidden',
     },
-
-    image: {
+    header: {},
+    logoContainer: {
       width: '100%',
-      height: HeightScreen / 2.7,
+      marginVertical: Spacing.width16,
+    },
+    images: {
+      width: Spacing.width200,
+      height: Spacing.height62,
     },
     txtTitle: {
       fontSize: FontSize.FontSize32,

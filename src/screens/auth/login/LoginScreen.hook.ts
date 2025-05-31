@@ -11,8 +11,8 @@ import {useDispatch} from 'react-redux';
 import {createStyles} from './styles';
 
 const defaultForm = {
-  username: '',
-  password: '',
+  email: 'hieunguyendev102@gmail.com',
+  password: 'trunghieu111',
 };
 export const useLoginScreen = () => {
   const {themeColors} = useTheme();
@@ -29,7 +29,7 @@ export const useLoginScreen = () => {
 
   const onSubmit = handleSubmit(async (form: loginFormData) => {
     const params = {
-      username: form.username,
+      username: form.email,
       password: form.password,
     };
     GlobalService.showLoading();
@@ -38,13 +38,13 @@ export const useLoginScreen = () => {
       const res = await loginApi(params);
       console.log({res});
       showNotificationSuccess(t('login.loginSuccess'), res?.message);
-      dispatch(setToken(res?.data?.access_token));
-      dispatch(setUserInfo(res?.data?.me));
+      dispatch(setToken(res?.data?.accessToken));
+      dispatch(setUserInfo(res?.data?.user));
       //
     } catch (error: any) {
       console.log({error: error});
 
-      showNotificationError(t('login.loginFail'), error?.message);
+      showNotificationError(t('login.loginFailed'), t('login.messageFailed'));
     } finally {
       GlobalService.hideLoading();
     }
