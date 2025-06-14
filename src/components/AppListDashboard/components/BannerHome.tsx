@@ -1,9 +1,8 @@
 import { AppImage, AppText } from '@components';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
+import { FontSize, FontWithFamily, isTablet, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import { ItemListProduct } from '@types';
 import React, { useRef, useState } from 'react';
 import { FlatList, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import Animated from 'react-native-reanimated';
 
 interface BannerHomeProps {
@@ -34,8 +33,8 @@ const BannerHome = ({ data = [], style }: BannerHomeProps) => {
         showsHorizontalScrollIndicator={false}
         renderItem={({ item, index }) => (
           <View key={index} style={styles.btn}>
-            <AppImage uri={item.images} style={styles.image} />
-            <LinearGradient
+            <AppImage uri={isTablet ? item.images : item?.images_mobile} style={styles.image} />
+            {/* <LinearGradient
               colors={['#1400AE', 'rgba(115, 115, 115, 0)']}
               style={styles.overlay}
             />
@@ -45,7 +44,7 @@ const BannerHome = ({ data = [], style }: BannerHomeProps) => {
               start={{ x: 0.5, y: 0 }}
               end={{ x: 0.5, y: 1 }}
               style={styles.linear}
-            />
+            /> */}
 
             <View style={styles.infoBanner}>
               <AppText style={styles.descriptionBanner} numberOfLines={2}>{item.label}</AppText>

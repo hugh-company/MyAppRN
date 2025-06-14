@@ -1,1 +1,14 @@
-{}
+{
+  "ignore_dirs": [
+    ".git",
+    "node_modules",
+    "android/app/build",
+    "ios/build",
+    "ios/Pods",
+    "vendor",
+    "build",
+    ".gradle"
+  ],
+  "fsevents_latency": 0.05,
+  "settle": 5000
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "862326056116",
+    "project_id": "allapp-f403e",
+    "storage_bucket": "allapp-f403e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:862326056116:android:428ce71f4b317a28c063e1",
+        "android_client_info": {
+          "package_name": "com.fillapp.posttype"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWb1GO9ZYemz9VC5a4KX3-4rW2eYiEoNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

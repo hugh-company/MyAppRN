@@ -1,7 +1,7 @@
 import {Dimensions, PixelRatio, Platform} from 'react-native';
 
 const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
-const isTablet = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) >= 600;
+export const isTablet = Math.min(SCREEN_WIDTH, SCREEN_HEIGHT) >= 600;
 const baseWidth = isTablet ? 768 : 375;
 const scale = SCREEN_WIDTH / baseWidth;
 

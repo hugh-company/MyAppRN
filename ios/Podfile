@@ -14,7 +14,7 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
-target 'FillApp' do
+target 'Phim3sApp' do
   config = use_native_modules!
 
   use_react_native!(
@@ -22,15 +22,15 @@ target 'FillApp' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
-# import
-pod 'Firebase', :modular_headers => true
-pod 'FirebaseCoreInternal'
-pod 'FirebaseCore', :modular_headers => true
 
-# pod 'Firebase/Messaging', :modular_headers => true
-pod 'GoogleUtilities', :modular_headers => true
-pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
-pod 'GoogleSignIn'
+  # Firebase et modules importés depuis ios2/Podfile
+  pod 'Firebase', :modular_headers => true
+  pod 'FirebaseCoreInternal'
+  pod 'FirebaseCore', :modular_headers => true
+  pod 'GoogleUtilities', :modular_headers => true
+  pod 'react-native-fbsdk-next', :path => '../node_modules/react-native-fbsdk-next'
+  pod 'GoogleSignIn'
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
