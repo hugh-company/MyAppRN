@@ -1,4 +1,4 @@
-import { LogoTextIcon } from '@assets';
+import { BackgroundHeader, LogoTextIcon } from '@assets';
 import { AppImage } from '@components';
 import { useTheme } from '@theme';
 import React from 'react';
@@ -18,10 +18,12 @@ const ContainerAuth = ({ children, style }: ContainerAuthProps) => {
   const { top } = useSafeAreaInsets();
 
   return (
-    <View style={[styles.container, { paddingTop: top }]}>
+    <View style={[styles.container]}>
+      <AppImage defaultSource={BackgroundHeader} style={styles.headerBackground} resizeMode="cover" />
+
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
 
-        <View style={styles.header}>
+        <View style={[styles.header, { paddingTop: top }]}>
           <View style={styles.logoContainer}>
             <AppImage defaultSource={LogoTextIcon} style={styles.images} resizeMode='contain' />
           </View>

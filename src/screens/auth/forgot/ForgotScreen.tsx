@@ -14,7 +14,7 @@ const ForgotScreen = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader title={t('forgot.title')} />
+      <AppHeader title={t('forgot.title')} isBackground />
       <AppText style={styles.txtDescription}>
         {t('forgot.description')}
       </AppText>

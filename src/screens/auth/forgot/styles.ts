@@ -1,4 +1,4 @@
-import {FontSize, ThemeColors} from '@theme';
+import {FontSize, Spacing, ThemeColors} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -10,11 +10,12 @@ export const createStyles = (themeColors: ThemeColors) =>
     body: {
       flex: 1,
       padding: 16,
+      marginTop: Spacing.height50,
     },
     txtDescription: {
       paddingHorizontal: 16,
       paddingVertical: 8,
-      color: themeColors.textSecondary,
+      color: themeColors.whiteColor,
       fontSize: FontSize.FontSize12,
     },
   });

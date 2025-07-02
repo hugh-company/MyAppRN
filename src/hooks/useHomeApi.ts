@@ -12,6 +12,12 @@ export const useDashboardHomeApi = () => {
         title: 'Dịch vụ',
         items: services,
       },
+
+      {
+        id: 5,
+        type: 'marketing',
+        title: 'Marketing & SEO',
+      },
       {
         id: 2,
         type: 'promotions',

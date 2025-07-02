@@ -10,7 +10,7 @@ const DetailScreen = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader title={params.name || ''} />
+      <AppHeader title={params.name || ''} isBackground />
       <AppListDetailService data={params?.data || []} />
     </View>
   );

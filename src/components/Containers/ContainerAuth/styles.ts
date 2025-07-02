@@ -1,4 +1,11 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  HeightScreen,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -12,6 +19,12 @@ export const createStyles = (themeColors: ThemeColors) =>
       borderBottomLeftRadius: Spacing.height40,
       overflow: 'hidden',
     },
+    headerBackground: {
+      ...StyleSheet.absoluteFillObject,
+      width: WidthScreen,
+      height: HeightScreen / 2,
+    }, // Added style for background
+
     header: {},
     logoContainer: {
       width: '100%',

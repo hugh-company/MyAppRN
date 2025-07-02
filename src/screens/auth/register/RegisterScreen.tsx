@@ -1,15 +1,17 @@
-import { AppButton, AppHeader, AppInput, AppInputCountries, AppInputDropdown, AppText } from '@components';
+import { AnimatedInputScrollerRef, AppButton, AppHeader, AppInput, AppInputCountries, AppInputDropdown, AppText } from '@components';
+
 import { goBack } from '@navigation';
 import { t } from 'i18next';
 import React, { useRef } from 'react';
 import { Controller } from 'react-hook-form';
-import { TouchableOpacity, View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { TextInput, TouchableOpacity, View } from 'react-native';
+import AnimatedInputScroller from '../../../components/AnimatedInputScroller';
 import { useRegisterScreen } from './RegisterScreen.hook';
 
 const RegisterScreen = () => {
-  const { control, errors, styles, onSubmit, watch } = useRegisterScreen(); // Destructure control and watch
-  const accountType = watch('accountType'); // Watch accountType changes
+  const { control, errors, styles, onSubmit, watch } = useRegisterScreen();
+  const accountType = watch('accountType');
+  const scrollerRef = useRef<AnimatedInputScrollerRef>(null);
 
   const accountTypeOptions = [
     { label: t('register.individual'), value: 'individual' },
@@ -29,13 +31,32 @@ const RegisterScreen = () => {
   const companyNameRef = useRef<any>(null);
   const personalIdRef = useRef<any>(null);
 
+  // Helper function to focus and scroll
+  const focusAndScroll = (refToFocus: React.RefObject<TextInput | View | any>) => { // Added View for broader type
+    if (refToFocus.current) {
+      // Attempt to focus only if the focus method exists
+      if (typeof refToFocus.current.focus === 'function') {
+        refToFocus.current.focus();
+      }
+      // Attempt to scroll to it
+      if (scrollerRef.current) {
+        // Ensure the component referred by refToFocus can be handled by measureLayout
+        // This might require AppInputDropdown (and other custom inputs) to use forwardRef
+        // and pass the ref to an actual View or TextInput component.
+        scrollerRef.current.scrollToInput(refToFocus);
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <AppHeader title={t('register.title')} />
-      <KeyboardAwareScrollView
+
+      <AppHeader title={t('register.title')} isBackground />
+      <AnimatedInputScroller
+        ref={scrollerRef} // Assign the ref
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
-        extraScrollHeight={100}
+        extraScrollHeight={100} // You might want to adjust this
         style={styles.body}
       >
         <AppInput
@@ -46,7 +67,7 @@ const RegisterScreen = () => {
           error={errors.lastname?.message}
           control={control}
           ref={lastnameRef}
-          onSubmitEditing={() => firstnameRef.current?.focus()}
+          onSubmitEditing={() => focusAndScroll(firstnameRef)}
         />
 
 
@@ -58,7 +79,7 @@ const RegisterScreen = () => {
           error={errors.firstname?.message}
           control={control}
           ref={firstnameRef}
-          onSubmitEditing={() => emailRef.current?.focus()}
+          onSubmitEditing={() => focusAndScroll(emailRef)}
         />
 
 
@@ -70,7 +91,7 @@ const RegisterScreen = () => {
           error={errors.email?.message}
           control={control}
           ref={emailRef}
-          onSubmitEditing={() => phoneNumberRef.current?.focus()}
+          onSubmitEditing={() => focusAndScroll(phoneNumberRef)}
         />
 
         <AppInput
@@ -81,6 +102,9 @@ const RegisterScreen = () => {
           error={errors.phonenumber?.message}
           control={control}
           ref={phoneNumberRef}
+          // Assuming accountTypeRef is the next, or handle differently if it's a dropdown without direct focus
+          // For a dropdown, focus() might not be applicable, but scrolling to it is.
+          onSubmitEditing={() => focusAndScroll(accountTypeRef)}
         />
 
         <AppInputDropdown
@@ -91,6 +115,9 @@ const RegisterScreen = () => {
           error={errors.accountType?.message}
           control={control}
           ref={accountTypeRef}
+        // AppInputDropdown likely doesn't have onSubmitEditing.
+        // Use a prop like onSelect, onValueChange, or onClose to trigger the next action.
+
         />
         <AppInput
           name="password"
@@ -101,7 +128,7 @@ const RegisterScreen = () => {
           key={'password'}
           autoCapitalize="none"
           ref={passwordRef}
-          onSubmitEditing={() => confirmPasswordRef.current?.focus()}
+          onSubmitEditing={() => focusAndScroll(confirmPasswordRef)}
         />
 
         <AppInput
@@ -113,7 +140,7 @@ const RegisterScreen = () => {
           autoCapitalize="none"
           key={'password2'}
           ref={confirmPasswordRef}
-          onSubmitEditing={() => address1Ref.current?.focus()}
+          onSubmitEditing={() => focusAndScroll(address1Ref)}
         />
 
         <AppInput
@@ -124,6 +151,17 @@ const RegisterScreen = () => {
           error={errors.address1?.message}
           control={control}
           ref={address1Ref}
+          // Assuming country is next, but it's a Controller, not a direct ref.
+          // You might need a different strategy for Controller-based inputs
+          // or if AppInputCountries can take a ref.
+          // For now, let's assume it focuses the next available field based on accountType
+          onSubmitEditing={() => {
+            if (accountType === 'company') {
+              focusAndScroll(companyTaxRef);
+            } else {
+              focusAndScroll(personalIdRef);
+            }
+          }}
         />
 
         <Controller
@@ -149,7 +187,7 @@ const RegisterScreen = () => {
               error={errors.companyTax?.message}
               control={control}
               ref={companyTaxRef}
-              onSubmitEditing={() => companyNameRef.current?.focus()}
+              onSubmitEditing={() => focusAndScroll(companyNameRef)}
             />
 
             <AppInput
@@ -160,7 +198,7 @@ const RegisterScreen = () => {
               error={errors.companyName?.message}
               control={control}
               ref={companyNameRef}
-              onSubmitEditing={() => affiliateCodeRef.current?.focus()}
+              onSubmitEditing={() => focusAndScroll(affiliateCodeRef)}
             />
           </>
         ) : (
@@ -172,7 +210,7 @@ const RegisterScreen = () => {
             error={errors.personalId?.message}
             control={control}
             ref={personalIdRef}
-            onSubmitEditing={() => affiliateCodeRef.current?.focus()}
+            onSubmitEditing={() => focusAndScroll(affiliateCodeRef)}
           />
         )}
         <AppInput
@@ -193,7 +231,7 @@ const RegisterScreen = () => {
             <AppText style={styles.createAccount}>{t('login.title')}</AppText>
           </TouchableOpacity>
         </View>
-      </KeyboardAwareScrollView>
+      </AnimatedInputScroller>
     </View>
   );
 };

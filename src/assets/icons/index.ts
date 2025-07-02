@@ -104,3 +104,19 @@ export {default as PhoneNumberIcon} from './PhoneNumberIcon';
 
 export {default as InfoIcon} from './InfoIcon';
 export {default as NameComLogo} from './NameComLogo';
+
+export {default as CloudServerIcon} from './services/CloudServer';
+export {default as DdosIcon} from './services/DdosIcon';
+export {default as DomainIcon} from './services/DomainIcon';
+export {default as HostingIcon} from './services/HostingIcon';
+export {default as MarketingIcon} from './services/MarketingIcon';
+export {default as ServerIcon} from './services/ServerIcon';
+export {default as VpsIcon} from './services/VpsIcon';
+export {default as WebAppIcon} from './services/WebAppIcon';
+export {default as WebIcon} from './services/WebsiteIcon';
+
+export {default as ContentIcon} from './services/ContentIcon';
+export {default as EntitySeo} from './services/EntitySeo';
+export {default as ManagerWeb} from './services/ManagerWeb';
+export {default as SeoAllIcon} from './services/SeoAllIcon';
+export {default as SeoKeywork} from './services/SeoKeywork';

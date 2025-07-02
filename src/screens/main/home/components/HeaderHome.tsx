@@ -49,7 +49,7 @@ const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
     container: {
       backgroundColor: themeColors.primary,
-      paddingBottom: Spacing.width16,
+      paddingBottom: Spacing.width8,
     },
     linear: {
       ...StyleSheet.absoluteFillObject,

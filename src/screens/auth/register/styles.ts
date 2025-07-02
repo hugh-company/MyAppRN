@@ -1,4 +1,11 @@
-import {FontSize, FontWithFamily, Spacing, ThemeColors} from '@theme';
+import {
+  FontSize,
+  FontWithFamily,
+  HeightScreen,
+  Spacing,
+  ThemeColors,
+  WidthScreen,
+} from '@theme';
 import {StyleSheet} from 'react-native';
 
 export const createStyles = (themeColors: ThemeColors) =>
@@ -10,6 +17,12 @@ export const createStyles = (themeColors: ThemeColors) =>
     body: {
       paddingHorizontal: Spacing.width16,
     },
+    headerBackground: {
+      ...StyleSheet.absoluteFillObject,
+      width: WidthScreen,
+      height: HeightScreen / 2,
+    }, // Added style for background
+
     viewInfo: {
       alignItems: 'center',
       gap: Spacing.height8,

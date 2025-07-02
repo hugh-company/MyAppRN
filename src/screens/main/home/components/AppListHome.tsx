@@ -1,14 +1,16 @@
 import React from 'react';
 import { StyleProp, ViewStyle } from 'react-native';
 import Animated, { AnimatedStyle } from 'react-native-reanimated';
+import { MarketingServices } from '../../../../constants/services';
 import { BannerPromotions } from './BannerPromotions';
 import { CloudList } from './CloudList';
 import { DomainList } from './DomainList';
+import { ServiceCarousel } from './ServiceCarousel';
 import { ServiceGrid } from './ServiceGrid';
 
 export interface HomeSection {
   id: number;
-  type: 'service' | 'promotions' | 'domain' | 'Cloud';
+  type: 'service' | 'promotions' | 'domain' | 'Cloud' | 'marketing'; // add marketing type
   title?: string;
   description?: string; // add description for domain section
   items: any[];
@@ -32,6 +34,10 @@ export function AppListHome(props: AppListHomeProps) {
       case 'promotions':
         return (
           <BannerPromotions title={section.title} />
+        );
+      case 'marketing':
+        return (
+          <ServiceCarousel items={MarketingServices} title={section.title} />
         );
       case 'domain':
         return (

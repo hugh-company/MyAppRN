@@ -65,7 +65,6 @@ export const NavControlService: React.FC<NavControlServiceProps> = ({ title, ite
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'white',
 
     // padding: 16,
     marginVertical: Spacing.width16,

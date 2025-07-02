@@ -1,10 +1,9 @@
-import { AppInputSearchDomain, AppText } from '@components';
+import { AppInputSearchDomain } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
 import { itemDetailInterface } from '@types';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 export interface HeaderDetailProps {
   data: itemDetailInterface
@@ -17,19 +16,19 @@ export function HeaderDetail(props: HeaderDetailProps) {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
+      {/* <LinearGradient
         colors={["#4ABAB9", themeColors.primary]}
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
         style={StyleSheet.absoluteFillObject}
         pointerEvents="none"
-      />
-      <AppText style={styles.title} numberOfLines={1}>
+      /> */}
+      {/* <AppText style={styles.title} numberOfLines={1}>
         {props.data.title || 'Header Detail'}
       </AppText>
       <AppText style={styles.description} numberOfLines={1}>
         {props.data.description || 'This is a description for the header detail.'}
-      </AppText>
+      </AppText> */}
       <AppInputSearchDomain
         style={styles.containerInput}
         editable={false}

@@ -1,8 +1,8 @@
-import { CartIcon, LeftIcon, LogoTextIcon } from '@assets';
+import { ArrowDropLeft, BackgroundHeader, CartIcon, LogoTextIcon } from '@assets';
 import { AppImage } from '@components';
 import { goBack, navigate, SCREEN_ROUTE } from '@navigation';
 import { RootState } from '@redux';
-import { FontSize, FontWithFamily, Spacing, ThemeColors, useTheme } from '@theme';
+import { FontSize, FontWithFamily, HeightScreen, Spacing, ThemeColors, useTheme, WidthScreen } from '@theme';
 import React, { useMemo } from 'react';
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, View, ViewStyle } from 'react-native';
 import Animated from 'react-native-reanimated';
@@ -22,6 +22,7 @@ interface AppHeaderProps {
   onBack?: () => void;
   styleBack?: StyleProp<ViewStyle>;
   isCart?: boolean;
+  isBackground?: boolean;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -35,6 +36,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   onBack,
   styleBack,
   isCart = true,
+  isBackground = false,
 }) => {
   const { themeColors } = useTheme();
   const { top } = useSafeAreaInsets();
@@ -43,34 +45,48 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
   return (
 
-    <Animated.View style={[styles.container, { paddingTop: top + Spacing.height8 || Spacing.width16 }, style]}>
-      <View style={styles.flex1}>
-        {leftComponent ? leftComponent :
-          <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={[styles.btnBack, styleBack]}>
-            <LeftIcon />
-          </TouchableOpacity>
-        }
+    <>
+      <Animated.View style={[styles.header,]}>
 
-      </View>
-      {title ? <AppText style={[styles.title, titleStyle]} numberOfLines={1}>{title}</AppText> : <AppImage defaultSource={LogoTextIcon} style={styles.images} resizeMode='contain' />}
-      {isCart && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CART)} style={styles.btnBack}>
-        <CartIcon color='black' />
-        {cartItems?.length > 0 && (
-          <View style={styles.cartBadge}>
-            <AppText style={styles.cartBadgeText}>{cartItems?.length}</AppText>
+        {isBackground && <AppImage defaultSource={BackgroundHeader} style={styles.headerBackground} resizeMode="cover" />}
+        <View style={[styles.container, { paddingTop: top + Spacing.height8 || Spacing.width16 }, style]}>
+          <View style={styles.flex1}>
+            {leftComponent ? leftComponent :
+              <TouchableOpacity onPress={() => onBack ? onBack() : goBack()} style={[styles.btnBack, styleBack]}>
+                <ArrowDropLeft color={isBackground ? 'white' : 'black'} />
+              </TouchableOpacity>
+            }
+
           </View>
-        )}
-      </TouchableOpacity>}
-    </Animated.View>
+          {title ? <AppText style={[styles.title, titleStyle, { color: isBackground ? 'white' : 'black' }]} numberOfLines={1}>{title}</AppText> : <AppImage defaultSource={LogoTextIcon} style={styles.images} resizeMode='contain' />}
+          {isCart && <TouchableOpacity onPress={() => navigate(SCREEN_ROUTE.CART)} style={styles.btnBack}>
+            <CartIcon color='black' />
+            {cartItems?.length > 0 && (
+              <View style={styles.cartBadge}>
+                <AppText style={styles.cartBadgeText}>{cartItems?.length}</AppText>
+              </View>
+            )}
+          </TouchableOpacity>}
+        </View>
+
+      </Animated.View>
+
+    </>
 
   );
 };
 
 const createStyles = (themeColors: ThemeColors) =>
   StyleSheet.create({
+    headerBackground: {
+      ...StyleSheet.absoluteFillObject,
+      width: WidthScreen,
+      height: HeightScreen / 2,
+    }, // Added style for background
+
     container: {
       // height: Platform.OS === 'android' ? Spacing.height64 : undefined,
-      paddingHorizontal: Spacing.width16,
+
       backgroundColor: 'transparent',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -80,6 +96,9 @@ const createStyles = (themeColors: ThemeColors) =>
       top: 0,
       left: 0,
       right: 0,
+    },
+    header: {
+
     },
     title: {
       fontSize: FontSize.FontSize18,

@@ -1,14 +1,16 @@
 import { LogoIcon } from '@assets';
+import { AppText } from '@components';
 import { navigate, SCREEN_ROUTE } from '@navigation';
 import { FontSize, Spacing, ThemeColors, useTheme } from '@theme';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AppImage } from '../../../../components/AppImage/AppImage';
+import { SERVICES } from '../../../../constants/services';
 
 interface ServiceItem {
   name: string;
-  img: string;
+  Icon: React.ElementType; // Changed from string
   url: string;
 }
 
@@ -23,34 +25,39 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({ items, title }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        {title ? <Text style={styles.title}>{title}</Text> : null}
         <AppImage
           defaultSource={LogoIcon}
           style={styles.logo} />
+        {title ? <AppText style={styles.title}>{title}</AppText> : null}
+
       </View>
       <View style={styles.gridContainer}>
-        {items.map((item, idx) => (
-          <TouchableOpacity
-            key={item.name + idx}
-            style={styles.gridItem}
-            onPress={() => {
-              navigate(SCREEN_ROUTE.DETAIL, item)
-            }}
-          >
-            <View style={styles.buttonImage}>
+        {SERVICES.map((item, idx) => {
+          const { Icon } = item;
+          return (
+            <TouchableOpacity
+              key={item.name + idx}
+              style={styles.gridItem}
+              onPress={() => {
+                navigate(SCREEN_ROUTE.DETAIL, item)
+              }}
+            >
+              <View style={styles.buttonImage}>
 
-              <LinearGradient
-                colors={["#4ABAB9", themeColors.primary]}
-                start={{ x: 0.5, y: 0 }}
-                end={{ x: 0.5, y: 1 }}
-                style={StyleSheet.absoluteFillObject}
-                pointerEvents="none"
-              />
-              <AppImage uri={item.img} isBase={false} style={styles.image} resizeMode="cover" />
-            </View>
-            <Text style={styles.name}>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
+                <LinearGradient
+                  colors={["#4ABAB9", themeColors.primary]}
+                  start={{ x: 0.5, y: 0 }}
+                  end={{ x: 0.5, y: 1 }}
+                  style={StyleSheet.absoluteFillObject}
+                  pointerEvents="none"
+                />
+                {/* <CloudServerIcon /> */}
+                <Icon style={styles.image} />
+              </View>
+              <Text style={styles.name}>{item.name}</Text>
+            </TouchableOpacity>
+          )
+        })}
       </View>
     </View>
   );
@@ -70,8 +77,8 @@ export const createStyles = (themeColors: ThemeColors) =>
       gap: Spacing.width8,
     },
     logo: {
-      width: Spacing.width30,
-      height: Spacing.width30,
+      width: Spacing.width20,
+      height: Spacing.width20,
     },
     buttonImage: {
       width: Spacing.width50,
@@ -90,8 +97,7 @@ export const createStyles = (themeColors: ThemeColors) =>
     title: {
       fontSize: FontSize.FontSize16,
       fontWeight: 'bold',
-      marginBottom: 8,
-      marginTop: 8,
+
     },
     gridContainer: {
       flexDirection: 'row',

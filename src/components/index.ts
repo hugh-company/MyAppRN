@@ -53,5 +53,6 @@ export * from './ModalFilter';
 export * from './ModalInfoUser';
 
 //
+export * from './AnimatedInputScroller';
 export * from './AppInputCountries';
 export * from './PhoneCallFloatingButton';
